@@ -6,7 +6,7 @@
                 class-name-active="my-active-class"
                 class-name="basic-form" 
                 v-for="element in SAHLProject[openProjectIndex].DataTypes.CompuMethod"
-                :key="element.uuid"  :scale="zoom.value"
+                :key="element.uuid" :scale="zoom.value"
                 :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
@@ -440,8 +440,13 @@ export default{
     },
     watch: {
         setting(value) {
-            console.log('// '+value.zoomMain)
+            //console.log('// '+value.zoomMain)
             this.zoom.value = value.zoomMain
+            this.$nextTick(() => {
+                this.changeMinimapView()
+                //console.log('wheel')
+                setTimeout(() => {this.moveline()}, 200) //선이 똑바로 그려지지가 않아서 한타이밍 늦게 느려주게 구현
+            })
         },
         isInputFileComplate(value) {
             //Input file한뒤에 그림이 그려지기 전에 선을 그리려고 하니 에러 
@@ -597,7 +602,7 @@ export default{
             this.moveline()
         },
         moveline() {
-            console.log('moveline')
+            //console.log('moveline')
             if(this.minimaptoolbar) {
                 this.connections.forEach((connection) => connection.position())
             }
@@ -640,7 +645,7 @@ export default{
             //this.moveline()
         },
         onmouseDown() { //edit dialog했을경우 임의로 activeuuid 값을 넣어줬기 때문에 배경을 누르면 toolbar색이 변하지 않는 이슈
-            //console.log(document.getElementById('main-view').offsetWidth +'  /  '+ document.getElementById('main-view').scrollWidth)
+            //console.log('onmouseDown')
             //console.log(document.getElementById('main-view').offsetHeight +'  /  '+ document.getElementById('main-view').scrollHeight)
             //console.log(e)
             //console.log(e.pageX +'  /  '+ e.pageY +'  /  '+e.clientX +'  /  '+e.clientY)
@@ -658,12 +663,12 @@ export default{
         },
         onScroll() { //wheel을 빠르게 움직이면 line이 제대로 안그려지는데 여기에 moveline 넣으면 잘작동함
             //console.log('onScroll   ' + this.sync)
-            console.log('onScroll')
+            //console.log('onScroll')
             this.changeMinimapView()
             this.moveline()
         },
         changeMinimapView() {
-            var bodyWidth = document.getElementById('main-view').scrollWidth+200 //+100해주면 minimap에서 우측으로 갈때 element가 작게 보이는게 좀 나아짐
+            var bodyWidth = document.getElementById('main-view').scrollWidth+200 //+200해주면 minimap에서 우측으로 갈때 element가 작게 보이는게 좀 나아짐
             var bodyHeight
             if(this.zoom.value < 0.75) {
                 bodyHeight = document.getElementById('main-view').scrollHeight +100
@@ -679,7 +684,6 @@ export default{
                 document.getElementsByClassName('minimap-view')[0].style.width = (100 * realScaleX) + '%'
             }
             document.getElementsByClassName('minimap-view')[0].style.height = (100 * realScaleY) + '%'
-            //console.log(realScaleX*100+'    /  '+realScaleY*100 )
         },
         onmouseWheel(e) {
             //console.log('onmouseWheel   '+ e.shiftKey)
@@ -688,18 +692,18 @@ export default{
                 return
             }
             e.preventDefault()
+            var scale 
             if (e.deltaY < 0) {
-                this.zoom.value = this.zoom.value >= this.zoom.max ? this.zoom.max : this.zoom.value + this.zoom.step;
+                scale = this.zoom.value >= this.zoom.max ? this.zoom.max : this.zoom.value + this.zoom.step;
             } else  if (e.deltaY > 0) {
-                this.zoom.value = this.zoom.value <= this.zoom.min ? this.zoom.min : this.zoom.value - this.zoom.step;
+                scale = this.zoom.value <= this.zoom.min ? this.zoom.min : this.zoom.value - this.zoom.step;
             }
-            this.$store.commit('setZoomInOut', {valueMain: this.zoom.value, valueDetail: null})
-            this.$nextTick(() => {
-                this.changeMinimapView()
-                console.log('wheel')
-                setTimeout(() => {this.moveline()}, 200) //선이 똑바로 그려지지가 않아서 한타이밍 늦게 느려주게 구현
-            })
-            
+            this.$store.commit('setZoomInOut', {valueMain: scale, valueDetail: null})
+            // this.$nextTick(() => {
+            //     this.changeMinimapView()
+            //     //console.log('wheel')
+            //     setTimeout(() => {this.moveline()}, 200) //선이 똑바로 그려지지가 않아서 한타이밍 늦게 느려주게 구현
+            // })
             /*if (e.deltaY < 0) {
                 this.zoom.value = this.zoom.value >= this.zoom.max ? this.zoom.max : this.zoom.value + this.zoom.step;
             } else  if (e.deltaY > 0) {
