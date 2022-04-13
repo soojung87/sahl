@@ -122,6 +122,7 @@ export default {
     methods: {
         submitDialog(element) {
             this.element.path = element
+            this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
         },
         setToolbarColor(uuid) 
         {
@@ -147,6 +148,9 @@ export default {
         inputSomeIPtoMachineName () {
             this.$store.commit('editSomeIPtoMachine', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             //this.$store.commit('changeNameDataConstr', {uuid:this.element.uuid, name:this.element.name} )
+            if (this.element.name != '') {
+                this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
+            }
         },
 
         clearCCRef() {

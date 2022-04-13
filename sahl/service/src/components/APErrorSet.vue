@@ -158,6 +158,7 @@ export default {
         submitDialog(element) {
             this.element.path = element
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
+            this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
         },
         setToolbarColor(uuid) 
         {
@@ -186,6 +187,9 @@ export default {
         inputErrorSetName () {
             this.$store.commit('editErrorSet', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
+            if (this.element.name != '') {
+                this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
+            }
         },
         inputError () {
             this.$store.commit('editErrorSet', {compo:"error ref", uuid:this.element.uuid, errorref: this.errorItem} )

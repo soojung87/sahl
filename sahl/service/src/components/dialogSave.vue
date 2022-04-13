@@ -135,6 +135,9 @@ export default {
         navigatorList () {
             return this.$store.state.navigatorList
         },
+        checkVaildation() {
+            return this.$store.state.checkVaildation
+        },
 
         dialogSaveWindow: {
             get() {
@@ -183,11 +186,18 @@ export default {
             snackbar: false,
             text: '정확하게 작성한 뒤 저장을 시도해 주세요.',
             timeout: 2000,
+            isValidation: false,
             dialogOpen: false,
             reOpen: true, // update,beforeupdate는 무언가를 누를때마다 불린다. cancle누르면  둘다 불려서 dialogOpen이 true로 변하기 떄문에 이걸로 바뀌지 않게 잡아줘야함.
             //openIds: [],
         }
     },
+    watch: {
+        checkVaildation(value) {
+            this.isValidation = value
+        }
+    },
+
     updated() {
         //console.log('updated '+ this.dialogOpen +' - ' + this.reOpen )
         if(this.dialogOpen == false) {
@@ -441,8 +451,8 @@ export default {
         },
         saveElement() {
             //var isValidation = this.$store.getters.getCheckValidate
-            var isValidation = this.$store.getters.getSaveValidate(this.saveList)
-            if(isValidation && this.navigatorList[this.openProjectIndex].validation==false) {
+            this.$store.commit('setSaveValidate', {savelist: this.saveList})
+            if(this.isValidation && this.navigatorList[this.openProjectIndex].validation==false) {
                 var treeitem = Object.values(this.$store.getters.gettreeviewitems)
                 var arrelement
                 this.saveList.forEach( list => {
@@ -461,6 +471,7 @@ export default {
             } else {
                 this.snackbar = true
             }
+            this.$store.commit('setcheckVaildation', {value: false})
         },
         cancelSave() {
             this.tabListItem.forEach(ele => {

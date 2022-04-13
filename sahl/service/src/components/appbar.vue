@@ -111,18 +111,26 @@ export default({
         },
         isOpenCloseDetailView() {
             return this.$store.state.isOpenCloseDetailView
-        }
+        },
+        checkVaildation() {
+            return this.$store.state.checkVaildation
+        },
     },
     watch: {
         ismakeProject() { // project가 없는상태에서 다른 compoment들을 만들어 놓으니 에러가 떠서 만들어줌
             this.isprojectOpen = true
         },
         checkValidate(val) {
-            console.log(val)
-            if (!val) 
+            //console.log(val)
+            if (!val){
                 return
+            }
             this.dialogValidate = false
             this.checkValidate = false
+            this.$store.commit('setcheckVaildation', {value: false})
+        },
+        checkVaildation(value) {
+            this.checkValidate = value
         }
     },
     data() {
@@ -203,7 +211,7 @@ export default({
         clickValidate() {
             console.log('clickValidate')
             this.dialogValidate = true
-            this.checkValidate = this.$store.getters.getCheckValidate
+            this.$store.commit('setCheckValidate')
         },
         showNavigation() {
             this.isOpenCloseNavigation = this.isOpenCloseNavigation ? false : true

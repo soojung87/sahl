@@ -21,14 +21,14 @@
         </v-navigation-drawer>
         <v-main v-if="isprojectOpen">
             <mainview :minimaptoolbar='true'/>
-            <div class="minimap-resize">
+            <div class='minimap-resize'>
                 <v-btn small :text="btnMinimapResize" @click="onClickMinimapResize()"><v-icon>mdi-arrow-expand</v-icon></v-btn>
             </div>
-            <div class="mini-map" v-if="btnMinimapResize">
+            <div class='mini-map' v-show="btnMinimapResize">
                 <mainview :minimaptoolbar='false'/>
             </div>
         </v-main>
-        <v-navigation-drawer v-show="visibleDetailV" ref="detailViewer" :width="drawViewernavi.width" app v-model="drawViewernavi.shown" clipped right >
+        <v-navigation-drawer ref="detailViewer" :width="drawViewernavi.width" app v-model="drawViewernavi.shown" clipped right >
             <detailViewer />
         </v-navigation-drawer>
         <v-footer app>
@@ -74,10 +74,14 @@ export default ({
         ismakeProject(val) { // project가 없는상태에서 다른 compoment들을 만들어 놓으니 에러가 떠서 만들어줌
             if (val) {
                 this.isprojectOpen = true
+                this.$nextTick(() => { //이렇게 안해주면 minimap을 그리기 전에 호출되서 undefine으로 나옴 
+                    this.setMinimapLeft()
+                })
             }
         },
         isOpenCloseDetailView(val) {
             this.drawViewernavi.shown = val
+            this.setMinimapLeft()
         },
         isOpenCloseNavigationView(val) {
             console.log(val)
@@ -85,9 +89,6 @@ export default ({
         },
         isOpenCloseSearch(val) {
             this.isSearch = val
-        },
-        visibleDetailView(val) {
-            this.visibleDetailV = val
         },
     },
     data() {
@@ -100,7 +101,6 @@ export default ({
             model: null, // 찾은 아이템 정보가 담김
             searchList: [],
             btnMinimapResize: true,
-            visibleDetailV: this.$store.state.visibleDetailView,
         }
     },
     mounted() {
@@ -176,6 +176,10 @@ export default ({
                 if (f >= vm.drawViewernavi.minSize) {
                     el.style.width = f + "px"
                     vm.drawViewernavi.width = el.style.width
+                    if(vm.$store.state.visibleDetailView && vm.isprojectOpen) {
+                        document.getElementsByClassName('mini-map')[0].style.left = (window.innerWidth - f - 320) +'px'
+                        document.getElementsByClassName('minimap-resize')[0].style.left = (window.innerWidth - f - 72) +'px'
+                    }
                 }
             }
 
@@ -185,7 +189,7 @@ export default ({
                     el.style.transition ='initial'
                     document.addEventListener("mousemove", resize, false)
                     if (this.isprojectOpen) {
-                        document.getElementById('main-view').style.overflow= "hidden"
+                        document.getElementById('main-view').style.overflow = "hidden"
                     }
                 },
                 false
@@ -199,11 +203,12 @@ export default ({
                     document.body.style.cursor = ""
                     document.removeEventListener("mousemove", resize, false)
                     if (this.isprojectOpen) {
-                        document.getElementById('main-view').style.overflow= "scroll"
+                        document.getElementById('main-view').style.overflow = "scroll"
                     }
                 },
                 false
             );
+
         },
         goElement() {
             //console.log(this.model.uuid)
@@ -222,6 +227,19 @@ export default ({
             })
             //console.log(this.searchList)
         },
+        setMinimapLeft() {
+            if (this.isprojectOpen) {
+                if(this.$store.state.visibleDetailView && this.drawViewernavi.shown) {
+                    var detailViewWidth = this.drawViewernavi.width.replace(/[^0-9]/g,'')
+                    console.log(detailViewWidth)
+                    document.getElementsByClassName('mini-map')[0].style.left = (window.innerWidth - detailViewWidth - 330) +'px'
+                    document.getElementsByClassName('minimap-resize')[0].style.left = (window.innerWidth - detailViewWidth - 82) +'px'
+                } else {
+                    document.getElementsByClassName('mini-map')[0].style.left = (window.innerWidth - 330) +'px'
+                    document.getElementsByClassName('minimap-resize')[0].style.left = (window.innerWidth - 82) +'px'
+                }
+            }
+        }
     },
 })
 </script>

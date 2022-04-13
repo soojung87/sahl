@@ -345,6 +345,7 @@ export default {
         submitDialog(element) {
             this.element.path = element
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
+            this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
         },
         setToolbarColor(activeid) 
         {
@@ -388,6 +389,9 @@ export default {
         inputSWComponentName() {
             this.$store.commit('editSWComponents', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
+            if (this.element.name != '') {
+                this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
+            }
         },
         inputPPort() {
             this.$store.commit('editSWComponents', {compo:"pport", uuid:this.element.uuid, pport:this.pPortItem} )

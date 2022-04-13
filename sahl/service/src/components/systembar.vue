@@ -100,7 +100,7 @@
                 </v-card-text>
                 <v-subheader >Detail View</v-subheader>
                 <v-card-text>
-                    <v-switch v-model="switchDetailView" inset :label="switchDetailView ? 'visible' : 'unvisible'" @change="changeDetailView()"></v-switch>
+                    <v-switch v-model="switchDetailView" inset :label="switchDetailView ? 'visible' : 'unvisible'"></v-switch>
                 </v-card-text>
                 <v-subheader >Detail View Zoom</v-subheader>
                 <v-card-text>
@@ -187,8 +187,8 @@ export default({
             dialogNewProject: false,
             dialogSetting: false,
             strProjectName: null,
-            zoomMain: 0,
-            zoomDetail: 0,
+            zoomMain: this.$store.state.setting.zoomMain,
+            zoomDetail: this.$store.state.setting.zoomDetail,
             dialogSaveWindow: false,
             isprojectOpen: false,
             dialogError: false,
@@ -244,14 +244,13 @@ export default({
         },
         saveSetting() {
             this.$store.commit('setZoomInOut', {valueMain: this.zoomMain, valueDetail: this.zoomDetail})
+            this.$store.commit('setVisibleDetailView', {visible : this.switchDetailView})
+            this.$store.commit('setOpenCloseDetailView', {isopen: this.switchDetailView} )
             this.cancelSetting()
         },
         cancelSetting() {
             this.dialogSetting = false
-        },
-        changeDetailView() {
-            this.$store.commit('setVisibleDetailView', {visible : this.switchDetailView})
-            this.$store.commit('setOpenCloseDetailView', {isopen: true} )
+            this.switchDetailView = this.$store.state.visibleDetailView
         },
         zoomMainOut () {
             this.zoomMain = this.zoomMain <= 0.2 ? 0.2 : this.zoomMain - 0.1

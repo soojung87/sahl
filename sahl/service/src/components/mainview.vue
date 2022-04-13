@@ -423,6 +423,9 @@ export default{
         isInputFileComplate() {
             return this.$store.state.isInputFileComplate
         },
+        visibleDetailView() {
+            return this.$store.state.visibleDetailView
+        },
     },
     data() {
         return {
@@ -677,6 +680,7 @@ export default{
             }
             var realScaleX = document.getElementsByClassName('mini-map')[0].clientWidth /bodyWidth
             var realScaleY = document.getElementsByClassName('mini-map')[0].clientHeight /bodyHeight
+
             document.getElementsByClassName('minimap-view')[0].style.transform = `scale(${realScaleX}, ${realScaleY})`
             if(this.zoom.value < 0.75) { // minimap안에서 보여질때, 화면에서 왼쪽으로 이동시 minimap에 다 나타나지 않아서 설정해줌
                 document.getElementsByClassName('minimap-view')[0].style.width = (100 * (realScaleX+0.9-this.zoom.value)) + '%'
@@ -1186,7 +1190,7 @@ export default{
 
 .basic-form {
     cursor: pointer;
-    position: absolute; /* 이게 없으면 component들이  x 좌표에 같이 있질 못함  h만큼 떨어져서 배치됨*/
+    position: absolute; /* 이게 없으면 z값이 이상해짐 나중에 생긴게 z값이 가장 크게됨 */
 }
 
 .main-view::-webkit-scrollbar {

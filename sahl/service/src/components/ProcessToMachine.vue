@@ -136,6 +136,7 @@ export default {
     methods: {
         submitDialog(element) {
             this.element.path = element
+            this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
         },
         setToolbarColor(activeid) 
         {
@@ -164,6 +165,9 @@ export default {
         inputProcesstoMachineMappingsetName() {
             this.$store.commit('editProtoMachineMapping', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             //this.$store.commit('changeNameExecutable', {uuid:this.element.uuid, name:this.element.name} )
+            if (this.element.name != '') {
+                this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
+            }
         }, 
 
         clearMachineRef() {

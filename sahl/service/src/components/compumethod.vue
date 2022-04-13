@@ -152,8 +152,10 @@ export default {
     },
     methods: {
         submitDialog(element) {
+            //여기에 errorlist에 있는지 check해보자
             this.element.path = element
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
+            this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
         },
         setToolbarColor(activeid) 
         {
@@ -179,6 +181,9 @@ export default {
         inputCompuMethodName () {
             this.$store.commit('editCompuMehtod', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
+            if (this.element.name != '') {
+                this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
+            }
         },
         inputCompuMothodScale () {
             this.$store.commit('editCompuMehtod', {compo:"Scale", uuid:this.element.uuid, scales:this.scalesItem} )

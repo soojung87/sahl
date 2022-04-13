@@ -19,6 +19,8 @@ export default new Vuex.Store({
         ismakeProject: false,
         detailViewerList: [], // project가 바뀔때 마다 reset해야한다.
         idexDetailView: undefined,
+        checkVaildation: false,
+        errorList: [],
         detailViewer: { uuid: '', element: '' },
         setting: { zoomMain: 0, zoomDetail: 0, },
         visibleDetailView: true,
@@ -3025,274 +3027,6 @@ export default new Vuex.Store({
             console.log(xmlDoc)
             return xmlDoc
         },
-        getSaveValidate: (state) => (savelist) => {
-            for (var data in state.SAHLProject[state.openProjectIndex]) {
-                if (data != 'uuid' && data != 'name') {
-                    for (var datatype in state.SAHLProject[state.openProjectIndex][data]) {
-                        state.SAHLProject[state.openProjectIndex][data][datatype].forEach((ele, elidx) => {
-                            var idxchild = null,
-                                idxchildchild = null,
-                                idxService = null
-                            savelist.forEach(list => {
-                                list.saveFile.forEach(item => {
-                                    if (item.uuid == ele.uuid) {
-                                        if (ele.name == '' || ele.path == '') {
-                                            if (datatype == 'CompuMethod') {
-                                                idxchild = constant.DateType_index
-                                                idxchildchild = constant.CompuMethod_index
-                                            } else if (datatype == 'DataConstr') {
-                                                idxchild = constant.DateType_index
-                                                idxchildchild = constant.DataConstr_index
-                                            } else if (datatype == 'ApplicationArrayDataType') {
-                                                idxchild = constant.DateType_index
-                                                idxchildchild = constant.ApplicationArray_index
-                                            } else if (datatype == 'ImplementationDataType') {
-                                                idxchild = constant.DateType_index
-                                                idxchildchild = constant.Implementation_index
-                                            } else if (datatype == 'Machine') {
-                                                idxchild = constant.Machines_index
-                                                idxchildchild = constant.Machine_index
-                                            } else if (datatype == 'MachineDesign') {
-                                                idxchild = constant.Machines_index
-                                                idxchildchild = constant.MachineDesigne_index
-                                            } else if (datatype == 'EthernetCluster') {
-                                                idxchild = constant.Machines_index
-                                                idxchildchild = constant.EthernetCluster_index
-                                            } else if (datatype == 'ModeDeclarationGroup') {
-                                                idxchild = constant.Machines_index
-                                                idxchildchild = constant.ModeDeclarationGroup_index
-                                            } else if (datatype == 'HWElement') {
-                                                idxchild = constant.Machines_index
-                                                idxchildchild = constant.HWElement_index
-                                            } else if (datatype == 'ProtoMachineMapping') {
-                                                idxchild = constant.AdaptiveApplication_index
-                                                idxchildchild = constant.ProcesstoMachineMapping_index
-                                            } else if (datatype == 'SWComponents') {
-                                                idxchild = constant.AdaptiveApplication_index
-                                                idxchildchild = constant.SWComponents_index
-                                            } else if (datatype == 'Process') {
-                                                idxchild = constant.AdaptiveApplication_index
-                                                idxchildchild = constant.Process_index
-                                            } else if (datatype == 'Executable') {
-                                                idxchild = constant.AdaptiveApplication_index
-                                                idxchildchild = constant.Executable_index
-                                            } else if (datatype == 'StartupConfig') {
-                                                idxchild = constant.AdaptiveApplication_index
-                                                idxchildchild = constant.StartupConfig_index
-                                            } else if (datatype == 'DeterministicClient') {
-                                                idxchild = constant.AdaptiveApplication_index
-                                                idxchildchild = constant.DeterministicClient_index
-                                            } else if (datatype == 'ProcessDesign') {
-                                                idxchild = constant.AdaptiveApplication_index
-                                                idxchildchild = constant.ProcessDesign_index
-                                            } else if (datatype == 'SomeIPServiceInterfaceDeployment') {
-                                                idxService = constant.ServiceInterfaces_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.SomeIPServiceInterfaceDeployment_index
-                                            } else if (datatype == 'ServiceInterface') {
-                                                idxService = constant.ServiceInterfaces_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.ServiceInterface_index
-                                            } else if (datatype == 'SomeIPClientEvent') {
-                                                idxService = constant.SomeIPEvents_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.Client_index
-                                            } else if (datatype == 'SomeIPServerEvent') {
-                                                idxService = constant.SomeIPEvents_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.Server_index
-                                            } else if (datatype == 'Error') {
-                                                idxService = constant.Errors_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.Error_index
-                                            } else if (datatype == 'ErrorSet') {
-                                                idxService = constant.Errors_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.Errorset_index
-                                            } else if (datatype == 'ErrorDomain') {
-                                                idxService = constant.Errors_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.ErrorDomain_index
-                                            } else if (datatype == 'SomeIPClientServiceInstance') {
-                                                idxService = constant.ServiceInstances_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.SomeIPClient_index
-                                            } else if (datatype == 'SomeIPServerServiceInstance') {
-                                                idxService = constant.ServiceInstances_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.SomeIPServer_index
-                                            } else if (datatype == 'SomeIPServiceInstanceToMachine') {
-                                                idxService = constant.ServiceInstances_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.SomeIPToMachineMapping_index
-                                            } else if (datatype == 'ServiceInstanceToPortPrototype') {
-                                                idxService = constant.ServiceInstances_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.ToPortPrototypeMapping_index
-                                            } else if (datatype == 'RequiredSomeIP') {
-                                                idxService = constant.ServiceInstances_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.RequiredSomeIP_index
-                                            } else if (datatype == 'ProvidedSomeIP') {
-                                                idxService = constant.ServiceInstances_index
-                                                idxchild = constant.Service_index
-                                                idxchildchild = constant.ProvidedSomeIP_index
-                                            }
-
-                                            if (idxchild == constant.Service_index) {
-                                                state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].children[idxchildchild].children[elidx].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].children[idxchildchild].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[idxchild].validation = true
-                                                state.navigatorList[state.openProjectIndex].validation = true
-                                            } else {
-                                                state.navigatorList[state.openProjectIndex].children[idxchild].children[idxchildchild].children[elidx].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[idxchild].children[idxchildchild].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[idxchild].validation = true
-                                                state.navigatorList[state.openProjectIndex].validation = true
-                                            }
-                                        }
-                                    }
-                                })
-                            })
-                        })
-                    }
-                }
-            }
-            return true
-        },
-        getCheckValidate(state) {
-            for (var data in state.SAHLProject[state.openProjectIndex]) {
-                if (data != 'uuid' && data != 'name') {
-                    for (var datatype in state.SAHLProject[state.openProjectIndex][data]) {
-                        state.SAHLProject[state.openProjectIndex][data][datatype].forEach((ele, elidx) => {
-                            var idxchild = null,
-                                idxchildchild = null,
-                                idxService = null
-
-                            if (ele.name == '' || ele.path == '') {
-                                if (datatype == 'CompuMethod') {
-                                    idxchild = constant.DateType_index
-                                    idxchildchild = constant.CompuMethod_index
-                                } else if (datatype == 'DataConstr') {
-                                    idxchild = constant.DateType_index
-                                    idxchildchild = constant.DataConstr_index
-                                } else if (datatype == 'ApplicationArrayDataType') {
-                                    idxchild = constant.DateType_index
-                                    idxchildchild = constant.ApplicationArray_index
-                                } else if (datatype == 'ImplementationDataType') {
-                                    idxchild = constant.DateType_index
-                                    idxchildchild = constant.Implementation_index
-                                } else if (datatype == 'Machine') {
-                                    idxchild = constant.Machines_index
-                                    idxchildchild = constant.Machine_index
-                                } else if (datatype == 'MachineDesign') {
-                                    idxchild = constant.Machines_index
-                                    idxchildchild = constant.MachineDesigne_index
-                                } else if (datatype == 'EthernetCluster') {
-                                    idxchild = constant.Machines_index
-                                    idxchildchild = constant.EthernetCluster_index
-                                } else if (datatype == 'ModeDeclarationGroup') {
-                                    idxchild = constant.Machines_index
-                                    idxchildchild = constant.ModeDeclarationGroup_index
-                                } else if (datatype == 'HWElement') {
-                                    idxchild = constant.Machines_index
-                                    idxchildchild = constant.HWElement_index
-                                } else if (datatype == 'ProtoMachineMapping') {
-                                    idxchild = constant.AdaptiveApplication_index
-                                    idxchildchild = constant.ProcesstoMachineMapping_index
-                                } else if (datatype == 'SWComponents') {
-                                    idxchild = constant.AdaptiveApplication_index
-                                    idxchildchild = constant.SWComponents_index
-                                } else if (datatype == 'Process') {
-                                    idxchild = constant.AdaptiveApplication_index
-                                    idxchildchild = constant.Process_index
-                                } else if (datatype == 'Executable') {
-                                    idxchild = constant.AdaptiveApplication_index
-                                    idxchildchild = constant.Executable_index
-                                } else if (datatype == 'StartupConfig') {
-                                    idxchild = constant.AdaptiveApplication_index
-                                    idxchildchild = constant.StartupConfig_index
-                                } else if (datatype == 'DeterministicClient') {
-                                    idxchild = constant.AdaptiveApplication_index
-                                    idxchildchild = constant.DeterministicClient_index
-                                } else if (datatype == 'ProcessDesign') {
-                                    idxchild = constant.AdaptiveApplication_index
-                                    idxchildchild = constant.ProcessDesign_index
-                                } else if (datatype == 'SomeIPServiceInterfaceDeployment') {
-                                    idxService = constant.ServiceInterfaces_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.SomeIPServiceInterfaceDeployment_index
-                                } else if (datatype == 'ServiceInterface') {
-                                    idxService = constant.ServiceInterfaces_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.ServiceInterface_index
-                                } else if (datatype == 'SomeIPClientEvent') {
-                                    idxService = constant.SomeIPEvents_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.Client_index
-                                } else if (datatype == 'SomeIPServerEvent') {
-                                    idxService = constant.SomeIPEvents_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.Server_index
-                                } else if (datatype == 'Error') {
-                                    idxService = constant.Errors_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.Error_index
-                                } else if (datatype == 'ErrorSet') {
-                                    idxService = constant.Errors_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.Errorset_index
-                                } else if (datatype == 'ErrorDomain') {
-                                    idxService = constant.Errors_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.ErrorDomain_index
-                                } else if (datatype == 'SomeIPClientServiceInstance') {
-                                    idxService = constant.ServiceInstances_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.SomeIPClient_index
-                                } else if (datatype == 'SomeIPServerServiceInstance') {
-                                    idxService = constant.ServiceInstances_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.SomeIPServer_index
-                                } else if (datatype == 'SomeIPServiceInstanceToMachine') {
-                                    idxService = constant.ServiceInstances_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.SomeIPToMachineMapping_index
-                                } else if (datatype == 'ServiceInstanceToPortPrototype') {
-                                    idxService = constant.ServiceInstances_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.ToPortPrototypeMapping_index
-                                } else if (datatype == 'RequiredSomeIP') {
-                                    idxService = constant.ServiceInstances_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.RequiredSomeIP_index
-                                } else if (datatype == 'ProvidedSomeIP') {
-                                    idxService = constant.ServiceInstances_index
-                                    idxchild = constant.Service_index
-                                    idxchildchild = constant.ProvidedSomeIP_index
-                                }
-
-                                if (idxchild == constant.Service_index) {
-                                    state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].children[idxchildchild].children[elidx].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].children[idxchildchild].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[idxchild].validation = true
-                                    state.navigatorList[state.openProjectIndex].validation = true
-                                } else {
-                                    state.navigatorList[state.openProjectIndex].children[idxchild].children[idxchildchild].children[elidx].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[idxchild].children[idxchildchild].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[idxchild].validation = true
-                                    state.navigatorList[state.openProjectIndex].validation = true
-                                }
-                            }
-                        })
-                    }
-
-                }
-            }
-            return true
-        },
         getSamePathList: (state) => (editPath) => {
             return state.strSavePath.indexOf(editPath)
         },
@@ -3516,6 +3250,182 @@ export default new Vuex.Store({
         },
         setOpenCloseNavigationView(state, payload) {
             state.isOpenCloseNavigationView = payload.isopen
+        },
+        setcheckVaildation(state, payload) {
+            state.checkVaildation = payload.value
+        },
+        setSaveValidate(state, payload) {
+            console.log('setSaveValidate')
+            state.errorList = []
+            for (var data in state.SAHLProject[state.openProjectIndex]) {
+                if (data != 'uuid' && data != 'name') {
+                    for (var datatype in state.SAHLProject[state.openProjectIndex][data]) {
+                        state.SAHLProject[state.openProjectIndex][data][datatype].forEach((ele, elidx) => {
+                            payload.savelist.forEach(list => {
+                                list.saveFile.forEach(item => {
+                                    if (item.uuid == ele.uuid) {
+                                        if (ele.name == '') {
+                                            state.errorList.push({ uuid: ele.uuid, name: ele.name, parent: data, path: ele.path, error: 'name' })
+                                        }
+                                        if (ele.path == '') {
+                                            state.errorList.push({ uuid: ele.uuid, name: ele.name, parent: data, path: ele.path, error: 'path' })
+                                        }
+
+                                        if (ele.name == '' || ele.path == '') {
+                                            this.commit('checkVaildationElement', { datatype: datatype, elidx: elidx })
+                                        }
+                                    }
+                                })
+                            })
+                        })
+                    }
+                }
+            }
+            state.checkVaildation = true
+        },
+        setCheckValidate(state) {
+            console.log('setCheckValidate')
+            state.errorList = []
+            for (var data in state.SAHLProject[state.openProjectIndex]) {
+                if (data != 'uuid' && data != 'name') {
+                    for (var datatype in state.SAHLProject[state.openProjectIndex][data]) {
+                        state.SAHLProject[state.openProjectIndex][data][datatype].forEach((ele, elidx) => {
+                            if (ele.name == '') {
+                                state.errorList.push({ uuid: ele.uuid, name: ele.name, parent: data, path: ele.path, error: 'name' })
+                            }
+                            if (ele.path == '') {
+                                state.errorList.push({ uuid: ele.uuid, name: ele.name, parent: data, path: ele.path, error: 'path' })
+                            }
+
+                            if (ele.name == '' || ele.path == '') {
+                                this.commit('checkVaildationElement', { datatype: datatype, elidx: elidx })
+                            }
+                        })
+                    }
+
+                }
+            }
+            state.checkVaildation = true
+        },
+        checkVaildationElement(state, payload) {
+            var idxchild = null,
+                idxchildchild = null,
+                idxService = null
+
+            if (payload.datatype == 'CompuMethod') {
+                idxchild = constant.DateType_index
+                idxchildchild = constant.CompuMethod_index
+            } else if (payload.datatype == 'DataConstr') {
+                idxchild = constant.DateType_index
+                idxchildchild = constant.DataConstr_index
+            } else if (payload.datatype == 'ApplicationArrayDataType') {
+                idxchild = constant.DateType_index
+                idxchildchild = constant.ApplicationArray_index
+            } else if (payload.datatype == 'ImplementationDataType') {
+                idxchild = constant.DateType_index
+                idxchildchild = constant.Implementation_index
+            } else if (payload.datatype == 'Machine') {
+                idxchild = constant.Machines_index
+                idxchildchild = constant.Machine_index
+            } else if (payload.datatype == 'MachineDesign') {
+                idxchild = constant.Machines_index
+                idxchildchild = constant.MachineDesigne_index
+            } else if (payload.datatype == 'EthernetCluster') {
+                idxchild = constant.Machines_index
+                idxchildchild = constant.EthernetCluster_index
+            } else if (payload.datatype == 'ModeDeclarationGroup') {
+                idxchild = constant.Machines_index
+                idxchildchild = constant.ModeDeclarationGroup_index
+            } else if (payload.datatype == 'HWElement') {
+                idxchild = constant.Machines_index
+                idxchildchild = constant.HWElement_index
+            } else if (payload.datatype == 'ProtoMachineMapping') {
+                idxchild = constant.AdaptiveApplication_index
+                idxchildchild = constant.ProcesstoMachineMapping_index
+            } else if (payload.datatype == 'SWComponents') {
+                idxchild = constant.AdaptiveApplication_index
+                idxchildchild = constant.SWComponents_index
+            } else if (payload.datatype == 'Process') {
+                idxchild = constant.AdaptiveApplication_index
+                idxchildchild = constant.Process_index
+            } else if (payload.datatype == 'Executable') {
+                idxchild = constant.AdaptiveApplication_index
+                idxchildchild = constant.Executable_index
+            } else if (payload.datatype == 'StartupConfig') {
+                idxchild = constant.AdaptiveApplication_index
+                idxchildchild = constant.StartupConfig_index
+            } else if (payload.datatype == 'DeterministicClient') {
+                idxchild = constant.AdaptiveApplication_index
+                idxchildchild = constant.DeterministicClient_index
+            } else if (payload.datatype == 'ProcessDesign') {
+                idxchild = constant.AdaptiveApplication_index
+                idxchildchild = constant.ProcessDesign_index
+            } else if (payload.datatype == 'SomeIPServiceInterfaceDeployment') {
+                idxService = constant.ServiceInterfaces_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.SomeIPServiceInterfaceDeployment_index
+            } else if (payload.datatype == 'ServiceInterface') {
+                idxService = constant.ServiceInterfaces_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.ServiceInterface_index
+            } else if (payload.datatype == 'SomeIPClientEvent') {
+                idxService = constant.SomeIPEvents_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.Client_index
+            } else if (payload.datatype == 'SomeIPServerEvent') {
+                idxService = constant.SomeIPEvents_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.Server_index
+            } else if (payload.datatype == 'Error') {
+                idxService = constant.Errors_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.Error_index
+            } else if (payload.datatype == 'ErrorSet') {
+                idxService = constant.Errors_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.Errorset_index
+            } else if (payload.datatype == 'ErrorDomain') {
+                idxService = constant.Errors_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.ErrorDomain_index
+            } else if (payload.datatype == 'SomeIPClientServiceInstance') {
+                idxService = constant.ServiceInstances_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.SomeIPClient_index
+            } else if (payload.datatype == 'SomeIPServerServiceInstance') {
+                idxService = constant.ServiceInstances_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.SomeIPServer_index
+            } else if (payload.datatype == 'SomeIPServiceInstanceToMachine') {
+                idxService = constant.ServiceInstances_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.SomeIPToMachineMapping_index
+            } else if (payload.datatype == 'ServiceInstanceToPortPrototype') {
+                idxService = constant.ServiceInstances_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.ToPortPrototypeMapping_index
+            } else if (payload.datatype == 'RequiredSomeIP') {
+                idxService = constant.ServiceInstances_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.RequiredSomeIP_index
+            } else if (payload.datatype == 'ProvidedSomeIP') {
+                idxService = constant.ServiceInstances_index
+                idxchild = constant.Service_index
+                idxchildchild = constant.ProvidedSomeIP_index
+            }
+
+            if (idxchild == constant.Service_index) {
+                state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].children[idxchildchild].children[payload.elidx].validation = true
+                state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].children[idxchildchild].validation = true
+                state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].validation = true
+                state.navigatorList[state.openProjectIndex].children[idxchild].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else {
+                state.navigatorList[state.openProjectIndex].children[idxchild].children[idxchildchild].children[payload.elidx].validation = true
+                state.navigatorList[state.openProjectIndex].children[idxchild].children[idxchildchild].validation = true
+                state.navigatorList[state.openProjectIndex].children[idxchild].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            }
         },
         setSavePath(state, payload) {
             state.strSavePath.push(payload.strPath)
@@ -8137,6 +8047,18 @@ export default new Vuex.Store({
                 } else if (tableLine[0] == 'errordomain') { //ErrorDomain 변경시 =>  Error 에서 Error Domain ref할때
                     idxElement = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === startUUID[0])
                     state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].errorDref = payload.path + '/' + payload.name
+                }
+            })
+        },
+        isintoErrorList(state, payload) {
+            state.errorList.forEach((item, i) => {
+                if (item.uuid == payload.uuid) {
+                    if (item.error == 'name' && payload.name != '') {
+                        state.errorList.splice(i, 1)
+                    }
+                    if (item.error == 'path' && payload.path != '') {
+                        state.errorList.splice(i, 1)
+                    }
                 }
             })
         },

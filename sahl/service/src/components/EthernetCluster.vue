@@ -571,16 +571,19 @@ export default {
     methods: {
         submitDialog(element) {
             this.element.path = element
-            if(this.ConditionalItem[this.conditionalTab].channel.length>0) {
-                if(this.ConditionalItem[this.conditionalTab].channel[this.channelTab].endpoint.length > 0) {
-                    if(this.ConditionalItem[this.conditionalTab].channel[this.channelTab].endpoint[this.endpointTab].name != '') {
-                        this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                    condi: this.ConditionalItem[this.conditionalTab].name,
-                                                    channl: this.ConditionalItem[this.conditionalTab].channel[this.channelTab].name,
-                                                    endpoint: this.ConditionalItem[this.conditionalTab].channel[this.channelTab].endpoint[this.endpointTab].name} )
+            if(this.ConditionalItem[this.conditionalTab] != undefined) {
+                if(this.ConditionalItem[this.conditionalTab].channel.length > 0) {
+                    if(this.ConditionalItem[this.conditionalTab].channel[this.channelTab].endpoint.length > 0) {
+                        if(this.ConditionalItem[this.conditionalTab].channel[this.channelTab].endpoint[this.endpointTab].name != '') {
+                            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                        condi: this.ConditionalItem[this.conditionalTab].name,
+                                                        channl: this.ConditionalItem[this.conditionalTab].channel[this.channelTab].name,
+                                                        endpoint: this.ConditionalItem[this.conditionalTab].channel[this.channelTab].endpoint[this.endpointTab].name} )
+                        }
                     }
                 }
             }
+            this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
         },
         setToolbarColor(activeid) 
         {
@@ -684,6 +687,9 @@ export default {
                                                     endpoint: this.ConditionalItem[this.conditionalTab].channel[this.channelTab].endpoint[this.endpointTab].name} )
                     }
                 }
+            }
+            if (this.element.name != '') {
+                this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
         },
         inputConditionalName(name) {

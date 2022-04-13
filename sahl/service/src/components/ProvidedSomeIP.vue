@@ -354,6 +354,7 @@ export default {
         submitDialog(element) {
             this.element.path = element
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name, req: false} )
+            this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
         },
         setToolbarColor(uuid) 
         {
@@ -412,6 +413,9 @@ export default {
         inputProvidedSomeIPName () {
             this.$store.commit('editProvidedSomeIP', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name, req: false} )
+            if (this.element.name != '') {
+                this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
+            }
         },
 
         clearSIDeployment() {
