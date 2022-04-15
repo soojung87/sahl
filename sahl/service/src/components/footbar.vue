@@ -11,7 +11,7 @@
                         <v-list dense class='validationList'>
                             <v-list-item v-for="(item, i) in errorList" :key="i" link @click="goElement(item.uuid)" style="height: 12px;">
                                 <v-list-item-avatar>
-                                    <v-icon color="red lighten-1">mdi-information</v-icon>
+                                    <v-icon color="red lighten-1">mdi-alert-circle-outline</v-icon>
                                 </v-list-item-avatar>                               
                                 <v-list-item-content>
                                     <v-list-item-title class="red--text" >{{ item.parent +'/'+item.name +' ===> '+ item.error +' is null'}}</v-list-item-title>

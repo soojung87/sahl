@@ -3,7 +3,7 @@
         <v-system-bar app >
             <systembar />
         </v-system-bar>
-        <v-app-bar app dense flat clipped-left clipped-right >
+        <v-app-bar app dense flat clipped-left clipped-right>
             <appbar />
             <v-spacer></v-spacer>
             <v-icon v-if="isSearch && isprojectOpen">mdi-magnify</v-icon>
@@ -77,6 +77,8 @@ export default ({
                 this.$nextTick(() => { //이렇게 안해주면 minimap을 그리기 전에 호출되서 undefine으로 나옴 
                     this.setMinimapLeft()
                 })
+            } else {
+                this.isprojectOpen = false
             }
         },
         isOpenCloseDetailView(val) {
@@ -90,12 +92,16 @@ export default ({
         isOpenCloseSearch(val) {
             this.isSearch = val
         },
+        visibleDetailView(val) {
+            this.drawViewernavi.shown = val
+            this.setMinimapLeft()
+        }
     },
     data() {
         return {
             isprojectOpen: false,
             navigation: { width: 200, borderSize: 3, minSize: 10, shown: true},
-            drawViewernavi: {width: 300, borderSize: 3, minSize: 5, shown: true},
+            drawViewernavi: {width: 300, borderSize: 3, minSize: 5, shown: this.$store.state.visibleDetailView},
             isSearch: false,
             search: null, //찾은 이름이 나옴
             model: null, // 찾은 아이템 정보가 담김
@@ -188,7 +194,7 @@ export default ({
                 function() {
                     el.style.transition ='initial'
                     document.addEventListener("mousemove", resize, false)
-                    if (this.isprojectOpen) {
+                    if (vm.isprojectOpen) {
                         document.getElementById('main-view').style.overflow = "hidden"
                     }
                 },
@@ -202,13 +208,12 @@ export default ({
                     vm.drawViewernavi.width = el.style.width
                     document.body.style.cursor = ""
                     document.removeEventListener("mousemove", resize, false)
-                    if (this.isprojectOpen) {
-                        document.getElementById('main-view').style.overflow = "scroll"
+                    if (vm.isprojectOpen) {
+                        document.getElementById('main-view').style.overflow = "auto"
                     }
                 },
                 false
             );
-
         },
         goElement() {
             //console.log(this.model.uuid)
@@ -231,7 +236,6 @@ export default ({
             if (this.isprojectOpen) {
                 if(this.$store.state.visibleDetailView && this.drawViewernavi.shown) {
                     var detailViewWidth = this.drawViewernavi.width.replace(/[^0-9]/g,'')
-                    console.log(detailViewWidth)
                     document.getElementsByClassName('mini-map')[0].style.left = (window.innerWidth - detailViewWidth - 330) +'px'
                     document.getElementsByClassName('minimap-resize')[0].style.left = (window.innerWidth - detailViewWidth - 82) +'px'
                 } else {

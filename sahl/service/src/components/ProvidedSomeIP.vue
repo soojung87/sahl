@@ -367,6 +367,8 @@ export default {
         setToolbarColorDetailView(isdetail) {
             if(this.element.uuid == isdetail) {
                 this.colorToolbar = "#B0E0E6" 
+            } else if (this.element.uuid == this.$store.state.activeUUID) {
+                this.colorToolbar  = "#FF1493"
             } else {
                 this.colorToolbar = "#6A5ACD"
             }

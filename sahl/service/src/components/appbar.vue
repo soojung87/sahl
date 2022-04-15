@@ -38,7 +38,7 @@
         </v-dialog>
         <v-tooltip bottom>  
             <template v-slot:activator="{ on, attrs }">
-                <v-btn class="d-inline-flex ml-3 mr-1"  small icon v-bind="attrs" v-on="on" @click="onButtonClick()">
+                <v-btn class="d-inline-flex ml-3 mr-1"  small icon v-bind="attrs" v-on="on" @click="inputFile()">
                     <v-icon> mdi-open-in-app</v-icon>
                 </v-btn>
                 <input ref="uploader" class="d-none" type="file" @change="uploadProject">
@@ -92,7 +92,7 @@
 <script>
 //import draggable from "vuedraggable";
 import dialogSave from '../components/dialogSave.vue'
-//import { EventBus } from '../main'
+import { EventBus } from '../main'
 
 export default({
     components: { dialogSave},//draggable
@@ -117,8 +117,8 @@ export default({
         },
     },
     watch: {
-        ismakeProject() { // project가 없는상태에서 다른 compoment들을 만들어 놓으니 에러가 떠서 만들어줌
-            this.isprojectOpen = true
+        ismakeProject(val) { // project가 없는상태에서 다른 compoment들을 만들어 놓으니 에러가 떠서 만들어줌
+            this.isprojectOpen = val
         },
         checkValidate(val) {
             //console.log(val)
@@ -146,6 +146,15 @@ export default({
             dialogSaveWindow: false,
             dialogError: false,
         }
+    },
+    mounted() {
+          EventBus.$on('shortcut-keys-appbar', (str) => {
+              if (str == 'validation') {
+                  this.clickValidate()
+              } else if (str == 'openfile') {
+                  this.inputFile()
+              }
+          })
     },
     methods: {
         addproject () {
@@ -224,7 +233,7 @@ export default({
                 this.$store.commit('setOpenCloseDetailView', {isopen: this.isOpenCloseDetailV} )
             }
         },
-        onButtonClick() {
+        inputFile() {
             if(!this.isprojectOpen){
                 this.dialogError = true
                 setTimeout(() => {this.dialogError = false}, 4000);

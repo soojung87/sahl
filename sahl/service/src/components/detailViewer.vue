@@ -1,16 +1,19 @@
 <template>
-    <div v-bind:style="{ transform: 'scale(' + zoom.value + ')'}" class="zoom-width" > 
+    <div v-bind:style="{ transform: 'scale(' + zoom + ')'}" class="zoom-width" > 
         <v-card flat >
-            <v-toolbar dense flat>
-                <v-btn icon @click="hideDetailViewer">
+            <v-toolbar dense flat color="#FFFAF0">
+                <v-btn small icon @click="hideDetailViewer">
                     <v-icon>mdi-chevron-double-right</v-icon>
                 </v-btn>
                 <v-toolbar-title>Detail Viewer</v-toolbar-title>
-                <v-btn icon @click="backViewer" :disabled="!isbackpossible">
+                <v-btn small icon @click="backViewer()" :disabled="!isbackpossible">
                     <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>
-                <v-btn icon @click="frontViewer" :disabled="!isfrontpossible">
+                <v-btn small icon @click="frontViewer()" :disabled="!isfrontpossible">
                     <v-icon>mdi-arrow-right</v-icon>
+                </v-btn>
+                <v-btn small icon @click="deleteDetailViewerList()" :disabled="detailViewerList.length > 0 ? false : true">
+                    <v-icon>mdi-delete</v-icon>
                 </v-btn>
             </v-toolbar>
             <div v-if="detailViewer.element == 'Compu Method'">
@@ -137,38 +140,34 @@ export default {
         },
         setting() {
             return this.$store.state.setting
+        },
+        detailViewerList() {
+            return this.$store.state.detailViewerList
         }
     },
     watch: {
         idexDetailView(val) {
-            if (val <= this.$store.getters.getDetailViewlength && val >= 0) {
+            if (val <= this.$store.state.detailViewerList.length-1 && val >= 0) {
                 this.isbackpossible = true
                 this.isfrontpossible = true
             }
             if (val == 0) {
                 this.isbackpossible = false
             }
-            if (val == (this.$store.getters.getDetailViewlength )) {
+            if (val == (this.$store.state.detailViewerList.length-1 )) {
                 this.isfrontpossible = false
             }
         },
         setting(value) {
             //console.log('///'+value.zoomDetail)
-            this.zoom.value = value.zoomDetail
+            this.zoom = value.zoomDetail
         }
     },
     data() {
         return {
             isbackpossible: false,
             isfrontpossible: false,
-            zoom: {
-                min: 0.2,
-                max: 2,
-                value: this.$store.state.setting.zoomDetail,
-                step: 0.1,
-                originX: 0,
-                originY: 0
-            },
+            zoom: this.$store.state.setting.zoomDetail,
             ethernetClusterInfo: {  isChannel: false, isEndpoint: false, 
                                     idxConditional: null, idxChannel: null,  idxEndpoint: null,} ,
             }
@@ -185,8 +184,6 @@ export default {
     methods: {
         hideDetailViewer() {
             //console.log('hideDetailViewer')
-            //document.getElementById('detailviewer').style.width= '5px'
-            //크기 조정은 되는데 mainview의 스크롤이 따라오질 않는다
             this.$store.commit('setOpenCloseDetailView', {isopen: false} )
         },
         backViewer() {
@@ -197,11 +194,16 @@ export default {
             this.$store.commit('setBackDetailView')
         },
         frontViewer() {
-            if (this.$store.state.idexDetailView == (this.$store.getters.getDetailViewlength)) {
+            if (this.$store.state.idexDetailView == (this.$store.state.detailViewerList.length-1)) {
                 this.isfrontpossible = false
                 return
             }
             this.$store.commit('setfrontDetailView')
+        },
+        deleteDetailViewerList() {
+            this.$store.commit('deleteDetailViewerList')
+            this.isbackpossible = false
+            this.isfrontpossible = false
         },
     },
 }

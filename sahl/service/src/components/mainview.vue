@@ -1,6 +1,6 @@
 <template>
-    <div id="main-view"  v-dragscroll="drag" v-on:dragscrollmove="dragBackground()" v-bind:class="[{'grab-bing':'true'},{'main-view':minimaptoolbar},{'minimap-view':!minimaptoolbar}]" @scroll="onScroll"
-        @mousewheel="onmouseWheel" @mousedown="onmouseDown" >
+    <div id="main-view"  v-dragscroll="drag" v-on:dragscrollmove="dragBackground()" v-bind:class="[{'grab-bing':'true'},{'main-view':minimaptoolbar},{'minimap-view':!minimaptoolbar}]"
+        @mousewheel="onmouseWheel" @mousedown="onmouseDown"  @scroll="onScroll">
         <v-main id="sea" v-bind:style="{ transform: 'scale(' + zoom.value + ')' }" ><!--<v-app>에서 바꿈 : v-app으로 하면 뭔가 안에 창이 하나 더생겨서 화면이 늘어나 scroll이 생긴다.-->
             <vue-draggable-resizable :id="element.uuid"
                 class-name-active="my-active-class"
@@ -426,6 +426,9 @@ export default{
         visibleDetailView() {
             return this.$store.state.visibleDetailView
         },
+        visibleLine() {
+            return this.$store.state.visibleLine
+        }
     },
     data() {
         return {
@@ -434,8 +437,6 @@ export default{
                 max: 2,
                 value: this.$store.state.setting.zoomMain,
                 step: 0.05,
-                originX: 0,
-                originY: 0,
             },
             drag: true, //true: 배경 움직임, false: diagram움직임
             connections: [],
@@ -453,8 +454,8 @@ export default{
         },
         isInputFileComplate(value) {
             //Input file한뒤에 그림이 그려지기 전에 선을 그리려고 하니 에러 
-            console.log(this.connections)
-            console.log(value)
+            //console.log(this.connections)
+            //console.log(value)
             if (value) {
                 this.$nextTick(() => {
                     console.log('updata')
@@ -463,6 +464,19 @@ export default{
                 })
             }
         },
+        visibleLine(val) {
+            if(this.minimaptoolbar) {
+                if (val) {
+                    this.connections.forEach( item => {
+                        item.show()
+                    })
+                } else {
+                    this.connections.forEach( item => {
+                        item.hide()
+                    })
+                }
+            }
+        }
     },
     mounted() {
         this.$nextTick(() => {
@@ -484,8 +498,17 @@ export default{
         });
         EventBus.$on('delete-line', (numLine) => {
             //console.log('delete-line'+ numLine)
-            this.connections[numLine].remove()
-            this.connections.splice(numLine, 1)
+            if(this.minimaptoolbar) {
+                if (numLine == 'all') {
+                    this.connections.forEach( item => {
+                        item.remove()
+                    })
+                    this.connections = []
+                } else {
+                    this.connections[numLine].remove()
+                    this.connections.splice(numLine, 1)
+                }
+            }
         });
         EventBus.$on('onActivated', (uuid) => {
             this.onActivated(uuid)
@@ -633,7 +656,7 @@ export default{
                         this.connections[activeLine[i]].color = 'rgba(253, 105, 68, 0.7)'
                     } else if (isactive) {
                         //this.connections[activeLine[i]].dash = {animation: isactive, len: 8, gap: 13}
-                        this.connections[activeLine[i]].size = 3
+                        this.connections[activeLine[i]].size = 2
                         this.connections[activeLine[i]].color = 'rgba(253, 105, 68, 1)'
                     } else {
                         //this.connections[activeLine[i]].dash = false
@@ -744,37 +767,11 @@ export default{
             */
         },
         drawLineCloseTitlebar(uuid) {
-            var activeLine = this.$store.getters.getactiveLine(uuid)
-            for (let i=0; i< activeLine.length;i++) {
-                this.connections[activeLine[i]].remove()
-                this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                            startPlug: 'disc',
-                            endPlug: 'arrow1',
-                            startSocket: 'auto',
-                            endSocket: 'auto',
-                            endPlugSize: 2,
-                            color: 'rgba(253, 105, 68, 0.4)',
-                            size: 1,
-                }))
-            }
-        },
-        drawLineOpenTitlebar(uuid) {
-            var activeLine = this.$store.getters.getactiveLine(uuid)
-            var startLine
-            for (let i=0; i< activeLine.length;i++) {
-                startLine = this.$store.getters.getStartLineInfo(activeLine[i]) 
-                var startUUID = startLine.split('/')
-                var tableLine = startUUID[1].split('-')
-                //tab이 아닌 애들만 선그리기
-                if (!(tableLine[0] == 'field' || tableLine[0] == 'event' || tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror' ||
-                     tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient' || tableLine[0] == 'providEventG' || tableLine[0] == 'providServer' ||
-                     tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' || tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup' ||
-                     tableLine[0] == 'comconet')) {
+            if(this.minimaptoolbar) {
+                var activeLine = this.$store.getters.getactiveLine(uuid)
+                for (let i=0; i< activeLine.length;i++) {
                     this.connections[activeLine[i]].remove()
-                    if(tableLine[0] == 'ddpccompu' || tableLine[0] == 'ddpcdata'){ //implementation에서 table에 ref가 두개라..
-                        tableLine[0] = 'DDPC'
-                    } 
-                    this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/'+tableLine[0]),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                    this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
                                 startPlug: 'disc',
                                 endPlug: 'arrow1',
                                 startSocket: 'auto',
@@ -783,345 +780,411 @@ export default{
                                 color: 'rgba(253, 105, 68, 0.4)',
                                 size: 1,
                     }))
+                }
+            }
+        },
+        drawLineOpenTitlebar(uuid) {
+            if(this.minimaptoolbar) {
+                var activeLine = this.$store.getters.getactiveLine(uuid)
+                var startLine
+                for (let i=0; i< activeLine.length;i++) {
+                    startLine = this.$store.getters.getStartLineInfo(activeLine[i]) 
+                    var startUUID = startLine.split('/')
+                    var tableLine = startUUID[1].split('-')
+                    //tab이 아닌 애들만 선그리기
+                    if (!(tableLine[0] == 'field' || tableLine[0] == 'event' || tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror' ||
+                        tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient' || tableLine[0] == 'providEventG' || tableLine[0] == 'providServer' ||
+                        tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' || tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup' ||
+                        tableLine[0] == 'comconet')) {
+                        this.connections[activeLine[i]].remove()
+                        if(tableLine[0] == 'ddpccompu' || tableLine[0] == 'ddpcdata'){ //implementation에서 table에 ref가 두개라..
+                            tableLine[0] = 'DDPC'
+                        } 
+                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/'+tableLine[0]),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                    startPlug: 'disc',
+                                    endPlug: 'arrow1',
+                                    startSocket: 'auto',
+                                    endSocket: 'auto',
+                                    endPlugSize: 2,
+                                    color: 'rgba(253, 105, 68, 0.4)',
+                                    size: 1,
+                        }))
+                    }
                 }
             }
         },
         drawLinTabMoveSomeIPServeice(item, uuid, idx, tabname, str1, str2) {
             //console.log('drawLinTabMoveSomeIPServeice')
-            var activeLine = this.$store.getters.getactiveLine(uuid)
-            var startLine
-            for (let i=0; i< activeLine.length;i++) {
-                startLine = this.$store.getters.getStartLineInfo(activeLine[i]) 
-                var startUUID = startLine.split('/')
-                var tableLine = startUUID[1].split('-')
-                if (tableLine[0] == 'field' && item == 'field') {
-                    console.log('/field')
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[1]){
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fieldtab'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/field'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                } else if (tableLine[0] == 'event' && item == 'event') {
-                    this.connections[activeLine[i]].remove()
-                    console.log('/event')
-                    if(idx == tableLine[2]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/eventtab'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/event'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                } else if (tableLine[0] == 'argtable' ) {
-                    //console.log('/argtable')
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[2]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/argtable'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                } else if (tableLine[0] == 'methoderrors') {
-                     //console.log('/methoderrors')
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[2]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methoderrors'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                } else if (tableLine[0] == 'methoderror') {
-                     //console.log('/methoderror')
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[2]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methoderror'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                } else if (tableLine[0] == 'requiredEventG') {
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[1]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredEventG'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                } else if (tableLine[0] == 'requiredClient') {
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[1]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredClient'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                }  else if (tableLine[0] == 'providEventG') {
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[1]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providEventG'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                }  else if (tableLine[0] == 'providServer') {
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[1]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providServer'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                }  else if (tableLine[0] == 'fgcontext') {
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[2]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fgtable'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                }  else if (tableLine[0] == 'fgtarget') {
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[2]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fgtable'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                }  else if (tableLine[0] == 'processresorce') {
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[1]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processresorce'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                }  else if (tableLine[0] == 'processstartup') {
-                    console.log('processstartup')
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[1]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processstartup'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                } else if (tableLine[0] == 'comconet' && item == 'connector') {
-                    this.connections[activeLine[i]].remove()
-                    if(idx == tableLine[2] && tabname == tableLine[3]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/comconet'+str1+'-'+str2),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else if (idx != tableLine[2] && tabname == tableLine[3]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/channel'+str2),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
+            if(this.minimaptoolbar) {
+                var activeLine = this.$store.getters.getactiveLine(uuid)
+                var startLine
+                for (let i=0; i< activeLine.length;i++) {
+                    startLine = this.$store.getters.getStartLineInfo(activeLine[i]) 
+                    var startUUID = startLine.split('/')
+                    var tableLine = startUUID[1].split('-')
+                    if (tableLine[0] == 'field' && item == 'field') {
+                        console.log('/field')
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[1]){
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fieldtab'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/field'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    } else if (tableLine[0] == 'event' && item == 'event') {
+                        this.connections[activeLine[i]].remove()
+                        console.log('/event')
+                        if(idx == tableLine[2]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/eventtab'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/event'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    } else if (tableLine[0] == 'argtable' ) {
+                        //console.log('/argtable')
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[2]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/argtable'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    } else if (tableLine[0] == 'methoderrors') {
+                        //console.log('/methoderrors')
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[2]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methoderrors'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    } else if (tableLine[0] == 'methoderror') {
+                        //console.log('/methoderror')
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[2]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methoderror'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    } else if (tableLine[0] == 'requiredEventG') {
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[1]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredEventG'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    } else if (tableLine[0] == 'requiredClient') {
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[1]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredClient'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    }  else if (tableLine[0] == 'providEventG') {
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[1]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providEventG'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    }  else if (tableLine[0] == 'providServer') {
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[1]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providServer'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    }  else if (tableLine[0] == 'fgcontext') {
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[2]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fgtable'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    }  else if (tableLine[0] == 'fgtarget') {
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[2]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fgtable'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    }  else if (tableLine[0] == 'processresorce') {
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[1]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processresorce'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    }  else if (tableLine[0] == 'processstartup') {
+                        console.log('processstartup')
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[1]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processstartup'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    } else if (tableLine[0] == 'comconet' && item == 'connector') {
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[2] && tabname == tableLine[3]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/comconet'+str1+'-'+str2),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else if (idx != tableLine[2] && tabname == tableLine[3]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/channel'+str2),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/conditional'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    }  else if (tableLine[0] == 'comconet' && item == 'channel') {
+                        this.connections[activeLine[i]].remove()
+                        if(tabname == tableLine[3]) {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/channel'+str1),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        } else {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/conditional'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                            }))
+                        }
+                    } else if (tableLine[0] == 'comconet' && item == 'conditional') {
+                        this.connections[activeLine[i]].remove()
                         this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/conditional'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
                                     startPlug: 'disc',
                                     endPlug: 'arrow1',
@@ -1131,50 +1194,15 @@ export default{
                                     color: 'rgba(253, 105, 68, 0.4)',
                                     size: 1,
                         }))
+                        
                     }
-                }  else if (tableLine[0] == 'comconet' && item == 'channel') {
-                    this.connections[activeLine[i]].remove()
-                    if(tabname == tableLine[3]) {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/channel'+str1),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    } else {
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/conditional'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                        }))
-                    }
-                } else if (tableLine[0] == 'comconet' && item == 'conditional') {
-                    this.connections[activeLine[i]].remove()
-                    this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/conditional'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                startPlug: 'disc',
-                                endPlug: 'arrow1',
-                                startSocket: 'auto',
-                                endSocket: 'auto',
-                                endPlugSize: 2,
-                                color: 'rgba(253, 105, 68, 0.4)',
-                                size: 1,
-                    }))
-                    
                 }
+                
+                this.$nextTick(() => {
+                    this.setanimationLine(uuid, true)
+                    this.moveline()
+                })
             }
-            
-            this.$nextTick(() => {
-                this.setanimationLine(uuid, true)
-                this.moveline()
-            })
-
         },
     },
 }
@@ -1217,9 +1245,4 @@ div /* 텍스트를 마우스로 드래그하는 것을 방지하는 CSS */
   -webkit-user-select: none; /*크롬, 사파리 */
   user-select: none;
 } 
-
-.leader-line {
-   z-index: 2; 
-}
-
 </style>

@@ -6,7 +6,8 @@
 }
 
 svg.leader-line {
-    position: fixed
+    position: fixed;
+    z-index: 2;
 }
 
 .v-navigation-drawer {

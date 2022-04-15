@@ -7,9 +7,16 @@
                 </v-btn>
             </template>
             <v-list>
-                <v-list-item v-for="(item, index) in fileItem" :key="index" @click="item.menuAction(item.title)">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item>
+                <template v-for="(item, index) in fileItem.slice(0, 7)">
+                    <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
+                    <v-list-item v-else :key="index" @click="item.menuAction(item.title)">
+                            <v-icon  left small>{{item.icon}} </v-icon> 
+                            <v-list-item-content  class="font-weight-medium">
+                                <v-list-item-title v-text="item.title"></v-list-item-title>
+                            </v-list-item-content>
+                            <v-list-item-action v-text="item.Shortcut" class="font-weight-light"></v-list-item-action>
+                    </v-list-item>
+                </template>
             </v-list>
         </v-menu>
         <v-menu offset-y>
@@ -19,21 +26,16 @@
                 </v-btn>
             </template>
             <v-list>
-                <v-list-item v-for="(item, index) in projectItem" :key="index" @click="item.menuAction(item.title)">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item>
-            </v-list>
-        </v-menu>
-        <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
-                <v-btn text v-bind="attrs" v-on="on">
-                    Save
-                </v-btn>
-            </template>
-            <v-list>
-                <v-list-item v-for="(item, index) in saveItem" :key="index" @click="item.menuAction(item.title)">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item>
+                <template v-for="(item, index) in projectItem.slice(0, 5)">
+                    <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
+                    <v-list-item v-else :key="index" @click="item.menuAction(item.title)">
+                            <v-icon  left small>{{item.icon}} </v-icon> 
+                            <v-list-item-content class="font-weight-medium">
+                                <v-list-item-title v-text="item.title"></v-list-item-title>
+                            </v-list-item-content>
+                            <v-list-item-action v-text="item.Shortcut" class="font-weight-light"></v-list-item-action>
+                    </v-list-item>
+                </template>
             </v-list>
         </v-menu>
         <v-menu offset-y>
@@ -43,20 +45,28 @@
                 </v-btn>
             </template>
             <v-list>
-                <v-list-item v-for="(item, index) in toolItem" :key="index">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                <v-list-item v-for="(item, index) in toolItem" :key="index"  @click="item.menuAction(item.title)">
+                    <v-icon  left small>{{item.icon}} </v-icon> 
+                    <v-list-item-content class="font-weight-medium">
+                        <v-list-item-title v-text="item.title"></v-list-item-title>
+                    </v-list-item-content>
+                    <v-list-item-action v-text="item.Shortcut" class="font-weight-light"></v-list-item-action>
                 </v-list-item>
             </v-list>
         </v-menu>
         <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
                 <v-btn text v-bind="attrs" v-on="on">
-                    Search
+                    Setting
                 </v-btn>
             </template>
             <v-list>
-                <v-list-item v-for="(item, index) in searchItem" :key="index" @click="item.menuAction(item.title)">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                <v-list-item v-for="(item, index) in settingItem" :key="index" @click="item.menuAction(item.title)">
+                    <v-icon  left small>{{item.icon}} </v-icon> 
+                    <v-list-item-content class="font-weight-medium">
+                        <v-list-item-title v-text="item.title"></v-list-item-title>
+                    </v-list-item-content>
+                    <v-list-item-action v-text="item.Shortcut" class="font-weight-light"></v-list-item-action>
                 </v-list-item>
             </v-list>
         </v-menu>
@@ -68,7 +78,11 @@
             </template>
             <v-list>
                 <v-list-item v-for="(item, index) in helpItem" :key="index" @click="item.menuAction(item.title)">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    <v-icon  left small>{{item.icon}} </v-icon> 
+                    <v-list-item-content class="font-weight-medium">
+                        <v-list-item-title v-text="item.title"></v-list-item-title>
+                    </v-list-item-content>
+                    <v-list-item-action v-text="item.Shortcut" class="font-weight-light"></v-list-item-action>
                 </v-list-item>
             </v-list>
         </v-menu>
@@ -133,6 +147,31 @@
 import dialogSave from '../components/dialogSave.vue'
 import { EventBus } from '../main'
 
+document.onkeydown = function(e) { //단축키 만들기
+  //console.log(e)
+  if(e.shiftKey && e.keyCode == 78) { // shift+n  => new file
+    EventBus.$emit('shortcut-keys', 'newfile')
+  } 
+  if(e.shiftKey && e.keyCode == 79) { //shift+o => open file
+  EventBus.$emit('shortcut-keys-appbar', 'openfile')
+  }
+  if(e.shiftKey && e.keyCode == 83) { //shift+s => save
+  EventBus.$emit('shortcut-keys', 'save')
+  }
+  if(e.ctrlKey && e.keyCode == 86 && e.shiftKey) { //ctrl+shift+v => validation check
+  EventBus.$emit('shortcut-keys-appbar', 'validation')
+  }
+  if(e.ctrlKey && e.keyCode == 70 && e.shiftKey) { //ctrl+shift+f => search
+  EventBus.$emit('shortcut-keys', 'search')
+  }
+  if(e.ctrlKey && e.keyCode == 68 && e.shiftKey) { //ctrl+shift+d => delete file
+  EventBus.$emit('shortcut-keys', 'deletefile')
+  }
+  if(e.shiftKey && e.keyCode == 69) { //shift+e => setting
+  EventBus.$emit('shortcut-keys', 'setting')
+  }
+}
+
 export default({
     components: { dialogSave},
     computed: {
@@ -142,47 +181,45 @@ export default({
         visibleDetailView() {
             return this.$store.state.visibleDetailView
         },
+        visibleLine() {
+            return this.$store.state.visibleLine
+        },
         ismakeProject() {
             return this.$store.state.ismakeProject
         },
     },
     watch: {
-        ismakeProject() { // project가 없는상태에서 다른 compoment들을 만들어 놓으니 에러가 떠서 만들어줌
-            this.isprojectOpen = true
+        ismakeProject(val) { // project가 없는상태에서 다른 compoment들을 만들어 놓으니 에러가 떠서 만들어줌
+            this.isprojectOpen = val
         }
     },
     data() {
         return {
             fileItem: [
-                { title: 'New File', menuAction: action => { this.newFile(action) }},
-                { title: 'Delete File', menuAction: action => { this.deleteFile(action) }},
-                { title: 'Close Screen'},
+                { title: 'New File', Shortcut:'Shift+N', icon:'mdi-file-plus', menuAction: action => { this.newFile(action) }},
+                { title: 'Delete File', Shortcut:'Ctrl+Shift+D', icon:'mdi-delete', menuAction: action => { this.deleteFile(action) }},
+                { title: 'Open File', Shortcut:'Shift+O', icon:'mdi-open-in-app', menuAction: action => { this.inputFile(action) }},
+                { divider: true, inset: true},
+                { title: 'Save', Shortcut:'Shift+S', icon:'mdi-content-save', menuAction: action => { this.save(action) }},
+                { divider: true, inset: true},
+                { title: 'Exit', icon:'mdi-exit-to-app'}
             ],
             projectItem: [
-                { title: 'New Prpject',    menuAction: action => { this.newProject(action) }},
-                { title: 'Delete Prpject'},
-                { title: 'Open'},
-                { title: 'Save'},
-                { title: 'Auto Save'},
-                { title: 'Revert Prpject'},
-                { title: 'Close Screen'},
-            ],
-            saveItem: [
-                { title: 'Save as', menuAction: action => { this.save(action) }},
+                { title: 'New Project', icon:'mdi-folder-plus',  menuAction: action => { this.newProject(action) }},
+                { title: 'Delete Project', icon:'mdi-delete', menuAction: () => {  }},
+                { title: 'Close Project', icon:'mdi-window-close', menuAction: () => {  }},
+                { divider: true, inset: true},
+                { title: 'Save', Shortcut:'Shift+S', icon:'mdi-content-save', menuAction: action => { this.save(action) }}
             ],
             toolItem: [
-                { title: 'Undo'},
-                { title: 'Redo'},
-                { title: 'Cut'},
-                { title: 'Copy'},
-                { title: 'Paste'},
+                { title: 'Search', Shortcut:'Ctrl+Shift+F', icon:'mdi-magnify', menuAction: action => { this.setSearch(action) }},
             ],
-            searchItem: [
-                { title: 'Search', menuAction: action => { this.setSearch(action) }},
+            settingItem: [
+                { title: 'Setting', Shortcut:'Shigt+E', icon:'mdi-cog-outline', menuAction: action => { this.setSetting(action) }},
+                { title: 'Visible Line', icon:'mdi-vector-line', menuAction: action => { this.setVisibleLine(action) }},
             ],
             helpItem: [
-                { title: 'Manual', },
-                { title: 'Setting', menuAction: action => { this.setSetting(action) }},
+                { title: 'Manual', icon:'mdi-help-circle-outline', },
             ],
             dialogNewProject: false,
             dialogSetting: false,
@@ -196,19 +233,38 @@ export default({
             switchDetailView: this.$store.state.visibleDetailView,
         }
     },
+    mounted() {
+        EventBus.$on('shortcut-keys', (str) => {
+            console.log(str)
+            if (str == 'newfile') {
+                this.newFile()
+            } else if (str == 'save') {
+                this.save()
+            } else if (str == 'search') {
+                this.setSearch()
+            } else if (str == 'deletefile') {
+                this.deleteFile()
+            } else if (str == 'setting') {
+                this.setSetting()
+            }
+        })
+    },
     methods: {
         newProject() {
             this.dialogNewProject = true
         },
         newFile() {
             if (this.isprojectOpen) {
-                EventBus.$emit('new-file',)
+                EventBus.$emit('new-file')
             }
         },
         deleteFile() {
             if (this.isprojectOpen) {
-              EventBus.$emit('delete-file',)
+              EventBus.$emit('delete-file')
             }
+        },
+        inputFile() {
+            EventBus.$emit('shortcut-keys-appbar', 'openfile')
         },
         setSetting() {
             this.zoomMain = this.$store.state.setting.zoomMain
@@ -263,6 +319,10 @@ export default({
         },
         zoomDetailIn () {
             this.zoomDetail = this.zoomDetail >= 1.2 ? 1.2 : this.zoomDetail + 0.1
+        },
+        setVisibleLine() {
+            var isVisible = this.$store.state.visibleLine ? false : true
+            this.$store.commit('setVisibleLine', {isvisible: isVisible})
         },
 
     },

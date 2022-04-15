@@ -11,10 +11,10 @@
                         <v-icon color="red" dark>mdi-exclamation</v-icon>
                     </v-list-item-icon>
                     <v-list-item-content>
-                        <v-list-item-title v-text="item.name" style="fontsize:20px" @contextmenu="show($event, true)"></v-list-item-title>
+                        <v-list-item-title v-text="item.name" style="fontsize:20px" @contextmenu="show($event, 0)"></v-list-item-title>
                     </v-list-item-content>
                 </template> 
-                <v-card flat @contextmenu="show($event,false)">
+                <v-card flat @contextmenu="show($event,1)">
                     <v-treeview ref="tree" :items="item.children" activatable item-key="uuid" :open.sync="openIds" :active.sync="activenode" dense @update:open="openNode" @update:active="activeElement()" class="caption">
                         <template v-slot:prepend="{ item, open }">
                             <!-- <v-badge v-if="item.validation" bordered dot color="red" offset-x="10" offset-y="12"> -->
@@ -39,17 +39,47 @@
             </v-list-group>
         </v-list>
         <v-menu v-model="showMenu" :position-x="x" :position-y="y" absolute offset-y>
-            <v-list v-if="isProjectmenu" dense class = "text-start">
+            <v-list v-if="ismenu == 2" dense class = "text-start">
+                <v-list-item  v-for="(item, index) in menuElementitems" :key="index" @click="item.menuAction(item.title)">
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+            <v-list v-else-if="ismenu == 0" dense class = "text-start">
                 <v-list-item  v-for="(item, index) in menuProjectitems" :key="index" @click="item.menuAction(item.title)">
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
-            <v-list v-else dense class = "text-start">
+            <v-list v-else-if="ismenu == 1" dense class = "text-start">
                 <v-list-item  v-for="(item, index) in menuitems" :key="index" @click="item.menuAction(item.title)">
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
+            <v-list v-else dense class = "text-start">
+                <v-list-item  v-for="(item, index) in menuFirstitems" :key="index" @click="item.menuAction(item.title)">
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
         </v-menu>
+        <v-dialog v-model="dialogDeleteProject" persistent width="600">
+            <v-card color="red accent-2">
+                <v-card-title class="text-h6 white--text" height="10px"> 
+                    <v-icon color="white lighten-1">mdi-alert-outline</v-icon>
+                    warning 
+                </v-card-title>
+                <v-card-text class="text-h5 text--primary text-center">
+                    {{strDelete}}
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn class="d-inline-flex ml-3 mr-1" color="white darken-1" text  @click="okDelete(ismenu)" >
+                        Ok
+                    </v-btn>
+                    <v-btn class="d-inline-flex ml-3 mr-1" color="white darken-1" text @click="dialogDeleteProject = false">
+                        Cancel
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -72,6 +102,9 @@ export default({
         activeUUID() {
             return this.$store.state.activeUUID
         },
+        ismakeProject() {
+            return this.$store.state.ismakeProject
+        },
     },
     watch:{
         // activenode() {
@@ -93,35 +126,38 @@ export default({
                 this.activenode.push(val)
             }
         },
+        ismakeProject(val) {
+            if (!val) {
+                this.openIds = []
+            }
+        },
     },
     data() {
         return {
             showMenu: false,
             x: 0,
             y: 0,
-            isProjectmenu: false,
+            ismenu: 0,
             activenode: [],
             openIds: [],
+            dialogDeleteProject: false,
+            strDelete: null,
+            menuElementitems: [
+                { title: 'Rename', menuAction: action => { this.newOption(action) } },
+                { title: 'Delete', menuAction: action => { this.deleteElement(action) } },
+                { title: 'Copy&Paste', menuAction: action => { this.newOption(action) } },
+            ],
+            menuFirstitems: [
+                { title: 'Open',   menuAction: action => { this.openElement(action) } },
+            ],
             menuitems: [
                 { title: 'New',    menuAction: action => { this.newElement(action) } },
-                //{ title: 'Open',   menuAction: action => { this.newOpen(action) } },
-                //{ title: 'Rename', menuAction: action => { this.newOption(action) } },
-                { title: 'Delete', menuAction: action => { this.deleteElement(action) } },
-                //{ title: 'Import', menuAction: action => { this.newOption(action) } },
-                //{ title: 'Cut',    menuAction: action => { this.newOption(action) } },
-                //{ title: 'Copy',   menuAction: action => { this.newOption(action) } },
-                //{ title: 'Paste',  menuAction: action => { this.newOption(action) } },
-                //{ title: 'Save',   menuAction: action => { this.saveElement(action) } },
+                { title: 'Open',   menuAction: action => { this.openElement(action) } },
             ],
             menuProjectitems: [
-                { title: 'New Project',    menuAction: action => { this.newOption(action) } },
-                { title: 'Open Project',   menuAction: action => { this.newOption(action) } },
                 { title: 'Rename Project', menuAction: action => { this.newOption(action) } },
-                { title: 'Delete Project',  menuAction: action => { this.newOption(action) } },
-                { title: 'Import Project',  menuAction: action => { this.newOption(action) } },
-                { title: 'Cut',             menuAction: action => { this.newOption(action) } },
-                { title: 'Copy',            menuAction: action => { this.newOption(action) } },
-                { title: 'Paste',           menuAction: action => { this.newOption(action) } },
+                { title: 'Delete Project', menuAction: action => { this.deleteProject(action) } },
+                { title: 'Save',           menuAction: action => { this.saveElement(action) } },
             ],
         }
     },
@@ -145,10 +181,17 @@ export default({
     methods: {
         show (e, isprojectmenu) {
             e.preventDefault()
-            if (this.activenode[0] != null) {
-                
-
-                this.isProjectmenu = isprojectmenu
+            if (this.activenode[0] != null || isprojectmenu == 0) {
+                this.ismenu = 3
+                if (isprojectmenu == 0) {
+                    this.ismenu = isprojectmenu
+                } else if (this.activenode[0].indexOf('-') != -1) {
+                    this.ismenu = 2
+                } else if (!(this.activenode[0] == constant.DateType_str || this.activenode[0] == constant.Service_str || this.activenode[0] == constant.AdaptiveApplication_str
+                    || this.activenode[0] == constant.Machines_str || this.activenode[0] == constant.Platform_str || this.activenode[0] == constant.ServiceInterfaces_str
+                    || this.activenode[0] == constant.SomeIPEvents_str || this.activenode[0] == constant.ServiceInstances_str || this.activenode[0] == constant.Errors_str)) {
+                    this.ismenu = isprojectmenu
+                }
                 this.showMenu = false
                 this.x = e.clientX
                 this.y = e.clientY
@@ -345,8 +388,12 @@ export default({
                 this.openIds.push(this.activenode[0])
             }
         },
+        openElement() {
+            if(!this.openIds.some(item => item === this.activenode[0])){
+                this.openIds.push(this.activenode[0])
+            }
+        },
         activeElement() {
-            //console.log('activeElement '+ this.activenode[0]+',,,'+this.$store.state.activeUUID)
             var treeitem
             var arrelement
             //console.log('00'+ this.$store.state.activeUUID)
@@ -391,16 +438,27 @@ export default({
             }
         },
         deleteElement () {
-            var treeitem = Object.values(this.$store.getters.gettreeviewitems)
-            var arrelement = treeitem.find(data =>  data.uuid === this.activenode[0])
-            this.$store.commit('deleteRefElement', {uuid:this.activenode[0]} ) // 내가 화살표의 끝인가?
-            this.$store.commit('deleteElementLine', {uuid:this.activenode[0]} ) // 내가 화살표의 시작인가?
-            this.$store.commit('deleteElement', {parent:arrelement.parent, uuid:this.activenode[0]} )
+            this.dialogDeleteProject = true
+            this.strDelete = "Element를 삭제하시겠습니까?"
         },
         saveElement () {
-            var treeitem = Object.values(this.$store.getters.gettreeviewitems)
-            var arrelement = treeitem.find(data =>  data.uuid === this.activenode[0])
-            this.$store.commit('saveElement', {parent:arrelement.parent, uuid:this.activenode[0]} )
+            EventBus.$emit('shortcut-keys', 'save')
+        },
+        deleteProject() {
+            this.dialogDeleteProject = true
+            this.strDelete = "Project를 삭제하시겠습니까?"
+        },
+        okDelete() {
+            if(this.ismenu == 0) { //project
+                this.$store.commit( 'deleteProject')
+            } else if (this.ismenu == 2) {
+                var treeitem = Object.values(this.$store.getters.gettreeviewitems)
+                var arrelement = treeitem.find(data =>  data.uuid === this.activenode[0])
+                this.$store.commit('deleteRefElement', {uuid:this.activenode[0]} ) // 내가 화살표의 끝인가?
+                this.$store.commit('deleteElementLine', {uuid:this.activenode[0]} ) // 내가 화살표의 시작인가?
+                this.$store.commit('deleteElement', {parent:arrelement.parent, uuid:this.activenode[0]} )
+            }
+            this.dialogDeleteProject = false
         },
     },
 })

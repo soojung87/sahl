@@ -262,7 +262,7 @@ export default {
         },
         detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        }
+        },
     },
     created() {
         this.setToolbarColor(this.$store.state.activeUUID)
@@ -318,18 +318,6 @@ export default {
             if (this.element.idtelement != undefined) {
                 this.IDTElementItem = this.element.idtelement.slice()
             }
-            // if (this.element.templatetype != null) { //여기에 넣으면 선이 두번 그려짐 다른곳은 이렇게 안했음
-            //     var endLine = this.$store.getters.getImplementationPath(this.element.templatetype)
-            //     if (endLine != null) {
-            //         this.newLine(this.element.uuid+'/templateType', this.element.uuid+'/templateType', endLine)
-            //     }
-            // }
-            // if (this.element.typeref != null) {
-            //     var endLineref = this.$store.getters.getImplementationPath(this.element.typeref)
-            //     if (endLineref != null) {
-            //         this.newLine(this.element.uuid+'/typeref', this.element.uuid+'/typeref', endLineref)
-            //     }
-            // }
         })
     },
     methods: {
@@ -349,6 +337,8 @@ export default {
         setToolbarColorDetailView(isdetail) {
             if(this.element.uuid == isdetail) {
                 this.colorToolbar = "#B0E0E6" 
+            } else if (this.element.uuid == this.$store.state.activeUUID) {
+                this.colorToolbar  = "#FF1493"
             } else {
                 this.colorToolbar = "#6A5ACD"
             }

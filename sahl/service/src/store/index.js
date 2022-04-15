@@ -24,6 +24,7 @@ export default new Vuex.Store({
         detailViewer: { uuid: '', element: '' },
         setting: { zoomMain: 0, zoomDetail: 0, },
         visibleDetailView: true,
+        visibleLine: true,
         isOpenCloseSearch: false,
         isOpenCloseDetailView: true,
         isOpenCloseNavigationView: true,
@@ -883,9 +884,6 @@ export default new Vuex.Store({
         },
         getDataErrorSet: (state) => (uuid) => {
             return state.SAHLProject[state.openProjectIndex].Service.ErrorSet.find(data => data.uuid === uuid)
-        },
-        getDetailViewlength(state) {
-            return state.detailViewerList.length - 1
         },
         getchangenamelist: (state) => (uuid) => {
             var idx = state.connectionLine[state.openProjectIndex].end.indexOf(uuid)
@@ -3169,6 +3167,20 @@ export default new Vuex.Store({
             })
             state.connectionLine.push({ start: [], end: [] })
         },
+        deleteProject(state) {
+            state.ismakeProject = false
+            state.openProjectIndex = 0
+            state.SAHLProject = []
+            state.navigatorList = []
+            state.connectionLine = []
+            state.detailViewerList = []
+            state.detailViewer = { uuid: '', element: '' }
+            state.activeUUID = null
+            state.detailViewUUID = null
+            state.idexDetailView = undefined
+            state.strSavePath = []
+            EventBus.$emit('delete-line', 'all')
+        },
         setuuid(state, payload) {
             state.activeUUID = payload.uuid
         },
@@ -3232,6 +3244,14 @@ export default new Vuex.Store({
         setVisibleDetailView(state, payload) {
             state.visibleDetailView = payload.visible
             localStorage.setItem("visibleDetailView", JSON.stringify(state.visibleDetailView))
+        },
+        setVisibleLine(state, payload) {
+            state.visibleLine = payload.isvisible
+        },
+        deleteDetailViewerList(state) {
+            state.detailViewerList = []
+            state.detailViewer = { uuid: '', element: '' }
+            console.log(state.detailViewerList)
         },
         setZoomInOut(state, payload) {
             if (payload.valueDetail == null) {
