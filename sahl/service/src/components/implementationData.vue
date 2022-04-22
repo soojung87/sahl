@@ -85,7 +85,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isDDPCOpenClose">  
-                            <v-data-table v-model="selectDelectDDPCItem" :headers="headerDDPC" :items="DDPCItem"
+                            <v-data-table v-model="selectDelectDDPCItem" :headers="headerDDPC" :items="element.ddpc"
                                     :show-select="isdeleteDDPCItem" item-key="compumethod" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -172,7 +172,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isIDTElementOpenClose">  
-                            <v-data-table v-model="selectDelectIDTElementItem" :headers="headerIDTElement" :items="IDTElementItem"
+                            <v-data-table v-model="selectDelectIDTElementItem" :headers="headerIDTElement" :items="element.idtelement"
                                     :show-select="isdeleteIDTElementItem" item-key="name" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -285,7 +285,6 @@ export default {
                 { text: 'Compu Method', align: 'start', sortable: false, value: 'compumethod' },
                 { text: 'Data Constr', sortable: false, value: 'dataconstr' },
             ],
-            DDPCItem:  [],
             selectDelectDDPCItem: [],
             defaultDDPCItem: { compumethod: null, dataconstr: null },
             editDDPCItem: { compumethod: null, dataconstr: null },
@@ -302,7 +301,6 @@ export default {
                 { text: 'Inplace', sortable: false, value: 'inplace' },
                 { text: 'Desc', sortable: false, value: 'desc' }
             ],
-            IDTElementItem: [],
             selectDelectIDTElementItem: [],
             defaultIDTElementItem: { name: '', typeref: null, inplace: false, desc: '' },
             editIDTElementItem: { name: '', typeref: null, inplace: false, desc: '' },
@@ -311,14 +309,6 @@ export default {
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            if (this.element.ddpc != undefined) {
-                this.DDPCItem = this.element.ddpc.slice()
-            }
-            if (this.element.idtelement != undefined) {
-                this.IDTElementItem = this.element.idtelement.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -381,12 +371,6 @@ export default {
                 this.deleteLine(this.element.uuid+'/typeref')
             }
         },
-        inputDDPC() {
-            this.$store.commit('editImplementation', {compo:"DDPC", uuid:this.element.uuid, ddpc:this.DDPCItem} )
-        },
-        inputIDTElement() {
-            this.$store.commit('editImplementation', {compo:"IDT Element", uuid:this.element.uuid, idtelement:this.IDTElementItem} )
-        },
         isCheckDDPC() {
             if (this.isdeleteDDPCItem == true) {
                 this.isdeleteDDPCItem = false
@@ -397,7 +381,7 @@ export default {
         },
         deleteDDPC() {
             if (this.isdeleteDDPCItem == true) {
-                for(let i=0; i<this.DDPCItem.length; i++){
+                for(let i=0; i<this.element.ddpc.length; i++){
                     var endLineCom = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+i)
                     if(endLineCom != undefined) {
                         this.deleteLine(this.element.uuid+'/ddpccompu-'+i)
@@ -407,31 +391,31 @@ export default {
                         this.deleteLine(this.element.uuid+'/ddpcdata-'+i)
                     }
                     if(endLineCom != undefined || endLineData != undefined) {
-                        this.changeLineDDPC.push({compumethod:this.DDPCItem[i].compumethod, dataconstr:this.DDPCItem[i].dataconstr, endLineCom:endLineCom, endLineData:endLineData})
+                        this.changeLineDDPC.push({compumethod:this.element.ddpc[i].compumethod, dataconstr:this.element.ddpc[i].dataconstr, endLineCom:endLineCom, endLineData:endLineData})
                     }
                 }
 
-                this.DDPCItem = this.DDPCItem.filter(item => {
+                this.element.ddpc = this.element.ddpc.filter(item => {
                          return this.selectDelectDDPCItem.indexOf(item) < 0 })
 
                 let idx = 0 
-                for(let n=0; n<this.DDPCItem.length; n++) {
+                for(let n=0; n<this.element.ddpc.length; n++) {
                     let rigth= true
                     while (rigth) {
                         console.log('while'+ idx+'+'+this.changeLineDDPC[idx].compumethod +'+'+this.changeLineDDPC[idx].dataconstr)
-                        console.log('while'+ idx+'+'+this.DDPCItem[n].compumethod +'+'+this.DDPCItem[n].dataconstr)
-                        if (this.DDPCItem[n].compumethod == this.changeLineDDPC[idx].compumethod &&
-                            this.DDPCItem[n].dataconstr == this.changeLineDDPC[idx].dataconstr) {
+                        console.log('while'+ idx+'+'+this.element.ddpc[n].compumethod +'+'+this.element.ddpc[n].dataconstr)
+                        if (this.element.ddpc[n].compumethod == this.changeLineDDPC[idx].compumethod &&
+                            this.element.ddpc[n].dataconstr == this.changeLineDDPC[idx].dataconstr) {
                                 rigth = false
                                 idx--
                         }
                         idx++
                     }
                     console.log('escape')
-                    if (this.DDPCItem[n].compumethod != null) {
+                    if (this.element.ddpc[n].compumethod != null) {
                         this.newLine(this.element.uuid+'/ddpccompu-'+n, this.element.uuid+'/DDPC', this.changeLineDDPC[idx].endLineCom)
                     }
-                    if (this.DDPCItem[n].dataconstr != null) {
+                    if (this.element.ddpc[n].dataconstr != null) {
                         this.newLine(this.element.uuid+'/ddpcdata-'+n, this.element.uuid+'/DDPC', this.changeLineDDPC[idx].endLineData)
                     }
                 }
@@ -439,34 +423,33 @@ export default {
                 this.isdeleteDDPCItem = false
                 this.selectDelectDDPCItem = []
                 this.changeLineDDPC = []
-                this.inputDDPC()
             } 
         },
         openDDPC(idx) {
             this.selCompuMethod = this.$store.getters.getCompuMethod
             this.selDataConstr =  this.$store.getters.getDataConstr
 
-            if (this.DDPCItem[idx].compumethod != null ) {
+            if (this.element.ddpc[idx].compumethod != null ) {
                 var endLineC = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+idx)
                 if (endLineC == undefined) {
-                    endLineC = this.$store.getters.getCompuMethodPath(this.DDPCItem[idx].compumethod)
+                    endLineC = this.$store.getters.getCompuMethodPath(this.element.ddpc[idx].compumethod)
                 }
-                this.editDDPCItem.compumethod = { name :this.DDPCItem[idx].compumethod, uuid: endLineC }
+                this.editDDPCItem.compumethod = { name :this.element.ddpc[idx].compumethod, uuid: endLineC }
             }
-            if (this.DDPCItem[idx].dataconstr != null) {
+            if (this.element.ddpc[idx].dataconstr != null) {
                 var endLineD = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpcdata-'+idx)
                 if (endLineD == undefined) {
-                    endLineD = this.$store.getters.getDataConstrPath(this.DDPCItem[idx].dataconstr)
+                    endLineD = this.$store.getters.getDataConstrPath(this.element.ddpc[idx].dataconstr)
                 }
-                this.editDDPCItem.dataconstr = { name :this.DDPCItem[idx].dataconstr, uuid: endLineD }
+                this.editDDPCItem.dataconstr = { name :this.element.ddpc[idx].dataconstr, uuid: endLineD }
             }
         },
         addDDPC() {
             var datacount
-            if(this.DDPCItem == undefined) {
+            if(this.element.ddpc == undefined) {
                 datacount = 0
             }else {
-                datacount = this.DDPCItem.length
+                datacount = this.element.ddpc.length
             }
 
             if( this.editDDPCItem.compumethod != null) {
@@ -478,47 +461,45 @@ export default {
                 this.editDDPCItem.dataconstr = this.editDDPCItem.dataconstr.name
             }
             const addObj = Object.assign({}, this.editDDPCItem)
-            this.DDPCItem.push(addObj)
+            this.element.ddpc.push(addObj)
             this.cancelDDPC()
-            this.inputDDPC()
         },
         editDDPC(idx) {
             var endcompuLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+idx)
             if (endcompuLine != undefined && this.editDDPCItem.compumethod == null) {
                 this.deleteLine(this.element.uuid+'/ddpccompu-'+idx)
-                this.DDPCItem[idx].compumethod = null
+                this.element.ddpc[idx].compumethod = null
             } else if (endcompuLine != undefined && endcompuLine != this.editDDPCItem.compumethod.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/ddpccompu-'+idx)
                 this.newLine(this.element.uuid+'/ddpccompu-'+idx, this.element.uuid+'/DDPC', this.editDDPCItem.compumethod.uuid)
-                this.DDPCItem[idx].compumethod = this.editDDPCItem.compumethod.name
+                this.element.ddpc[idx].compumethod = this.editDDPCItem.compumethod.name
             } else if(endcompuLine == undefined && this.editDDPCItem.compumethod != null) {
                 if (this.editDDPCItem.compumethod != null) {
                     // input으로 들어왔을 때 uuid값이 없는 경우가 있는데 compo/datcon 둘중 하나만 edit하면 한쪽이 uuid값이 없어서 에러남
                     this.newLine(this.element.uuid+'/ddpccompu-'+idx, this.element.uuid+'/DDPC', this.editDDPCItem.compumethod.uuid)
                 }
-                this.DDPCItem[idx].compumethod = this.editDDPCItem.compumethod.name
+                this.element.ddpc[idx].compumethod = this.editDDPCItem.compumethod.name
             }
 
             var enddataLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpcdata-'+idx)
             console.log('editDDPC      '+ enddataLine)
             if (enddataLine != undefined && this.editDDPCItem.dataconstr == null) {
                 this.deleteLine(this.element.uuid+'/ddpcdata-'+idx)
-                this.DDPCItem[idx].dataconstr = null
+                this.element.ddpc[idx].dataconstr = null
             } else if (enddataLine != undefined && enddataLine != this.editDDPCItem.dataconstr.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/ddpcdata-'+idx)
                 this.newLine(this.element.uuid+'/ddpcdata-'+idx, this.element.uuid+'/DDPC', this.editDDPCItem.dataconstr.uuid)
-                this.DDPCItem[idx].dataconstr = this.editDDPCItem.dataconstr.name
+                this.element.ddpc[idx].dataconstr = this.editDDPCItem.dataconstr.name
             } else if (enddataLine == undefined && this.editDDPCItem.dataconstr != undefined) {
                 if (this.editDDPCItem.dataconstr != null) {
                     this.newLine(this.element.uuid+'/ddpcdata-'+idx, this.element.uuid+'/DDPC', this.editDDPCItem.dataconstr.uuid)
                 }
-                this.DDPCItem[idx].dataconstr = this.editDDPCItem.dataconstr.name
+                this.element.ddpc[idx].dataconstr = this.editDDPCItem.dataconstr.name
             }
             
             this.cancelDDPC()
-            this.inputDDPC()
         },
         cancelDDPC() {
             this.editDDPCItem = Object.assign({}, this.defaultDDPCItem)
@@ -535,7 +516,7 @@ export default {
         newCompuMethod() {
             this.$store.commit('addElementCompuMehtod', {
                     name: this.$store.getters.getNameCompuMethod,  input: false, path: '',
-                    top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, category:null, scales:null, icon:"mdi-clipboard-outline", validation: false
+                    top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, category:null, scales:[], icon:"mdi-clipboard-outline", validation: false
                 })
             EventBus.$emit('add-element', constant.CompuMethod_str)
             EventBus.$emit('add-element', constant.DateType_str)
@@ -596,20 +577,20 @@ export default {
         },
         deleteIDTElement() {
             if (this.isdeleteIDTElementItem == true) {
-                for(let i=0; i<this.IDTElementItem.length; i++){
+                for(let i=0; i<this.element.idtelement.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+i)
                     if(endLine != undefined) {
-                        this.changeLineImp.push({name:this.IDTElementItem[i].name, endLine:endLine})
+                        this.changeLineImp.push({name:this.element.idtelement[i].name, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/idtetable-'+i)
                     }
                 }
 
-                this.IDTElementItem = this.IDTElementItem.filter(item => {
+                this.element.idtelement = this.element.idtelement.filter(item => {
                          return this.selectDelectIDTElementItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.IDTElementItem.length; n++) {
+                for(let n=0; n<this.element.idtelement.length; n++) {
                     for(let idx=0; idx<this.changeLineImp.length; idx++) {
-                        if (this.IDTElementItem[n].name == this.changeLineImp[idx].name) {
+                        if (this.element.idtelement[n].name == this.changeLineImp[idx].name) {
                             this.newLine(this.element.uuid+'/idtetable-'+n, this.element.uuid+'/idtetable', this.changeLineImp[idx].endLine)
                         }
                     }
@@ -618,58 +599,55 @@ export default {
                 this.isdeleteIDTElementItem = false
                 this.selectDelectIDTElementItem = []
                 this.changeLineImp = []
-                this.inputIDTElement()
             }
         },
         openIDTElement(idx) {
             this.selTemplateType = this.$store.getters.getImplementationDataType
-            this.editIDTElementItem.name = this.IDTElementItem[idx].name
-            if ( this.IDTElementItem[idx].typeref != null) {
+            this.editIDTElementItem.name = this.element.idtelement[idx].name
+            if ( this.element.idtelement[idx].typeref != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getImplementationPath(this.IDTElementItem[idx].typeref)
+                    endLine = this.$store.getters.getImplementationPath(this.element.idtelement[idx].typeref)
                 }
-                this.editIDTElementItem.typeref = { name: this.IDTElementItem[idx].typeref, uuid: endLine }
+                this.editIDTElementItem.typeref = { name: this.element.idtelement[idx].typeref, uuid: endLine }
             }
-            this.editIDTElementItem.inplace = this.IDTElementItem[idx].inplace
-            this.editIDTElementItem.desc = this.IDTElementItem[idx].desc
+            this.editIDTElementItem.inplace = this.element.idtelement[idx].inplace
+            this.editIDTElementItem.desc = this.element.idtelement[idx].desc
         },
         addIDTElement() {
             if( this.editIDTElementItem.typeref != null) {
                 var datacount
-                if(this.IDTElementItem == undefined) {
+                if(this.element.idtelement == undefined) {
                     datacount = 0
                 }else {
-                    datacount = this.IDTElementItem.length
+                    datacount = this.element.idtelement.length
                 }
                 this.newLine(this.element.uuid+'/idtetable-'+datacount, this.element.uuid+'/idtetable', this.editIDTElementItem.typeref.uuid)
                 this.editIDTElementItem.typeref = this.editIDTElementItem.typeref.name
             }
             const addObj = Object.assign({}, this.editIDTElementItem);
-            this.IDTElementItem.push(addObj);
+            this.element.idtelement.push(addObj);
             this.cancelIDTElement()
-            this.inputIDTElement()
         },
         editIDTElement(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+idx)
             if (endLine != undefined && this.editIDTElementItem.typeref == null) {
                 this.deleteLine(this.element.uuid+'/idtetable-'+idx)
-                this.IDTElementItem[idx].typeref = null
+                this.element.idtelement[idx].typeref = null
             } else if (endLine != undefined && endLine != this.editIDTElementItem.typeref.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/idtetable-'+idx)
                 this.newLine(this.element.uuid+'/idtetable-'+idx, this.element.uuid+'/idtetable', this.editIDTElementItem.typeref.uuid)
-                this.IDTElementItem[idx].typeref = this.editIDTElementItem.typeref.name
+                this.element.idtelement[idx].typeref = this.editIDTElementItem.typeref.name
             }else if (endLine == undefined && this.editIDTElementItem.typeref != null) {
                 this.newLine(this.element.uuid+'/idtetable-'+idx, this.element.uuid+'/idtetable', this.editIDTElementItem.typeref.uuid)
-                this.IDTElementItem[idx].typeref = this.editIDTElementItem.typeref.name
+                this.element.idtelement[idx].typeref = this.editIDTElementItem.typeref.name
             }
 
-            this.IDTElementItem[idx].name = this.editIDTElementItem.name
-            this.IDTElementItem[idx].inplace = this.editIDTElementItem.inplace
-            this.IDTElementItem[idx].desc = this.editIDTElementItem.desc
+            this.element.idtelement[idx].name = this.editIDTElementItem.name
+            this.element.idtelement[idx].inplace = this.editIDTElementItem.inplace
+            this.element.idtelement[idx].desc = this.editIDTElementItem.desc
             this.cancelIDTElement()
-            this.inputIDTElement()
         },
         cancelIDTElement() {
             this.editIDTElementItem = Object.assign({}, this.defaultIDTElementItem)
@@ -731,7 +709,7 @@ export default {
             this.setactiveUUID()
         },
         setTypeRef(item){
-            console.log(item)
+            //console.log(item)
             if( this.element.typeref != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/typeref')
                 if (endLine != undefined && endLine != item.uuid) {
@@ -749,7 +727,7 @@ export default {
                     name: this.$store.getters.getNameImplementation,  input: false, path: '',
                     top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', 
-                    typeref: null, templatetype:null, desc:'', ddpc:null, idtelement:null,
+                    typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
                 })
             EventBus.$emit('add-element', constant.Implementation_str)
             EventBus.$emit('add-element', constant.DateType_str)

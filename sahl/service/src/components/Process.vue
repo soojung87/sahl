@@ -449,7 +449,7 @@ export default {
             this.$store.commit('addElementProcessDesign', { //executableref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                 name: this.$store.getters.getNameProcessDesign, input: false, path: '',
                 top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                executableref: null, determin: null,
+                executableref: null, determin: [],
             })
             EventBus.$emit('add-element', constant.ProcessDesign_str)
             EventBus.$emit('add-element', constant.AdaptiveApplication_str)
@@ -581,7 +581,7 @@ export default {
             this.$store.commit('addElementModeDeclarationGroup', {
                 name: this.$store.getters.getNameModeDeclarationGroup, input: false, path: '',
                 top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, 
-                modedeclaration:null, initmode:null, icon:"mdi-clipboard-outline", validation: false
+                modedeclaration:[], initmode:null, icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.ModeDeclarationGroup_str)
             EventBus.$emit('add-element', constant.Machines_str)

@@ -37,7 +37,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isErrorRefOpenClose">
-                            <v-data-table v-model="selectDelectErrorRef" :headers="headerErrorRef" :items="errorItem"
+                            <v-data-table v-model="selectDelectErrorRef" :headers="headerErrorRef" :items="element.errorref"
                                     :show-select="isdeleteErrorRefItem" item-key="error" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -148,11 +148,6 @@ export default {
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            if(this.element.errorref != undefined) {
-                this.errorItem = this.element.errorref.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -193,9 +188,6 @@ export default {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
         },
-        inputError () {
-            this.$store.commit('editErrorSet', {compo:"error ref", uuid:this.element.uuid, errorref: this.errorItem} )
-        },
 
         isCheckErrorRef() {
             if (this.isdeleteErrorRefItem == true) {
@@ -207,20 +199,20 @@ export default {
         },
         deletErrorRef() {
             if (this.isdeleteErrorRefItem == true) {
-                for(let i=0; i<this.errorItem.length; i++){
+                for(let i=0; i<this.element.errorref.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/error-'+i)
                     if(endLine != undefined) {
-                        this.deleteChangeLine.push({name:this.errorItem[i].error, endLine:endLine})
+                        this.deleteChangeLine.push({name:this.element.errorref[i].error, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/error-'+i)
                     }
                 }
 
-                this.errorItem = this.errorItem.filter(item => {
+                this.element.errorref = this.element.errorref.filter(item => {
                         return this.selectDelectErrorRef.indexOf(item) < 0 })
 
-                for(let n=0; n<this.errorItem.length; n++) {
+                for(let n=0; n<this.element.errorref.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLine.length; idx++) {
-                        if (this.errorItem[n].error == this.deleteChangeLine[idx].name) {
+                        if (this.element.errorref[n].error == this.deleteChangeLine[idx].name) {
                             this.newLine(this.element.uuid+'/error-'+n, this.element.uuid+'/error', this.deleteChangeLine[idx].endLine)
                         }
                     }
@@ -229,36 +221,34 @@ export default {
                 this.isdeleteErrorRefItem = false
                 this.selectDelectErrorRef = []
                 this.deleteChangeLine = []
-                this.inputError()
             } 
         },
         openErrorRef(idx) {
             this.selError = this.$store.getters.getError
-            if ( this.errorItem[idx].error != null) {
+            if ( this.element.errorref[idx].error != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/error-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getErrorPath(this.errorItem[idx].error)
+                    endLine = this.$store.getters.getErrorPath(this.element.errorref[idx].error)
                 }
-                this.editItem.error = { name: this.errorItem[idx].error, uuid: endLine }
+                this.editItem.error = { name: this.element.errorref[idx].error, uuid: endLine }
             }
         },
         editErrorRef(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/error-'+idx)
             if (endLine != undefined && this.editItem.error == null) {
                 this.deleteLine(this.element.uuid+'/error-'+idx)
-                this.errorItem[idx].error = null
+                this.element.errorref[idx].error = null
             } else if (endLine != undefined && endLine != this.editItem.error.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/error-'+idx)
                 this.newLine(this.element.uuid+'/error-'+idx, this.element.uuid+'/error', this.editItem.error.uuid)
-                this.errorItem[idx].error = this.editItem.error.name
+                this.element.errorref[idx].error = this.editItem.error.name
             } else if (endLine == undefined && this.editItem.error != null) {
                 this.newLine(this.element.uuid+'/error-'+idx, this.element.uuid+'/error', this.editItem.error.uuid)
-                this.errorItem[idx].error = this.editItem.error.name
+                this.element.errorref[idx].error = this.editItem.error.name
             }
             
             this.cancelErrorRef()
-            this.inputError()
         },
         cancelErrorRef() {
             this.editItem.error = null
@@ -267,19 +257,18 @@ export default {
         addErrorRef() {
             if( this.editItem.error != null) {
                 var datacount
-                if(this.errorItem == undefined) {
+                if(this.element.errorref == undefined) {
                     datacount = 0
                 }else {
-                    datacount = this.errorItem.length
+                    datacount = this.element.errorref.length
                 }
                 this.newLine(this.element.uuid+'/error-'+datacount, this.element.uuid+'/error', this.editItem.error.uuid)
                 this.editItem.error = this.editItem.error.name
             }
             const addObj = Object.assign({}, this.editItem)
-            this.errorItem.push(addObj);
+            this.element.errorref.push(addObj);
 
             this.cancelErrorRef()
-            this.inputError()
         },
 
         clearErrorRef() {

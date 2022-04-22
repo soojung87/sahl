@@ -232,7 +232,7 @@ export default {
             this.$store.commit('addElementRequiredSomeIP', { 
                 name: this.$store.getters.getNameRequiredSomeIP, input: false, path: '',
                 top: this.element.top+100, left: this.element.left+ 300, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                deployref: null, minover: '', id: '', clientref: null, ver: null, method: null, requiredevent: null,
+                deployref: null, minover: '', id: '', clientref: null, ver: null, method: [], requiredevent: [],
             })
             EventBus.$emit('add-element', constant.RequiredSomeIP_str)
             EventBus.$emit('add-element', constant.ServiceInstances_str)

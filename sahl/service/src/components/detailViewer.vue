@@ -57,6 +57,9 @@
             <div v-else-if="detailViewer.element == 'Mode Declaration Group'">
                 <ModeDeclarationGroup :element= this.$store.getters.getDataModeDeclaration(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
+            <div v-else-if="detailViewer.element == 'HW Element'">
+                <HWElement :element= this.$store.getters.getDataHWElement(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
 
             <div v-else-if="detailViewer.element == 'Error'">
                 <APError :element= this.$store.getters.getDataError(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
@@ -65,7 +68,7 @@
                 <APErrorDomain :element= this.$store.getters.getDataErrorDomain(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
             <div v-else-if="detailViewer.element == 'Error Set'">
-                <APErrorSet :element= this.$store.getters.getDataErrorDomain(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+                <APErrorSet :element= this.$store.getters.getDataErrorSet(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
             <div v-else-if="detailViewer.element == 'SomeIP Service Interface Deployment'">
                 <SomeIPService :element= this.$store.getters.getDataSomeIPService(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
@@ -112,6 +115,7 @@ import Machine from '../components/Machine.vue'
 import MachineDesign from '../components/MachineDesign.vue'
 import EthernetCluster from '../components/EthernetCluster.vue'
 import ModeDeclarationGroup from '../components/ModeDeclarationGroup.vue'
+import HWElement from '../components/HWElement.vue'
 import APErrorDomain from '../components/APErrorDomain.vue'
 import APError from '../components/APError.vue'
 import APErrorSet from '../components/APErrorSet.vue'
@@ -130,7 +134,7 @@ export default {
                 SomeIPClient, SomeIPServer, Required, Provided,
                 APError, APErrorDomain, APErrorSet,
                 SWComponents, ProcessDesign, Executable, StartupConfig, DeterministicClient,
-                Machine, MachineDesign, EthernetCluster, ModeDeclarationGroup },
+                Machine, MachineDesign, EthernetCluster, ModeDeclarationGroup, HWElement },
     computed: {
         detailViewer() {
             return this.$store.state.detailViewer

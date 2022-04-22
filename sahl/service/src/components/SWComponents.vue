@@ -47,7 +47,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isPPortOpenClose">  
-                                    <v-data-table v-model="selectDelectPPort" :headers="headerPPort" :items="pPortItem"
+                                    <v-data-table v-model="selectDelectPPort" :headers="headerPPort" :items="element.pport"
                                             :show-select="isdeletePPort" item-key="name" height="100px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -117,7 +117,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isPRPortOpenClose">  
-                                    <v-data-table v-model="selectDelectPRPort" :headers="headerPRPort" :items="prPortItem"
+                                    <v-data-table v-model="selectDelectPRPort" :headers="headerPRPort" :items="element.prport"
                                             :show-select="isdeletePRPort" item-key="name" height="100px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -187,7 +187,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isRPortOpenClose">  
-                                    <v-data-table v-model="selectDelectRPort" :headers="headerRPort" :items="rPortItem"
+                                    <v-data-table v-model="selectDelectRPort" :headers="headerRPort" :items="element.rport"
                                             :show-select="isdeleteRPort" item-key="name" height="100px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -314,9 +314,6 @@ export default {
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
                 { text: 'Required Interface', sortable: false, value: 'interface' },
             ],
-            pPortItem: [],
-            prPortItem: [],
-            rPortItem: [],
             editPPortItem: { name: '', interface: null},
             editPRPortItem: { name: '', interface: null},
             editRPortItem: { name: '', interface: null},
@@ -329,17 +326,6 @@ export default {
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            if(this.element.pport != undefined) {
-                this.pPortItem = this.element.pport.slice()
-            }
-            if(this.element.rport != undefined) {
-                this.rPortItem = this.element.rport.slice()
-            }
-            if(this.element.prport != undefined) {
-                this.prPortItem = this.element.prport.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -395,16 +381,6 @@ export default {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
         },
-        inputPPort() {
-            this.$store.commit('editSWComponents', {compo:"pport", uuid:this.element.uuid, pport:this.pPortItem} )
-        },
-        inputRPort() {
-            this.$store.commit('editSWComponents', {compo:"rport", uuid:this.element.uuid, rport:this.rPortItem} )
-        },
-        inputPRPort() {
-            this.$store.commit('editSWComponents', {compo:"prport", uuid:this.element.uuid, prport:this.prPortItem} )
-        },
-
 
         isPPortCheckbox() {
             if (this.isdeletePPort == true) {
@@ -416,21 +392,21 @@ export default {
         },
         deletePPort() {
             if (this.isdeletePPort == true) {
-                for(let i=0; i<this.pPortItem.length; i++){
+                for(let i=0; i<this.element.pport.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/pporttable-'+i)
                     if(endLine != undefined) {
-                        this.changeLinePPort.push({name:this.pPortItem[i].name, endLine:endLine})
+                        this.changeLinePPort.push({name:this.element.pport[i].name, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/pporttable-'+i)
                     }
                 }
 
                 this.$store.commit('deleteRefTable', {deleteName:'pPort', deletItemList: this.selectDelectPPort, path: this.element.path, name: this.element.name})
-                this.pPortItem = this.pPortItem.filter(item => {
+                this.element.pport = this.element.pport.filter(item => {
                          return this.selectDelectPPort.indexOf(item) < 0 })
 
-                for(let n=0; n<this.pPortItem.length; n++) {
+                for(let n=0; n<this.element.pport.length; n++) {
                     for(let idx=0; idx<this.changeLinePPort.length; idx++) {
-                        if (this.pPortItem[n].name == this.changeLinePPort[idx].name) {
+                        if (this.element.pport[n].name == this.changeLinePPort[idx].name) {
                             this.newLine(this.element.uuid+'/pporttable-'+n, this.element.uuid+'/pporttable', this.changeLinePPort[idx].endLine)
                         }
                     }
@@ -439,37 +415,36 @@ export default {
                 this.isdeletePPort = false
                 this.selectDelectPPort = []
                 this.changeLinePPort = []
-                this.inputPPort()
             } 
         },
         openPPort(idx) {
             this.selServiceInterface = this.$store.getters.getServiceInterface
-            this.editPPortItem.name = this.pPortItem[idx].name
-            if ( this.pPortItem[idx].interface != null) {
-                this.editPPortItem.interface = { name :this.pPortItem[idx].interface, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/pporttable-'+idx) }
+            this.editPPortItem.name = this.element.pport[idx].name
+            if ( this.element.pport[idx].interface != null) {
+                this.editPPortItem.interface = { name :this.element.pport[idx].interface, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/pporttable-'+idx) }
             }
         },
         editPPort(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/pporttable-'+idx)
             if (endLine != undefined && this.editPPortItem.interface == null) {
                 this.deleteLine(this.element.uuid+'/pporttable-'+idx)
-                this.pPortItem[idx].interface = null
+                this.element.pport[idx].interface = null
             } else if (endLine != undefined && endLine != this.editPPortItem.interface.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/pporttable-'+idx)
                 this.newLine(this.element.uuid+'/pporttable-'+idx, this.element.uuid+'/pporttable', this.editPPortItem.interface.uuid)
-                this.pPortItem[idx].interface = this.editPPortItem.interface.name
+                this.element.pport[idx].interface = this.editPPortItem.interface.name
             } else if (endLine == undefined && this.editPPortItem.interface != null) {
                 this.newLine(this.element.uuid+'/pporttable-'+idx, this.element.uuid+'/pporttable', this.editPPortItem.interface.uuid)
-                this.pPortItem[idx].interface = this.editPPortItem.interface.name
+                this.element.pport[idx].interface = this.editPPortItem.interface.name
             }
 
-            if (this.pPortItem[idx].name != this.editPPortItem.name){
+            if (this.element.pport[idx].name != this.editPPortItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'pPort', listname: this.editPPortItem.name} )
             }
 
-            this.pPortItem[idx].name = this.editPPortItem.name
+            this.element.pport[idx].name = this.editPPortItem.name
             this.cancelPPort()
         },
         cancelPPort() {
@@ -479,18 +454,17 @@ export default {
         addPPort() {
             if (this.editPPortItem.interface != null) {
                 var datacount
-                if(this.pPortItem == undefined) {
+                if(this.element.pport == undefined) {
                     datacount = 0
                 }else {
-                    datacount = this.pPortItem.length
+                    datacount = this.element.pport.length
                 }
                 this.newLine(this.element.uuid+'/pporttable-'+datacount, this.element.uuid+'/pporttable', this.editPPortItem.interface.uuid)
                 this.editPPortItem.interface = this.editPPortItem.interface.name
             }
             const addObj = Object.assign({}, this.editPPortItem);
-            this.pPortItem.push(addObj);
+            this.element.pport.push(addObj);
             this.cancelPPort()
-            this.inputPPort()
         },
         setPPortSelect() {
             if (this.isEditingPPort == true) {
@@ -519,21 +493,21 @@ export default {
         },
         deletePRPort() {
             if (this.isdeletePRPort == true) {
-                for(let i=0; i<this.prPortItem.length; i++){
+                for(let i=0; i<this.element.prport.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/prporttable-'+i)
                     if(endLine != undefined) {
-                        this.changeLinePRPort.push({name:this.prPortItem[i].name, endLine:endLine})
+                        this.changeLinePRPort.push({name:this.element.prport[i].name, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/prporttable-'+i)
                     }
                 }
 
                 this.$store.commit('deleteRefTable', {deleteName:'prPort', deletItemList: this.selectDelectPRPort, path: this.element.path, name: this.element.name})
-                this.prPortItem = this.prPortItem.filter(item => {
+                this.element.prport = this.element.prport.filter(item => {
                          return this.selectDelectPRPort.indexOf(item) < 0 })
 
-                for(let n=0; n<this.prPortItem.length; n++) {
+                for(let n=0; n<this.element.prport.length; n++) {
                     for(let idx=0; idx<this.changeLinePRPort.length; idx++) {
-                        if (this.prPortItem[n].name == this.changeLinePRPort[idx].name) {
+                        if (this.element.prport[n].name == this.changeLinePRPort[idx].name) {
                             this.newLine(this.element.uuid+'/prporttable-'+n, this.element.uuid+'/prporttable', this.changeLinePRPort[idx].endLine)
                         }
                     }
@@ -542,37 +516,36 @@ export default {
                 this.isdeletePRPort = false
                 this.selectDelectPRPort = []
                 this.changeLinePRPort = []
-                this.inputPRPort()
             } 
         },
         openPRPort(idx) {
             this.selServiceInterface = this.$store.getters.getServiceInterface
-            this.editPRPortItem.name = this.prPortItem[idx].name
-            if ( this.prPortItem[idx].interface != null) {
-                this.editPRPortItem.interface = { name :this.prPortItem[idx].interface, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/prporttable-'+idx) }
+            this.editPRPortItem.name = this.element.prport[idx].name
+            if ( this.element.prport[idx].interface != null) {
+                this.editPRPortItem.interface = { name :this.element.prport[idx].interface, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/prporttable-'+idx) }
             }
         },
         editPRPort(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/prporttable-'+idx)
             if (endLine != undefined && this.editPRPortItem.interface == null) {
                 this.deleteLine(this.element.uuid+'/prporttable-'+idx)
-                this.prPortItem[idx].interface = null
+                this.element.prport[idx].interface = null
             } else if (endLine != undefined && endLine != this.editPRPortItem.interface.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/prporttable-'+idx)
                 this.newLine(this.element.uuid+'/prporttable-'+idx, this.element.uuid+'/prporttable', this.editPRPortItem.interface.uuid)
-                this.prPortItem[idx].interface = this.editPRPortItem.interface.name
+                this.element.prport[idx].interface = this.editPRPortItem.interface.name
             } else if (endLine == undefined && this.editPRPortItem.interface != null) {
                 this.newLine(this.element.uuid+'/prporttable-'+idx, this.element.uuid+'/prporttable', this.editPRPortItem.interface.uuid)
-                this.prPortItem[idx].interface = this.editPRPortItem.interface.name
+                this.element.prport[idx].interface = this.editPRPortItem.interface.name
             }
 
-            if (this.prPortItem[idx].name != this.editPRPortItem.name){
+            if (this.element.prport[idx].name != this.editPRPortItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'prPort', listname: this.editPRPortItem.name} )
             }
 
-            this.prPortItem[idx].name = this.editPRPortItem.name
+            this.element.prport[idx].name = this.editPRPortItem.name
             this.cancelPRPort()
         },
         cancelPRPort() {
@@ -582,18 +555,17 @@ export default {
         addPRPort() {
             if (this.editPRPortItem.interface != null) {
                 var datacount
-                if(this.pPortItem == undefined) {
+                if(this.element.prport == undefined) {
                     datacount = 0
                 }else {
-                    datacount = this.prPortItem.length
+                    datacount = this.element.prport.length
                 }
                     this.newLine(this.element.uuid+'/prporttable-'+datacount, this.element.uuid+'/prporttable', this.editPRPortItem.interface.uuid)
                     this.editPRPortItem.interface = this.editPRPortItem.interface.name
             }
             const addObj = Object.assign({}, this.editPRPortItem);
-            this.prPortItem.push(addObj);
+            this.element.prport.push(addObj);
             this.cancelPRPort()
-            this.inputPRPort()
         },
         setPRPortSelect() {
             if (this.isEditingPRPort == true) {
@@ -621,21 +593,21 @@ export default {
         },
         deleteRPort() {
             if (this.isdeleteRPort == true) {
-                for(let i=0; i<this.rPortItem.length; i++){
+                for(let i=0; i<this.element.rport.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/rporttable-'+i)
                     if(endLine != undefined) {
-                        this.changeLineRPort.push({name:this.rPortItem[i].name, endLine:endLine})
+                        this.changeLineRPort.push({name:this.element.rport[i].name, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/rporttable-'+i)
                     }
                 }
 
                 this.$store.commit('deleteRefTable', {deleteName:'rPort', deletItemList: this.selectDelectRPort, path: this.element.path, name: this.element.name})
-                this.rPortItem = this.rPortItem.filter(item => {
+                this.element.rport = this.element.rport.filter(item => {
                          return this.selectDelectRPort.indexOf(item) < 0 })
 
-                for(let n=0; n<this.rPortItem.length; n++) {
+                for(let n=0; n<this.element.rport.length; n++) {
                     for(let idx=0; idx<this.changeLineRPort.length; idx++) {
-                        if (this.rPortItem[n].name == this.changeLineRPort[idx].name) {
+                        if (this.element.rport[n].name == this.changeLineRPort[idx].name) {
                             this.newLine(this.element.uuid+'/rporttable-'+n, this.element.uuid+'/rporttable', this.changeLineRPort[idx].endLine)
                         }
                     }
@@ -644,37 +616,36 @@ export default {
                 this.isdeleteRPort = false
                 this.selectDelectRPort = []
                 this.changeLineRPort = []
-                this.inputRPort()
             } 
         },
         openRPort(idx) {
             this.selServiceInterface = this.$store.getters.getServiceInterface
-            this.editRPortItem.name = this.rPortItem[idx].name
-            if ( this.rPortItem[idx].interface != null) {
-                this.editRPortItem.interface = { name :this.rPortItem[idx].interface, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/rporttable-'+idx) }
+            this.editRPortItem.name = this.element.rport[idx].name
+            if ( this.element.rport[idx].interface != null) {
+                this.editRPortItem.interface = { name :this.element.rport[idx].interface, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/rporttable-'+idx) }
             }
         },
         editRPort(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/rporttable-'+idx)
             if (endLine != undefined && this.editRPortItem.interface == null) {
                 this.deleteLine(this.element.uuid+'/rporttable-'+idx)
-                this.rPortItem[idx].interface = null
+                this.element.rport[idx].interface = null
             } else if (endLine != undefined && endLine != this.editRPortItem.interface.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/rporttable-'+idx)
                 this.newLine(this.element.uuid+'/rporttable-'+idx, this.element.uuid+'/rporttable', this.editRPortItem.interface.uuid)
-                this.rPortItem[idx].interface = this.editRPortItem.interface.name
+                this.element.rport[idx].interface = this.editRPortItem.interface.name
             } else if (endLine == undefined && this.editRPortItem.interface != null) {
                 this.newLine(this.element.uuid+'/rporttable-'+idx, this.element.uuid+'/rporttable', this.editRPortItem.interface.uuid)
-                this.rPortItem[idx].interface = this.editRPortItem.interface.name
+                this.element.rport[idx].interface = this.editRPortItem.interface.name
             }
 
-            if (this.rPortItem[idx].name != this.editRPortItem.name){
+            if (this.element.rport[idx].name != this.editRPortItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'rPort', listname: this.editRPortItem.name} )
             }
 
-            this.rPortItem[idx].name = this.editRPortItem.name
+            this.element.rport[idx].name = this.editRPortItem.name
             this.cancelRPort()
         },
         cancelRPort() {
@@ -684,17 +655,16 @@ export default {
         addRPort() {
             if( this.editRPortItem.interface != null) {
                 var datacount
-                if(this.pPortItem == undefined) {
+                if(this.element.rport == undefined) {
                     datacount = 0
                 }else {
-                    datacount = this.rPortItem.length
+                    datacount = this.element.rport.length
                 }
                 this.newLine(this.element.uuid+'/rporttable-'+datacount, this.element.uuid+'/rporttable', this.editRPortItem.interface.uuid)
                 this.editRPortItem.interface = this.editRPortItem.interface.name
             }
             const addObj = Object.assign({}, this.editRPortItem);
-            this.rPortItem.push(addObj);
-            this.inputRPort()
+            this.element.rport.push(addObj);
             this.cancelRPort()
         },
         setRPortSelect() {

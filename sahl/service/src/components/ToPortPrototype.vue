@@ -50,7 +50,7 @@
                                             <v-list-item v-for="(item, i) in selPortPrototype" :key="i" link @click="setPortPrototype(item)">
                                                 <v-list-item-title>{{ item.name }}</v-list-item-title>
                                             </v-list-item>
-                                            <v-list-item v-if="selPortPrototype.length == 0">
+                                            <v-list-item v-if="selPortPrototype == null || (selPortPrototype !=null && selPortPrototype.length == 0)">
                                                 <v-list-item-title>No Data Available</v-list-item-title>
                                             </v-list-item>
                                         </v-list>
@@ -312,7 +312,7 @@ export default {
             this.$store.commit('addElementProcessDesign', {
                 name: this.$store.getters.getNameProcessDesign, input: false, path: '',
                 top: this.element.top+100, left: this.element.left+ 300 , zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
-                executableref: null, determin: null,
+                executableref: null, determin: [],
             })
             EventBus.$emit('add-element', constant.ProcessDesign_str)
             EventBus.$emit('add-element', constant.AdaptiveApplication_str)
@@ -378,14 +378,14 @@ export default {
                 this.$store.commit('addElementProvidedSomeIP', {
                     name: this.$store.getters.getNameProvidedSomeIP, input: false, path: '',
                     top: this.element.top+100, left: this.element.left+ 300, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    deployref: null, someipserver: null, id: '', eventP: null, method: null, eventG: null,
+                    deployref: null, someipserver: null, id: '', eventP: [], method: [], eventG: [],
                 })
                 EventBus.$emit('add-element', constant.ProvidedSomeIP_str)
             } else if (this.element.selectServiceIns == "REQUIRED-SOMEIP-SERVICE-INSTANCE") {
                 this.$store.commit('addElementRequiredSomeIP', {  //deployref, clientref,ver는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                     name: this.$store.getters.getNameRequiredSomeIP, input: false, path: '',
                     top: this.element.top+100, left: this.element.left+ 300, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    deployref: null, minover: '', id: '', clientref: null, ver: null, method: null, requiredevent: null,
+                    deployref: null, minover: '', id: '', clientref: null, ver: null, method: [], requiredevent: [],
                 })
                 EventBus.$emit('add-element', constant.RequiredSomeIP_str)
             }

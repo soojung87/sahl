@@ -135,8 +135,8 @@ export default {
         navigatorList () {
             return this.$store.state.navigatorList
         },
-        checkVaildation() {
-            return this.$store.state.checkVaildation
+        errorList() {
+            return this.$store.state.errorList
         },
 
         dialogSaveWindow: {
@@ -186,16 +186,12 @@ export default {
             snackbar: false,
             text: '정확하게 작성한 뒤 저장을 시도해 주세요.',
             timeout: 2000,
-            isValidation: false,
             dialogOpen: false,
             reOpen: true, // update,beforeupdate는 무언가를 누를때마다 불린다. cancle누르면  둘다 불려서 dialogOpen이 true로 변하기 떄문에 이걸로 바뀌지 않게 잡아줘야함.
             //openIds: [],
         }
     },
     watch: {
-        checkVaildation(value) {
-            this.isValidation = value
-        }
     },
 
     updated() {
@@ -450,9 +446,8 @@ export default {
             })
         },
         saveElement() {
-            //var isValidation = this.$store.getters.getCheckValidate
             this.$store.commit('setSaveValidate', {savelist: this.saveList})
-            if(this.isValidation && this.navigatorList[this.openProjectIndex].validation==false) {
+            if(this.$store.state.errorList.length == 0) {
                 var treeitem = Object.values(this.$store.getters.gettreeviewitems)
                 var arrelement
                 this.saveList.forEach( list => {
@@ -462,7 +457,9 @@ export default {
                             arrelement = treeitem.find(data =>  data.uuid === item.uuid)
                             this.moveSaveFile.push({parent: arrelement.parent, uuid: item.uuid})
                         })
-                        this.$store.commit('saveElement', {list: this.moveSaveFile, saveName: list.savename+".xml"} )
+                        if(this.moveSaveFile.length > 0) {
+                            this.$store.commit('saveElement', {list: this.moveSaveFile, saveName: list.savename+".xml"} )
+                        }
                     }
                 })
                 let today = new Date();  
@@ -471,7 +468,6 @@ export default {
             } else {
                 this.snackbar = true
             }
-            this.$store.commit('setcheckVaildation', {value: false})
         },
         cancelSave() {
             this.tabListItem.forEach(ele => {

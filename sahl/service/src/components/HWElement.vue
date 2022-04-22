@@ -56,10 +56,10 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isAttributeOpenClose">  
-                            <v-data-table v-model="selectdeleteAttribut" :headers="headersAttribut" :items="AttributeItem" 
+                            <v-data-table v-model="selectdeleteAttribut" :headers="headersAttribut" :items="element.attribute" 
                                     :show-select="isdeleteAttributeItem" item-key="attr" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
-                                    <v-simple-checkbox color="green" :value="isSelected" @input="select($event)"></v-simple-checkbox>
+                                    <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
                                 <template v-if="!isdeleteAttributeItem" v-slot:body="{ items, headers }">
                                     <tbody>
@@ -153,18 +153,12 @@ export default {
             ],
             attributeType: [ 'EEPROM', 'FLASH', 'RAM','ROM',],
             selectdeleteAttribut: [],
-            AttributeItem: [],
             editAttributeItem: { attr: null, vt:'', v:''},
             defaultAttributeItem: { attr: null, vt:'', v:''}
 
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            if(this.element.attribute != undefined) {
-                this.AttributeItem = this.element.attribute.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -223,15 +217,11 @@ export default {
         },
         deleteAttribute() {
             if (this.isdeleteAttributeItem == true) {
-                this.AttributeItem = this.AttributeItem.filter(item => {
+                this.element.attribute = this.element.attribute.filter(item => {
                          return this.selectdeleteAttribut.indexOf(item) < 0 })
                 this.isdeleteAttributeItem = false
                 this.selectdeleteAttribut = []
-                this.inputAttribute()
             } 
-        },
-        inputAttribute() {
-            this.$store.commit('editHWElement', {compo:"Attribute", uuid:this.element.uuid, attribute:this.AttributeItem} )
         },
         clearHWAttribute() {
             this.editAttributeItem.attr = null
@@ -241,36 +231,33 @@ export default {
             this.setactiveUUID()
         },
         editAttribute(idx) {
-            this.AttributeItem[idx].attr = this.editAttributeItem.attr.name
-            if (this.AttributeItem[idx].attr == "/AUTOSAR/MemorySegment/memoryType") {
-                this.AttributeItem[idx].v = ''
-                this.AttributeItem[idx].vt = this.editAttributeItem.vt
-            } else if (this.AttributeItem[idx].attr == "/AUTOSAR/MemorySegment/memorySize"){
-                this.AttributeItem[idx].vt = ''
-                this.AttributeItem[idx].v = this.editAttributeItem.v
+            this.element.attribute[idx].attr = this.editAttributeItem.attr.name
+            if (this.element.attribute[idx].attr == "/AUTOSAR/MemorySegment/memoryType") {
+                this.element.attribute[idx].v = ''
+                this.element.attribute[idx].vt = this.editAttributeItem.vt
+            } else if (this.element.attribute[idx].attr == "/AUTOSAR/MemorySegment/memorySize"){
+                this.element.attribute[idx].vt = ''
+                this.element.attribute[idx].v = this.editAttributeItem.v
             }
             this.cancelAttribute()
-            this.inputAttribute()
-
         },
         openAttribute(idx) {
-            console.log(this.AttributeItem[idx].attr)
+            console.log(this.element.attribute[idx].attr)
             var id = null
-            if (this.AttributeItem[idx].attr == "/AUTOSAR/MemorySegment/memoryType") {
+            if (this.element.attribute[idx].attr == "/AUTOSAR/MemorySegment/memoryType") {
                 id = 1
-            } else if (this.AttributeItem[idx].attr == "/AUTOSAR/MemorySegment/memorySize"){
+            } else if (this.element.attribute[idx].attr == "/AUTOSAR/MemorySegment/memorySize"){
                 id = 2
             }
-            this.editAttributeItem.attr = { name: this.AttributeItem[idx].attr, uuid: id}
-            this.editAttributeItem.vt = this.AttributeItem[idx].vt
-            this.editAttributeItem.v = this.AttributeItem[idx].v
+            this.editAttributeItem.attr = { name: this.element.attribute[idx].attr, uuid: id}
+            this.editAttributeItem.vt = this.element.attribute[idx].vt
+            this.editAttributeItem.v = this.element.attribute[idx].v
         },
         addAttribute() {
             this.editAttributeItem.attr = this.editAttributeItem.attr.name
             const addObj = Object.assign({}, this.editAttributeItem);
-            this.AttributeItem.push(addObj);
+            this.element.attribute.push(addObj);
             this.cancelAttribute()
-            this.inputAttribute()
         },
 
         setactiveUUID() {

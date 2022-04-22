@@ -39,7 +39,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isCCOpenClose">  
-                            <v-data-table v-model="selectdeleteCCItem" :headers="headersCC" :items="CCItem" 
+                            <v-data-table v-model="selectdeleteCCItem" :headers="headersCC" :items="element.connector" 
                                     :show-select="isdeleteCCItem" item-key="name" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
@@ -108,7 +108,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isSDCOpenClose"> 
-                            <v-data-table v-model="selectdeleteSDCItem" :headers="headersSDC" :items="SDCItem"
+                            <v-data-table v-model="selectdeleteSDCItem" :headers="headersSDC" :items="element.servicediscover"
                                     :show-select="isdeleteSDCItem" item-key="ssdp" style="width:100%" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
@@ -212,7 +212,6 @@ export default {
             selNetworkEndpoint: this.$store.getters.getNetworkEndPoint,
             menulistEndpoint: [],
             selectdeleteCCItem: [],
-            CCItem: [],
             headersCC: [
                 { text: '', sortable: false, value: 'sort', width: '10px' },
                 { text: 'name', align: 'start', sortable: false, value: 'name' },
@@ -235,7 +234,6 @@ export default {
 
             isdeleteSDCItem: false,
             selectdeleteSDCItem: [],
-            SDCItem: [],
             headersSDC: [
                 { text: 'Multicast-SD-Ip-Address', width:'170px', align: 'start', sortable: false, value: 'msia' },
                 { text: 'SomeIP-Service-discovery-port',width:'210px', sortable: false, value: 'ssdp' },
@@ -248,14 +246,6 @@ export default {
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            if(this.element.connector != undefined) {
-                this.CCItem = this.element.connector.slice()
-            }
-            if(this.element.servicediscover != undefined) {
-                this.SDCItem = this.element.servicediscover.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -314,21 +304,21 @@ export default {
         },
         deleteCCItem() {
             if (this.isdeleteCCItem == true) {
-                for(let i=0; i<this.CCItem.length; i++){
+                for(let i=0; i<this.element.connector.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+i)
                     if(endLine != undefined) {
-                        this.deleteChangeLineCC.push({endpoint:this.CCItem[i].endpoint, endLine:endLine})
+                        this.deleteChangeLineCC.push({endpoint:this.element.connector[i].endpoint, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/cctable-'+i)
                     }
                 }
 
                 this.$store.commit('deleteRefTable', {deleteName:'CommunicationC', deletItemList: this.selectdeleteCCItem, path: this.element.path, name: this.element.name})
-                this.CCItem = this.CCItem.filter(item => {
+                this.element.connector = this.element.connector.filter(item => {
                          return this.selectdeleteCCItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.CCItem.length; n++) {
+                for(let n=0; n<this.element.connector.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLineCC.length; idx++) {
-                        if (this.CCItem[n].endpoint == this.deleteChangeLineCC[idx].endpoint) {
+                        if (this.element.connector[n].endpoint == this.deleteChangeLineCC[idx].endpoint) {
                             this.newLine(this.element.uuid+'/cctable-'+n, this.element.uuid+'/cctable', this.deleteChangeLineCC[idx].endLine)
                         }
                     }
@@ -336,25 +326,21 @@ export default {
 
                 this.isdeleteCCItem = false
                 this.selectdeleteCCItem = []
-                this.inputCCItem()
             } 
-        },
-        inputCCItem() {
-            this.$store.commit('editMachineDesign', {compo:"CC item", uuid:this.element.uuid, cc:this.CCItem} )
         },
         openCC(idx) {
             this.selNetworkEndpoint = this.$store.getters.getNetworkEndPoint
-            this.editedItemCC.name = this.CCItem[idx].name
-            this.editedItemCC.mtu = this.CCItem[idx].mtu
-            this.editedItemCC.mtuenable = this.CCItem[idx].mtuenable
-            this.editedItemCC.timeout = this.CCItem[idx].timeout
-            this.editedItemCC.mask = this.CCItem[idx].mask
-            if ( this.CCItem[idx].endpoint != null) {
+            this.editedItemCC.name = this.element.connector[idx].name
+            this.editedItemCC.mtu = this.element.connector[idx].mtu
+            this.editedItemCC.mtuenable = this.element.connector[idx].mtuenable
+            this.editedItemCC.timeout = this.element.connector[idx].timeout
+            this.editedItemCC.mask = this.element.connector[idx].mask
+            if ( this.element.connector[idx].endpoint != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getEthernetClusterPath(this.CCItem[idx].endpoint)
+                    endLine = this.$store.getters.getEthernetClusterPath(this.element.connector[idx].endpoint)
                 }
-                this.editedItemCC.endpoint = { name: this.CCItem[idx].endpoint, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+idx) }
+                this.editedItemCC.endpoint = { name: this.element.connector[idx].endpoint, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+idx) }
             }
             this.setlistEthernetCluster()
         },
@@ -365,76 +351,49 @@ export default {
         addCC() {
             if(this.editedItemCC.endpoint != null) {
                 var datacount
-                if(this.CCItem == undefined) {
+                if(this.element.connector == undefined) {
                     datacount = 0
                 }else {
-                    datacount = this.CCItem.length
+                    datacount = this.element.connector.length
                 }
                 this.newLine(this.element.uuid+'/cctable-'+datacount, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
                 this.editedItemCC.endpoint = this.editedItemCC.endpoint.name
             }
             const addObj = Object.assign({}, this.editedItemCC);
-            this.CCItem.push(addObj);
+            this.element.connector.push(addObj);
             this.cancelCC()
-            this.inputCCItem()
         },
         editCC(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+idx)
             if (endLine != undefined && this.editedItemCC.endpoint == null) {
                 this.deleteLine(this.element.uuid+'/cctable-'+idx)
-                this.CCItem[idx].endpoint = null
+                this.element.connector[idx].endpoint = null
             } else if (endLine != undefined && endLine != this.editedItemCC.endpoint.uuid) {
                 this.deleteLine(this.element.uuid+'/cctable-'+idx)
                 this.newLine(this.element.uuid+'/cctable-'+idx, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
             } else if (endLine == undefined && this.editedItemCC.endpoint != null) {
                 this.newLine(this.element.uuid+'/cctable-'+idx, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
-                this.CCItem[idx].endpoint = this.editedItemCC.endpoint.name
+                this.element.connector[idx].endpoint = this.editedItemCC.endpoint.name
             }
 
-            if (this.CCItem[idx].name != this.editedItemCC.name){
+            if (this.element.connector[idx].name != this.editedItemCC.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'CommunicationC', listname: this.editedItemCC.name} )
             }
 
 
-            this.CCItem[idx].name = this.editedItemCC.name
-            this.CCItem[idx].mtu = this.editedItemCC.mtu
-            this.CCItem[idx].mtuenable = this.editedItemCC.mtuenable
-            this.CCItem[idx].timeout = this.editedItemCC.timeout
-            this.CCItem[idx].mask = this.editedItemCC.mask
+            this.element.connector[idx].name = this.editedItemCC.name
+            this.element.connector[idx].mtu = this.editedItemCC.mtu
+            this.element.connector[idx].mtuenable = this.editedItemCC.mtuenable
+            this.element.connector[idx].timeout = this.editedItemCC.timeout
+            this.element.connector[idx].mask = this.editedItemCC.mask
             this.cancelCC()
-            this.inputCCItem()
         },
         cancelCC() {
             this.editedItemCC = Object.assign({}, this.defaultItemCC)
             this.selectEndpointItem = []
             this.menulistEndpoint = []
             this.setactiveUUID()
-        },
-        moveActiveEthernetCluster(item) {
-            if(this.$store.state.activeUUID != null) {
-                EventBus.$emit('onDeactivated', this.$store.state.activeUUID)
-            }
-            EventBus.$emit('onActivated', item.uuid)
-            //this.$store.commit('editEthernetCluster', {compo:"z", uuid:this.$store.state.activeUUID, zindex:2})
-            //this.$store.commit('editEthernetCluster', {compo:"z", uuid:item.uuid, zindex:10})
-            //this.$store.commit('editMachineDesign', {compo:"z", uuid:this.element.uuid, zindex:2} )
-        },
-        newNetWorkEndPoint() {
-            //new NetWork endpoint
-            this.$store.commit('addElementEthernetCluster', {
-                name: this.$store.getters.getNameEthernetCluster, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300, zindex: 10, conditional:'', icon:"mdi-clipboard-outline", validation: false
-            })
-            EventBus.$emit('add-element', constant.EthernetCluster_str)
-            EventBus.$emit('add-element', constant.Machines_str)
-            this.$store.commit('editMachineDesign', {compo:"z", uuid:this.element.uuid, zindex:2} )
-        },
-        newHWAttribute() {
-            // new HW attribute
-            //EventBus.$emit('add-element', constant.)
-            //EventBus.$emit('add-element', constant.Machines_str)
-            //this.$store.commit('editMachineDesign', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
         clearMDEndpoint() {
             this.isEditingMDEndpoint = true
@@ -466,20 +425,20 @@ export default {
         },
         deleteSDC() {
             if (this.isdeleteSDCItem == true) {
-                for(let i=0; i<this.SDCItem.length; i++){
+                for(let i=0; i<this.element.servicediscover.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+i)
                     if(endLine != undefined) {
-                        this.deleteChangeLineSDC.push({msia:this.SDCItem[i].msia, endLine:endLine})
+                        this.deleteChangeLineSDC.push({msia:this.element.servicediscover[i].msia, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/sdctable-'+i)
                     }
                 }
 
-                this.SDCItem = this.SDCItem.filter(item => {
+                this.element.servicediscover = this.element.servicediscover.filter(item => {
                          return this.selectdeleteSDCItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.SDCItem.length; n++) {
+                for(let n=0; n<this.element.servicediscover.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLineSDC.length; idx++) {
-                        if (this.SDCItem[n].msia == this.deleteChangeLineSDC[idx].msia) {
+                        if (this.element.servicediscover[n].msia == this.deleteChangeLineSDC[idx].msia) {
                             this.newLine(this.element.uuid+'/sdctable-'+n, this.element.uuid+'/sdctable', this.deleteChangeLineSDC[idx].endLine)
                         }
                     }
@@ -488,21 +447,17 @@ export default {
                 this.isdeleteSDCItem = false
                 this.selectdeleteSDCItem = []
                 this.deleteChangeLineSDC = []
-                this.inputSDCItem()
             } 
-        },
-        inputSDCItem() {
-            this.$store.commit('editMachineDesign', {compo:"SDC item", uuid:this.element.uuid, sdc:this.SDCItem} )
         },
         openSDC(idx) {
             this.selNetworkEndpoint = this.$store.getters.getNetworkEndPoint
-            this.editedItemSDC.ssdp = this.SDCItem[idx].ssdp
-            if ( this.SDCItem[idx].msia != null) {
+            this.editedItemSDC.ssdp = this.element.servicediscover[idx].ssdp
+            if ( this.element.servicediscover[idx].msia != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getEthernetClusterPath(this.SDCItem[idx].msia)
+                    endLine = this.$store.getters.getEthernetClusterPath(this.element.servicediscover[idx].msia)
                 }
-                this.editedItemSDC.msia = { name: this.SDCItem[idx].msia, uuid: endLine }
+                this.editedItemSDC.msia = { name: this.element.servicediscover[idx].msia, uuid: endLine }
             }
             this.setlistEthernetCluster()
         },
@@ -514,18 +469,17 @@ export default {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+idx)
             if (endLine != undefined && this.editedItemSDC.msia == null) {
                 this.deleteLine(this.element.uuid+'/sdctable-'+idx)
-                this.SDCItem[idx].msia = null
+                this.element.servicediscover[idx].msia = null
             } else if (endLine != undefined && endLine != this.editedItemSDC.msia.uuid) {
                 this.deleteLine(this.element.uuid+'/sdctable-'+idx)
                 this.newLine(this.element.uuid+'/sdctable-'+idx, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)
             } else if (endLine == undefined && this.editedItemSDC.msia != null) {
                 this.newLine(this.element.uuid+'/sdctable-'+idx, this.element.uuid+'/functiontable', this.editedItemSDC.msia.uuid)
-                this.SDCItem[idx].msia = this.editedItemSDC.msia.name
+                this.element.servicediscover[idx].msia = this.editedItemSDC.msia.name
             }
 
-            this.SDCItem[idx].ssdp = this.editedItemSDC.ssdp
+            this.element.servicediscover[idx].ssdp = this.editedItemSDC.ssdp
             this.cancelSDC()
-            this.inputSDCItem()
         },
         cancelSDC() {
             for(let i=0; i<this.$store.state.SAHLProject[this.$store.state.openProjectIndex].Machine.EthernetCluster.length; i++){
@@ -539,18 +493,17 @@ export default {
         addSDC() {
             if(this.editedItemSDC.msia != null) {
                 var datacount
-                if(this.SDCItem == undefined) {
+                if(this.element.servicediscover == undefined) {
                     datacount = 0
                 }else {
-                    datacount = this.SDCItem.length
+                    datacount = this.element.servicediscover.length
                 }
                 this.newLine(this.element.uuid+'/sdctable-'+datacount, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)
                 this.editedItemSDC.msia = this.editedItemSDC.msia.name
             }
             const addObj = Object.assign({}, this.editedItemSDC);
-            this.SDCItem.push(addObj);
+            this.element.servicediscover.push(addObj);
             this.cancelSDC()
-            this.inputSDCItem()
         },
         clearMDMulticast() {
             this.isEditingMDMulticast = true

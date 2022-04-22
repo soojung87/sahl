@@ -56,25 +56,25 @@
                             </v-btn>
                         </div>
                         <v-tabs v-model='determinTab' v-if="isDeterminsticOpenClose">
-                            <v-tab v-for="(tab, idx) in determinItem" :key="idx" @click="clickDeterminstictab()"> 
+                            <v-tab v-for="(tab, idx) in element.determin" :key="idx" @click="clickDeterminstictab()"> 
                                 {{idx}}
                                 <v-btn text x-small @click="deleteDeterminstic(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
                         </v-tabs>
                         <v-tabs-items v-model="determinTab" v-if="isDeterminsticOpenClose">
-                            <v-tab-item v-for="(tab, idx) in determinItem" :key="idx">
+                            <v-tab-item v-for="(tab, idx) in element.determin" :key="idx">
                                 <v-card flat>
                                     <v-card-text>
-                                        <v-text-field v-model="tab.swname" label="name" :rules="rules.name" @input="inputDeterministicName(tab.swname)" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                                        <v-text-field v-model="tab.hardwareP" label="Hardware Platform" @input="inputDeterministicHardwareP(tab.hardwareP)" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                        <v-text-field v-model="tab.swname" label="name" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                        <v-text-field v-model="tab.hardwareP" label="Hardware Platform" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                         <v-card outlined class="mx-auto">
                                             <div class="subtitle-2" style="height:20px">
                                                 Init Resource
                                             </div>
                                             <v-card-text>
-                                                <v-text-field v-model="tab.initnofinstruction" label="Number of Instructions" @input="inputInitNumofInstruct(tab.initnofinstruction)" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                <v-text-field v-model="tab.initsequentialbegin" label="Sequential Instructions Begin" @input="inputInitBegin(tab.initsequentialbegin)" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                <v-text-field v-model="tab.initsequentialend" label="Sequential Instructions End " @input="inputInitEnd(tab.initsequentialend)" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                <v-text-field v-model="tab.initspeedup" label="Speedup" placeholder="int" @input="inputInitSpeedup(tab.initspeedup)" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-text-field v-model="tab.initnofinstruction" label="Number of Instructions" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-text-field v-model="tab.initsequentialbegin" label="Sequential Instructions Begin" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-text-field v-model="tab.initsequentialend" label="Sequential Instructions End " placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-text-field v-model="tab.initspeedup" label="Speedup" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                             </v-card-text>
                                         </v-card>
                                         <v-card outlined class="mx-auto">
@@ -82,10 +82,10 @@
                                                 Run Resource
                                             </div>
                                             <v-card-text>
-                                                <v-text-field v-model="tab.runnofinstruction" label="Number of Instructions" @input="inputRunNumofInstruct(tab.runnofinstruction)" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                <v-text-field v-model="tab.runsequentialbegin" label="Sequential Instructions Begin" @input="inputRunBegin(tab.runsequentialbegin)" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                <v-text-field v-model="tab.runsequentialend" label="Sequential Instructions End" @input="inputRunEnd(tab.runsequentialend)" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                <v-text-field v-model="tab.runspeedup" label="Speedup" @input="inputRunSpeedup(tab.runspeedup)" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-text-field v-model="tab.runnofinstruction" label="Number of Instructions" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-text-field v-model="tab.runsequentialbegin" label="Sequential Instructions Begin" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-text-field v-model="tab.runsequentialend" label="Sequential Instructions End" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-text-field v-model="tab.runspeedup" label="Speedup" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                             </v-card-text>
                                         </v-card>
                                     </v-card-text>
@@ -141,16 +141,10 @@ export default {
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             isDeterminsticOpenClose: true,
             selExecutable: this.$store.getters.getExecutable,
-            determinItem: [],
             determinTab: 0,
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            if(this.element.determin != undefined) {
-                this.determinItem = this.element.determin.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -190,39 +184,6 @@ export default {
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
-        },
-        inputDeterminItem() {
-            this.$store.commit('editProcessDesign', {compo:"determin", uuid:this.element.uuid, determin: this.determinItem} )
-        },
-        inputDeterministicName(name) {
-            this.$store.commit('editProcessDesign', {compo:"Stort Name", uuid:this.element.uuid, name:name, determinTab: this.determinTab} )
-        },
-        inputDeterministicHardwareP(name) {
-            this.$store.commit('editProcessDesign', {compo:"Hardware Platform", uuid:this.element.uuid, name:name, determinTab: this.determinTab} )
-        },
-        inputInitNumofInstruct(name) {
-            this.$store.commit('editProcessDesign', {compo:"Init Instruct", uuid:this.element.uuid, name:name, determinTab: this.determinTab} )
-        },
-        inputInitBegin(name) {
-            this.$store.commit('editProcessDesign', {compo:"Init Begin", uuid:this.element.uuid, name:name, determinTab: this.determinTab} )
-        },
-        inputInitEnd(name) {
-            this.$store.commit('editProcessDesign', {compo:"Init End", uuid:this.element.uuid, name:name, determinTab: this.determinTab} )
-        },
-        inputInitSpeedup(name) {
-            this.$store.commit('editProcessDesign', {compo:"Init Speedup", uuid:this.element.uuid, name:name, determinTab: this.determinTab} )
-        },
-        inputRunNumofInstruct(name) {
-            this.$store.commit('editProcessDesign', {compo:"Run Instruct", uuid:this.element.uuid, name:name, determinTab: this.determinTab} )
-        },
-        inputRunBegin(name) {
-            this.$store.commit('editProcessDesign', {compo:"Run Begin", uuid:this.element.uuid, name:name, determinTab: this.determinTab} )
-        },
-        inputRunEnd(name) {
-            this.$store.commit('editProcessDesign', {compo:"Run End", uuid:this.element.uuid, name:name, determinTab: this.determinTab} )
-        },
-        inputRunSpeedup(name) {
-            this.$store.commit('editProcessDesign', {compo:"Run Speedup", uuid:this.element.uuid, name:name, determinTab: this.determinTab} )
         },
 
         clearExecutableRef() {
@@ -275,14 +236,12 @@ export default {
                 initnofinstruction: '', initsequentialbegin: '', initsequentialend: '', initspeedup: '',
                 runnofinstruction: '', runsequentialbegin: '', runsequentialend: '', runspeedup: ''}
             const addObj = new Object(editItem)
-            this.determinItem.push(addObj)
-            this.determinTab = this.determinItem.length-1
-            this.inputDeterminItem()
+            this.element.determin.push(addObj)
+            this.determinTab = this.element.determin.length-1
         },
         clickDeterminstictab() {},
         deleteDeterminstic(idx) {
-            this.determinItem.splice(idx, 1)
-            this.inputDeterminItem()
+            this.element.determin.splice(idx, 1)
         },
 
         setactiveUUID() {

@@ -465,6 +465,7 @@ export default{
             }
         },
         visibleLine(val) {
+            //console.log('visibleLine   '+val)
             if(this.minimaptoolbar) {
                 if (val) {
                     this.connections.forEach( item => {
@@ -489,7 +490,6 @@ export default{
             })
         })
         EventBus.$on('new-line', (startdiagram, enddiagram) => {
-            console.log('new-line '+ startdiagram + '=='+ enddiagram)
             this.addLine(startdiagram, enddiagram)
             this.$nextTick(() => { // 다 그려진뒤에 move해줘야지 그려지기전에 하게되면 선이 이상한 곳에 가서 그려져있음
                 this.setanimationLine(this.$store.state.activeUUID, true)
@@ -510,13 +510,23 @@ export default{
                 }
             }
         });
-        EventBus.$on('onActivated', (uuid) => {
-            this.onActivated(uuid)
-        })
-        EventBus.$on('onDeactivated', (uuid) => {
-            this.onDeactivated(uuid)
+        EventBus.$on('copy-line', (uuid, endLine, index) => {
+            if(this.minimaptoolbar) {
+                var startLine
+                if(this.connections[index].start.id.indexOf('/') !== -1) {
+                    var copyId = this.connections[index].start.id.split('/')
+                    startLine = uuid+'/'+copyId[1]
+                } else { //titlabar 접혀있을때 copy하면 startLine이 uuid값만 가지고 있기때문에 다 그렇게 복사됨 접었다 열면 제자리 찾아감
+                    startLine = uuid
+                }
+                this.$nextTick(() => { // 다 그려진뒤에 move해줘야지 그려지기전에 하게되면 선이 이상한 곳에 가서 그려져있음
+                    this.addLine(startLine, endLine)
+                    this.moveline()
+                })
+            }
         })
         EventBus.$on('setLineActive', (uuid, isactive) => {
+            //console.log(uuid+'   / '+ isactive)
             this.setanimationLine(uuid, isactive)
         })
         EventBus.$on('drawLine', () => { //v-hover 일때 쓰임
@@ -644,6 +654,7 @@ export default{
                                 endPlugSize: 2,
                                 color: 'rgba(253, 105, 68, 0.4)',
                                 size: 1,
+                                hide: !this.$store.state.visibleLine
                 }))
             }
         },
@@ -779,6 +790,7 @@ export default{
                                 endPlugSize: 2,
                                 color: 'rgba(253, 105, 68, 0.4)',
                                 size: 1,
+                                hide: !this.$store.state.visibleLine
                     }))
                 }
             }
@@ -808,6 +820,7 @@ export default{
                                     endPlugSize: 2,
                                     color: 'rgba(253, 105, 68, 0.4)',
                                     size: 1,
+                                    hide: !this.$store.state.visibleLine
                         }))
                     }
                 }
@@ -823,7 +836,7 @@ export default{
                     var startUUID = startLine.split('/')
                     var tableLine = startUUID[1].split('-')
                     if (tableLine[0] == 'field' && item == 'field') {
-                        console.log('/field')
+                        //console.log('/field')
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]){
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fieldtab'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -834,6 +847,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/field'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -844,11 +858,12 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
                     } else if (tableLine[0] == 'event' && item == 'event') {
                         this.connections[activeLine[i]].remove()
-                        console.log('/event')
+                        //console.log('/event')
                         if(idx == tableLine[2]) {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/eventtab'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
                                         startPlug: 'disc',
@@ -858,6 +873,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/event'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -868,6 +884,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
                     } else if (tableLine[0] == 'argtable' ) {
@@ -882,6 +899,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -892,6 +910,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
                     } else if (tableLine[0] == 'methoderrors') {
@@ -906,6 +925,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -916,6 +936,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
                     } else if (tableLine[0] == 'methoderror') {
@@ -930,6 +951,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -940,6 +962,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
                     } else if (tableLine[0] == 'requiredEventG') {
@@ -953,6 +976,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -963,6 +987,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
                     } else if (tableLine[0] == 'requiredClient') {
@@ -976,6 +1001,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -986,9 +1012,10 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
-                    }  else if (tableLine[0] == 'providEventG') {
+                    } else if (tableLine[0] == 'providEventG') {
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providEventG'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -999,6 +1026,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1009,9 +1037,10 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
-                    }  else if (tableLine[0] == 'providServer') {
+                    } else if (tableLine[0] == 'providServer') {
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providServer'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1022,6 +1051,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1032,9 +1062,10 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
-                    }  else if (tableLine[0] == 'fgcontext') {
+                    } else if (tableLine[0] == 'fgcontext') {
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fgtable'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1045,6 +1076,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1055,9 +1087,10 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
-                    }  else if (tableLine[0] == 'fgtarget') {
+                    } else if (tableLine[0] == 'fgtarget') {
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fgtable'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1068,6 +1101,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1078,9 +1112,10 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
-                    }  else if (tableLine[0] == 'processresorce') {
+                    } else if (tableLine[0] == 'processresorce') {
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processresorce'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1091,6 +1126,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1101,10 +1137,11 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
-                    }  else if (tableLine[0] == 'processstartup') {
-                        console.log('processstartup')
+                    } else if (tableLine[0] == 'processstartup') {
+                        //console.log('processstartup')
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processstartup'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1115,6 +1152,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1125,12 +1163,13 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
                     } else if (tableLine[0] == 'comconet' && item == 'connector') {
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2] && tabname == tableLine[3]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/comconet'+str1+'-'+str2),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
+                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/comconet-'+str1+'-'+str2),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
                                         startPlug: 'disc',
                                         endPlug: 'arrow1',
                                         startSocket: 'auto',
@@ -1138,6 +1177,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else if (idx != tableLine[2] && tabname == tableLine[3]) {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/channel'+str2),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1148,6 +1188,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/conditional'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1158,9 +1199,10 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
-                    }  else if (tableLine[0] == 'comconet' && item == 'channel') {
+                    } else if (tableLine[0] == 'comconet' && item == 'channel') {
                         this.connections[activeLine[i]].remove()
                         if(tabname == tableLine[3]) {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/channel'+str1),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1171,6 +1213,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         } else {
                             this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/conditional'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
@@ -1181,6 +1224,7 @@ export default{
                                         endPlugSize: 2,
                                         color: 'rgba(253, 105, 68, 0.4)',
                                         size: 1,
+                                        hide: !this.$store.state.visibleLine
                             }))
                         }
                     } else if (tableLine[0] == 'comconet' && item == 'conditional') {
@@ -1193,6 +1237,7 @@ export default{
                                     endPlugSize: 2,
                                     color: 'rgba(253, 105, 68, 0.4)',
                                     size: 1,
+                                    hide: !this.$store.state.visibleLine
                         }))
                         
                     }

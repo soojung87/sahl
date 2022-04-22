@@ -73,7 +73,7 @@
                                                     <v-card flat>
                                                         <v-card-text>
                                                             <v-text-field v-model="subtab.name" :rules="rules.name" label="Name" @input="inputChannelName(subtab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                            <div class="subtitle-2" style="height:20px" :id="element.uuid+'/comconet'+subtab.name+'-'+tab.name">
+                                                            <div class="subtitle-2" style="height:20px" :id="element.uuid+'/comconet-'+subtab.name+'-'+tab.name">
                                                                 <v-hover v-slot="{ hover }">
                                                                     <v-btn text @click="showCommConnectItem" x-small color="indigo">
                                                                         <v-icon>{{ isCommConnectOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -753,7 +753,7 @@ export default {
             this.ConditionalItem.push(addObj)
             this.conditionalTab = this.ConditionalItem.length-1
             this.inputConditionalItem()
-             EventBus.$emit('changeLine-someipService', 'conditional', this.element.uuid, null)
+            EventBus.$emit('changeLine-someipService', 'conditional', this.element.uuid, null)
         },
         clickConditionaltab() {
             this.clickChanneltab()
@@ -800,7 +800,9 @@ export default {
             this.clickEndpointTab()
         },
         changeChannelTab() {
-            setTimeout(() => {EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab, this.conditionalTab, this.ConditionalItem[this.conditionalTab].channel[this.channelTab].name, this.ConditionalItem[this.conditionalTab].name)}, 300);
+            if (this.ConditionalItem[this.conditionalTab].channel.length > 0) {
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab, this.conditionalTab, this.ConditionalItem[this.conditionalTab].channel[this.channelTab].name, this.ConditionalItem[this.conditionalTab].name)}, 300);
+            }
         },
         deleteChannel(idx) {
             for(let i=0; i<this.ConditionalItem[this.conditionalTab].channel[idx].comconnect.length; i++){
@@ -857,9 +859,10 @@ export default {
                 }else {
                     datacount = this.ConditionalItem[this.conditionalTab].channel[this.channelTab].comconnect.length
                 }
-                this.newLine(this.element.uuid+'/comconet-'+datacount+'-'+this.channelTab+'-'+this.conditionalTab, this.element.uuid+'/comconet'+this.ConditionalItem[this.conditionalTab].channel[this.channelTab].name+'-'+this.ConditionalItem[this.conditionalTab].name, this.editCCItem.connector.uuid)
+                this.newLine(this.element.uuid+'/comconet-'+datacount+'-'+this.channelTab+'-'+this.conditionalTab, this.element.uuid+'/comconet-'+this.ConditionalItem[this.conditionalTab].channel[this.channelTab].name+'-'+this.ConditionalItem[this.conditionalTab].name, this.editCCItem.connector.uuid)
                 this.editCCItem.connector = this.editCCItem.connector.name
             }
+            console.log(this.element.uuid+'/comconet-'+this.ConditionalItem[this.conditionalTab].channel[this.channelTab].name+'-'+this.ConditionalItem[this.conditionalTab].name)
             const addObj = Object.assign({}, this.editCCItem)
             this.ConditionalItem[this.conditionalTab].channel[this.channelTab].comconnect.push(addObj);
 
@@ -878,10 +881,10 @@ export default {
             } else if (endLine != undefined && endLine != this.editCCItem.connector.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/comconet-'+idx+'-'+this.channelTab+'-'+this.conditionalTab)
-                this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.channelTab+'-'+this.conditionalTab, this.element.uuid+'/comconet'+this.ConditionalItem[this.conditionalTab].channel[this.channelTab].name+'-'+this.ConditionalItem[this.conditionalTab].name, this.editCCItem.connector.uuid)
+                this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.channelTab+'-'+this.conditionalTab, this.element.uuid+'/comconet-'+this.ConditionalItem[this.conditionalTab].channel[this.channelTab].name+'-'+this.ConditionalItem[this.conditionalTab].name, this.editCCItem.connector.uuid)
                 this.ConditionalItem[this.conditionalTab].channel[this.channelTab].comconnect[idx].connector = this.editCCItem.connector.name
             } else if (endLine == undefined && this.editCCItem.connector != null) {
-                this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.channelTab+'-'+this.conditionalTab, this.element.uuid+'/comconet'+this.ConditionalItem[this.conditionalTab].channel[this.channelTab].name+'-'+this.ConditionalItem[this.conditionalTab].name, this.editCCItem.connector.uuid)
+                this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.channelTab+'-'+this.conditionalTab, this.element.uuid+'/comconet-'+this.ConditionalItem[this.conditionalTab].channel[this.channelTab].name+'-'+this.ConditionalItem[this.conditionalTab].name, this.editCCItem.connector.uuid)
                 this.ConditionalItem[this.conditionalTab].channel[this.channelTab].comconnect[idx].connector = this.editCCItem.connector.name
             }
             
@@ -1119,7 +1122,7 @@ export default {
                 for(let n=0; n<this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].comconnect.length; n++) {
                     for(let idx=0; idx<this.deleteCCLine.length; idx++) {
                         if (this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].comconnect[n].connector == this.deleteCCLine[idx].name) {
-                            this.newLine(this.element.uuid+'/comconet-'+n+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional, this.element.uuid+'/comconet'+this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].name+'-'+this.element.conditional[this.viewInfo.idxConditional].name, this.deleteCCLine[idx].endLine)
+                            this.newLine(this.element.uuid+'/comconet-'+n+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional, this.element.uuid+'/comconet-'+this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].name+'-'+this.element.conditional[this.viewInfo.idxConditional].name, this.deleteCCLine[idx].endLine)
                         }
                     }
                 }
@@ -1144,10 +1147,10 @@ export default {
             } else if (endLine != undefined && endLine != this.editCCItem.connector.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/comconet-'+idx+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional)
-                this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional, this.element.uuid+'/comconet'+this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].name+'-'+this.element.conditional[this.viewInfo.idxConditional].name, this.editCCItem.connector.uuid)
+                this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional, this.element.uuid+'/comconet-'+this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].name+'-'+this.element.conditional[this.viewInfo.idxConditional].name, this.editCCItem.connector.uuid)
                 this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].comconnect[idx].connector = this.editCCItem.connector.name
             } else if (endLine == undefined && this.editCCItem.connector != null) {
-                this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional, this.element.uuid+'/comconet'+this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].name+'-'+this.element.conditional[this.viewInfo.idxConditional].name, this.editCCItem.connector.uuid)
+                this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional, this.element.uuid+'/comconet-'+this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].name+'-'+this.element.conditional[this.viewInfo.idxConditional].name, this.editCCItem.connector.uuid)
                 this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].comconnect[idx].connector = this.editCCItem.connector.name
             }
             
@@ -1165,7 +1168,7 @@ export default {
                 }else {
                     datacount = this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].comconnect.length
                 }
-                this.newLine(this.element.uuid+'/comconet-'+datacount+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional, this.element.uuid+'/comconet'+this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].name+'-'+this.element.conditional[this.viewInfo.idxConditional].name, this.editCCItem.connector.uuid)
+                this.newLine(this.element.uuid+'/comconet-'+datacount+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional, this.element.uuid+'/comconet-'+this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].name+'-'+this.element.conditional[this.viewInfo.idxConditional].name, this.editCCItem.connector.uuid)
                 this.editCCItem.connector = this.editCCItem.connector.name
             }
             const addObj = Object.assign({}, this.editCCItem)

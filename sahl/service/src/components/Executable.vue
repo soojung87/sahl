@@ -191,9 +191,9 @@ export default {
         },
         newSWComponent() {
             this.$store.commit('addElementSWComponents', {
-                    name: this.$store.getters.getNamSWComponents,  input: false, path: '',
+                    name: this.$store.getters.getNameSWComponents,  input: false, path: '',
                     top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    pport: null, rport: null, prport: null,
+                    pport: [], rport: [], prport: [],
                 })
             EventBus.$emit('add-element', constant.SWComponents_str)
             EventBus.$emit('add-element', constant.AdaptiveApplication_str)

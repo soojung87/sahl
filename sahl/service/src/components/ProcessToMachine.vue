@@ -208,8 +208,8 @@ export default {
         newMachine() {
             this.$store.commit('addElementMachine', {
                 name: this.$store.getters.getNameMachine, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300, zindex: 10, machinedesign:null, timeout:'', hwelement:null, executable:null, 
-                admin: '', functiongroup:null, processor: null, moduleinstant: null, icon:"mdi-clipboard-outline", validation: false
+                top: this.element.top+100, left: this.element.left+ 300, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, 
+                admin: '', functiongroup:[], processor: [], moduleinstant: [], icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.Machine_str)
             EventBus.$emit('add-element', constant.Machines_str)

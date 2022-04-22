@@ -1146,7 +1146,7 @@ export default {
             let res = true, n = 0
 
             while (res) {
-                addObj.name = 'Field Deployment_' + n++;
+                addObj.name = 'Field_Deployment_' + n++;
                 res = this.FieldDItem.some(ele => ele.name === addObj.name)
             }
             this.FieldDItem.push(addObj)

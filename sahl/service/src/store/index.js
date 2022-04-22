@@ -19,7 +19,6 @@ export default new Vuex.Store({
         ismakeProject: false,
         detailViewerList: [], // project가 바뀔때 마다 reset해야한다.
         idexDetailView: undefined,
-        checkVaildation: false,
         errorList: [],
         detailViewer: { uuid: '', element: '' },
         setting: { zoomMain: 0, zoomDetail: 0, },
@@ -146,7 +145,7 @@ export default new Vuex.Store({
             }
             return name
         },
-        getNamSWComponents(state) {
+        getNameSWComponents(state) {
             let name = null,
                 res = true,
                 n = 0
@@ -422,7 +421,7 @@ export default new Vuex.Store({
         getModeDeclaration(state) { //Mode Declaration Group의 mode Declaration
             var datatype = []
             state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.forEach(ele => {
-                if (ele.modedeclaration != null) {
+                if (ele.modedeclaration.length > 0) {
                     ele.modedeclaration.forEach(item => {
                         datatype.push({
                             name: ele.path + '/' + ele.name + '/' + item,
@@ -463,7 +462,7 @@ export default new Vuex.Store({
         getCommunicationConnect(state) { // MachineDesign Comunication Connect
             var datatype = []
             state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.forEach(ele => {
-                if (ele.connector != null) {
+                if (ele.connector.length > 0) {
                     ele.connector.forEach(item => {
                         datatype.push({
                             name: ele.path + '/' + ele.name + '/' + item.name,
@@ -514,7 +513,7 @@ export default new Vuex.Store({
         getPPortPrototype(state) { //SWComponent안에 P Port
             var datatype = []
             state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(ele => {
-                if (ele.pport != null) {
+                if (ele.pport.length > 0) {
                     ele.pport.forEach(item => {
                         datatype.push({
                             name: ele.path + '/' + ele.name + '/' + item.name,
@@ -528,7 +527,7 @@ export default new Vuex.Store({
         getRPortPrototype(state) { //SWComponent안에 R Port
             var datatype = []
             state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(ele => {
-                if (ele.rport != null) {
+                if (ele.rport.length > 0) {
                     ele.rport.forEach(item => {
                         datatype.push({
                             name: ele.path + '/' + ele.name + '/' + item.name,
@@ -542,7 +541,7 @@ export default new Vuex.Store({
         getPRPortPrototype(state) { //SWComponent안에 PR Port
             var datatype = []
             state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(ele => {
-                if (ele.prport != null) {
+                if (ele.prport.length > 0) {
                     ele.prport.forEach(item => {
                         datatype.push({
                             name: ele.path + '/' + ele.name + '/' + item.name,
@@ -836,6 +835,9 @@ export default new Vuex.Store({
         },
         getDataModeDeclaration: (state) => (uuid) => {
             return state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.find(data => data.uuid === uuid)
+        },
+        getDataHWElement: (state) => (uuid) => {
+            return state.SAHLProject[state.openProjectIndex].Machine.HWElement.find(data => data.uuid === uuid)
         },
         getDataSWComponent: (state) => (uuid) => {
             return state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.find(data => data.uuid === uuid)
@@ -1645,7 +1647,7 @@ export default new Vuex.Store({
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].category != '') {
                         saveStr += "<CATEGORY>" + state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].category + "</CATEGORY>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].scales != null) {
+                    if (state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].scales.length > 0) {
                         saveStr += "<COMPU-INTERNAL-TO-PHYS><COMPU-SCALES>"
                         state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].scales.forEach(ele => {
                             saveStr += "<COMPU-SCALE>"
@@ -1750,7 +1752,7 @@ export default new Vuex.Store({
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].desc != '') {
                         saveStr += '<DESC><L-2 L="EN">' + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].desc + "</L-2></DESC>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].ddpc != null) {
+                    if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].ddpc.length > 0) {
                         saveStr += "<SW-DATA-DEF-PROPS><SW-DATA-DEF-PROPS-VARIANTS>"
                         state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].ddpc.forEach(ele => {
                             saveStr += '<SW-DATA-DEF-PROPS-CONDITIONAL>'
@@ -1764,7 +1766,7 @@ export default new Vuex.Store({
                         })
                         saveStr += "</SW-DATA-DEF-PROPS-VARIANTS></SW-DATA-DEF-PROPS>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].idtelement != null) {
+                    if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].idtelement.length > 0) {
                         saveStr += "<SUB-ELEMENTS>"
                         state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].idtelement.forEach(ele => {
                             saveStr += "<CPP-IMPLEMENTATION-DATA-TYPE-ELEMENT>"
@@ -1798,7 +1800,7 @@ export default new Vuex.Store({
                         saveStr += "<EXIT-TIMEOUT-VALUE>" + state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].timeout + "</EXIT-TIMEOUT-VALUE>"
                         saveStr += "</DEFAULT-APPLICATION-TIMEOUT>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].hwelement != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].hwelement.length > 0) {
                         saveStr += "<HW-ELEMENT-REFS>"
                         state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].hwelement.forEach(ele => {
                             if (ele.hwelement != null) {
@@ -1892,7 +1894,7 @@ export default new Vuex.Store({
                     if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].resettimer != '') {
                         saveStr += "<PN-RESET-TIMER>" + state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].resettimer + "</PN-RESET-TIMER>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].connector != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].connector.length > 0) {
                         saveStr += "<COMMUNICATION-CONNECTORS>"
                         state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].connector.forEach(ele => {
                             saveStr += "<ETHERNET-COMMUNICATION-CONNECTOR>"
@@ -1918,7 +1920,7 @@ export default new Vuex.Store({
                         })
                         saveStr += "</COMMUNICATION-CONNECTORS>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].servicediscover != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].servicediscover.length > 0) {
                         saveStr += "<SERVICE-DISCOVER-CONFIGS>"
                         state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].servicediscover.forEach(ele => {
                             saveStr += "<SOMEIP-SERVICE-DISCOVERY>"
@@ -2049,7 +2051,7 @@ export default new Vuex.Store({
                     if (state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].initmode != null) {
                         saveStr += '<INITIAL-MODE-REF DEST="MODE-DECLARATION">' + state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].initmode + "</INITIAL-MODE-REF>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].modedeclaration != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].modedeclaration.length > 0) {
                         saveStr += "<MODE-DECLARATIONS>"
                         state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].modedeclaration.forEach(ele => {
                             saveStr += "<MODE-DECLARATION>"
@@ -2069,7 +2071,7 @@ export default new Vuex.Store({
                         saveStr += '<HW-CATEGORY-REF DEST="HW-CATEGORY">' + state.SAHLProject[state.openProjectIndex].Machine.HWElement[data.idx].category + "</HW-CATEGORY-REF>"
                         saveStr += "</HW-CATEGORY-REFS>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[data.idx].attribute != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[data.idx].attribute.length > 0) {
                         saveStr += "<HW-ATTRIBUTE-VALUES>"
                         state.SAHLProject[state.openProjectIndex].Machine.HWElement[data.idx].attribute.forEach(ele => {
                             saveStr += "<HW-ATTRIBUTE-VALUE>"
@@ -2117,12 +2119,12 @@ export default new Vuex.Store({
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].name != '') {
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].name + "</SHORT-NAME>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport != null ||
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport != null ||
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport != null) {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport.length > 0 ||
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport.length > 0 ||
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport.length > 0) {
                         saveStr += "<PORTS>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport != null) {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport.length > 0) {
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport.forEach(ele => {
                             saveStr += "<P-PORT-PROTOTYPE>"
                             if (ele.name != '') {
@@ -2134,7 +2136,7 @@ export default new Vuex.Store({
                             saveStr += "</P-PORT-PROTOTYPE>"
                         })
                     }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport != null) {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport.length > 0) {
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport.forEach(ele => {
                             saveStr += "<R-PORT-PROTOTYPE>"
                             if (ele.name != '') {
@@ -2146,7 +2148,7 @@ export default new Vuex.Store({
                             saveStr += "</R-PORT-PROTOTYPE>"
                         })
                     }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport != null) {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport.length > 0) {
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport.forEach(ele => {
                             saveStr += "<PR-PORT-PROTOTYPE>"
                             if (ele.name != '') {
@@ -2158,9 +2160,9 @@ export default new Vuex.Store({
                             saveStr += "</PR-PORT-PROTOTYPE>"
                         })
                     }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport != null ||
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport != null ||
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport != null) {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport.length > 0 ||
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport.length > 0 ||
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport.length > 0) {
                         saveStr += "</PORTS>"
                     }
                     saveStr += "</ADAPTIVE-APPLICATION-SW-COMPONENT-TYPE>"
@@ -2230,7 +2232,7 @@ export default new Vuex.Store({
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].executableref != null) {
                         saveStr += '<EXECUTABLE-REF DEST="EXECUTABLE">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].executableref + "</EXECUTABLE-REF>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].determin != null) {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].determin.length > 0) {
                         saveStr += "<DETERMINISTIC-CLIENT-RESOURCE-NEEDSS>"
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].determin.forEach(ele => {
                             saveStr += "<DETERMINISTIC-CLIENT-RESOURCE-NEEDS>"
@@ -2862,7 +2864,7 @@ export default new Vuex.Store({
                     if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].version != null) {
                         saveStr += "<VERSION-DRIVEN-FIND-BEHAVIOR>" + state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].version + "</VERSION-DRIVEN-FIND-BEHAVIOR>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].method != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].method.length > 0) {
                         saveStr += "<METHOD-REQUEST-PROPSS>"
                         state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].method.forEach(ele => {
                             saveStr += "<SOMEIP-METHOD-PROPS>"
@@ -2873,7 +2875,7 @@ export default new Vuex.Store({
                         })
                         saveStr += "</METHOD-REQUEST-PROPSS>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].requiredevent != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].requiredevent.length > 0) {
                         saveStr += "<REQUIRED-EVENT-GROUPS>"
                         state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].requiredevent.forEach(ele => {
                             saveStr += "<SOMEIP-REQUIRED-EVENT-GROUP>"
@@ -2905,7 +2907,7 @@ export default new Vuex.Store({
                     if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].instanceid != '') {
                         saveStr += "<SERVICE-INSTANCE-ID>" + state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].instanceid + "</SERVICE-INSTANCE-ID>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].eventP != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].eventP.length > 0) {
                         saveStr += "<EVENT-PROPSS>"
                         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].eventP.forEach(ele => {
                             saveStr += "<SOMEIP-EVENT-PROPS>"
@@ -2927,7 +2929,7 @@ export default new Vuex.Store({
                         })
                         saveStr += "</METHOD-RESPONSE-PROPSS>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].eventG != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].eventG.length > 0) {
                         saveStr += "<PROVIDED-EVENT-GROUPS>"
                         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].eventG.forEach(ele => {
                             saveStr += "<SOMEIP-PROVIDED-EVENT-GROUP>"
@@ -2977,7 +2979,7 @@ export default new Vuex.Store({
                     if (state.SAHLProject[state.openProjectIndex].Service.ErrorSet[data.idx].name != '') {
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.ErrorSet[data.idx].name + "</SHORT-NAME>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Service.ErrorSet[data.idx].errorref != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Service.ErrorSet[data.idx].errorref.length > 0) {
                         saveStr += "<AP-APPLICATION-ERROR-REFS>"
                         state.SAHLProject[state.openProjectIndex].Service.ErrorSet[data.idx].errorref.forEach(ele => {
                             if (ele.error != null) {
@@ -3184,6 +3186,302 @@ export default new Vuex.Store({
         setuuid(state, payload) {
             state.activeUUID = payload.uuid
         },
+        copyElement(state, payload) {
+            var idxEle = null,
+                copyEle
+            if (payload.parent == constant.CompuMethod_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxEle]))
+                state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameCompuMethod
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.CompuMethod_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.DataConstr_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxEle]))
+                state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameDataConstr
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.DataConstr_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.ApplicationArray_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxEle]))
+                state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameApplicationArray
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.ApplicationArray_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.Implementation_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxEle]))
+                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameImplementation
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.Machine_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Machine.Machine[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameMachine
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Machine.Machine.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.MachineDesigne_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameMachineDesign
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.EthernetCluster_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameEthernetCluster
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.EthernetCluster_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.ModeDeclarationGroup_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameModeDeclarationGroup
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.ModeDeclarationGroup_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.HWElement_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameHWElement
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Machine.HWElement.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.ProcesstoMachineMapping_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxEle]))
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameProcesstoMachineMapping
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.SWComponents_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxEle]))
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameSWComponents
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.Process_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxEle]))
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameProcess
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.ProcessDesign_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxEle]))
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameProcessDesign
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcessDesign_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.Executable_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxEle]))
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameExecutable
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Executable_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.StartupConfig_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxEle]))
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameStartupConfig
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.StartupConfig_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.DeterministicClient_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxEle]))
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameDeterministicClient
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.DeterministicClient_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.SomeIPServiceInterfaceDeployment_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameSomeIPService
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.ServiceInterface_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameServiceInterface
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.Client_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameClient
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Client_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.Server_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameServer
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Server_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.SomeIPClient_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameSomeIPClient
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPClient_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.SomeIPServer_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameSomeIPServer
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPServer_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.SomeIPToMachineMapping_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameSomeIPtoMachine
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.ToPortPrototypeMapping_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameToPortPrototype
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.RequiredSomeIP_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameRequiredSomeIP
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.ProvidedSomeIP_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameProvidedSomeIP
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.Error_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.Error[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.Error[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameError
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.Error.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Error_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.Errorset_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameErrorSet
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.ErrorSet.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            } else if (payload.parent == constant.ErrorDomain_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.findIndex(item => item.uuid === payload.uuid)
+                copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxEle]))
+                state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxEle].zindex = 2
+                copyEle.uuid = uuid.v1()
+                copyEle.name = this.getters.getNameErrorDomain
+                copyEle.left += 100
+                state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.push(copyEle)
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.ErrorDomain_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            }
+            state.activeUUID = copyEle.uuid
+            Vue.nextTick(() => { // 선 하나씩 그려주기 때문에 끝날때 active line 해줘야한다.
+                EventBus.$emit('setLineActive', payload.uuid, false)
+                EventBus.$emit('new-element', copyEle.uuid)
+                Vue.nextTick(() => {
+                    var activeLine = this.getters.getactiveLine(payload.uuid)
+                    activeLine.forEach((i, n) => {
+                        console.log(i)
+                        var startUUID = state.connectionLine[state.openProjectIndex].start[i].split('/')
+                        if (startUUID[0] == payload.uuid) {
+                            //console.log(payload.uuid + '   //   ' + copyEle.uuid)
+                            Vue.nextTick(() => {
+                                this.commit('setConnectionline', { start: copyEle.uuid + '/' + startUUID[1], end: state.connectionLine[state.openProjectIndex].end[i] })
+                            })
+                            Vue.nextTick(() => {
+                                EventBus.$emit('copy-line', copyEle.uuid, state.connectionLine[state.openProjectIndex].end[i], i)
+                                if (n == activeLine.length - 1) {
+                                    Vue.nextTick(() => {
+                                        //console.log(state.visibleLine)
+                                        if (state.visibleLine) {
+                                            EventBus.$emit('setLineActive', copyEle.uuid, true)
+                                                //this.commit('setVisibleLine', { isvisible: state.visibleLine })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                })
+            })
+        },
         setConnectionline(state, payload) {
             //console.log('setConnectionline ' + payload.start + ' /// ' + payload.end)
             state.connectionLine[state.openProjectIndex].start.push(payload.start)
@@ -3251,6 +3549,7 @@ export default new Vuex.Store({
         deleteDetailViewerList(state) {
             state.detailViewerList = []
             state.detailViewer = { uuid: '', element: '' }
+            state.detailViewUUID = null
             console.log(state.detailViewerList)
         },
         setZoomInOut(state, payload) {
@@ -3270,9 +3569,6 @@ export default new Vuex.Store({
         },
         setOpenCloseNavigationView(state, payload) {
             state.isOpenCloseNavigationView = payload.isopen
-        },
-        setcheckVaildation(state, payload) {
-            state.checkVaildation = payload.value
         },
         setSaveValidate(state, payload) {
             console.log('setSaveValidate')
@@ -3301,7 +3597,6 @@ export default new Vuex.Store({
                     }
                 }
             }
-            state.checkVaildation = true
         },
         setCheckValidate(state) {
             console.log('setCheckValidate')
@@ -3325,7 +3620,6 @@ export default new Vuex.Store({
 
                 }
             }
-            state.checkVaildation = true
         },
         checkVaildationElement(state, payload) {
             var idxchild = null,
@@ -5844,7 +6138,7 @@ export default new Vuex.Store({
                             }
                         })
                     }
-                    if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].ddpc != null) {
+                    if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].ddpc.length > 0) {
                         state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].ddpc.forEach((data, i) => {
                             if (data.compumethod != null) {
                                 state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.forEach(item => {
@@ -5864,7 +6158,7 @@ export default new Vuex.Store({
                             }
                         })
                     }
-                    if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].idtelement != null) {
+                    if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].idtelement.length > 0) {
                         state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].idtelement.forEach((data, i) => {
                             if (data.typeref != null) {
                                 state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
@@ -5886,7 +6180,7 @@ export default new Vuex.Store({
                             }
                         })
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].hwelement != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].hwelement.length > 0) {
                         state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].hwelement.forEach((data, i) => {
                             if (data.hwelement != null) {
                                 state.SAHLProject[state.openProjectIndex].Machine.HWElement.forEach(item => {
@@ -5912,7 +6206,7 @@ export default new Vuex.Store({
                     }
                 } else if (ele.parent == constant.MachineDesigne_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(item => item.uuid === ele.uuid)
-                    if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].connector != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].connector.length > 0) {
                         state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].connector.forEach((data, i) => {
                             if (data.endpoint != null) {
                                 state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.forEach(item => {
@@ -5937,7 +6231,7 @@ export default new Vuex.Store({
                             }
                         })
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].servicediscover != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].servicediscover.length > 0) {
                         state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].servicediscover.forEach((data, i) => {
                             if (data.msia != null) {
                                 state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.forEach(item => {
@@ -5975,7 +6269,7 @@ export default new Vuex.Store({
                                                         if (connect.connector == (data.path + '/' + data.name + '/' + con.name)) {
                                                             this.commit('setConnectionline', { start: ele.uuid + '/comconet-' + c + '-' + v + '-' + n, end: data.uuid })
                                                             if (n == 0 && v == 0) {
-                                                                EventBus.$emit('new-line', ele.uuid + '/comconet' + channel.name + '-' + condi.name, data.uuid)
+                                                                EventBus.$emit('new-line', ele.uuid + '/comconet-' + channel.name + '-' + condi.name, data.uuid)
                                                             } else if (n == 0 && v != 0) {
                                                                 EventBus.$emit('new-line', ele.uuid + '/channel' + condi.name, data.uuid)
                                                             } else {
@@ -6011,7 +6305,7 @@ export default new Vuex.Store({
                     }
                 } else if (ele.parent == constant.SWComponents_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(item => item.uuid === ele.uuid)
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].pport != null) {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].pport.length > 0) {
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].pport.forEach((data, i) => {
                             if (data.interface != null) {
                                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
@@ -6023,7 +6317,7 @@ export default new Vuex.Store({
                             }
                         })
                     }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].rport != null) {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].rport.length > 0) {
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].rport.forEach((data, i) => {
                             if (data.interface != null) {
                                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
@@ -6035,7 +6329,7 @@ export default new Vuex.Store({
                             }
                         })
                     }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport != null) {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.length > 0) {
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.forEach((data, i) => {
                             if (data.interface != null) {
                                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
@@ -6415,7 +6709,7 @@ export default new Vuex.Store({
                             }
                         })
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].method != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].method.length > 0) {
                         state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].method.forEach((method, i) => {
                             if (method.method != null) {
                                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(item => {
@@ -6477,7 +6771,7 @@ export default new Vuex.Store({
                             }
                         })
                     }
-                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].eventP != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].eventP.length > 0) {
                         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].eventP.forEach((eventp, i) => {
                             if (eventp.event != null) {
                                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(item => {
@@ -6549,7 +6843,7 @@ export default new Vuex.Store({
                     }
                 } else if (ele.parent == constant.Errorset_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(item => item.uuid === ele.uuid)
-                    if (state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxelement].errorref != null) {
+                    if (state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxelement].errorref.length > 0) {
                         state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxelement].errorref.forEach((data, i) => {
                             if (data.error != null) {
                                 state.SAHLProject[state.openProjectIndex].Service.Error.forEach(item => {
@@ -6593,8 +6887,6 @@ export default new Vuex.Store({
             var idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.findIndex(data => data.uuid === payload.uuid)
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.CompuMethod_index].children[idxElement].name = payload.name
-            } else if (payload.compo == "Scale") {
-                state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].scales = payload.scales.slice()
             } else if (payload.compo == "drag") {
                 state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].top = payload.top
                 state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].left = payload.left
@@ -6712,10 +7004,6 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxElement].name = payload.name
                 state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].typeemitter = payload.typeemitter
-            } else if (payload.compo == "DDPC") {
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc = payload.ddpc.slice()
-            } else if (payload.compo == "IDT Element") {
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].idtelement = payload.idtelement.slice()
             } else if (payload.compo == "drag") {
                 state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].top = payload.top
                 state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].left = payload.left
@@ -6757,20 +7045,6 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children[idxElement].name = payload.name
-            } else if (payload.compo == 'HWElement') {
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].hwelement = payload.hwelement.slice()
-            } else if (payload.compo == 'function') {
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].functiongroup = payload.functiongroup.slice()
-            } else if (payload.compo == 'Processor') {
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].processor = payload.processor.slice()
-            } else if (payload.compo == 'Processor Name') {
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].processor[payload.idx].name = payload.name
-            } else if (payload.compo == 'Processor Core') {
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].processor[payload.idx].core = payload.core
-            } else if (payload.compo == "module Ins") {
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].moduleinstant = payload.ModuleIns.slice()
-            } else if (payload.compo == 'module Name') {
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].moduleinstant[payload.idx].name = payload.name
             } else if (payload.compo == "drag") {
                 state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].top = payload.top
                 state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].left = payload.left
@@ -6806,8 +7080,6 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].children[idxElement].name = payload.name
-            } else if (payload.compo == 'Attribute') {
-                state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].attribute = payload.attribute.slice()
             } else if (payload.compo == "drag") {
                 state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].top = payload.top
                 state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].left = payload.left
@@ -6846,10 +7118,6 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].children[idxElement].name = payload.name
-            } else if (payload.compo == 'CC item') {
-                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector = payload.cc.slice()
-            } else if (payload.compo == 'SDC item') {
-                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover = payload.sdc.slice()
             } else if (payload.compo == "drag") {
                 state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].top = payload.top
                 state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].left = payload.left
@@ -6885,8 +7153,6 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.ModeDeclarationGroup_index].children[idxElement].name = payload.name
-            } else if (payload.compo == 'Mode declaration') {
-                state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxElement].modedeclaration = payload.modedeclaration.slice()
             } else if (payload.compo == "drag") {
                 state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxElement].top = payload.top
                 state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxElement].left = payload.left
@@ -7008,12 +7274,6 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].name = payload.name
-            } else if (payload.compo == "pport") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport = payload.pport.slice()
-            } else if (payload.compo == "rport") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport = payload.rport.slice()
-            } else if (payload.compo == "prport") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport = payload.prport.slice()
             } else if (payload.compo == "drag") {
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].top = payload.top
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].left = payload.left
@@ -7090,28 +7350,6 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcessDesign_index].children[idxElement].name = payload.name
-            } else if (payload.compo == "determin") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].determin = payload.determin.slice()
-            } else if (payload.compo == "Stort Name") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].determin[payload.determinTab].swname = payload.name
-            } else if (payload.compo == "Hardware Platform") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].determin[payload.determinTab].hardwareP = payload.name
-            } else if (payload.compo == "Init Instruct") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].determin[payload.determinTab].initnofinstruction = payload.name
-            } else if (payload.compo == "Init Begin") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].determin[payload.determinTab].initsequentialbegin = payload.name
-            } else if (payload.compo == "Init End") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].determin[payload.determinTab].initsequentialend = payload.name
-            } else if (payload.compo == "Init Speedup") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].determin[payload.determinTab].initspeedup = payload.name
-            } else if (payload.compo == "Run Instruct") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].determin[payload.determinTab].runnofinstruction = payload.name
-            } else if (payload.compo == "Run Begin") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].determin[payload.determinTab].runsequentialbegin = payload.name
-            } else if (payload.compo == "Run End") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].determin[payload.determinTab].runsequentialend = payload.name
-            } else if (payload.compo == "Run Speedup") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].determin[payload.determinTab].runspeedup = payload.name
             } else if (payload.compo == "drag") {
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].top = payload.top
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].left = payload.left
@@ -7642,12 +7880,6 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].name = payload.name
-            } else if (payload.compo == "method") {
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method = payload.methodref.slice()
-            } else if (payload.compo == "Event name") {
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[payload.tab].name = payload.name
-            } else if (payload.compo == "Required Event") {
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent = payload.eventG.slice()
             } else if (payload.compo == "drag") {
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].top = payload.top
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].left = payload.left
@@ -7687,22 +7919,6 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].name = payload.name
-            } else if (payload.compo == "method") {
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method = payload.methodref.slice()
-            } else if (payload.compo == "event") {
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP = payload.eventref.slice()
-            } else if (payload.compo == "Required Event") {
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG = payload.eventG.slice()
-            } else if (payload.compo == "Event name") {
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[payload.tab].name = payload.name
-            } else if (payload.compo == "Event udp") {
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[payload.tab].udp = payload.name
-            } else if (payload.compo == "Event ipv4") {
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[payload.tab].ipv4 = payload.name
-            } else if (payload.compo == "Event ipv6") {
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[payload.tab].ipv6 = payload.name
-            } else if (payload.compo == "Event threshold") {
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[payload.tab].threshold = payload.name
             } else if (payload.compo == "drag") {
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].top = payload.top
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].left = payload.left
@@ -7774,8 +7990,6 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].children[idxElement].name = payload.name
-            } else if (payload.compo == "error ref") {
-                state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].errorref = payload.errorref.slice()
             } else if (payload.compo == "drag") {
                 state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].top = payload.top
                 state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].left = payload.left
@@ -7819,6 +8033,100 @@ export default new Vuex.Store({
             }
         },
 
+        renameElement(state, payload) {
+            var idxEle, ele
+            if (payload.parent == constant.CompuMethod_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxEle]
+            } else if (payload.parent == constant.DataConstr_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxEle]
+            } else if (payload.parent == constant.ApplicationArray_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxEle]
+            } else if (payload.parent == constant.Implementation_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxEle]
+            } else if (payload.parent == constant.Machine_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Machine.Machine[idxEle]
+            } else if (payload.parent == constant.MachineDesigne_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxEle]
+            } else if (payload.parent == constant.EthernetCluster_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxEle]
+            } else if (payload.parent == constant.ModeDeclarationGroup_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxEle]
+            } else if (payload.parent == constant.HWElement_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxEle]
+            } else if (payload.parent == constant.ProcesstoMachineMapping_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxEle]
+            } else if (payload.parent == constant.SWComponents_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxEle]
+            } else if (payload.parent == constant.Process_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxEle]
+            } else if (payload.parent == constant.ProcessDesign_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxEle]
+            } else if (payload.parent == constant.Executable_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxEle]
+            } else if (payload.parent == constant.StartupConfig_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxEle]
+            } else if (payload.parent == constant.DeterministicClient_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxEle]
+            } else if (payload.parent == constant.SomeIPServiceInterfaceDeployment_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxEle]
+            } else if (payload.parent == constant.ServiceInterface_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxEle]
+            } else if (payload.parent == constant.Client_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxEle]
+            } else if (payload.parent == constant.Server_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxEle]
+            } else if (payload.parent == constant.SomeIPClient_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxEle]
+            } else if (payload.parent == constant.SomeIPServer_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxEle]
+            } else if (payload.parent == constant.SomeIPToMachineMapping_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxEle]
+            } else if (payload.parent == constant.ToPortPrototypeMapping_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxEle]
+            } else if (payload.parent == constant.RequiredSomeIP_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxEle]
+            } else if (payload.parent == constant.ProvidedSomeIP_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxEle]
+            } else if (payload.parent == constant.Error_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.Error[idxEle]
+            } else if (payload.parent == constant.Errorset_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxEle]
+            } else if (payload.parent == constant.ErrorDomain_str) {
+                idxEle = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.findIndex(item => item.uuid === payload.uuid)
+                ele = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxEle]
+            }
+
+            ele.name = payload.name
+            this.commit('changePathElement', { uuid: payload.uuid, path: ele.path, name: ele.name })
+        },
         changePathElement(state, payload) {
             var indices = this.getters.getchangenamelist(payload.uuid)
             indices.forEach(idx => {
@@ -8151,7 +8459,7 @@ export default new Vuex.Store({
                 } else if (payload.deleteName == 'eventG') {
                     //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                     state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach((ele, i) => {
-                            if (ele.requiredevent != null) {
+                            if (ele.requiredevent.length > 0) {
                                 ele.requiredevent.forEach((item, n) => {
                                     if (item.eventG == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
                                         var idx = this.getters.getconnectLineNum(ele.uuid + '/requiredEventG-' + n)
@@ -8171,7 +8479,7 @@ export default new Vuex.Store({
                         })
                         //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의 eventG ref할때
                     state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
-                        if (ele.eventG != null) {
+                        if (ele.eventG.length > 0) {
                             ele.eventG.forEach((item, n) => {
                                 if (item.eventG == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
                                     var idx = this.getters.getconnectLineNum(ele.uuid + '/providEventG-' + n)
@@ -8344,7 +8652,7 @@ export default new Vuex.Store({
                             })
                             //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의  eventD ref할때
                         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
-                            if (ele.eventP != null) {
+                            if (ele.eventP.length > 0) {
                                 ele.eventP.forEach((item, n) => {
                                     if (item.event == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                         var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedEventP-' + n)
@@ -8365,7 +8673,7 @@ export default new Vuex.Store({
                     } else if (payload.deleteName == 'methodD') {
                         //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 Service Deployment Method Deployment ref할때
                         state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach((ele, i) => {
-                                if (ele.method != null) {
+                                if (ele.method.length > 0) {
                                     ele.method.forEach((item, n) => {
                                         if (item.method == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                             var idx = this.getters.getconnectLineNum(ele.uuid + '/requiredMethod-' + n)

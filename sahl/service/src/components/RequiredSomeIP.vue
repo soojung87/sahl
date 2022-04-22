@@ -84,7 +84,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isMethodRefOpenClose">
-                            <v-data-table v-model="selectMethodRef" :headers="headerMethodRef" :items="methodItem"
+                            <v-data-table v-model="selectMethodRef" :headers="headerMethodRef" :items="element.method"
                                     :show-select="isdeleteMethodRef" item-key="method" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -139,12 +139,12 @@
                             </v-btn>
                         </div>
                         <v-tabs v-model='eventGroupTab' v-show="isRequiredEventOpenClose" show-arrows @change="changeEeventGroupTab()">
-                            <v-tab v-for="(tab, idx) in eventGroupItem" :key="idx" @click="clickEeventGroupTab()"> 
+                            <v-tab v-for="(tab, idx) in element.requiredevent" :key="idx" @click="clickEeventGroupTab()"> 
                                 {{tab.name}}
                                 <v-btn text x-small @click="deleteEventGroup(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
                         </v-tabs>
                         <v-tabs-items v-model="eventGroupTab" v-show="isRequiredEventOpenClose">
-                            <v-tab-item v-for="(tab, idx) in eventGroupItem" :key="idx">
+                            <v-tab-item v-for="(tab, idx) in element.requiredevent" :key="idx">
                                 <v-card flat>
                                     <v-card-text>
                                         <v-text-field v-model="tab.name" label="name" :rules="rules.name" @input='inputEventGName(tab.name)' @click="setactiveUUID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
@@ -253,7 +253,6 @@ export default {
             headerMethodRef: [
                 { text: 'SomeIP Method Props', align: 'start', sortable: false, value: 'method' },
             ],
-            methodItem: [],
             editMethodItem: { method : null},
             isdeleteMethodRef: false,
             selMethodref: this.$store.getters.getDeploymentMethod,
@@ -261,20 +260,11 @@ export default {
             deleteMethodLine: [],
 
             eventGroupTab: 0,
-            eventGroupItem: [],
             selEventG: this.$store.getters.getEventGroup,
             selClient: this.$store.getters.getClient,
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            if(this.element.method != undefined) {
-                this.methodItem = this.element.method.slice()
-            }
-            if(this.element.requiredevent != undefined) {
-                this.eventGroupItem = this.element.requiredevent.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -304,9 +294,9 @@ export default {
             this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
                 if(this.iselementOpenClose) {
-                    if(this.eventGroupItem.length > 0) {
+                    if(this.element.requiredevent.length > 0) {
                         if (this.isRequiredEventOpenClose) {
-                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.eventGroupItem[this.eventGroupTab].name)
+                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].name)
                         } else {
                             EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
                         }
@@ -322,10 +312,10 @@ export default {
         showRequiredEvent() {
             this.isRequiredEventOpenClose = this.isRequiredEventOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
-            if(this.eventGroupItem.length > 0) {
+            if(this.element.requiredevent.length > 0) {
                 this.$nextTick(() => {
                     if(this.isRequiredEventOpenClose) {
-                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.eventGroupItem[this.eventGroupTab].name)
+                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].name)
                     } else {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
                     }
@@ -445,20 +435,20 @@ export default {
         },
         deletMethodRef() {
             if (this.isdeleteMethodRef == true) {
-                for(let i=0; i<this.methodItem.length; i++){
+                for(let i=0; i<this.element.method.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredMethod-'+i)
                     if(endLine != undefined) {
-                        this.deleteMethodLine.push({name:this.methodItem[i].method, endLine:endLine})
+                        this.deleteMethodLine.push({name:this.element.method[i].method, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/requiredMethod-'+i)
                     }
                 }
 
-                this.methodItem = this.methodItem.filter(item => {
+                this.element.method = this.element.method.filter(item => {
                         return this.selectMethodRef.indexOf(item) < 0 })
 
-                for(let n=0; n<this.methodItem.length; n++) {
+                for(let n=0; n<this.element.method.length; n++) {
                     for(let idx=0; idx<this.deleteMethodLine.length; idx++) {
-                        if (this.methodItem[n].method == this.deleteMethodLine[idx].name) {
+                        if (this.element.method[n].method == this.deleteMethodLine[idx].name) {
                             this.newLine(this.element.uuid+'/requiredMethod-'+n, this.element.uuid+'/requiredMethod', this.deleteMethodLine[idx].endLine)
                         }
                     }
@@ -467,40 +457,35 @@ export default {
                 this.isdeleteMethodRef = false
                 this.selectMethodRef = []
                 this.deleteMethodLine = []
-                this.inputMethodItem()
             } 
-        },
-        inputMethodItem() {
-            this.$store.commit('editRequiredSomeIP', {compo:"method", uuid:this.element.uuid, methodref: this.methodItem} )
         },
         openMethodRef(idx) {
             this.selMethodref = this.$store.getters.getDeploymentMethod
 
-            if ( this.methodItem[idx].method != null) {
+            if ( this.element.method[idx].method != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredMethod-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getServiceInterfaceDeploymentPath(this.methodItem[idx].method, 3)
+                    endLine = this.$store.getters.getServiceInterfaceDeploymentPath(this.element.method[idx].method, 3)
                 }
-                this.editMethodItem.method = { name: this.methodItem[idx].method, uuid: endLine }
+                this.editMethodItem.method = { name: this.element.method[idx].method, uuid: endLine }
             }
         },
         editMethodRef(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredMethod-'+idx)
             if (endLine != undefined && this.editMethodItem.method == null) {
                 this.deleteLine(this.element.uuid+'/requiredMethod-'+idx)
-                this.methodItem[idx].method = null
+                this.element.method[idx].method = null
             } else if (endLine != undefined && endLine != this.editMethodItem.method.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/requiredMethod-'+idx)
                 this.newLine(this.element.uuid+'/requiredMethod-'+idx, this.element.uuid+'/requiredMethod', this.editMethodItem.method.uuid)
-                this.methodItem[idx].method = this.editMethodItem.method.name
+                this.element.method[idx].method = this.editMethodItem.method.name
             } else if (endLine == undefined && this.editMethodItem.method != null) {
                 this.newLine(this.element.uuid+'/requiredMethod-'+idx, this.element.uuid+'/requiredMethod', this.editMethodItem.method.uuid)
-                this.methodItem[idx].method = this.editMethodItem.method.name
+                this.element.method[idx].method = this.editMethodItem.method.name
             }
             
             this.cancelMethodRef()
-            this.inputMethodItem()
         },
         cancelMethodRef() {
             this.editMethodItem.method = null
@@ -509,19 +494,18 @@ export default {
         addMethodRef() {
             if( this.editMethodItem.method != null) {
                 var datacount
-                if(this.methodItem == undefined) {
+                if(this.element.method == undefined) {
                     datacount = 0
                 }else {
-                    datacount = this.methodItem.length
+                    datacount = this.element.method.length
                 }
                 this.newLine(this.element.uuid+'/requiredMethod-'+datacount, this.element.uuid+'/requiredMethod', this.editMethodItem.method.uuid)
                 this.editMethodItem.method = this.editMethodItem.method.name
             }
             const addObj = Object.assign({}, this.editMethodItem)
-            this.methodItem.push(addObj);
+            this.element.method.push(addObj);
 
             this.cancelMethodRef()
-            this.inputMethodItem()
         },
         setMethodSelect() {
             if (this.isEditingMethod == true) {
@@ -543,12 +527,6 @@ export default {
             this.editMethodItem.method = null
         },
 
-        inputEventGName(name) {
-            this.$store.commit('editRequiredSomeIP', {compo:"Event name", uuid:this.element.uuid, name: name, tab: this.eventGroupTab} )
-        },
-        inputEventGroupItem() {
-            this.$store.commit('editRequiredSomeIP', {compo:"Required Event", uuid:this.element.uuid, eventG: this.eventGroupItem} )
-        },
         addRequiredEvent() {
             const editItem = { name: '', eventG: null, client: null}
             const addObj = new Object(editItem)
@@ -556,35 +534,34 @@ export default {
 
             while (res) {
                 addObj.name = 'Event Group_' + n++;
-                res = this.eventGroupItem.some(ele => ele.name === addObj.name)
+                res = this.element.requiredevent.some(ele => ele.name === addObj.name)
             }
-            this.eventGroupItem.push(addObj)
-            this.eventGroupTab = this.eventGroupItem.length-1
-            this.inputEventGroupItem()
+            this.element.requiredevent.push(addObj)
+            this.eventGroupTab = this.element.requiredevent.length-1
             EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
         },
         clickEeventGroupTab() {},
         changeEeventGroupTab() {
-            if(this.eventGroupItem.length > 0) {
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.eventGroupItem[this.eventGroupTab].name)}, 300);
+            if(this.element.requiredevent.length > 0) {
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].name)}, 300);
             }
         },
         deleteEventGroup(idx) {
+            //console.log('deleteEventGroup')
             var endLine
-            if (this.eventGroupItem[idx].eventG != null) {
+            if (this.element.requiredevent[idx].eventG != null) {
                 endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredEventG-'+idx)
                 if (endLine != undefined) {
                     this.deleteLine(this.element.uuid+'/requiredEventG-'+idx)
                 }
             }
-            if (this.eventGroupItem[idx].client != null) {
+            if (this.element.requiredevent[idx].client != null) {
                 endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredClient-'+idx)
                 if (endLine != undefined) {
                     this.deleteLine(this.element.uuid+'/requiredClient-'+idx)
                 }
             }
-            this.eventGroupItem.splice(idx, 1)
-            this.inputEventGroupItem()
+            this.element.requiredevent.splice(idx, 1)
         },
         clearEventG(item) {
             item.eventG = null
@@ -592,7 +569,6 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/requiredEventG-'+this.eventGroupTab)
             }
-            this.inputEventGroupItem()
         },
         setEventGSelect(item) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredEventG-'+this.eventGroupTab)
@@ -616,10 +592,9 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/requiredEventG-'+this.eventGroupTab, this.element.uuid+'/requiredEventG'+this.eventGroupItem[this.eventGroupTab].name, item.uuid)
+                    this.newLine(this.element.uuid+'/requiredEventG-'+this.eventGroupTab, this.element.uuid+'/requiredEventG'+this.element.requiredevent[this.eventGroupTab].name, item.uuid)
                 }
                 tab.eventG = item.name
-                this.inputEventGroupItem()
             }
             this.setactiveUUID()
         },
@@ -629,7 +604,6 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/requiredClient-'+this.eventGroupTab)
             }
-            this.inputEventGroupItem()
         },
         setClientSelect(item) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredClient-'+this.eventGroupTab)
@@ -653,10 +627,9 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/requiredClient-'+this.eventGroupTab, this.element.uuid+'/requiredClient'+this.eventGroupItem[this.eventGroupTab].name, item.uuid)
+                    this.newLine(this.element.uuid+'/requiredClient-'+this.eventGroupTab, this.element.uuid+'/requiredClient'+this.element.requiredevent[this.eventGroupTab].name, item.uuid)
                 }
                 tab.client = item.name
-                this.inputEventGroupItem()
             }
             this.setactiveUUID()
         },

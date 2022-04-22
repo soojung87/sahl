@@ -71,14 +71,14 @@
             <span>Detail View Open</span>
         </v-tooltip>
         
-        <v-dialog v-model="dialogValidate" hide-overlay persistent width="600">
+        <!-- <v-dialog v-model="dialogValidate" hide-overlay persistent width="600">
             <v-card >
                 <v-card-text>
                     validate 체크중입니다. 기다려주세요.
                     <v-progress-circular indeterminate color="primary"></v-progress-circular>
                 </v-card-text>
             </v-card>
-        </v-dialog>
+        </v-dialog> -->
         <v-dialog v-model="dialogError" persistent width="600">
             <v-card >
                 <v-alert v-model="dialogError" width="600" prominent border="left" outlined type="warning" dismissible>
@@ -112,26 +112,11 @@ export default({
         isOpenCloseDetailView() {
             return this.$store.state.isOpenCloseDetailView
         },
-        checkVaildation() {
-            return this.$store.state.checkVaildation
-        },
     },
     watch: {
         ismakeProject(val) { // project가 없는상태에서 다른 compoment들을 만들어 놓으니 에러가 떠서 만들어줌
             this.isprojectOpen = val
         },
-        checkValidate(val) {
-            //console.log(val)
-            if (!val){
-                return
-            }
-            this.dialogValidate = false
-            this.checkValidate = false
-            this.$store.commit('setcheckVaildation', {value: false})
-        },
-        checkVaildation(value) {
-            this.checkValidate = value
-        }
     },
     data() {
         return {
@@ -142,19 +127,18 @@ export default({
             dialogNewProject: false,
             dialogValidate: false,
             strProjectName: null,
-            checkValidate: false,
             dialogSaveWindow: false,
             dialogError: false,
         }
     },
     mounted() {
-          EventBus.$on('shortcut-keys-appbar', (str) => {
-              if (str == 'validation') {
-                  this.clickValidate()
-              } else if (str == 'openfile') {
-                  this.inputFile()
-              }
-          })
+        EventBus.$on('shortcut-keys-appbar', (str) => {
+            if (str == 'validation') {
+                this.clickValidate()
+            } else if (str == 'openfile') {
+                this.inputFile()
+            }
+        })
     },
     methods: {
         addproject () {
@@ -219,7 +203,7 @@ export default({
         },
         clickValidate() {
             console.log('clickValidate')
-            this.dialogValidate = true
+            //this.dialogValidate = true
             this.$store.commit('setCheckValidate')
         },
         showNavigation() {

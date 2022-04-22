@@ -38,10 +38,10 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isScaleOpenClose">  
-                            <v-data-table v-model="selectDelectScaleItem" :headers="headerScale" :items="scalesItem" 
+                            <v-data-table v-model="selectDelectScaleItem" :headers="headerScale" :items="element.scales" 
                                     :show-select="isdeleteScaleItem" item-key="const" height="150px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
-                                    <v-simple-checkbox color="green" :value="isSelected" @input="select($event)"></v-simple-checkbox>
+                                    <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
                                 <template v-if="!isdeleteScaleItem" v-slot:body="{ items, headers }">
                                     <tbody>
@@ -143,12 +143,6 @@ export default {
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            //console.log(this.element.scales)
-            if(this.element.scales != undefined) {
-                this.scalesItem = this.element.scales.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -187,9 +181,6 @@ export default {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
         },
-        inputCompuMothodScale () {
-            this.$store.commit('editCompuMehtod', {compo:"Scale", uuid:this.element.uuid, scales:this.scalesItem} )
-        },
         isCheckScale() {
             if (this.isdeleteScaleItem == true) {
                 this.isdeleteScaleItem = false
@@ -200,32 +191,30 @@ export default {
         },
         deleteScale () {
             if (this.isdeleteScaleItem == true) {
-                this.scalesItem = this.scalesItem.filter(item => {
+                this.element.scales = this.element.scales.filter(item => {
                          return this.selectDelectScaleItem.indexOf(item) < 0 })
                 this.isdeleteScaleItem = false
                 this.selectDelectScaleItem = []
-                this.inputCompuMothodScale()
             }
         },
         openScale (idx) {
-            this.editScaleItem.const = this.scalesItem[idx].const
-            this.editScaleItem.symbol = this.scalesItem[idx].symbol
-            this.editScaleItem.lowerlimit = this.scalesItem[idx].lowerlimit
-            this.editScaleItem.upperlimit = this.scalesItem[idx].upperlimit
-            this.editScaleItem.desc = this.scalesItem[idx].desc
+            this.editScaleItem.const = this.element.scales[idx].const
+            this.editScaleItem.symbol = this.element.scales[idx].symbol
+            this.editScaleItem.lowerlimit = this.element.scales[idx].lowerlimit
+            this.editScaleItem.upperlimit = this.element.scales[idx].upperlimit
+            this.editScaleItem.desc = this.element.scales[idx].desc
         },
         addScale () {
             const addObj = Object.assign({}, this.editScaleItem);
-            this.scalesItem.push(addObj);
+            this.element.scales.push(addObj);
             this.cancelScale()
-            this.inputCompuMothodScale()
         },
         editScale (idx) {
-            this.scalesItem[idx].const = this.editScaleItem.const
-            this.scalesItem[idx].symbol = this.editScaleItem.symbol
-            this.scalesItem[idx].lowerlimit = this.editScaleItem.lowerlimit
-            this.scalesItem[idx].upperlimit = this.editScaleItem.upperlimit
-            this.scalesItem[idx].desc = this.editScaleItem.desc
+            this.element.scales[idx].const = this.editScaleItem.const
+            this.element.scales[idx].symbol = this.editScaleItem.symbol
+            this.element.scales[idx].lowerlimit = this.editScaleItem.lowerlimit
+            this.element.scales[idx].upperlimit = this.editScaleItem.upperlimit
+            this.element.scales[idx].desc = this.editScaleItem.desc
             this.cancelScale()
         },
         cancelScale () {
@@ -236,7 +225,6 @@ export default {
             this.$store.commit('setuuid', {uuid: this.element.uuid} )
             this.$store.commit('editCompuMehtod', {compo:"z", uuid:this.element.uuid, zindex:10} )
         },
-
     },
 
 }

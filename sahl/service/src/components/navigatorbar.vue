@@ -34,27 +34,39 @@
                                 <v-icon v-else color="primary">{{item.icon}}</v-icon>
                             </div>
                         </template>
+                        <template v-slot:label="{ item }">
+                            <v-edit-dialog v-if="renameId==item.uuid" eager large persistent cancel-text='Ok' save-text="Cancel" @open="openRename(item)" @cancel="setRename(item)" @save="cancelRename()"> 
+                                <v-btn outlined color="indigo" dense text small block width="80px" >
+                                    <v-icon x-small>mdi-pencil</v-icon>Rename
+                                </v-btn>
+                                <template v-slot:input>
+                                    <br>
+                                    <v-text-field v-model="reName" outlined clearable label="Rename" type="text"></v-text-field>
+                                </template>
+                            </v-edit-dialog>
+                            <div v-else>{{item.name}}</div>
+                        </template>
                     </v-treeview>
                 </v-card>
             </v-list-group>
         </v-list>
         <v-menu v-model="showMenu" :position-x="x" :position-y="y" absolute offset-y>
-            <v-list v-if="ismenu == 2" dense class = "text-start">
+            <v-list v-if="ismenu == 2" dense class="text-start">
                 <v-list-item  v-for="(item, index) in menuElementitems" :key="index" @click="item.menuAction(item.title)">
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
-            <v-list v-else-if="ismenu == 0" dense class = "text-start">
+            <v-list v-else-if="ismenu == 0" dense class="text-start">
                 <v-list-item  v-for="(item, index) in menuProjectitems" :key="index" @click="item.menuAction(item.title)">
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
-            <v-list v-else-if="ismenu == 1" dense class = "text-start">
+            <v-list v-else-if="ismenu == 1" dense class="text-start">
                 <v-list-item  v-for="(item, index) in menuitems" :key="index" @click="item.menuAction(item.title)">
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
-            <v-list v-else dense class = "text-start">
+            <v-list v-else dense class="text-start">
                 <v-list-item  v-for="(item, index) in menuFirstitems" :key="index" @click="item.menuAction(item.title)">
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
@@ -134,6 +146,7 @@ export default({
     },
     data() {
         return {
+            rules: { name:  [val => (val || '').length > 0 ],},
             showMenu: false,
             x: 0,
             y: 0,
@@ -142,20 +155,25 @@ export default({
             openIds: [],
             dialogDeleteProject: false,
             strDelete: null,
+            renameId : 0,
+            reName: null, //이거없이 바로 edit dialog에 item.name해주면 enter쳤을 때 treeview의 값이 바뀌게된다
             menuElementitems: [
-                { title: 'Rename', menuAction: action => { this.newOption(action) } },
+                { title: 'Rename', menuAction: action => { this.renameElement(action) } },
                 { title: 'Delete', menuAction: action => { this.deleteElement(action) } },
-                { title: 'Copy&Paste', menuAction: action => { this.newOption(action) } },
+                { title: 'Copy & Paste', menuAction: action => { this.copyElement(action) } },
             ],
             menuFirstitems: [
                 { title: 'Open',   menuAction: action => { this.openElement(action) } },
+                { title: 'Close',   menuAction: action => { this.closeElement(action) } },
             ],
             menuitems: [
                 { title: 'New',    menuAction: action => { this.newElement(action) } },
                 { title: 'Open',   menuAction: action => { this.openElement(action) } },
+                { title: 'Close',   menuAction: action => { this.closeElement(action) } },
             ],
             menuProjectitems: [
-                { title: 'Rename Project', menuAction: action => { this.newOption(action) } },
+                { title: 'Open All',   menuAction: action => { this.openAll(action) } },
+                { title: 'Close All',   menuAction: action => { this.closeAll(action) } },
                 { title: 'Delete Project', menuAction: action => { this.deleteProject(action) } },
                 { title: 'Save',           menuAction: action => { this.saveElement(action) } },
             ],
@@ -200,9 +218,6 @@ export default({
                 })
             }
         },
-        newOption () {
-            //alert('this.selectItem[0]')
-        },
         openNode() {
             //alert(this.openIds)
         },
@@ -213,7 +228,7 @@ export default({
             if (this.activenode[0] == constant.CompuMethod_str) {
                 this.$store.commit('addElementCompuMehtod', {
                     name: this.$store.getters.getNameCompuMethod, input: false, path: '',
-                    top: elementY, left: elementX, zindex: 10, category:'', scales:null, icon:"mdi-clipboard-outline", validation: false
+                    top: elementY, left: elementX, zindex: 10, category:'', scales:[], icon:"mdi-clipboard-outline", validation: false
                 })
             } else if (this.activenode[0] == constant.DataConstr_str) {
                 this.$store.commit('addElementDataConstr', {
@@ -231,29 +246,29 @@ export default({
                     name: this.$store.getters.getNameImplementation, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', 
-                    typeref: null, templatetype:null, desc:'', ddpc:null, idtelement:null,
+                    typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
                 })
             }
             else if (this.activenode[0] == constant.Machine_str) {
                 this.$store.commit('addElementMachine', {
                     name: this.$store.getters.getNameMachine, input: false, path: '',
-                    top: elementY, left: elementX, zindex: 10, machinedesign:null, timeout:'', hwelement:null, executable:null, admin: '',
-                    functiongroup:null, processor: null, moduleinstant: null, icon:"mdi-clipboard-outline", validation: false
+                    top: elementY, left: elementX, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, admin: '',
+                    functiongroup:[], processor: [], moduleinstant: [], icon:"mdi-clipboard-outline", validation: false
                 })
             } else if (this.activenode[0] == constant.MachineDesigne_str) {
                 this.$store.commit('addElementMachineDesign', {
                     name: this.$store.getters.getNameMachineDesign, input: false, path: '',
-                    top: elementY, left: elementX, zindex: 10, access: null, resettimer:'', connector:null, servicediscover:null, icon:"mdi-clipboard-outline", validation: false
+                    top: elementY, left: elementX, zindex: 10, access: null, resettimer:'', connector:[], servicediscover:[], icon:"mdi-clipboard-outline", validation: false
                 })
             } else if (this.activenode[0] == constant.ModeDeclarationGroup_str) {
                 this.$store.commit('addElementModeDeclarationGroup', {
                     name: this.$store.getters.getNameModeDeclarationGroup, input: false, path: '',
-                    top: elementY, left: elementX, zindex: 10, modedeclaration:null, initmode:null, icon:"mdi-clipboard-outline", validation: false
+                    top: elementY, left: elementX, zindex: 10, modedeclaration:[], initmode:null, icon:"mdi-clipboard-outline", validation: false
                 })
             } else if (this.activenode[0] == constant.HWElement_str) {
                 this.$store.commit('addElementHWElement', { //category 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                     name: this.$store.getters.getNameHWElement,  input: false, path: '',
-                    top: elementY, left: elementX, zindex: 10, category:null, attribute:null, icon:"mdi-clipboard-outline", validation: false
+                    top: elementY, left: elementX, zindex: 10, category:null, attribute:[], icon:"mdi-clipboard-outline", validation: false
                 })
             } else if (this.activenode[0] == constant.EthernetCluster_str) {
                 this.$store.commit('addElementEthernetCluster', {
@@ -269,9 +284,9 @@ export default({
                 })
             } else if (this.activenode[0] == constant.SWComponents_str) {
                 this.$store.commit('addElementSWComponents', {
-                    name: this.$store.getters.getNamSWComponents, input: false, path: '',
+                    name: this.$store.getters.getNameSWComponents, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    pport: null, rport: null, prport: null,
+                    pport: [], rport: [], prport: [],
                 })
             } else if (this.activenode[0] == constant.Process_str) {
                 this.$store.commit('addElementProcess', { //prodesign, determin, execut, machinetype  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
@@ -283,7 +298,7 @@ export default({
                 this.$store.commit('addElementProcessDesign', { //executableref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                     name: this.$store.getters.getNameProcessDesign, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10,icon:"mdi-clipboard-outline", validation: false,
-                    executableref: null, determin: null,
+                    executableref: null, determin: [],
                 })
             } else if (this.activenode[0] == constant.Executable_str) {
                 this.$store.commit('addElementExecutable', { //applicationtyperef 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
@@ -356,13 +371,13 @@ export default({
                 this.$store.commit('addElementRequiredSomeIP', {  //deployref, clientref,ver는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                     name: this.$store.getters.getNameRequiredSomeIP, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    deployref: null, minover: '', id: '', clientref: null, ver: null, method: null, requiredevent: null,
+                    deployref: null, minover: '', id: '', clientref: null, ver: null, method: [], requiredevent: [],
                 })
             } else if (this.activenode[0] == constant.ProvidedSomeIP_str) {
                 this.$store.commit('addElementProvidedSomeIP', {
                     name: this.$store.getters.getNameProvidedSomeIP, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    deployref: null, someipserver: null, id: '', eventP: null, method: null, eventG: null,
+                    deployref: null, someipserver: null, id: '', eventP: [], method: [], eventG: [],
                 })
             } else if (this.activenode[0] == constant.Error_str) {
                 this.$store.commit('addElementError', { //errorDref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
@@ -374,7 +389,7 @@ export default({
                 this.$store.commit('addElementErrorSet', {
                     name: this.$store.getters.getNameErrorSet, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    errorref: null,
+                    errorref: [],
                 })
             } else if (this.activenode[0] == constant.ErrorDomain_str) {
                 this.$store.commit('addElementErrorDomain', {
@@ -393,10 +408,17 @@ export default({
                 this.openIds.push(this.activenode[0])
             }
         },
+        closeElement() {
+            this.openIds.forEach((ele,i) => {
+                if( ele == this.activenode[0]) {
+                    this.openIds.splice(i,1)
+                }
+            })
+        },
         activeElement() {
             var treeitem
             var arrelement
-            //console.log('00'+ this.$store.state.activeUUID)
+            //console.log('00 '+ this.$store.state.activeUUID)
             if(this.activenode[0] != this.$store.state.activeUUID) {
                 if(this.$store.state.activeUUID != null) {
                     treeitem = Object.values(this.$store.getters.gettreeviewitems)
@@ -411,7 +433,7 @@ export default({
                         this.$store.commit('setuuid', {uuid: this.activenode[0]} )
 
                         if(actelement.validation) { 
-                            console.log('111111'+this.activenode[0])
+                            //console.log('111111'+this.activenode[0])
                             this.$store.commit('setValidation', {parent:actelement.parent, uuid:this.activenode[0]})
                         }
 
@@ -434,15 +456,62 @@ export default({
                             this.$store.commit('setValidation', {parent:arrelement.parent, uuid:this.activenode[0]})
                         }
                     }
-                }
+                } 
             }
         },
         deleteElement () {
             this.dialogDeleteProject = true
             this.strDelete = "Element를 삭제하시겠습니까?"
         },
+        renameElement() {
+            //console.log(this.activenode[0])
+            if (this.renameId == 0) {
+                this.renameId = this.activenode[0]
+            }
+        },
+        openRename(item) {
+            this.reName = item.name
+        },
+        setRename(item) {
+            //console.log('setRename')
+            var treeitem = Object.values(this.$store.getters.gettreeviewitems)
+            var arrelement = treeitem.find(data =>  data.uuid === this.renameId)
+            this.$store.commit('renameElement', {uuid: this.renameId, parent: arrelement.parent, name: this.reName})
+            item.name = this.reName
+            this.cancelRename()
+        },
+        cancelRename() {
+            this.renameId = 0
+            this.reName = null
+        },
         saveElement () {
             EventBus.$emit('shortcut-keys', 'save')
+        },
+        openAll() {
+            this.$store.state.navigatorList[this.$store.state.openProjectIndex].children.forEach( fir => {
+                if(!this.openIds.some(item => item === fir.name)){
+                        this.openIds.push(fir.name)
+                }
+                fir.children.forEach(sec => {
+                    if(sec.children.length > 0) {
+                        if(!this.openIds.some(item => item === sec.name)){
+                            this.openIds.push(sec.name)
+                        }
+                    }
+                    if(fir.name == constant.Service_str) {
+                        sec.children.forEach(thr => {
+                            if(thr.children.length > 0) {
+                                if(!this.openIds.some(item => item === thr.name)){
+                                    this.openIds.push(thr.name)
+                                }
+                            }
+                        })
+                    }
+                })
+            })
+        },
+        closeAll() {
+            this.openIds = []
         },
         deleteProject() {
             this.dialogDeleteProject = true
@@ -459,6 +528,11 @@ export default({
                 this.$store.commit('deleteElement', {parent:arrelement.parent, uuid:this.activenode[0]} )
             }
             this.dialogDeleteProject = false
+        },
+        copyElement() {
+            var treeitem = Object.values(this.$store.getters.gettreeviewitems)
+            var arrelement = treeitem.find(data =>  data.uuid === this.$store.state.activeUUID)
+            this.$store.commit('copyElement', {parent:arrelement.parent, uuid: this.$store.state.activeUUID} )
         },
     },
 })

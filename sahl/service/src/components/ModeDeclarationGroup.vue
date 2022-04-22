@@ -21,7 +21,7 @@
                 <v-card-text v-if="iselementOpenClose">
                     <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                 @input='inputModeDeclarationName' outlined dense></v-text-field>
-                    <v-select v-model="element.initmode" :items="modedeclarationItem" label="Initial Mode" @click="setactiveUUID()" outlined dense style="height: 45px;" class="lable-placeholer-color"></v-select>
+                    <v-select v-model="element.initmode" :items="element.modedeclaration" label="Initial Mode" @click="setactiveUUID()" outlined dense style="height: 45px;" class="lable-placeholer-color"></v-select>
                     <v-card outlined class="mx-auto">
                         <div class="subtitle-2" style="height:20px">
                             <v-hover v-slot="{ hover }">
@@ -33,7 +33,7 @@
                         </div>
                         <v-card-text v-if="isModeDeclarationOpenClose">
                             <v-row>
-                                <v-col v-for="(item, i) in modedeclarationItem" :key="i"  class="shrink">
+                                <v-col v-for="(item, i) in element.modedeclaration" :key="i"  class="shrink">
                                     <v-chip close @click:close="deleteModeDeclaration(i)" small>
                                         {{item}}
                                     </v-chip>
@@ -97,16 +97,10 @@ export default {
             colorToolbar: "#6A5ACD",
             iselementOpenClose: this.minimaptoolbar,
             isModeDeclarationOpenClose: true,
-            modedeclarationItem: [],
             editmodeDeclaration: '',
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            if(this.element.modedeclaration != undefined) {
-                this.modedeclarationItem = this.element.modedeclaration.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -145,13 +139,12 @@ export default {
             }
         },
         addmodedeclaration() {
-            this.modedeclarationItem.push(this.editmodeDeclaration)
+            this.element.modedeclaration.push(this.editmodeDeclaration)
             this.editmodeDeclaration = ''
-            this.$store.commit('editModeDeclarationGroup', {compo:"Mode declaration", uuid:this.element.uuid, modedeclaration:this.modedeclarationItem} )
         },
         deleteModeDeclaration(idx) {
-            this.$store.commit('deleteRefTable', {deleteName:'modeDeclar', deleteTab: true, tabName : this.modedeclarationItem[idx], path: this.element.path, name: this.element.name})
-            this.modedeclarationItem.splice(idx, 1)
+            this.$store.commit('deleteRefTable', {deleteName:'modeDeclar', deleteTab: true, tabName : this.element.modedeclaration[idx], path: this.element.path, name: this.element.name})
+            this.element.modedeclaration.splice(idx, 1)
         },
         setactiveUUID() {
             this.$store.commit('setuuid', {uuid: this.element.uuid} )

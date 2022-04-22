@@ -842,7 +842,7 @@ export default {
                     name: this.$store.getters.getNameImplementation, input: false, path: '',
                     top: this.element.top+100, left: this.element.left+ 300,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', 
-                    typeref: null, templatetype:null, desc:'', ddpc:null, idtelement:null,
+                    typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
             })
             EventBus.$emit('add-element', constant.Implementation_str)
             EventBus.$emit('add-element', constant.DateType_str)
@@ -1174,7 +1174,7 @@ export default {
             this.$store.commit('addElementErrorSet', {
                 name: this.$store.getters.getNameErrorSet, input: false, path: '',
                 top: this.element.top+100, left: this.element.left+300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                errorref: null,
+                errorref: [],
             })
             EventBus.$emit('add-element', constant.Service_str)
             EventBus.$emit('add-element', constant.Errors_str)

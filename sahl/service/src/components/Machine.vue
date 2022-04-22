@@ -62,7 +62,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isHWElementOpenClose">
-                            <v-data-table v-model="selectDelectHWElement" :headers="headerHWElement" :items="HWelementItem"
+                            <v-data-table v-model="selectDelectHWElement" :headers="headerHWElement" :items="element.hwelement"
                                     :show-select="isdeleteHWElementItem" item-key="hwelement" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -130,7 +130,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isFunctionGroupOpenClose">
-                            <v-data-table v-model="selectDelectFunctionItem" :headers="headerFunctionGroup" :items="functionGroupItem"
+                            <v-data-table v-model="selectDelectFunctionItem" :headers="headerFunctionGroup" :items="element.functiongroup"
                                     :show-select="isdeleteFunctionGroupItem" item-key="name" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -197,15 +197,15 @@
                             </v-btn>
                         </div>
                         <v-tabs v-model='processortab' height="30px" v-if="isProcessorOpenClose">
-                            <v-tab v-for="(tab, idx) in ProcessorItem" :key="idx" @click="clickProcessortab()"> 
+                            <v-tab v-for="(tab, idx) in element.processor" :key="idx" @click="clickProcessortab()"> 
                                 {{tab.name}}
                                 <v-btn text x-small @click="deleteProcessor(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
                         </v-tabs>
                         <v-tabs-items v-model="processortab" v-if="isProcessorOpenClose">
-                            <v-tab-item v-for="(tab, idx) in ProcessorItem" :key="idx">
+                            <v-tab-item v-for="(tab, idx) in element.processor" :key="idx">
                                 <v-card flat>
                                     <v-card-text>
-                                        <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @change="inputProcessorName" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                        <v-text-field v-model="tab.name" :rules="rules.name" label="Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                         <div class="subtitle-2" style="height:20px">
                                             <v-hover v-slot="{ hover }">
                                                 <v-btn text @click="showCore" x-small color="indigo">
@@ -274,15 +274,15 @@
                             </v-btn>
                         </div>
                         <v-tabs v-model='ModuleInstab' height="30px" v-if="isModuleInsOpenClose">
-                            <v-tab v-for="(tab, idx) in ModuleInsItem" :key="idx" @click="clickModuleInstab()"> 
+                            <v-tab v-for="(tab, idx) in element.moduleinstant" :key="idx" @click="clickModuleInstab()"> 
                                 {{tab.name}}
                                 <v-btn text x-small @click="deleteModuleIns(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
                         </v-tabs>
                         <v-tabs-items v-model="ModuleInstab" v-if="isModuleInsOpenClose">
-                            <v-tab-item v-for="(tab, idx) in ModuleInsItem" :key="idx">
+                            <v-tab-item v-for="(tab, idx) in element.moduleinstant" :key="idx">
                                 <v-card flat>
                                     <v-card-text>
-                                        <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputModuleInsName" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                        <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputModuleInsName()" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                         <div class="subtitle-2" style="height:20px">
                                             <v-hover v-slot="{ hover }">
                                                 <v-btn text @click="showResourceG" x-small color="indigo">
@@ -399,7 +399,6 @@ export default {
             headerHWElement: [
                 { text: 'HW Element Ref', align: 'start', sortable: false, value: 'hwelement' },
             ],
-            HWelementItem: [],
             editHWItem: { hwelement : null},
             deleteHWLine : [],
 
@@ -410,7 +409,6 @@ export default {
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
                 { text: 'Type', sortable: false, value: 'type' },
             ],
-            functionGroupItem: [],
             editFunctionItem: {
                 name: '',
                 type: null,
@@ -426,7 +424,6 @@ export default {
             isCoreOpenClose: true,
             isdeleteCoreItem: false,
             selectDelectCoreItem: [],
-            ProcessorItem: [],
             headerCore: [
                 { text: 'Name', align: 'start', sortable: false, value: 'name'},
                 { text: 'Core ID', sortable: false, value: 'id'},
@@ -450,7 +447,6 @@ export default {
                 { text: 'CPU Usage', width:'100px', sortable: false, value: 'cpuUsage' },
                 { text: 'Memory Usage', width:'120px', sortable: false, value: 'memoryUsage' },
             ],
-            ModuleInsItem: [],
             editModuleInsItem: {
                 name: '',
                 cpuUsage: '',
@@ -464,20 +460,6 @@ export default {
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            if(this.element.hwelement != undefined) {
-                this.HWelementItem = this.element.hwelement.slice()
-            }
-            if(this.element.functiongroup != undefined) {
-                this.functionGroupItem = this.element.functiongroup.slice()
-            }
-            if(this.element.processor != undefined) {
-                this.ProcessorItem = this.element.processor.slice()
-            }
-            if(this.element.moduleinstant != undefined) {
-                this.ModuleInsItem = this.element.moduleinstant.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -537,28 +519,9 @@ export default {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
         },
-        inputHWElement() {
-            this.$store.commit('editMachine', {compo:"HWElement", uuid:this.element.uuid, hwelement:this.HWelementItem} )
-        },
-        inputFunctionGroup() {
-            this.$store.commit('editMachine', {compo:"function", uuid:this.element.uuid, functiongroup:this.functionGroupItem} )
-        },
-        inputProcessor() {
-            this.$store.commit('editMachine', {compo:"Processor", uuid:this.element.uuid, processor:this.ProcessorItem} )
-        },
-        inputProcessorName() {
-            this.$store.commit('editMachine', {compo:"Processor Name", uuid:this.element.uuid, name:this.ProcessorItem[this.processortab].name, idx: this.processortab} )
-        },
-        inputcoreItem() {
-            this.$store.commit('editMachine', {compo:"Processor Core", uuid:this.element.uuid, core:this.ProcessorItem[this.processortab].core, idx: this.processortab} )
-        },
-        inputModuleIns() {
-            this.$store.commit('editMachine', {compo:"module Ins", uuid:this.element.uuid, ModuleIns:this.ModuleInsItem} )
-        },
         inputModuleInsName() {
-            this.$store.commit('editMachine', {compo:"module Name", uuid:this.element.uuid, name:this.ModuleInsItem[this.ModuleInstab].name, idx: this.ModuleInstab} )
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                        changeName: 'ModuleIns', listname: this.ModuleInsItem[this.ModuleInstab].name} )
+                                                        changeName: 'ModuleIns', listname: this.element.moduleinstant[this.ModuleInstab].name} )
         },
 
 
@@ -620,7 +583,7 @@ export default {
             this.$store.commit('addElementMachineDesign', {
                 name: this.$store.getters.getNameMachineDesign, input: false, path: '',
                 top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                access:null, resettimer: '', connector:null, servicediscover:null, 
+                access:null, resettimer: '', connector:[], servicediscover:[], 
             })
             EventBus.$emit('add-element', constant.MachineDesigne_str)
             EventBus.$emit('add-element', constant.Machines_str)
@@ -630,7 +593,7 @@ export default {
             //HW Element
             this.$store.commit('addElementHWElement', { //category 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                 name: this.$store.getters.getNameHWElement, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, category:null, attribute:null, icon:"mdi-clipboard-outline", validation: false
+                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, category:null, attribute:[], icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.HWElement_str)
             EventBus.$emit('add-element', constant.Machines_str)
@@ -640,7 +603,7 @@ export default {
             //Mode Declaration
             this.$store.commit('addElementModeDeclarationGroup', {
                 name: this.$store.getters.getNameModeDeclarationGroup, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, modedeclaration:null, initmode:null, icon:"mdi-clipboard-outline", validation: false
+                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, modedeclaration:[], initmode:null, icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.ModeDeclarationGroup_str)
             EventBus.$emit('add-element', constant.Machines_str)
@@ -658,20 +621,20 @@ export default {
         },
         deletHWElement() {
             if (this.isdeleteHWElementItem == true) {
-                for(let i=0; i<this.HWelementItem.length; i++){
+                for(let i=0; i<this.element.hwelement.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/hwelement-'+i)
                     if(endLine != undefined) {
-                        this.deleteHWLine.push({name:this.HWelementItem[i].hwelement, endLine:endLine})
+                        this.deleteHWLine.push({name:this.element.hwelement[i].hwelement, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/hwelement-'+i)
                     }
                 }
 
-                this.HWelementItem = this.HWelementItem.filter(item => {
+                this.element.hwelement = this.element.hwelement.filter(item => {
                         return this.selectDelectHWElement.indexOf(item) < 0 })
 
-                for(let n=0; n<this.HWelementItem.length; n++) {
+                for(let n=0; n<this.element.hwelement.length; n++) {
                     for(let idx=0; idx<this.deleteHWLine.length; idx++) {
-                        if (this.HWelementItem[n].hwelement == this.deleteHWLine[idx].name) {
+                        if (this.element.hwelement[n].hwelement == this.deleteHWLine[idx].name) {
                             this.newLine(this.element.uuid+'/hwelement-'+n, this.element.uuid+'/hwelement', this.deleteHWLine[idx].endLine)
                         }
                     }
@@ -680,32 +643,30 @@ export default {
                 this.isdeleteHWElementItem = false
                 this.selectDelectHWElement = []
                 this.deleteHWLine = []
-                this.inputHWElement()
             } 
         },
         openHWElement(idx) {
             this.selHWElement = this.$store.getters.getHWElement
-            if ( this.HWelementItem[idx].hwelement != null) {
-                this.editHWItem.hwelement = { name: this.HWelementItem[idx].hwelement, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/hwelement-'+idx) }
+            if ( this.element.hwelement[idx].hwelement != null) {
+                this.editHWItem.hwelement = { name: this.element.hwelement[idx].hwelement, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/hwelement-'+idx) }
             }
         },
         editHWElement(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/hwelement-'+idx)
             if (endLine != undefined && this.editHWItem.hwelement == null) {
                 this.deleteLine(this.element.uuid+'/hwelement-'+idx)
-                this.HWelementItem[idx].hwelement = null
+                this.element.hwelement[idx].hwelement = null
             } else if (endLine != undefined && endLine != this.editHWItem.hwelement.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/hwelement-'+idx)
                 this.newLine(this.element.uuid+'/hwelement-'+idx, this.element.uuid+'/hwelement', this.editHWItem.hwelement.uuid)
-                this.HWelementItem[idx].hwelement = this.editHWItem.hwelement.name
+                this.element.hwelement[idx].hwelement = this.editHWItem.hwelement.name
             } else if (endLine == undefined && this.editHWItem.hwelement != null) {
                 this.newLine(this.element.uuid+'/hwelement-'+idx, this.element.uuid+'/hwelement', this.editHWItem.hwelement.uuid)
-                this.HWelementItem[idx].hwelement = this.editHWItem.hwelement.name
+                this.element.hwelement[idx].hwelement = this.editHWItem.hwelement.name
             }
             
             this.cancelHWElement()
-            this.inputHWElement()
         },
         cancelHWElement() {
             this.editHWItem.hwelement = null
@@ -714,19 +675,18 @@ export default {
         addHWElement() {
             if( this.editHWItem.hwelement != null) {
                 var datacount
-                if(this.HWelementItem == undefined) {
+                if(this.element.hwelement == undefined) {
                     datacount = 0
                 }else {
-                    datacount = this.HWelementItem.length
+                    datacount = this.element.hwelement.length
                 }
                 this.newLine(this.element.uuid+'/hwelement-'+datacount, this.element.uuid+'/hwelement', this.editHWItem.hwelement.uuid)
                 this.editHWItem.hwelement = this.editHWItem.hwelement.name
             }
             const addObj = Object.assign({}, this.editHWItem)
-            this.HWelementItem.push(addObj);
+            this.element.hwelement.push(addObj);
 
             this.cancelHWElement()
-            this.inputHWElement()
         },
         setHWElementSelect() {
             if (this.isEditingHWElement == true) {
@@ -759,21 +719,21 @@ export default {
         },
         deleteFunctionGroup() {
             if (this.isdeleteFunctionGroupItem == true) {
-                for(let i=0; i<this.functionGroupItem.length; i++){
+                for(let i=0; i<this.element.functiongroup.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/functiontable-'+i)
                     if(endLine != undefined) {
-                        this.deleteChangeLine.push({name:this.functionGroupItem[i].name, endLine:endLine})
+                        this.deleteChangeLine.push({name:this.element.functiongroup[i].name, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/functiontable-'+i)
                     }
                 }
 
                 this.$store.commit('deleteRefTable', {deleteName:'functionG', deletItemList: this.selectDelectFunctionItem, path: this.element.path, name: this.element.name})
-                this.functionGroupItem = this.functionGroupItem.filter(item => {
+                this.element.functiongroup = this.element.functiongroup.filter(item => {
                         return this.selectDelectFunctionItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.functionGroupItem.length; n++) {
+                for(let n=0; n<this.element.functiongroup.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLine.length; idx++) {
-                        if (this.functionGroupItem[n].name == this.deleteChangeLine[idx].name) {
+                        if (this.element.functiongroup[n].name == this.deleteChangeLine[idx].name) {
                             this.newLine(this.element.uuid+'/functiontable-'+n, this.element.uuid+'/functiontable', this.deleteChangeLine[idx].endLine)
                         }
                     }
@@ -782,40 +742,38 @@ export default {
                 this.isdeleteFunctionGroupItem = false
                 this.selectDelectFunctionItem = []
                 this.deleteChangeLine = []
-                this.inputFunctionGroup()
             } 
         },
         openFunctionGroup(idx) {
             this.selModeDeclaration = this.$store.getters.getModeDeclarationG
-            this.editFunctionItem.name = this.functionGroupItem[idx].name
-            if ( this.functionGroupItem[idx].type != null) {
-                this.editFunctionItem.type = { name: this.functionGroupItem[idx].type, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/functiontable-'+idx) }
+            this.editFunctionItem.name = this.element.functiongroup[idx].name
+            if ( this.element.functiongroup[idx].type != null) {
+                this.editFunctionItem.type = { name: this.element.functiongroup[idx].type, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/functiontable-'+idx) }
             }
         },
         editFunctionGroup(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/functiontable-'+idx)
             if (endLine != undefined && this.editFunctionItem.type == null) {
                 this.deleteLine(this.element.uuid+'/functiontable-'+idx)
-                this.functionGroupItem[idx].type = null
+                this.element.functiongroup[idx].type = null
             } else if (endLine != undefined && endLine != this.editFunctionItem.type.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/functiontable-'+idx)
                 this.newLine(this.element.uuid+'/functiontable-'+idx, this.element.uuid+'/functiontable', this.editFunctionItem.type.uuid)
-                this.functionGroupItem[idx].type = this.editFunctionItem.type.name
+                this.element.functiongroup[idx].type = this.editFunctionItem.type.name
             } else if (endLine == undefined && this.editFunctionItem.type != null) {
                 this.newLine(this.element.uuid+'/functiontable-'+idx, this.element.uuid+'/functiontable', this.editFunctionItem.type.uuid)
-                this.functionGroupItem[idx].type = this.editFunctionItem.type.name
+                this.element.functiongroup[idx].type = this.editFunctionItem.type.name
             }
 
-            if (this.functionGroupItem[idx].name != this.editFunctionItem.name){
+            if (this.element.functiongroup[idx].name != this.editFunctionItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'functionG', listname: this.editFunctionItem.name} )
             }
 
-            this.functionGroupItem[idx].name = this.editFunctionItem.name
+            this.element.functiongroup[idx].name = this.editFunctionItem.name
             
             this.cancelFunctionGroup()
-            this.inputFunctionGroup()
         },
         cancelFunctionGroup() {
             this.editFunctionItem = Object.assign({}, this.defaultfunctionItem)
@@ -824,19 +782,18 @@ export default {
         addFunctionGroup() {
             if( this.editFunctionItem.type != null) {
                 var datacount
-                if(this.functionGroupItem == undefined) {
+                if(this.element.functiongroup == undefined) {
                     datacount = 0
                 }else {
-                    datacount = this.functionGroupItem.length
+                    datacount = this.element.functiongroup.length
                 }
                 this.newLine(this.element.uuid+'/functiontable-'+datacount, this.element.uuid+'/functiontable', this.editFunctionItem.type.uuid)
                 this.editFunctionItem.type = this.editFunctionItem.type.name
             }
 
             const addObj = Object.assign({}, this.editFunctionItem)
-            this.functionGroupItem.push(addObj);
+            this.element.functiongroup.push(addObj);
             this.cancelFunctionGroup()
-            this.inputFunctionGroup()
         },
 
         clickProcessortab() {
@@ -844,18 +801,17 @@ export default {
             this.selectDelectCoreItem = []
         },
         deleteProcessor(idx) {
-            this.ProcessorItem.splice(idx, 1)
+            this.element.processor.splice(idx, 1)
             this.inputProcessor()
         },
         addProcessor() {
             const editItem = {name: '', core: []}
             const addObj = new Object(editItem)
-            addObj.name = 'Processor_'+(this.ProcessorItem.length+1)
-            this.ProcessorItem.push(addObj)
-            this.processortab = this.ProcessorItem.length-1
+            addObj.name = 'Processor_'+(this.element.processor.length+1)
+            this.element.processor.push(addObj)
+            this.processortab = this.element.processor.length-1
             this.isdeleteCoreItem = false
             this.selectDelectCoreItem = []
-            this.inputProcessor()
         },
         isCheckCore() {
             if (this.isdeleteCoreItem == true) {
@@ -867,11 +823,10 @@ export default {
         },
         deleteCore() {
             if (this.isdeleteCoreItem == true) {
-                this.ProcessorItem[this.processortab].core = this.ProcessorItem[this.processortab].core.filter(item => {
+                this.element.processor[this.processortab].core = this.element.processor[this.processortab].core.filter(item => {
                          return this.selectDelectCoreItem.indexOf(item) < 0 })
                 this.isdeleteCoreItem = false
                 this.selectDelectCoreItem = []
-                this.inputcoreItem()
             }
         },
         openCore(idx, core) {
@@ -882,7 +837,6 @@ export default {
             core[idx].name = this.editCoreItem.name
             core[idx].id = this.editCoreItem.id
             this.cancelCore()
-            this.inputcoreItem()
         },
         cancelCore() {
             this.editCoreItem = Object.assign({}, this.defaultCoreItem)
@@ -890,30 +844,27 @@ export default {
         },
         addCore(idx) {
             const addObj = Object.assign({}, this.editCoreItem)
-            console.log("addCore/// "+ idx+'//'+this.ProcessorItem[idx].name)
-            this.ProcessorItem[idx].core.push(addObj)
+            console.log("addCore/// "+ idx+'//'+this.element.processor[idx].name)
+            this.element.processor[idx].core.push(addObj)
             this.cancelCore()
-            this.inputcoreItem()
         },
 
         addModuleIns() {
             const editItem = {name: '', resource: []}
             const addObj = new Object(editItem)
-            addObj.name = 'Module Instance_'+(this.ModuleInsItem.length+1)
-            this.ModuleInsItem.push(addObj)
-            this.ModuleInstab = this.ModuleInsItem.length-1
+            addObj.name = 'Module Instance_'+(this.element.moduleinstant.length+1)
+            this.element.moduleinstant.push(addObj)
+            this.ModuleInstab = this.element.moduleinstant.length-1
             this.isdeleteResourceGItem = false
             this.selectDelectModuleInsItem = []
-            this.inputModuleIns()
         },
         clickModuleInstab() {
             this.isdeleteResourceGItem = false
             this.selectDelectModuleInsItem = []
         },
         deleteModuleIns(idx) {
-            this.$store.commit('deleteRefTable', {deleteName:'ModuleIns', deleteTab: true, tabName: this.ModuleInsItem[idx].name, path: this.element.path, name: this.element.name})
-            this.ModuleInsItem.splice(idx, 1)
-            this.inputModuleIns()
+            this.$store.commit('deleteRefTable', {deleteName:'ModuleIns', deleteTab: true, tabName: this.element.moduleinstant[idx].name, path: this.element.path, name: this.element.name})
+            this.element.moduleinstant.splice(idx, 1)
         },
         isCheckResourceG() {
             if (this.isdeleteResourceGItem == true) {
@@ -925,11 +876,10 @@ export default {
         },
         deleteResourceG() {
             if (this.isdeleteResourceGItem == true) {
-                this.ModuleInsItem[this.ModuleInstab].resource = this.ModuleInsItem[this.ModuleInstab].resource.filter(item => {
+                this.element.moduleinstant[this.ModuleInstab].resource = this.element.moduleinstant[this.ModuleInstab].resource.filter(item => {
                          return this.selectDelectModuleInsItem.indexOf(item) < 0 })
                 this.isdeleteResourceGItem = false
                 this.selectDelectModuleInsItem = []
-                this.inputModuleIns()
             } 
         },
         openResourceG(idx, resource) {
@@ -942,7 +892,6 @@ export default {
             resource[idx].cpuUsage = this.editModuleInsItem.cpuUsage
             resource[idx].memoryUsage = this.editModuleInsItem.memoryUsage
             this.cancelResourceG()
-            this.inputModuleIns()
         },
         cancelResourceG() {
             this.editModuleInsItem = Object.assign({}, this.defaultModuleInsItem)
@@ -950,9 +899,8 @@ export default {
         },
         addResourceG(idx) {
             const addObj = Object.assign({}, this.editModuleInsItem)
-            this.ModuleInsItem[idx].resource.push(addObj)
+            this.element.moduleinstant[idx].resource.push(addObj)
             this.cancelResourceG()
-            this.inputModuleIns()
         },
 
         setactiveUUID() {
