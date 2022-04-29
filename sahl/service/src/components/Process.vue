@@ -597,16 +597,19 @@ export default {
             EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
         },
         clickDependentStartuptab() {
+            //console.log('clickDependentStartuptab')
             this.isdeleteFunctionG = false
             this.selectDelectFunctionGItem = []
         },
         changeDependentStartupTab() {
+            //console.log('changeDependentStartupTab' +this.dependentStartupTab)
             if(this.dependentStartupItem.length > 0) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.dependentStartupTab, this.dependentStartupTab)}, 300);
             }
         },
         deleteDependentStartup(idx) {
-            for(let i=0; i<this.dependentStartupItem[this.dependentStartupTab].functionItem.length; i++){
+            console.log('deleteDependentStartup' + idx)
+            for(let i=0; i<this.dependentStartupItem[idx].functionItem.length; i++){
                 var endLineCon = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgcontext-'+i+'-'+idx)
                 if(endLineCon != undefined) {
                     this.deleteLine(this.element.uuid+'/fgcontext-'+i+'-'+idx)
@@ -616,7 +619,7 @@ export default {
                     this.deleteLine(this.element.uuid+'/fgtarget-'+i+'-'+idx)
                 }
             }
-            var endLine
+            var endLine, endR, endS
             endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/processresorce-'+idx)
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/processresorce-'+idx)
@@ -625,9 +628,34 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/processstartup-'+idx)
             }
+            for(let i=idx+1; i<this.dependentStartupItem.length; i++){
+                endR = this.$store.getters.getChangeEndLine(this.element.uuid+'/processresorce-'+i)
+                endS = this.$store.getters.getChangeEndLine(this.element.uuid+'/processstartup-'+i)
+                for(let n=0; n<this.dependentStartupItem[i].functionItem.length; n++){
+                    var endC = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgcontext-'+n+'-'+i)
+                    if(endC != undefined) {
+                        this.deleteLine(this.element.uuid+'/fgcontext-'+n+'-'+i)
+                        this.newLine(this.element.uuid+'/fgcontext-'+n+'-'+(i-1), this.element.uuid+'/processStarupC', endC)
+                    }
+                    var endT = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgtarget-'+n+'-'+i)
+                    if(endT != undefined) {
+                        this.deleteLine(this.element.uuid+'/fgtarget-'+n+'-'+i)
+                        this.newLine(this.element.uuid+'/fgtarget-'+n+'-'+(i-1), this.element.uuid+'/processStarupC', endT)
+                    }
+                }
+                if (endR != undefined) {
+                    this.deleteLine(this.element.uuid+'/processresorce-'+i)
+                    this.newLine(this.element.uuid+'/processresorce-'+(i-1), this.element.uuid+'/processStarupC', endR)
+                }
+                if (endS != undefined) {
+                    this.deleteLine(this.element.uuid+'/processstartup-'+i)
+                    this.newLine(this.element.uuid+'/processstartup-'+(i-1), this.element.uuid+'/processStarupC', endS)
+                }
+            }
 
             this.dependentStartupItem.splice(idx, 1)
             this.inputdependentStartupItem()
+            this.changeDependentStartupTab()
         },
         isCheckFunctionG() {
             if (this.isdeleteFunctionG == true) {

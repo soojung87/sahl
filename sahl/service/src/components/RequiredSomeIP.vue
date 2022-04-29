@@ -370,7 +370,7 @@ export default {
             this.$store.commit('addElementSomeIPService', {
                 name: this.$store.getters.getNameSomeIPService, input: false, path: '',
                 top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                service: null, majversion:'', minversion:'', id: '', eventG:null, eventD: null, methodD:null, fieldD:null,
+                service: null, majversion:'', minversion:'', id: '', eventG:null, eventD: [], methodD:[], fieldD:[],
             })
             EventBus.$emit('add-element', constant.Service_str)
             EventBus.$emit('add-element', constant.ServiceInterfaces_str)
@@ -493,12 +493,7 @@ export default {
         },
         addMethodRef() {
             if( this.editMethodItem.method != null) {
-                var datacount
-                if(this.element.method == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.method.length
-                }
+                var datacount = this.element.method.length
                 this.newLine(this.element.uuid+'/requiredMethod-'+datacount, this.element.uuid+'/requiredMethod', this.editMethodItem.method.uuid)
                 this.editMethodItem.method = this.editMethodItem.method.name
             }
@@ -548,7 +543,7 @@ export default {
         },
         deleteEventGroup(idx) {
             //console.log('deleteEventGroup')
-            var endLine
+            var endLine, endE, endC
             if (this.element.requiredevent[idx].eventG != null) {
                 endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredEventG-'+idx)
                 if (endLine != undefined) {
@@ -561,7 +556,21 @@ export default {
                     this.deleteLine(this.element.uuid+'/requiredClient-'+idx)
                 }
             }
+            for(let i=idx+1; i<this.element.requiredevent.length; i++){
+                endE = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredEventG-'+i)
+                endC = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredClient-'+i)
+                if (endE != undefined) {
+                    this.deleteLine(this.element.uuid+'/requiredEventG-'+i)
+                    this.newLine(this.element.uuid+'/requiredEventG-'+(i-1), this.element.uuid+'/requiredE', endE)
+                }
+                if (endC != undefined) {
+                    this.deleteLine(this.element.uuid+'/requiredClient-'+i)
+                    this.newLine(this.element.uuid+'/requiredClient-'+(i-1), this.element.uuid+'/requiredE', endC)
+                }
+            }
+
             this.element.requiredevent.splice(idx, 1)
+            this.changeEeventGroupTab()
         },
         clearEventG(item) {
             item.eventG = null

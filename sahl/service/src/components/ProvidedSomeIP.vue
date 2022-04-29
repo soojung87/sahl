@@ -448,7 +448,7 @@ export default {
             this.$store.commit('addElementSomeIPService', {
                 name: this.$store.getters.getNameSomeIPService, input: false, path: '',
                 top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                service: null, majversion:'', minversion:'', id: '', eventG:null, eventD: null, methodD:null, fieldD:null,
+                service: null, majversion:'', minversion:'', id: '', eventG:null, eventD: [], methodD:[], fieldD:[],
             })
             EventBus.$emit('add-element', constant.Service_str)
             EventBus.$emit('add-element', constant.ServiceInterfaces_str)
@@ -571,12 +571,7 @@ export default {
         },
         addEventP() {
             if( this.editEventItem.event != null) {
-                var datacount
-                if(this.element.eventP == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.eventP.length
-                }
+                var datacount = this.element.eventP.length
                 this.newLine(this.element.uuid+'/proviedEventP-'+datacount, this.element.uuid+'/proviedEventP', this.editEventItem.event.uuid)
                 this.editEventItem.event = this.editEventItem.event.name
             }
@@ -672,12 +667,7 @@ export default {
         },
         addMethodRef() {
             if( this.editMethodItem.method != null) {
-                var datacount
-                if(this.element.method == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.method.length
-                }
+                var datacount = this.element.method.length
                 this.newLine(this.element.uuid+'/proviedMethod-'+datacount, this.element.uuid+'/proviedMethod', this.editMethodItem.method.uuid)
                 this.editMethodItem.method = this.editMethodItem.method.name
             }
@@ -728,7 +718,7 @@ export default {
             }
         },
         deleteEventGroup(idx) {
-            var endLine
+            var endLine, endS, endE
             console.log(this.element.eventG)
             if (this.element.eventG[idx].eventG != null) {
                 endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+idx)
@@ -742,7 +732,21 @@ export default {
                     this.deleteLine(this.element.uuid+'/providServer-'+idx)
                 }
             }
+            for(let i=idx+1; i<this.element.eventG.length; i++){
+                endE = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+i)
+                endS = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+i)
+                if (endE != undefined) {
+                    this.deleteLine(this.element.uuid+'/providEventG-'+i)
+                    this.newLine(this.element.uuid+'/providEventG-'+(i-1), this.element.uuid+'/providE', endE)
+                }
+                if (endS != undefined) {
+                    this.deleteLine(this.element.uuid+'/providServer-'+i)
+                    this.newLine(this.element.uuid+'/providServer-'+(i-1), this.element.uuid+'/providE', endS)
+                }
+            }
+
             this.element.eventG.splice(idx, 1)
+            this.changeEeventGroupTab()
         },
         clearEventG(item) {
             item.eventG = null

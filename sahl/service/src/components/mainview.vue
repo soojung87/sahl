@@ -1,6 +1,6 @@
 <template>
     <div id="main-view"  v-dragscroll="drag" v-on:dragscrollmove="dragBackground()" v-bind:class="[{'grab-bing':'true'},{'main-view':minimaptoolbar},{'minimap-view':!minimaptoolbar}]"
-        @mousewheel="onmouseWheel" @mousedown="onmouseDown"  @scroll="onScroll">
+        @mousewheel="onmouseWheel" @mousedown="onmouseDown" @scroll="onScroll">
         <v-main id="sea" v-bind:style="{ transform: 'scale(' + zoom.value + ')' }" ><!--<v-app>에서 바꿈 : v-app으로 하면 뭔가 안에 창이 하나 더생겨서 화면이 늘어나 scroll이 생긴다.-->
             <vue-draggable-resizable :id="element.uuid"
                 class-name-active="my-active-class"
@@ -11,7 +11,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Compu Method')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Compu Method')"
+                @resizing="changeField()">
                 <CompuMethod :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -23,7 +24,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Data Constr')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Data Constr')"
+                @resizing="changeField()">
                 <DataConstr :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/>
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -35,7 +37,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Application Array')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Application Array')"
+                @resizing="changeField()">
                 <ApplicationArrayDate :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -47,7 +50,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Implementation')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Implementation')"
+                @resizing="changeField()">
                 <ImplementationDataType :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
 
@@ -60,7 +64,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Machine')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Machine')"
+                @resizing="changeField()">
                 <Machine :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -72,7 +77,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'HW Element')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'HW Element')"
+                @resizing="changeField()">
                 <HWElement :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -84,7 +90,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Machine Designs')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Machine Designs')"
+                @resizing="changeField()">
                 <MachineDesign :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -96,7 +103,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Mode Declaration Group')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Mode Declaration Group')"
+                @resizing="changeField()">
                 <ModeDeclarationGroup :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -108,7 +116,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Ethernet Cluster')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Ethernet Cluster')"
+                @resizing="changeField()">
                 <EthernetCluster :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
 
@@ -121,7 +130,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process to Machine Mapping Set')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process to Machine Mapping Set')"
+                @resizing="changeField()">
                 <ProcessToMachine :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -133,7 +143,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SW Components')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SW Components')"
+                @resizing="changeField()">
                 <SWComponents :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -145,7 +156,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process')"
+                @resizing="changeField()">
                 <Process :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -157,7 +169,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process Design')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process Design')"
+                @resizing="changeField()">
                 <ProcessDesign :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -169,7 +182,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Executable')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Executable')"
+                @resizing="changeField()">
                 <Executable :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -181,7 +195,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Startup Config')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Startup Config')"
+                @resizing="changeField()">
                 <StartupConfig :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -193,7 +208,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Deterministic Client')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Deterministic Client')"
+                @resizing="changeField()">
                 <DeterministicClient :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
 
@@ -206,7 +222,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Service Interface Deployment')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Service Interface Deployment')"
+                @resizing="changeField()">
                 <SomeIPService :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/>  <!-- :drag-handle="'.drag-handle'" -->
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -218,7 +235,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Service Interface')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Service Interface')"
+                @resizing="changeField()">
                 <ServiceInterface :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/>  <!-- :drag-handle="'.drag-handle'" -->
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -230,7 +248,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Client')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Client')"
+                @resizing="changeField()">
                 <Client :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -242,7 +261,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Server')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Server')"
+                @resizing="changeField()">
                 <Server :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -254,7 +274,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Client')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Client')"
+                @resizing="changeField()">
                 <SomeIPClient :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -266,7 +287,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Server')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Server')"
+                @resizing="changeField()">
                 <SomeIPServer :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -278,7 +300,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP To Machine Mapping')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP To Machine Mapping')"
+                @resizing="changeField()">
                 <SomeIPtoMachine :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -290,7 +313,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'To Port Prototype Mapping')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'To Port Prototype Mapping')"
+                @resizing="changeField()">
                 <ToPortPrototype :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -302,7 +326,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Required SomeIP')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Required SomeIP')"
+                @resizing="changeField()">
                 <RequiredSomeIP :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -314,7 +339,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Provided SomeIP')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Provided SomeIP')"
+                @resizing="changeField()">
                 <ProvidedSomeIP :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
 
@@ -327,7 +353,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error Domain')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error Domain')"
+                @resizing="changeField()">
                 <APErrorDomain :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -339,7 +366,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error Set')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error Set')"
+                @resizing="changeField()">
                 <APErrorSet :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid"
@@ -351,7 +379,8 @@
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error')">
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error')"
+                @resizing="changeField()">
                 <APError :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
         </v-main>
@@ -490,6 +519,7 @@ export default{
             })
         })
         EventBus.$on('new-line', (startdiagram, enddiagram) => {
+            console.log('new-line '+ startdiagram + '  //  '+ enddiagram)
             this.addLine(startdiagram, enddiagram)
             this.$nextTick(() => { // 다 그려진뒤에 move해줘야지 그려지기전에 하게되면 선이 이상한 곳에 가서 그려져있음
                 this.setanimationLine(this.$store.state.activeUUID, true)
@@ -510,12 +540,18 @@ export default{
                 }
             }
         });
-        EventBus.$on('copy-line', (uuid, endLine, index) => {
+        EventBus.$on('copy-line', (uuid, endLine, index, tab, tabId) => {
             if(this.minimaptoolbar) {
                 var startLine
+                console.log(this.connections[index].start.id)
                 if(this.connections[index].start.id.indexOf('/') !== -1) {
-                    var copyId = this.connections[index].start.id.split('/')
-                    startLine = uuid+'/'+copyId[1]
+                    if(tab != null) {
+                        console.log('/////////////////////')
+                            startLine = uuid+'/'+tabId
+                    } else {
+                        var copyId = this.connections[index].start.id.split('/')
+                        startLine = uuid+'/'+copyId[1]
+                    }
                 } else { //titlabar 접혀있을때 copy하면 startLine이 uuid값만 가지고 있기때문에 다 그렇게 복사됨 접었다 열면 제자리 찾아감
                     startLine = uuid
                 }
@@ -559,7 +595,7 @@ export default{
     methods: {
         onActivated(uuid) {
             //console.log('onActivated'+uuid)
-            document.getElementById(uuid).scrollIntoView(true)
+            //document.getElementById(uuid).scrollIntoView(true)
             this.isMouseDiagram = true
             EventBus.$emit('active-element', uuid)
             this.drag = false
@@ -635,6 +671,10 @@ export default{
             } 
             document.getElementById(uuid).scrollIntoView(true)
             this.$store.commit(editStr, {compo:"drag", uuid: uuid, top: top, left: left} )
+            this.moveline()
+        },
+        changeField() {
+            console.log('changeField')
             this.moveline()
         },
         moveline() {

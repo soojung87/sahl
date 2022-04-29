@@ -34,7 +34,7 @@
                                 <v-icon v-else color="primary">{{item.icon}}</v-icon>
                             </div>
                         </template>
-                        <template v-slot:label="{ item }">
+                        <!-- <template v-slot:label="{ item }">
                             <v-edit-dialog v-if="renameId==item.uuid" eager large persistent cancel-text='Ok' save-text="Cancel" @open="openRename(item)" @cancel="setRename(item)" @save="cancelRename()"> 
                                 <v-btn outlined color="indigo" dense text small block width="80px" >
                                     <v-icon x-small>mdi-pencil</v-icon>Rename
@@ -45,30 +45,41 @@
                                 </template>
                             </v-edit-dialog>
                             <div v-else>{{item.name}}</div>
-                        </template>
+                        </template> -->
                     </v-treeview>
                 </v-card>
             </v-list-group>
         </v-list>
         <v-menu v-model="showMenu" :position-x="x" :position-y="y" absolute offset-y>
             <v-list v-if="ismenu == 2" dense class="text-start">
+                <v-edit-dialog eager large persistent cancel-text='Ok' save-text="Cancel" @cancel="setRename()" @save="cancelRename()"> 
+                    <v-list-item @click="renameElement()">
+                        <v-list-item-content>
+                            <v-list-item-title>Element Rename</v-list-item-title> <!--이름을 길게 안하면 menu밑에 text가 길어서 active된 라인이 짧아짐-->
+                        </v-list-item-content>
+                    </v-list-item>
+                    <template v-slot:input>
+                        <br>
+                        <v-text-field v-model="rename.name" outlined clearable label="Rename" type="text"></v-text-field>
+                    </template>
+                </v-edit-dialog>
                 <v-list-item  v-for="(item, index) in menuElementitems" :key="index" @click="item.menuAction(item.title)">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    <v-list-item-title v-text="item.title"></v-list-item-title>
                 </v-list-item>
             </v-list>
             <v-list v-else-if="ismenu == 0" dense class="text-start">
                 <v-list-item  v-for="(item, index) in menuProjectitems" :key="index" @click="item.menuAction(item.title)">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    <v-list-item-title v-text="item.title"></v-list-item-title>
                 </v-list-item>
             </v-list>
             <v-list v-else-if="ismenu == 1" dense class="text-start">
                 <v-list-item  v-for="(item, index) in menuitems" :key="index" @click="item.menuAction(item.title)">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    <v-list-item-title v-text="item.title"></v-list-item-title>
                 </v-list-item>
             </v-list>
             <v-list v-else dense class="text-start">
                 <v-list-item  v-for="(item, index) in menuFirstitems" :key="index" @click="item.menuAction(item.title)">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    <v-list-item-title v-text="item.title"></v-list-item-title>
                 </v-list-item>
             </v-list>
         </v-menu>
@@ -155,10 +166,9 @@ export default({
             openIds: [],
             dialogDeleteProject: false,
             strDelete: null,
-            renameId : 0,
-            reName: null, //이거없이 바로 edit dialog에 item.name해주면 enter쳤을 때 treeview의 값이 바뀌게된다
+            rename: { id: 0, name: null, parent: null},
             menuElementitems: [
-                { title: 'Rename', menuAction: action => { this.renameElement(action) } },
+                // { title: 'Rename', menuAction: action => { this.renameElement(action) } },
                 { title: 'Delete', menuAction: action => { this.deleteElement(action) } },
                 { title: 'Copy & Paste', menuAction: action => { this.copyElement(action) } },
             ],
@@ -273,7 +283,7 @@ export default({
             } else if (this.activenode[0] == constant.EthernetCluster_str) {
                 this.$store.commit('addElementEthernetCluster', {
                     name: this.$store.getters.getNameEthernetCluster, input: false, path: '',
-                    top: elementY, left: elementX, zindex: 10, conditional:null, icon:"mdi-clipboard-outline", validation: false
+                    top: elementY, left: elementX, zindex: 10, conditional:[], icon:"mdi-clipboard-outline", validation: false
                 })
             } 
             else if (this.activenode[0] == constant.ProcesstoMachineMapping_str) {
@@ -322,13 +332,13 @@ export default({
                 this.$store.commit('addElementSomeIPService', {
                     name: this.$store.getters.getNameSomeIPService, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, version:null, namespace:null, events:null, fields:null, methods:null, icon:"mdi-clipboard-outline", validation: false,
-                    service: null, majversion:'', minversion:'', id: '', eventG:null, eventD: null, methodD:null, fieldD:null,
+                    service: null, majversion:'', minversion:'', id: '', eventG:[], eventD: [], methodD:[], fieldD:[],
                 })
             } else if (this.activenode[0] == constant.ServiceInterface_str) {
                 this.$store.commit('addElementService', {
                     name: this.$store.getters.getNameServiceInterface, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    versionMaj:'', versionMin:'', namespace:'', events:null, fields:null, methods:null, isservice: '',
+                    versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: '',
                 })
             } else if (this.activenode[0] == constant.Client_str) {
                 this.$store.commit('addElementClient', { 
@@ -464,25 +474,23 @@ export default({
             this.strDelete = "Element를 삭제하시겠습니까?"
         },
         renameElement() {
-            //console.log(this.activenode[0])
-            if (this.renameId == 0) {
-                this.renameId = this.activenode[0]
+            //console.log('renameElement')
+            if (this.rename.id == 0) {
+                this.rename.id = this.activenode[0]
             }
-        },
-        openRename(item) {
-            this.reName = item.name
-        },
-        setRename(item) {
-            //console.log('setRename')
+            this.showMenu = false
             var treeitem = Object.values(this.$store.getters.gettreeviewitems)
-            var arrelement = treeitem.find(data =>  data.uuid === this.renameId)
-            this.$store.commit('renameElement', {uuid: this.renameId, parent: arrelement.parent, name: this.reName})
-            item.name = this.reName
+            var arrelement = treeitem.find(data =>  data.uuid === this.rename.id)
+            this.rename.name = arrelement.name
+            this.rename.parent = arrelement.parent
+        },
+        setRename() {
+            //console.log('setRename')
+            this.$store.commit('renameElement', {uuid: this.rename.id, parent: this.rename.parent, name: this.rename.name})
             this.cancelRename()
         },
         cancelRename() {
-            this.renameId = 0
-            this.reName = null
+            this.rename = { id: 0, name: null, parent: null}
         },
         saveElement () {
             EventBus.$emit('shortcut-keys', 'save')

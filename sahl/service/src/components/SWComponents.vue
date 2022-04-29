@@ -453,12 +453,7 @@ export default {
         },
         addPPort() {
             if (this.editPPortItem.interface != null) {
-                var datacount
-                if(this.element.pport == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.pport.length
-                }
+                var datacount = this.element.pport.length
                 this.newLine(this.element.uuid+'/pporttable-'+datacount, this.element.uuid+'/pporttable', this.editPPortItem.interface.uuid)
                 this.editPPortItem.interface = this.editPPortItem.interface.name
             }
@@ -554,14 +549,9 @@ export default {
         },
         addPRPort() {
             if (this.editPRPortItem.interface != null) {
-                var datacount
-                if(this.element.prport == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.prport.length
-                }
-                    this.newLine(this.element.uuid+'/prporttable-'+datacount, this.element.uuid+'/prporttable', this.editPRPortItem.interface.uuid)
-                    this.editPRPortItem.interface = this.editPRPortItem.interface.name
+                var datacount = this.element.prport.length
+                this.newLine(this.element.uuid+'/prporttable-'+datacount, this.element.uuid+'/prporttable', this.editPRPortItem.interface.uuid)
+                this.editPRPortItem.interface = this.editPRPortItem.interface.name
             }
             const addObj = Object.assign({}, this.editPRPortItem);
             this.element.prport.push(addObj);
@@ -654,12 +644,7 @@ export default {
         },
         addRPort() {
             if( this.editRPortItem.interface != null) {
-                var datacount
-                if(this.element.rport == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.rport.length
-                }
+                var datacount = this.element.rport.length
                 this.newLine(this.element.uuid+'/rporttable-'+datacount, this.element.uuid+'/rporttable', this.editRPortItem.interface.uuid)
                 this.editRPortItem.interface = this.editRPortItem.interface.name
             }
@@ -691,7 +676,7 @@ export default {
             this.$store.commit('addElementService', {
                     name: this.$store.getters.getNameServiceInterface, input: false, path: '',
                     top: this.element.top+100, left: this.element.left+ 300 , zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
-                    versionMaj:'', versionMin:'', namespace:'', events:null, fields:null, methods:null, isservice: '',
+                    versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: '',
                 })
             EventBus.$emit('add-element', constant.ServiceInterface_str)
             EventBus.$emit('add-element', constant.ServiceInterfaces_str)

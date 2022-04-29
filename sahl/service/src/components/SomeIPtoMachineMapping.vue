@@ -80,7 +80,7 @@
 <script>
 import constant from "../store/constants.js"
 import { EventBus } from "../main.js"
-import dialogPathSetting from '../components/dialogPathSetting.vue'
+import dialogPathSetting from './dialogPathSetting.vue'
 
 
 export default {

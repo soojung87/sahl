@@ -350,12 +350,7 @@ export default {
         },
         addCC() {
             if(this.editedItemCC.endpoint != null) {
-                var datacount
-                if(this.element.connector == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.connector.length
-                }
+                var datacount = this.element.connector.length
                 this.newLine(this.element.uuid+'/cctable-'+datacount, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
                 this.editedItemCC.endpoint = this.editedItemCC.endpoint.name
             }
@@ -402,6 +397,7 @@ export default {
         setMDEndpointSelect() {
             if (this.isEditingMDEndpoint == true) {
                 if (this.editedItemCC.endpoint != null && this.editedItemCC.endpoint.uuid != null) {
+                    this.infoEthernetCluster()
                     this.$store.commit('setDetailView', {uuid: this.editedItemCC.endpoint.uuid, element: constant.EthernetCluster_str} )
                 }
                 this.setMDEndpointList()
@@ -492,12 +488,7 @@ export default {
         },
         addSDC() {
             if(this.editedItemSDC.msia != null) {
-                var datacount
-                if(this.element.servicediscover == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.servicediscover.length
-                }
+                var datacount = this.element.servicediscover.length
                 this.newLine(this.element.uuid+'/sdctable-'+datacount, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)
                 this.editedItemSDC.msia = this.editedItemSDC.msia.name
             }
@@ -512,6 +503,7 @@ export default {
         setMDMulticastSelect() {
             if (this.isEditingMDMulticast == true) {
                 if (this.editedItemSDC.msia != null && this.editedItemSDC.msia.uuid != null) {
+                    this.infoEthernetCluster()
                     this.$store.commit('setDetailView', {uuid: this.editedItemSDC.msia.uuid, element: constant.EthernetCluster_str} )
                 }
                 this.setMDEndpointList()
@@ -519,6 +511,17 @@ export default {
             } else {
                 this.isEditingMDMulticast = true
             }
+        },
+        infoEthernetCluster() {
+            var info = {  isChannel: true, isEndpoint: true, idxConditional: 0, idxChannel: 0,  idxEndpoint: 0,}
+            this.selNetworkEndpoint.forEach( data => {
+                if (data.uuid == this.editedItemCC.endpoint.uuid) {
+                    info.idxConditional = data.condidx
+                    info.idxChannel = data.channelidx
+                    info.idxEndpoint = data.endpointidx
+                }
+            })
+            EventBus.$emit('detailViewInfo',info)
         },
 
 

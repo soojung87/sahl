@@ -445,12 +445,7 @@ export default {
             }
         },
         addDDPC() {
-            var datacount
-            if(this.element.ddpc == undefined) {
-                datacount = 0
-            }else {
-                datacount = this.element.ddpc.length
-            }
+            var datacount = this.element.ddpc.length
 
             if( this.editDDPCItem.compumethod != null) {
                 this.newLine(this.element.uuid+'/ddpccompu-'+datacount, this.element.uuid+'/DDPC', this.editDDPCItem.compumethod.uuid)
@@ -616,12 +611,8 @@ export default {
         },
         addIDTElement() {
             if( this.editIDTElementItem.typeref != null) {
-                var datacount
-                if(this.element.idtelement == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.idtelement.length
-                }
+                var datacount = this.element.idtelement.length
+                
                 this.newLine(this.element.uuid+'/idtetable-'+datacount, this.element.uuid+'/idtetable', this.editIDTElementItem.typeref.uuid)
                 this.editIDTElementItem.typeref = this.editIDTElementItem.typeref.name
             }

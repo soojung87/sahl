@@ -114,6 +114,7 @@ export default ({
         this.setEventsNavigation()
         this.setBorderDetailViewerWidth()
         this.setEventsDetailViewer()
+        this.drawViewernavi.shown = this.$store.state.visibleDetailView
     },
     methods: {
         onClickMinimapResize() {

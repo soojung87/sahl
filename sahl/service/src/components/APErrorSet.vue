@@ -256,12 +256,7 @@ export default {
         },
         addErrorRef() {
             if( this.editItem.error != null) {
-                var datacount
-                if(this.element.errorref == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.errorref.length
-                }
+                var datacount = this.element.errorref.length
                 this.newLine(this.element.uuid+'/error-'+datacount, this.element.uuid+'/error', this.editItem.error.uuid)
                 this.editItem.error = this.editItem.error.name
             }

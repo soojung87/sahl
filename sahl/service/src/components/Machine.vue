@@ -674,12 +674,7 @@ export default {
         },
         addHWElement() {
             if( this.editHWItem.hwelement != null) {
-                var datacount
-                if(this.element.hwelement == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.hwelement.length
-                }
+                var datacount = this.element.hwelement.length
                 this.newLine(this.element.uuid+'/hwelement-'+datacount, this.element.uuid+'/hwelement', this.editHWItem.hwelement.uuid)
                 this.editHWItem.hwelement = this.editHWItem.hwelement.name
             }
@@ -781,12 +776,7 @@ export default {
         },
         addFunctionGroup() {
             if( this.editFunctionItem.type != null) {
-                var datacount
-                if(this.element.functiongroup == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.element.functiongroup.length
-                }
+                var datacount = this.element.functiongroup.length
                 this.newLine(this.element.uuid+'/functiontable-'+datacount, this.element.uuid+'/functiontable', this.editFunctionItem.type.uuid)
                 this.editFunctionItem.type = this.editFunctionItem.type.name
             }

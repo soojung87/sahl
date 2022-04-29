@@ -47,7 +47,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isEventsOpenClose">  
-                            <v-data-table v-model="selectDelectEventItem" :headers="headerEvents" :items="eventItem" 
+                            <v-data-table v-model="selectDelectEventItem" :headers="headerEvents" :items="element.events" 
                                     :show-select="isdeleteEventItem" item-key="name" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
@@ -117,7 +117,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isFieldOpenClose">                            
-                            <v-data-table v-model="selectDelectFieldItem" :headers="headerField" :items="fieldItem" 
+                            <v-data-table v-model="selectDelectFieldItem" :headers="headerField" :items="element.fields" 
                                         :show-select="isdeleteFieldItem" item-key="name" height="100px" dense hide-default-footer>
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
@@ -207,16 +207,16 @@
                             </v-btn>
                         </div>
                         <v-tabs v-model='methodTab' v-show="isMethodsOpenClose" show-arrows @change="changeMethodTab()">
-                            <v-tab v-for="(tab, idx) in methodItem" :key="idx" @click="clickMethodtab()"> 
+                            <v-tab v-for="(tab, idx) in element.methods" :key="idx" @click="clickMethodtab()"> 
                                 {{tab.name}}
                                 <v-btn text x-small @click="deleteMethod(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
                         </v-tabs>
                         <v-tabs-items v-model="methodTab" v-show="isMethodsOpenClose">
-                            <v-tab-item v-for="(tab, idx) in methodItem" :key="idx">
+                            <v-tab-item v-for="(tab, idx) in element.methods" :key="idx">
                                 <v-card flat>
                                     <v-card-text>
                                         <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputMethodName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                        <v-checkbox v-model="tab.fireforget" label='Fire & Forget' @click="inputMethodFF(tab.fireforget)"></v-checkbox>
+                                        <v-checkbox v-model="tab.fireforget" label='Fire & Forget'></v-checkbox>
                                         <v-card outlined class="mx-auto">
                                             <div class="subtitle-2" style="height:20px" :id="element.uuid+'/argtable'+tab.name">
                                                 <v-hover v-slot="{ hover }">
@@ -428,7 +428,7 @@
                                             </v-card-text>
                                         </v-card>
                                         <br>
-                                        <v-text-field v-model="tab.descrip" label="Description" @input="inputMethodDescription(tab.descrip)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                        <v-text-field v-model="tab.descrip" label="Description" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                     </v-card-text>
                                 </v-card>
                             </v-tab-item>
@@ -497,7 +497,6 @@ export default {
             ],
             defaultEventsItem: { name: '', type: null },
             editEventsItem: {name: '', type: null },
-            eventItem: [],
             isdeleteEventItem: false,
             headerField: [
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
@@ -508,9 +507,7 @@ export default {
             ],
             defaultFieldsItem: { name: '', type: null, getter: null, setter: null, notifier: null },
             editFieldsItem: { name: '', type: null, getter: null, setter: null, notifier: null },
-            fieldItem: [],
             isdeleteFieldItem: false,
-            methodItem: [],
             selectDelectEventItem: [],
             selectDelectFieldItem: [],
             enumTrueFalse: [ 'true', 'false'],
@@ -556,17 +553,6 @@ export default {
         }
     },
     mounted() {
-        this.$nextTick(() => {
-            if(this.element.events != undefined) {
-                this.eventItem = this.element.events.slice()
-            }
-            if(this.element.fields != undefined) {
-                this.fieldItem = this.element.fields.slice()
-            }
-            if(this.element.methods != undefined) {
-                this.methodItem = this.element.methods.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -596,9 +582,9 @@ export default {
             this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
                 if(this.iselementOpenClose) {
-                    if(this.methodItem.length > 0) {
+                    if(this.element.methods.length > 0) {
                         if(this.isMethodsOpenClose) {
-                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.methodItem[this.methodTab].name)
+                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.element.methods[this.methodTab].name)
                         } else {
                             EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
                         }
@@ -618,10 +604,10 @@ export default {
         },
         showMethodItem() { 
             this.isMethodsOpenClose = this.isMethodsOpenClose ? false : true
-            if(this.methodItem.length > 0) {
+            if(this.element.methods.length > 0) {
                 this.$nextTick(() => {
                     if(this.isMethodsOpenClose) {
-                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.methodItem[this.methodTab].name)
+                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.element.methods[this.methodTab].name)
                     } else {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
                     }
@@ -630,36 +616,24 @@ export default {
             }
         },
         addEventItem() {
-            var datacount
-            if(this.eventItem == undefined) {
-                datacount = 0
-            }else {
-                datacount = this.eventItem.length
-            }
+            var datacount = this.element.events.length
             if( this.editEventsItem.type != null) {
                 this.newLine(this.element.uuid+'/Eventtable-'+datacount, this.element.uuid+'/Eventtable', this.editEventsItem.type.uuid)
                 this.editEventsItem.type = this.editEventsItem.type.name
             }
             const addObj = Object.assign({}, this.editEventsItem);
-            this.eventItem.push(addObj);
+            this.element.events.push(addObj);
             this.cancelEventItem()
-            this.inputServiceEvent()
         },
         addFieldItem() {
-            var datacount
-            if(this.fieldItem == undefined) {
-                datacount = 0
-            }else {
-                datacount = this.fieldItem.length
-            }
+            var datacount = this.element.fields.length
             if( this.editFieldsItem.type != null) {
                 this.newLine(this.element.uuid+'/Fieldtable-'+datacount, this.element.uuid+'/Fieldtable', this.editFieldsItem.type.uuid)
                 this.editFieldsItem.type = this.editFieldsItem.type.name
             }
             const addObj = Object.assign({}, this.editFieldsItem);
-            this.fieldItem.push(addObj);
+            this.element.fields.push(addObj);
             this.cancelFieldItem()
-            this.inputServiceField()
         },
         cancelEventItem() {
             this.editEventsItem = Object.assign({}, this.defaultEventsItem)
@@ -679,21 +653,21 @@ export default {
         },
         deleteEventItem() {
             if (this.isdeleteEventItem == true) {
-                for(let i=0; i<this.eventItem.length; i++){
+                for(let i=0; i<this.element.events.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+i)
                     if(endLine != undefined) {
-                        this.changeLineEvent.push({name:this.eventItem[i].name, endLine:endLine})
+                        this.changeLineEvent.push({name:this.element.events[i].name, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/Eventtable-'+i)
                     }
                 }
 
                 this.$store.commit('deleteRefTable', {deleteName:'eventSI', deletItemList: this.selectDelectEventItem, path: this.element.path, name: this.element.name})
-                this.eventItem = this.eventItem.filter(item => {
+                this.element.events = this.element.events.filter(item => {
                          return this.selectDelectEventItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.eventItem.length; n++) {
+                for(let n=0; n<this.element.events.length; n++) {
                     for(let idx=0; idx<this.changeLineEvent.length; idx++) {
-                        if (this.eventItem[n].name == this.changeLineEvent[idx].name) {
+                        if (this.element.events[n].name == this.changeLineEvent[idx].name) {
                             this.newLine(this.element.uuid+'/Eventtable-'+n, this.element.uuid+'/Eventtable', this.changeLineEvent[idx].endLine)
                         }
                     }
@@ -702,7 +676,6 @@ export default {
                 this.isdeleteEventItem = false
                 this.selectDelectEventItem = []
                 this.changeLineEvent = []
-                this.inputServiceEvent()
             } 
         },
         isFieldCheckbox() {
@@ -715,21 +688,21 @@ export default {
         },
         deleteFieldItem() {
             if (this.isdeleteFieldItem == true) {
-                for(let i=0; i<this.fieldItem.length; i++){
+                for(let i=0; i<this.element.fields.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+i)
                     if(endLine != undefined) {
-                        this.changeLineField.push({name:this.fieldItem[i].name, endLine:endLine})
+                        this.changeLineField.push({name:this.element.fields[i].name, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/Fieldtable-'+i)
                     }
                 }
 
                 this.$store.commit('deleteRefTable', {deleteName:'fieldSI', deletItemList: this.selectDelectFieldItem, path: this.element.path, name: this.element.name})
-                this.fieldItem = this.fieldItem.filter(item => {
+                this.element.fields = this.element.fields.filter(item => {
                          return this.selectDelectFieldItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.fieldItem.length; n++) {
+                for(let n=0; n<this.element.fields.length; n++) {
                     for(let idx=0; idx<this.changeLineField.length; idx++) {
-                        if (this.fieldItem[n].name == this.changeLineField[idx].name) {
+                        if (this.element.fields[n].name == this.changeLineField[idx].name) {
                             this.newLine(this.element.uuid+'/Fieldtable-'+n, this.element.uuid+'/Fieldtable', this.changeLineField[idx].endLine)
                         }
                     }
@@ -738,82 +711,81 @@ export default {
                 this.isdeleteFieldItem = false
                 this.selectDelectFieldItem = []
                 this.changeLineField = []
-                this.inputServiceField()
             } 
         },
         openEventItem(idx) {
             this.seltype = this.$store.getters.getImplementationDataType,
-            this.editEventsItem.name = this.eventItem[idx].name
-            if ( this.eventItem[idx].type != null) {
+            this.editEventsItem.name = this.element.events[idx].name
+            if ( this.element.events[idx].type != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getImplementationPath(this.eventItem[idx].type)
+                    endLine = this.$store.getters.getImplementationPath(this.element.events[idx].type)
                 }
-                this.editEventsItem.type = { name :this.eventItem[idx].type, uuid: endLine }
+                this.editEventsItem.type = { name :this.element.events[idx].type, uuid: endLine }
             }
 
         },
         openFieldItem(idx) {
             this.seltype = this.$store.getters.getImplementationDataType,
 
-            this.editFieldsItem.name = this.fieldItem[idx].name
-            if ( this.fieldItem[idx].type != null) {
+            this.editFieldsItem.name = this.element.fields[idx].name
+            if ( this.element.fields[idx].type != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getImplementationPath(this.fieldItem[idx].type)
+                    endLine = this.$store.getters.getImplementationPath(this.element.fields[idx].type)
                 }
-                this.editFieldsItem.type = { name :this.fieldItem[idx].type, uuid: endLine }
+                this.editFieldsItem.type = { name :this.element.fields[idx].type, uuid: endLine }
             }
-            this.editFieldsItem.getter = this.fieldItem[idx].getter
-            this.editFieldsItem.setter = this.fieldItem[idx].setter
-            this.editFieldsItem.notifier = this.fieldItem[idx].notifier
+            this.editFieldsItem.getter = this.element.fields[idx].getter
+            this.editFieldsItem.setter = this.element.fields[idx].setter
+            this.editFieldsItem.notifier = this.element.fields[idx].notifier
         },
         editEventItem(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+idx)
             if (endLine != undefined && this.editEventsItem.type == null) {
                 this.deleteLine(this.element.uuid+'/Eventtable-'+idx)
-                this.eventItem[idx].type = null
+                this.element.events[idx].type = null
             } else if (endLine != undefined && endLine != this.editEventsItem.type.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/Eventtable-'+idx)
                 this.newLine(this.element.uuid+'/Eventtable-'+idx, this.element.uuid+'/Eventtable', this.editEventsItem.type.uuid)
-                this.eventItem[idx].type = this.editEventsItem.type.name
+                this.element.events[idx].type = this.editEventsItem.type.name
             } else if (endLine == undefined && this.editEventsItem.type != null) {
                 this.newLine(this.element.uuid+'/Eventtable-'+idx, this.element.uuid+'/Eventtable', this.editEventsItem.type.uuid)
-                this.eventItem[idx].type = this.editEventsItem.type.name
+                this.element.events[idx].type = this.editEventsItem.type.name
             }
 
-            if (this.eventItem[idx].name != this.editEventsItem.name){
+            if (this.element.events[idx].name != this.editEventsItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'serviceEventD', listname: this.editEventsItem.name} )
             }
-            this.eventItem[idx].name = this.editEventsItem.name
+            this.element.events[idx].name = this.editEventsItem.name
             this.cancelEventItem()
         },
         editFieldItem(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+idx)
             if (endLine != undefined && this.editFieldsItem.type == null) {
                 this.deleteLine(this.element.uuid+'/Fieldtable-'+idx)
-                this.fieldItem[idx].type = null
+                this.element.fields[idx].type = null
             } else if (endLine != undefined && endLine != this.editFieldsItem.type.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/Fieldtable-'+idx)
                 this.newLine(this.element.uuid+'/Fieldtable-'+idx, this.element.uuid+'/Fieldtable', this.editFieldsItem.type.uuid)
-                this.fieldItem[idx].type = this.editFieldsItem.type.name
+                this.element.fields[idx].type = this.editFieldsItem.type.name
             }else if (endLine == undefined && this.editFieldsItem.type != null) {
                 this.newLine(this.element.uuid+'/Fieldtable-'+idx, this.element.uuid+'/Fieldtable', this.editFieldsItem.type.uuid)
-                this.fieldItem[idx].type = this.editFieldsItem.type.name
+                this.element.fields[idx].type = this.editFieldsItem.type.name
             }
 
-            if (this.fieldItem[idx].name != this.editFieldsItem.name){
+            if (this.element.fields[idx].name != this.editFieldsItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'field', listname: this.editFieldsItem.name} )
             }
 
-            this.fieldItem[idx].name = this.editFieldsItem.name
-            this.fieldItem[idx].getter = this.editFieldsItem.getter
-            this.fieldItem[idx].setter = this.editFieldsItem.setter
-            this.fieldItem[idx].notifier = this.editFieldsItem.notifier
+            this.element.fields[idx].name = this.editFieldsItem.name
+            this.element.fields[idx].getter = this.editFieldsItem.getter
+            this.element.fields[idx].setter = this.editFieldsItem.setter
+            this.element.fields[idx].notifier = this.editFieldsItem.notifier
             this.cancelFieldItem()
         },
 
@@ -827,15 +799,6 @@ export default {
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
-        },
-        inputServiceEvent() {
-            this.$store.commit('editServiceInterface', {compo:"Event", uuid:this.element.uuid, events:this.eventItem} )
-        },
-        inputServiceField() {
-            this.$store.commit('editServiceInterface', {compo:"Field", uuid:this.element.uuid, fields:this.fieldItem} )
-        },
-        inputServiceMethod() {
-            this.$store.commit('editServiceInterface', {compo:"Method", uuid:this.element.uuid, methods:this.methodItem} )
         },
         newDataType() {
             this.$store.commit('addElementImplementation', {
@@ -904,11 +867,10 @@ export default {
 
             while (res) {
                 addObj.name = 'Method_' + n++;
-                res = this.methodItem.some(ele => ele.name === addObj.name)
+                res = this.element.methods.some(ele => ele.name === addObj.name)
             }
-            this.methodItem.push(addObj)
-            this.methodTab = this.methodItem.length-1
-            this.inputServiceMethod()
+            this.element.methods.push(addObj)
+            this.methodTab = this.element.methods.length-1
             EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
         },
         clickMethodtab() {
@@ -920,46 +882,62 @@ export default {
             this.isdeleteError = false
         },
         changeMethodTab() {
-            if(this.methodItem.length > 0) {
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.methodItem[this.methodTab].name)}, 300);
+            if(this.element.methods.length > 0) {
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.element.methods[this.methodTab].name)}, 300);
             }
         },
         deleteMethod(idx) {
             var endLine
-            this.$store.commit('deleteRefTable', {deleteName:'methodSI', deleteTab:true, tabName: this.methodItem[this.methodTab].name, path: this.element.path, name: this.element.name})
+            this.$store.commit('deleteRefTable', {deleteName:'methodSI', deleteTab:true, tabName: this.element.methods[idx].name, path: this.element.path, name: this.element.name})
 
-            for(let i=0; i<this.methodItem[this.methodTab].argument.length; i++){
-                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+i+'-'+this.methodTab)
+            for(let i=0; i<this.element.methods[idx].argument.length; i++){
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+i+'-'+idx)
                 if(endLine != undefined) {
-                    this.deleteLine(this.element.uuid+'/argtable-'+i+'-'+this.methodTab)
+                    this.deleteLine(this.element.uuid+'/argtable-'+i+'-'+idx)
                 }
             }
-            for(let i=0; i<this.methodItem[this.methodTab].errorSet.length; i++){
-                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+i+'-'+this.methodTab)
+            for(let i=0; i<this.element.methods[idx].errorSet.length; i++){
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+i+'-'+idx)
                 if(endLine != undefined) {
-                    this.deleteLine(this.element.uuid+'/methoderrors-'+i+'-'+this.methodTab)
+                    this.deleteLine(this.element.uuid+'/methoderrors-'+i+'-'+idx)
                 }
             }
-            for(let i=0; i<this.methodItem[this.methodTab].error.length; i++){
-                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+i+'-'+this.methodTab)
+            for(let i=0; i<this.element.methods[idx].error.length; i++){
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+i+'-'+idx)
                 if(endLine != undefined) {
-                    this.deleteLine(this.element.uuid+'/methoderror-'+i+'-'+this.methodTab)
+                    this.deleteLine(this.element.uuid+'/methoderror-'+i+'-'+idx)
                 }
             }
-            this.methodItem.splice(idx, 1)
-            this.inputServiceMethod()
+
+            for(let n=idx+1; n<this.element.methods.length; n++){
+                for(let i=0; i<this.element.methods[n].argument.length; i++){
+                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+i+'-'+n)
+                    if(endLine != undefined) {
+                        this.deleteLine(this.element.uuid+'/argtable-'+i+'-'+n)
+                        this.newLine(this.element.uuid+'/argtable-'+i+'-'+(n-1), this.element.uuid+'/methods', endLine)
+                    }
+                }
+                for(let i=0; i<this.element.methods[n].errorSet.length; i++){
+                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+i+'-'+n)
+                    if(endLine != undefined) {
+                        this.deleteLine(this.element.uuid+'/methoderrors-'+i+'-'+n)
+                        this.newLine(this.element.uuid+'/methoderrors-'+i+'-'+(n-1), this.element.uuid+'/methods', endLine)
+                    }
+                }
+                for(let i=0; i<this.element.methods[n].error.length; i++){
+                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+i+'-'+n)
+                    if(endLine != undefined) {
+                        this.deleteLine(this.element.uuid+'/methoderror-'+i+'-'+n)
+                        this.newLine(this.element.uuid+'/methoderror-'+i+'-'+(n-1), this.element.uuid+'/methods', endLine)
+                    }
+                }
+            }
+            this.element.methods.splice(idx, 1)
+            this.changeMethodTab()
         },
         inputMethodName(name) {
-            this.$store.commit('editServiceInterface', {compo:"Method Name", uuid:this.element.uuid, name:name, methodtab: this.methodTab} )
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                         changeName: 'serviceMethodD', listname: name} )
-
-        },
-        inputMethodDescription(name) {
-            this.$store.commit('editServiceInterface', {compo:"Method Descript", uuid:this.element.uuid, discrip:name, methodtab: this.methodTab} )
-        },
-        inputMethodFF(name) {
-            this.$store.commit('editServiceInterface', {compo:"Method FF", uuid:this.element.uuid, fireforget:name, methodtab: this.methodTab} )
         },
 
         isCheckArg() {
@@ -972,21 +950,21 @@ export default {
         },
         deleteArg() {
             if (this.isdeleteArg == true) {
-                for(let i=0; i<this.methodItem[this.methodTab].argument.length; i++){
+                for(let i=0; i<this.element.methods[this.methodTab].argument.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+i+'-'+this.methodTab)
                     if(endLine != undefined) {
-                        this.changeLineArg.push({name:this.methodItem[this.methodTab].argument[i].name, endLine:endLine})
+                        this.changeLineArg.push({name:this.element.methods[this.methodTab].argument[i].name, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/argtable-'+i+'-'+this.methodTab)
                     }
                 }
 
-                this.methodItem[this.methodTab].argument = this.methodItem[this.methodTab].argument.filter(item => {
+                this.element.methods[this.methodTab].argument = this.element.methods[this.methodTab].argument.filter(item => {
                          return this.selDeleteArgItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.methodItem[this.methodTab].argument.length; n++) {
+                for(let n=0; n<this.element.methods[this.methodTab].argument.length; n++) {
                     for(let idx=0; idx<this.changeLineArg.length; idx++) {
-                        if (this.methodItem[this.methodTab].argument[n].name == this.changeLineArg[idx].name) {
-                            this.newLine(this.element.uuid+'/argtable-'+n+'-'+this.methodTab, this.element.uuid+'/argtable', this.changeLineArg[idx].endLine)
+                        if (this.element.methods[this.methodTab].argument[n].name == this.changeLineArg[idx].name) {
+                            this.newLine(this.element.uuid+'/argtable-'+n+'-'+this.methodTab, this.element.uuid+'/argtable'+this.element.methods[this.methodTab].name, this.changeLineArg[idx].endLine)
                         }
                     }
                 }
@@ -994,62 +972,55 @@ export default {
                 this.isdeleteArg = false
                 this.selDeleteArgItem = []
                 this.changeLineArg = []
-                this.inputServiceMethod()
             }
         },
         openArg(idx) {
             this.seltype = this.$store.getters.getImplementationDataType,
-            this.editArgItem.name = this.methodItem[this.methodTab].argument[idx].name
-            if ( this.methodItem[this.methodTab].argument[idx].type != null) {
+            this.editArgItem.name = this.element.methods[this.methodTab].argument[idx].name
+            if ( this.element.methods[this.methodTab].argument[idx].type != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getImplementationPath(this.methodItem[this.methodTab].argument[idx].type)
+                    endLine = this.$store.getters.getImplementationPath(this.element.methods[this.methodTab].argument[idx].type)
                 }
-                this.editArgItem.type = { name: this.methodItem[this.methodTab].argument[idx].type, uuid: endLine }
+                this.editArgItem.type = { name: this.element.methods[this.methodTab].argument[idx].type, uuid: endLine }
             }
-            this.editArgItem.dir = this.methodItem[this.methodTab].argument[idx].dir
-            this.editArgItem.descirp = this.methodItem[this.methodTab].argument[idx].descirp
+            this.editArgItem.dir = this.element.methods[this.methodTab].argument[idx].dir
+            this.editArgItem.descirp = this.element.methods[this.methodTab].argument[idx].descirp
         },
         editArg(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab)
             if (endLine != undefined && this.editArgItem.type == null) {
                 this.deleteLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab)
-                this.methodItem[this.methodTab].argument[idx].type = null
+                this.element.methods[this.methodTab].argument[idx].type = null
             } else if (endLine != undefined && endLine != this.editArgItem.type.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab)
-                this.newLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab, this.element.uuid+'/argtable', this.editArgItem.type.uuid)
-                this.methodItem[this.methodTab].argument[idx].type = this.editArgItem.type.name
+                this.newLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab, this.element.uuid+'/argtable'+this.element.methods[this.methodTab].name, this.editArgItem.type.uuid)
+                this.element.methods[this.methodTab].argument[idx].type = this.editArgItem.type.name
             }else if (endLine == undefined && this.editArgItem.type != null) {
-                this.newLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab, this.element.uuid+'/argtable', this.editArgItem.type.uuid)
-                this.methodItem[this.methodTab].argument[idx].type = this.editArgItem.type.name
+                this.newLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab, this.element.uuid+'/argtable'+this.element.methods[this.methodTab].name, this.editArgItem.type.uuid)
+                this.element.methods[this.methodTab].argument[idx].type = this.editArgItem.type.name
             }
 
-            this.methodItem[this.methodTab].argument[idx].name = this.editArgItem.name
-            this.methodItem[this.methodTab].argument[idx].dir = this.editArgItem.dir
-            this.methodItem[this.methodTab].argument[idx].descirp = this.editArgItem.descirp
+            this.element.methods[this.methodTab].argument[idx].name = this.editArgItem.name
+            this.element.methods[this.methodTab].argument[idx].dir = this.editArgItem.dir
+            this.element.methods[this.methodTab].argument[idx].descirp = this.editArgItem.descirp
             this.cancelArg()
-            this.inputServiceMethod()
         },
         cancelArg() {
             this.editArgItem = Object.assign({}, this.defaultArg)
             this.setactiveUUID()
         },
         addArg() {
+            console.log('1111111111')
             if( this.editArgItem.type != null) {
-                var datacount
-                if(this.methodItem[this.methodTab].argument == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.methodItem[this.methodTab].argument.length
-                }
-                this.newLine(this.element.uuid+'/argtable-'+datacount+'-'+this.methodTab, this.element.uuid+'/argtable'+this.methodItem[this.methodTab].name, this.editArgItem.type.uuid)
+                var datacount = this.element.methods[this.methodTab].argument.length
+                this.newLine(this.element.uuid+'/argtable-'+datacount+'-'+this.methodTab, this.element.uuid+'/argtable'+this.element.methods[this.methodTab].name, this.editArgItem.type.uuid)
                 this.editArgItem.type = this.editArgItem.type.name
             }
             const addObj = Object.assign({}, this.editArgItem);
-            this.methodItem[this.methodTab].argument.push(addObj);
+            this.element.methods[this.methodTab].argument.push(addObj);
             this.cancelArg()
-            this.inputServiceMethod()
         },
         clearArgType() {
             this.isEditingArgType = true
@@ -1077,21 +1048,21 @@ export default {
         },
         deleteErrorSet() {
             if (this.isdeleteErrorSet == true) {
-                for(let i=0; i<this.methodItem[this.methodTab].errorSet.length; i++){
+                for(let i=0; i<this.element.methods[this.methodTab].errorSet.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+i+'-'+this.methodTab)
                     if(endLine != undefined) {
-                        this.changeLineES.push({name:this.methodItem[this.methodTab].errorSet[i].error, endLine:endLine})
+                        this.changeLineES.push({name:this.element.methods[this.methodTab].errorSet[i].error, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/methoderrors-'+i+'-'+this.methodTab)
                     }
                 }
 
-                this.methodItem[this.methodTab].errorSet = this.methodItem[this.methodTab].errorSet.filter(item => {
+                this.element.methods[this.methodTab].errorSet = this.element.methods[this.methodTab].errorSet.filter(item => {
                         return this.selDeleteErrorSet.indexOf(item) < 0 })
 
-                for(let n=0; n<this.methodItem[this.methodTab].errorSet.length; n++) {
+                for(let n=0; n<this.element.methods[this.methodTab].errorSet.length; n++) {
                     for(let idx=0; idx<this.changeLineES.length; idx++) {
-                        if (this.methodItem[this.methodTab].errorSet[n].error == this.changeLineES[idx].name) {
-                            this.newLine(this.element.uuid+'/methoderrors-'+n+'-'+this.methodTab, this.element.uuid+'/methoderrors', this.changeLineES[idx].endLine)
+                        if (this.element.methods[this.methodTab].errorSet[n].error == this.changeLineES[idx].name) {
+                            this.newLine(this.element.uuid+'/methoderrors-'+n+'-'+this.methodTab, this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].name, this.changeLineES[idx].endLine)
                         }
                     }
                 }
@@ -1099,7 +1070,6 @@ export default {
                 this.isdeleteErrorSet = false
                 this.selDeleteErrorSet = []
                 this.changeLineES = []
-                this.inputServiceMethod()
             } 
         },
         clearErrorSet() {
@@ -1123,31 +1093,30 @@ export default {
         },
         openErrorSet(idx) {
             this.selErrorSet = this.$store.getters.getErrorSet
-            if ( this.methodItem[this.methodTab].errorSet[idx].error != null) {
+            if ( this.element.methods[this.methodTab].errorSet[idx].error != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getErrorSetPath(this.methodItem[this.methodTab].errorSet[idx].error)
+                    endLine = this.$store.getters.getErrorSetPath(this.element.methods[this.methodTab].errorSet[idx].error)
                 }
-                this.editErrorSetItem.error = { name: this.methodItem[this.methodTab].errorSet[idx].error, uuid: endLine }
+                this.editErrorSetItem.error = { name: this.element.methods[this.methodTab].errorSet[idx].error, uuid: endLine }
             }
         },
         editErrorSet(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab)
             if (endLine != undefined && this.editErrorSetItem.error == null) {
                 this.deleteLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab)
-                this.methodItem[this.methodTab].errorSet[idx].error = null
+                this.element.methods[this.methodTab].errorSet[idx].error = null
             } else if (endLine != undefined && endLine != this.editErrorSetItem.error.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab)
-                this.newLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderrors', this.editErrorSetItem.error.uuid)
-                this.methodItem[this.methodTab].errorSet[idx].error = this.editErrorSetItem.error.name
+                this.newLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].name, this.editErrorSetItem.error.uuid)
+                this.element.methods[this.methodTab].errorSet[idx].error = this.editErrorSetItem.error.name
             } else if (endLine == undefined && this.editErrorSetItem.error != null) {
-                this.newLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderrors', this.editErrorSetItem.error.uuid)
-                this.methodItem[this.methodTab].errorSet[idx].error = this.editErrorSetItem.error.name
+                this.newLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].name, this.editErrorSetItem.error.uuid)
+                this.element.methods[this.methodTab].errorSet[idx].error = this.editErrorSetItem.error.name
             }
             
             this.cancelErrorSet()
-            this.inputServiceMethod()
         },
         cancelErrorSet() {
             this.editErrorSetItem.error = null
@@ -1155,20 +1124,14 @@ export default {
         },
         addErrorSet() {
             if( this.editErrorSetItem.error != null) {
-                var datacount
-                if(this.methodItem[this.methodTab].errorSet == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.methodItem[this.methodTab].errorSet.length
-                }
-                this.newLine(this.element.uuid+'/methoderrors-'+datacount+'-'+this.methodTab, this.element.uuid+'/methoderrors'+this.methodItem[this.methodTab].name, this.editErrorSetItem.error.uuid)
+                var datacount = this.element.methods[this.methodTab].errorSet.length
+                this.newLine(this.element.uuid+'/methoderrors-'+datacount+'-'+this.methodTab, this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].name, this.editErrorSetItem.error.uuid)
                 this.editErrorSetItem.error = this.editErrorSetItem.error.name
             }
             const addObj = Object.assign({}, this.editErrorSetItem)
-            this.methodItem[this.methodTab].errorSet.push(addObj);
+            this.element.methods[this.methodTab].errorSet.push(addObj);
 
             this.cancelErrorSet()
-            this.inputServiceMethod()
         },
         newErrorSet() {
             this.$store.commit('addElementErrorSet', {
@@ -1192,21 +1155,21 @@ export default {
         },
         deleteError() {
             if (this.isdeleteError == true) {
-                for(let i=0; i<this.methodItem[this.methodTab].error.length; i++){
+                for(let i=0; i<this.element.methods[this.methodTab].error.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+i+'-'+this.methodTab)
                     if(endLine != undefined) {
-                        this.changeLineE.push({name:this.methodItem[this.methodTab].error[i].error, endLine:endLine})
+                        this.changeLineE.push({name:this.element.methods[this.methodTab].error[i].error, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/methoderror-'+i+'-'+this.methodTab)
                     }
                 }
 
-                this.methodItem[this.methodTab].error = this.methodItem[this.methodTab].error.filter(item => {
+                this.element.methods[this.methodTab].error = this.element.methods[this.methodTab].error.filter(item => {
                         return this.selDeleteError.indexOf(item) < 0 })
 
-                for(let n=0; n<this.methodItem[this.methodTab].error.length; n++) {
+                for(let n=0; n<this.element.methods[this.methodTab].error.length; n++) {
                     for(let idx=0; idx<this.changeLineE.length; idx++) {
-                        if (this.methodItem[this.methodTab].error[n].error == this.changeLineE[idx].name) {
-                            this.newLine(this.element.uuid+'/methoderror-'+n+'-'+this.methodTab, this.element.uuid+'/methoderror', this.changeLineE[idx].endLine)
+                        if (this.element.methods[this.methodTab].error[n].error == this.changeLineE[idx].name) {
+                            this.newLine(this.element.uuid+'/methoderror-'+n+'-'+this.methodTab, this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].name, this.changeLineE[idx].endLine)
                         }
                     }
                 }
@@ -1214,7 +1177,6 @@ export default {
                 this.isdeleteError = false
                 this.selDeleteError = []
                 this.changeLineE = []
-                this.inputServiceMethod()
             } 
         },
         clearErrorRef() {
@@ -1238,33 +1200,31 @@ export default {
         },
         openError(idx) {
             this.selError = this.$store.getters.getError
-            //this.methodItem = this.element.methods.slice()
 
-            if ( this.methodItem[this.methodTab].error[idx].error != null) {
+            if ( this.element.methods[this.methodTab].error[idx].error != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getErrorPath(this.methodItem[this.methodTab].error[idx].error)
+                    endLine = this.$store.getters.getErrorPath(this.element.methods[this.methodTab].error[idx].error)
                 }
-                this.editErrorItem.error = { name: this.methodItem[this.methodTab].error[idx].error, uuid: endLine }
+                this.editErrorItem.error = { name: this.element.methods[this.methodTab].error[idx].error, uuid: endLine }
             }
         },
         editError(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab)
             if (endLine != undefined && this.editErrorItem.error == null) {
                 this.deleteLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab)
-                this.methodItem[this.methodTab].error[idx].error = null
+                this.element.methods[this.methodTab].error[idx].error = null
             } else if (endLine != undefined && endLine != this.editErrorItem.error.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab)
-                this.newLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderror', this.editErrorItem.error.uuid)
-                this.methodItem[this.methodTab].error[idx].error = this.editErrorItem.error.name
+                this.newLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].name, this.editErrorItem.error.uuid)
+                this.element.methods[this.methodTab].error[idx].error = this.editErrorItem.error.name
             } else if (endLine == undefined && this.editErrorItem.error != null) {
-                this.newLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderror', this.editErrorItem.error.uuid)
-                this.methodItem[this.methodTab].error[idx].error = this.editErrorItem.error.name
+                this.newLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].name, this.editErrorItem.error.uuid)
+                this.element.methods[this.methodTab].error[idx].error = this.editErrorItem.error.name
             }
             
             this.cancelError()
-            this.inputServiceMethod()
         },
         cancelError() {
             this.editErrorItem.error = null
@@ -1272,20 +1232,14 @@ export default {
         },
         addError() {
             if( this.editErrorItem.error != null) {
-                var datacount
-                if(this.methodItem[this.methodTab].error == undefined) {
-                    datacount = 0
-                }else {
-                    datacount = this.methodItem[this.methodTab].error.length
-                }
-                this.newLine(this.element.uuid+'/methoderror-'+datacount+'-'+this.methodTab, this.element.uuid+'/methoderror'+this.methodItem[this.methodTab].name, this.editErrorItem.error.uuid)
+                var datacount = this.element.methods[this.methodTab].error.length
+                this.newLine(this.element.uuid+'/methoderror-'+datacount+'-'+this.methodTab, this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].name, this.editErrorItem.error.uuid)
                 this.editErrorItem.error = this.editErrorItem.error.name
             }
             const addObj = Object.assign({}, this.editErrorItem)
-            this.methodItem[this.methodTab].error.push(addObj);
+            this.element.methods[this.methodTab].error.push(addObj);
 
             this.cancelError()
-            this.inputServiceMethod()
         },
         newError() {
             this.$store.commit('addElementError', {
