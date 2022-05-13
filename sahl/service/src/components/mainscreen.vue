@@ -5,27 +5,48 @@
         </v-system-bar>
         <v-app-bar app dense flat clipped-left clipped-right>
             <appbar />
-            <v-spacer></v-spacer>
-            <v-icon v-if="isSearch && isprojectOpen">mdi-magnify</v-icon>
-            <v-autocomplete v-if="isSearch && isprojectOpen" v-model='model' :items='searchList' item-text='name' item-value="uuid" class="lable-placeholer-color"
+            <v-select v-if="panesNumber > 1 && isSearch && isprojectOpen" v-model="selectScreen" :items="screenItem" label="Select a Screen" outlined dense class="selectScreen"></v-select>
+            <v-icon v-if="isSearch && isprojectOpen" style="left: 393px;">mdi-magnify</v-icon>
+            <v-autocomplete v-if="isSearch && isprojectOpen" v-model='model' :items='searchList' item-text='name' item-value="uuid" class="lable-placeholer-color searchElement"
                 :search-input.sync="search" return-object clearable @click="setSearchList()"
-                hide-no-data hide-selected placeholder="Start typing to Search Element">
+                hide-no-data hide-selected placeholder="Start typing to Search Element" >
             </v-autocomplete>
-            <v-btn v-if="isSearch && isprojectOpen" icon @click="goElement()" >
+            <v-btn v-if="isSearch && isprojectOpen" icon @click="goElement()" style="left: 630px;">
                 <v-icon >mdi-crosshairs-gps</v-icon>
             </v-btn>
-            <v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer><v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+            <v-tooltip bottom v-if="isprojectOpen" >  
+                <template v-slot:activator="{on, attrs}">
+                    <v-btn small icon v-bind="attrs" v-on="on" @click="addPanes()" :disabled="panesNumber == 3">
+                        <v-icon>mdi-monitor-multiple</v-icon>
+                    </v-btn>
+                </template>
+                <span>Split Editor Right</span>
+            </v-tooltip>
+            <v-tooltip bottom v-if="isprojectOpen">  
+                <template v-slot:activator="{on, attrs}">
+                    <v-btn small icon v-bind="attrs" v-on="on" @click="deletePanes()" :disabled="panesNumber == 1">
+                        <v-icon>mdi-minus-box-outline</v-icon>
+                    </v-btn>
+                </template>
+                <span>Delete Split Editor</span>
+            </v-tooltip>
         </v-app-bar>
         <v-navigation-drawer ref="drawer" v-model="navigation.shown" :width="navigation.width" app clipped>
             <navigatorbar />
         </v-navigation-drawer>
         <v-main v-if="isprojectOpen">
-            <mainview :minimaptoolbar='true'/>
+            <!-- <mainview :minimaptoolbar='true'/> -->
+            <splitpanes>
+                <pane v-for="i in panesNumber" :key="i" min-size="20">
+                    <mainview :minimaptoolbar='true' :location='i'/>
+                </pane>
+            </splitpanes>
             <div class='minimap-resize'>
                 <v-btn small :text="btnMinimapResize" @click="onClickMinimapResize()"><v-icon>mdi-arrow-expand</v-icon></v-btn>
             </div>
             <div class='mini-map' v-show="btnMinimapResize">
-                <mainview :minimaptoolbar='false'/>
+                <mainview :minimaptoolbar='false' :location='1'/>
             </div>
         </v-main>
         <v-navigation-drawer ref="detailViewer" :width="drawViewernavi.width" app v-model="drawViewernavi.shown" clipped right >
@@ -45,11 +66,13 @@ import Mainview from '@/components/mainview.vue'
 import DetailViewer from '@/components/detailViewer.vue'
 import footbar from '@/components/footbar.vue'
 import { EventBus } from '../main'
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
 
 
 
 export default ({
-    components:{  Systembar, Appbar, Navigatorbar, Mainview, DetailViewer, footbar },
+    components:{  Splitpanes, Pane, Systembar, Appbar, Navigatorbar, Mainview, DetailViewer, footbar },
     computed: { 
         ismakeProject() {
             return this.$store.state.ismakeProject
@@ -72,13 +95,11 @@ export default ({
     },
     watch: {
         ismakeProject(val) { // project가 없는상태에서 다른 compoment들을 만들어 놓으니 에러가 떠서 만들어줌
+            this.isprojectOpen = val
             if (val) {
-                this.isprojectOpen = true
                 this.$nextTick(() => { //이렇게 안해주면 minimap을 그리기 전에 호출되서 undefine으로 나옴 
                     this.setMinimapLeft()
                 })
-            } else {
-                this.isprojectOpen = false
             }
         },
         isOpenCloseDetailView(val) {
@@ -97,6 +118,10 @@ export default ({
             this.setMinimapLeft()
         }
     },
+    created() {
+        this.drawViewernavi.shown = this.$store.state.visibleDetailView
+        //console.log('Viewnavi  ' + this.drawViewernavi.shown)
+    },
     data() {
         return {
             isprojectOpen: false,
@@ -107,6 +132,9 @@ export default ({
             model: null, // 찾은 아이템 정보가 담김
             searchList: [],
             btnMinimapResize: true,
+            panesNumber: 1,
+            screenItem: ['1'],
+            selectScreen: null
         }
     },
     mounted() {
@@ -114,7 +142,6 @@ export default ({
         this.setEventsNavigation()
         this.setBorderDetailViewerWidth()
         this.setEventsDetailViewer()
-        this.drawViewernavi.shown = this.$store.state.visibleDetailView
     },
     methods: {
         onClickMinimapResize() {
@@ -151,7 +178,9 @@ export default ({
                     el.style.transition ='initial';
                     document.addEventListener("mousemove", resize, false)
                     if (this.isprojectOpen) {
-                        document.getElementById('main-view').style.overflow= "hidden"
+                        for(var i=1; i<=vm.panesNumber; i++) {
+                            document.getElementById('main-view'+i).style.overflow= "hidden"
+                        }
                     }
                 },
                 false
@@ -165,7 +194,10 @@ export default ({
                     document.body.style.cursor = ""
                     document.removeEventListener("mousemove", resize, false)
                     if (this.isprojectOpen) {
-                        document.getElementById('main-view').style.overflow= "scroll"
+                        for(var i=1; i<=vm.panesNumber; i++) {
+                            document.getElementById('main-view'+i).style.overflow= "auto"
+                        }
+                        EventBus.$emit('drawLine')
                     }
                 },
                 false
@@ -196,7 +228,9 @@ export default ({
                     el.style.transition ='initial'
                     document.addEventListener("mousemove", resize, false)
                     if (vm.isprojectOpen) {
-                        document.getElementById('main-view').style.overflow = "hidden"
+                        for(var i=1; i<=vm.panesNumber; i++) {
+                            document.getElementById('main-view'+i).style.overflow= "hidden"
+                        }
                     }
                 },
                 false
@@ -210,18 +244,36 @@ export default ({
                     document.body.style.cursor = ""
                     document.removeEventListener("mousemove", resize, false)
                     if (vm.isprojectOpen) {
-                        document.getElementById('main-view').style.overflow = "auto"
+                        for(var i=1; i<=vm.panesNumber; i++) {
+                            document.getElementById('main-view'+i).style.overflow= "auto"
+                        }
+                        EventBus.$emit('drawLine')
                     }
                 },
                 false
             );
         },
         goElement() {
-            //console.log(this.model.uuid)
+            console.log('goElement')
             if(this.model != null && this.model.uuid != null) {
+                if (this.panesNumber > 1) {
+                    this.$store.commit( 'setSelectScreen', {num: this.selectScreen})
+                }
                 EventBus.$emit('goElement', this.model.uuid)
             }
             this.model = null
+        },
+        addPanes() {
+            this.panesNumber++
+            this.$store.commit( 'setPanesNum', {panes: this.panesNumber})
+            this.screenItem.push(this.panesNumber)
+            this.selectScreen = null
+        },
+        deletePanes() {
+            this.panesNumber--
+            this.$store.commit( 'setPanesNum', {panes: this.panesNumber})
+            this.screenItem.pop()
+            this.selectScreen = null
         },
         setSearchList() {
             this.searchList = []

@@ -30,6 +30,8 @@ export default new Vuex.Store({
         strSavePath: [], // Path List
         isInputFileComplate: false, //input file값 저장후 화면에 그린 뒤 line 그리기 위해
         inputFileList: [], // input file 값저장 후 line 그리기 위해 어떤것이 들어왔는지 알려고
+        numPanes: 1, //화면분할 몇개 했는지
+        selectScreen: 1,
     },
     getters: {
         projectCount(state) {
@@ -2194,7 +2196,7 @@ export default new Vuex.Store({
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinetype != null) {
                         saveStr += "</PROCESS-STATE-MACHINE>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].dependent != null) {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].dependent.length > 0) {
                         saveStr += "<STATE-DEPENDENT-STARTUP-CONFIGS>"
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].dependent.forEach(ele => {
                             saveStr += "<STATE-DEPENDENT-STARTUP-CONFIG>"
@@ -3573,6 +3575,12 @@ export default new Vuex.Store({
             state.detailViewUUID = null
             console.log(state.detailViewerList)
         },
+        setPanesNum(state, payload) {
+            state.numPanes = payload.panes
+        },
+        setSelectScreen(state, payload) {
+            state.selectScreen = payload.num
+        },
         setZoomInOut(state, payload) {
             if (payload.valueDetail == null) {
                 state.setting = { zoomMain: payload.valueMain, zoomDetail: state.setting.zoomDetail }
@@ -3898,14 +3906,15 @@ export default new Vuex.Store({
                             })
                         }
                     })
-                    var uuid = ele.getAttribute("UUID")
-                    if (uuid == null) {
-                        uuid = uuid.v1()
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
                     }
                     this.commit('addElementCompuMehtod', {
                         input: true,
                         path: strPath,
-                        uuid: uuid,
+                        uuid: UUID,
                         name: compuName,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
@@ -3915,7 +3924,7 @@ export default new Vuex.Store({
                         icon: "mdi-clipboard-outline",
                         validation: false
                     })
-                    state.inputFileList.push({ uuid: uuid, path: strPath + '/' + compuName, parent: constant.CompuMethod_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + compuName, parent: constant.CompuMethod_str })
                     EventBus.$emit('add-element', constant.DateType_str)
                     EventBus.$emit('add-element', constant.CompuMethod_str)
                 })
@@ -3944,14 +3953,15 @@ export default new Vuex.Store({
                             })
                         }
                     })
-                    var uuid = ele.getAttribute("UUID")
-                    if (uuid == null) {
-                        uuid = uuid.v1()
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
                     }
                     this.commit('addElementDataConstr', {
                         input: true,
                         path: strPath,
-                        uuid: uuid,
+                        uuid: UUID,
                         name: dataconName,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
@@ -3961,7 +3971,7 @@ export default new Vuex.Store({
                         icon: "mdi-clipboard-outline",
                         validation: false
                     })
-                    state.inputFileList.push({ uuid: uuid, path: strPath + '/' + dataconName, parent: constant.DataConstr_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + dataconName, parent: constant.DataConstr_str })
                     EventBus.$emit('add-element', constant.DateType_str)
                     EventBus.$emit('add-element', constant.DataConstr_str)
                 })
@@ -4005,10 +4015,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
+
                     this.commit('addElementApplicationArray', {
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         name: appliName,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
@@ -4022,7 +4038,7 @@ export default new Vuex.Store({
                         icon: "mdi-clipboard-outline",
                         validation: false
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + appliName, parent: constant.ApplicationArray_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + appliName, parent: constant.ApplicationArray_str })
                     EventBus.$emit('add-element', constant.DateType_str)
                     EventBus.$emit('add-element', constant.ApplicationArray_str)
                 })
@@ -4116,10 +4132,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
+
                     this.commit('addElementImplementation', {
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         name: impName,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
@@ -4136,7 +4158,7 @@ export default new Vuex.Store({
                         icon: "mdi-clipboard-outline",
                         validation: false
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + impName, parent: constant.Implementation_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + impName, parent: constant.Implementation_str })
                     EventBus.$emit('add-element', constant.DateType_str)
                     EventBus.$emit('add-element', constant.Implementation_str)
                 })
@@ -4254,10 +4276,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
+
                     this.commit('addElementMachine', {
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         name: name,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
@@ -4273,7 +4301,7 @@ export default new Vuex.Store({
                         icon: "mdi-clipboard-outline",
                         validation: false
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + name, parent: constant.Machine_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + name, parent: constant.Machine_str })
                     EventBus.$emit('add-element', constant.Machines_str)
                     EventBus.$emit('add-element', constant.Machine_str)
                 })
@@ -4340,11 +4368,17 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
+
                     this.commit('addElementMachineDesign', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -4355,7 +4389,7 @@ export default new Vuex.Store({
                         icon: "mdi-clipboard-outline",
                         validation: false
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.MachineDesigne_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.MachineDesigne_str })
                     EventBus.$emit('add-element', constant.Machines_str)
                     EventBus.$emit('add-element', constant.MachineDesigne_str)
                 })
@@ -4476,11 +4510,17 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
+
                     this.commit('addElementEthernetCluster', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -4488,7 +4528,7 @@ export default new Vuex.Store({
                         icon: "mdi-clipboard-outline",
                         validation: false
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.EthernetCluster_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.EthernetCluster_str })
                     EventBus.$emit('add-element', constant.Machines_str)
                     EventBus.$emit('add-element', constant.EthernetCluster_str)
                 })
@@ -4517,11 +4557,17 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
+
                     this.commit('addElementModeDeclarationGroup', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -4530,7 +4576,7 @@ export default new Vuex.Store({
                         icon: "mdi-clipboard-outline",
                         validation: false
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.ModeDeclarationGroup_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ModeDeclarationGroup_str })
                     EventBus.$emit('add-element', constant.Machines_str)
                     EventBus.$emit('add-element', constant.ModeDeclarationGroup_str)
                 })
@@ -4568,11 +4614,17 @@ export default new Vuex.Store({
                         })
                     }
                 })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+
                 this.commit('addElementHWElement', {
                     name: Name,
                     input: true,
                     path: strPath,
-                    uuid: ele.getAttribute("UUID"),
+                    uuid: UUID,
                     top: Math.floor(Math.random() * (200 - 6)) + 5,
                     left: Math.floor(Math.random() * (1400 - 11)) + 10,
                     zindex: 2,
@@ -4581,7 +4633,7 @@ export default new Vuex.Store({
                     icon: "mdi-clipboard-outline",
                     validation: false
                 })
-                state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.HWElement_str })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.HWElement_str })
                 EventBus.$emit('add-element', constant.Machines_str)
                 EventBus.$emit('add-element', constant.HWElement_str)
             })
@@ -4615,12 +4667,17 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
 
                     this.commit('addElementProtoMachineMapping', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -4630,7 +4687,7 @@ export default new Vuex.Store({
                         ptmmMachine: machine,
                         ptmmProcess: process,
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.ProcesstoMachineMapping_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ProcesstoMachineMapping_str })
                     EventBus.$emit('add-element', constant.AdaptiveApplication_str)
                     EventBus.$emit('add-element', constant.ProcesstoMachineMapping_str)
                 })
@@ -4691,15 +4748,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
-                    var uuid = ele.getAttribute("UUID")
-                    if (uuid == null) {
-                        uuid = uuid.v1()
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
                     }
                     this.commit('addElementSWComponents', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: uuid,
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -4709,7 +4767,7 @@ export default new Vuex.Store({
                         rport: rPort,
                         prport: prPort,
                     })
-                    state.inputFileList.push({ uuid: uuid, path: strPath + '/' + Name, parent: constant.SWComponents_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SWComponents_str })
                     EventBus.$emit('add-element', constant.AdaptiveApplication_str)
                     EventBus.$emit('add-element', constant.SWComponents_str)
                 })
@@ -4779,15 +4837,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
-                    var uuid = ele.getAttribute("UUID")
-                    if (uuid == null) {
-                        uuid = uuid.v1()
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
                     }
                     this.commit('addElementProcess', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: uuid,
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -4800,7 +4859,7 @@ export default new Vuex.Store({
                         machinetype: type,
                         dependent: config
                     })
-                    state.inputFileList.push({ uuid: uuid, path: strPath + '/' + Name, parent: constant.Process_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Process_str })
                     EventBus.$emit('add-element', constant.AdaptiveApplication_str)
                     EventBus.$emit('add-element', constant.Process_str)
                 })
@@ -4878,12 +4937,17 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
 
                     this.commit('addElementProcessDesign', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -4892,7 +4956,7 @@ export default new Vuex.Store({
                         executableref: exe,
                         determin: determininistic
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.ProcessDesign_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ProcessDesign_str })
                     EventBus.$emit('add-element', constant.AdaptiveApplication_str)
                     EventBus.$emit('add-element', constant.ProcessDesign_str)
                 })
@@ -4939,15 +5003,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
-                    var uuid = ele.getAttribute("UUID")
-                    if (uuid == null) {
-                        uuid = uuid.v1()
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
                     }
                     this.commit('addElementExecutable', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: uuid,
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -4961,7 +5026,7 @@ export default new Vuex.Store({
                         swname: swname,
                         applicationtyperef: appli,
                     })
-                    state.inputFileList.push({ uuid: uuid, path: strPath + '/' + Name, parent: constant.Executable_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Executable_str })
                     EventBus.$emit('add-element', constant.AdaptiveApplication_str)
                     EventBus.$emit('add-element', constant.Executable_str)
                 })
@@ -5006,15 +5071,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
-                    var uuid = ele.getAttribute("UUID")
-                    if (uuid == null) {
-                        uuid = uuid.v1()
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
                     }
                     this.commit('addElementStartupConfig', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: uuid,
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5026,7 +5092,7 @@ export default new Vuex.Store({
                         entertimeout: enter,
                         exittimeout: exit
                     })
-                    state.inputFileList.push({ uuid: uuid, path: strPath + '/' + Name, parent: constant.StartupConfig_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.StartupConfig_str })
                     EventBus.$emit('add-element', constant.AdaptiveApplication_str)
                     EventBus.$emit('add-element', constant.StartupConfig_str)
                 })
@@ -5049,12 +5115,16 @@ export default new Vuex.Store({
                             number = item.childNodes[0].nodeValue
                         }
                     })
-
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementDeterministicClien', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5063,7 +5133,7 @@ export default new Vuex.Store({
                         cycletiem: cycle,
                         numofworkers: number,
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.DeterministicClient_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.DeterministicClient_str })
                     EventBus.$emit('add-element', constant.AdaptiveApplication_str)
                     EventBus.$emit('add-element', constant.DeterministicClient_str)
                 })
@@ -5302,12 +5372,17 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
 
                     this.commit('addElementSomeIPService', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5322,7 +5397,7 @@ export default new Vuex.Store({
                         methodD: methodD,
                         fieldD: fieldD,
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.SomeIPServiceInterfaceDeployment_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPServiceInterfaceDeployment_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.ServiceInterfaces_str)
                     EventBus.$emit('add-element', constant.SomeIPServiceInterfaceDeployment_str)
@@ -5462,11 +5537,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementService', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5480,7 +5560,7 @@ export default new Vuex.Store({
                         fields: fields,
                         methods: methods
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.ServiceInterface_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ServiceInterface_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.ServiceInterfaces_str)
                     EventBus.$emit('add-element', constant.ServiceInterface_str)
@@ -5520,11 +5600,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementClient', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5536,7 +5621,7 @@ export default new Vuex.Store({
                         delaymax: max,
                         delaymin: min,
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.Client_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Client_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.SomeIPEvents_str)
                     EventBus.$emit('add-element', constant.Client_str)
@@ -5564,12 +5649,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
-
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementServer', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5578,7 +5667,7 @@ export default new Vuex.Store({
                         delaymax: max,
                         delaymin: min,
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.Server_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Server_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.SomeIPEvents_str)
                     EventBus.$emit('add-element', constant.Server_str)
@@ -5618,11 +5707,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementSomeIPClient', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5634,7 +5728,7 @@ export default new Vuex.Store({
                         inibasedelay: delay,
                         inirepetimax: max,
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.SomeIPClient_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPClient_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.ServiceInstances_str)
                     EventBus.$emit('add-element', constant.SomeIPClient_str)
@@ -5690,12 +5784,16 @@ export default new Vuex.Store({
                             time = item.childNodes[0].nodeValue
                         }
                     })
-
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementSomeIPServer', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5710,7 +5808,7 @@ export default new Vuex.Store({
                         offer: cyclic,
                         tiemtolive: time,
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.SomeIPServer_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPServer_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.ServiceInstances_str)
                     EventBus.$emit('add-element', constant.SomeIPServer_str)
@@ -5742,12 +5840,16 @@ export default new Vuex.Store({
                             tcp = item.childNodes[0].nodeValue
                         }
                     })
-
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementSomeIPtoMachine', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5758,7 +5860,7 @@ export default new Vuex.Store({
                         tcp: tcp,
                         siref: service,
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.SomeIPToMachineMapping_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPToMachineMapping_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.ServiceInstances_str)
                     EventBus.$emit('add-element', constant.SomeIPToMachineMapping_str)
@@ -5791,12 +5893,16 @@ export default new Vuex.Store({
                             serviceIns = item.childNodes[0].nodeValue
                         }
                     })
-
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementToPortPrototype', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5808,7 +5914,7 @@ export default new Vuex.Store({
                         selectServiceIns: selectServiceIns,
                         serviceIns: serviceIns,
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.ToPortPrototypeMapping_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ToPortPrototypeMapping_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.ServiceInstances_str)
                     EventBus.$emit('add-element', constant.ToPortPrototypeMapping_str)
@@ -5876,12 +5982,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
-
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementRequiredSomeIP', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5895,7 +6005,7 @@ export default new Vuex.Store({
                         method: methodP,
                         requiredevent: requiredevent
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.RequiredSomeIP_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.RequiredSomeIP_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.ServiceInstances_str)
                     EventBus.$emit('add-element', constant.RequiredSomeIP_str)
@@ -5981,12 +6091,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
-
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementProvidedSomeIP', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -5999,7 +6113,7 @@ export default new Vuex.Store({
                         method: method,
                         eventG: eventG
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.ProvidedSomeIP_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ProvidedSomeIP_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.ServiceInstances_str)
                     EventBus.$emit('add-element', constant.ProvidedSomeIP_str)
@@ -6028,12 +6142,16 @@ export default new Vuex.Store({
                             domain = item.childNodes[0].nodeValue
                         }
                     })
-
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementError', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -6043,7 +6161,7 @@ export default new Vuex.Store({
                         errorcode: code,
                         errorDref: domain
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.Error_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Error_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.Errors_str)
                     EventBus.$emit('add-element', constant.Error_str)
@@ -6070,12 +6188,16 @@ export default new Vuex.Store({
                             })
                         }
                     })
-
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
                     this.commit('addElementErrorSet', {
                         name: Name,
                         input: true,
                         path: strPath,
-                        uuid: ele.getAttribute("UUID"),
+                        uuid: UUID,
                         top: Math.floor(Math.random() * (200 - 6)) + 5,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
@@ -6083,7 +6205,7 @@ export default new Vuex.Store({
                         validation: false,
                         errorref: errorref
                     })
-                    state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.Errorset_str })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Errorset_str })
                     EventBus.$emit('add-element', constant.Service_str)
                     EventBus.$emit('add-element', constant.Errors_str)
                     EventBus.$emit('add-element', constant.Errorset_str)
@@ -6114,12 +6236,16 @@ export default new Vuex.Store({
                         value = item.childNodes[0].nodeValue
                     }
                 })
-
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
                 this.commit('addElementErrorDomain', {
                     name: Name,
                     input: true,
                     path: strPath,
-                    uuid: ele.getAttribute("UUID"),
+                    uuid: UUID,
                     top: Math.floor(Math.random() * (200 - 6)) + 5,
                     left: Math.floor(Math.random() * (1400 - 11)) + 10,
                     zindex: 2,
@@ -6128,7 +6254,7 @@ export default new Vuex.Store({
                     namespace: namespace,
                     value: value,
                 })
-                state.inputFileList.push({ uuid: ele.getAttribute("UUID"), path: strPath + '/' + Name, parent: constant.ErrorDomain_str })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ErrorDomain_str })
                 EventBus.$emit('add-element', constant.Service_str)
                 EventBus.$emit('add-element', constant.Errors_str)
                 EventBus.$emit('add-element', constant.ErrorDomain_str)
@@ -6909,8 +7035,11 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.CompuMethod_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].left[payload.location] = payload.left
+                    //console.log(state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].top[payload.location] + ' / ' + state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].left[payload.location])
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxElement].zindex = payload.zindex
             }
@@ -6943,8 +7072,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.DataConstr_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxElement].zindex = payload.zindex
             }
@@ -6982,8 +7113,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.ApplicationArray_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxElement].zindex = payload.zindex
             }
@@ -7024,10 +7157,11 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxElement].name = payload.name
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].typeemitter = payload.typeemitter
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].zindex = payload.zindex
             }
@@ -7067,8 +7201,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].zindex = payload.zindex
             }
@@ -7102,8 +7238,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].zindex = payload.zindex
             }
@@ -7140,8 +7278,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].zindex = payload.zindex
             }
@@ -7175,8 +7315,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.ModeDeclarationGroup_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxElement].zindex = payload.zindex
             }
@@ -7209,21 +7351,11 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.EthernetCluster_index].children[idxElement].name = payload.name
-            } else if (payload.compo == "Condi Name") {
-                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[payload.conditab].name = payload.name
-            } else if (payload.compo == "version") {
-                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[payload.conditab].version = payload.version
-            } else if (payload.compo == "Channel Name") {
-                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[payload.conditab].channel[payload.channeltab].name = payload.name
-            } else if (payload.compo == "Endpoint Name") {
-                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[payload.conditab].channel[payload.channeltab].endpoint[payload.endtab].name = payload.name
-            } else if (payload.compo == "Domain Name") {
-                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[payload.conditab].channel[payload.channeltab].endpoint[payload.endtab].domainname = payload.name
-            } else if (payload.compo == "Priority") {
-                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[payload.conditab].channel[payload.channeltab].endpoint[payload.endtab].priority = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].zindex = payload.zindex
             }
@@ -7258,8 +7390,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].zindex = payload.zindex
             }
@@ -7294,8 +7428,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].zindex = payload.zindex
             }
@@ -7332,11 +7468,11 @@ export default new Vuex.Store({
 
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxElement].name = payload.name
-            } else if (payload.compo == "dependent") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent = payload.dependent.slice()
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].zindex = payload.zindex
             }
@@ -7370,8 +7506,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcessDesign_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].zindex = payload.zindex
             }
@@ -7411,8 +7549,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Executable_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxElement].zindex = payload.zindex
             }
@@ -7450,8 +7590,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.StartupConfig_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxElement].zindex = payload.zindex
             }
@@ -7485,8 +7627,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.DeterministicClient_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxElement].zindex = payload.zindex
             }
@@ -7527,8 +7671,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].zindex = payload.zindex
             }
@@ -7567,8 +7713,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].zindex = payload.zindex
             }
@@ -7605,8 +7753,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Client_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxElement].zindex = payload.zindex
             }
@@ -7640,8 +7790,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Server_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxElement].zindex = payload.zindex
             }
@@ -7678,8 +7830,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPClient_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxElement].zindex = payload.zindex
             }
@@ -7719,8 +7873,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPServer_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxElement].zindex = payload.zindex
             }
@@ -7756,8 +7912,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].zindex = payload.zindex
             }
@@ -7794,8 +7952,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].zindex = payload.zindex
             }
@@ -7834,8 +7994,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].zindex = payload.zindex
             }
@@ -7873,8 +8035,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].zindex = payload.zindex
             }
@@ -7910,8 +8074,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Error_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].zindex = payload.zindex
             }
@@ -7944,8 +8110,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].zindex = payload.zindex
             }
@@ -7979,8 +8147,10 @@ export default new Vuex.Store({
             if (payload.compo == "Name") {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.ErrorDomain_index].children[idxElement].name = payload.name
             } else if (payload.compo == "drag") {
-                state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxElement].top = payload.top
-                state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxElement].left = payload.left
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxElement].top, payload.location, payload.top)
+                Vue.set(state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxElement].left, payload.location, payload.left)
+                    //state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxElement].top[payload.location] = payload.top
+                    //state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxElement].left[payload.location] = payload.left
             } else if (payload.compo == "z") {
                 state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxElement].zindex = payload.zindex
             }
@@ -8379,7 +8549,7 @@ export default new Vuex.Store({
             if (payload.deleteTab) {
                 if (payload.deleteName == 'ModuleIns') { //Machine 변경시 =>  Process 에서 Machine -> Module Instantiation ref할때
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach((ele, i) => {
-                        if (ele.dependent != null) {
+                        if (ele.dependent.length > 0) {
                             ele.dependent.forEach((data, n) => {
                                 if (data.resourceRef == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
                                     var idx = this.getters.getconnectLineNum(ele.uuid + '/processresorce-' + n)
@@ -8398,7 +8568,7 @@ export default new Vuex.Store({
                     })
                 } else if (payload.deleteName == 'modeDeclar') { //Mode Declaration  변경시 =>  Process 에서  Module Declaration-> mode Declarations ref할때
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach((ele, i) => {
-                        if (ele.dependent != null) {
+                        if (ele.dependent.length > 0) {
                             ele.dependent.forEach((data, n) => {
                                 if (data.functionItem != null) {
                                     data.functionItem.forEach((item, f) => {
@@ -8520,7 +8690,7 @@ export default new Vuex.Store({
                 payload.deletItemList.forEach(deleteList => {
                     if (payload.deleteName == 'functionG') { //Machine 변경시 =>  Process 에서 Machine -> Function Group ref할때
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach((ele, i) => {
-                            if (ele.dependent != null) {
+                            if (ele.dependent.length > 0) {
                                 ele.dependent.forEach((data, n) => {
                                     if (data.functionItem != null) {
                                         data.functionItem.forEach((item, f) => {
@@ -9534,15 +9704,15 @@ export default new Vuex.Store({
         },
         initialiseStore(state) {
             if (localStorage.getItem("setting")) {
-                console.log("loading setting");
+                //console.log("loading setting");
                 state.setting = JSON.parse(localStorage.getItem("setting"))
             }
             if (localStorage.getItem("savePath")) {
-                console.log("loading savePath");
+                //console.log("loading savePath");
                 state.strSavePath = JSON.parse(localStorage.getItem("savePath"))
             }
             if (localStorage.getItem("visibleDetailView")) {
-                console.log("loading visibleDetailView");
+                //console.log("loading visibleDetailView");
                 state.visibleDetailView = JSON.parse(localStorage.getItem("visibleDetailView"))
             }
         }

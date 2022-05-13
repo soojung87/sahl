@@ -252,7 +252,7 @@ export default {
             this.$store.commit('addElementProcess', { //prodesign, determin, execut, machinetype  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                 name: this.$store.getters.getNameProcess, input: false, path: '',
                 top: this.element.top+100, left: this.element.left+ 300, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: null
+                prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
             })
             EventBus.$emit('add-element', constant.Process_str)
             EventBus.$emit('add-element', constant.AdaptiveApplication_str)

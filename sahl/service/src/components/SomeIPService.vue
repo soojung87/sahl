@@ -574,6 +574,7 @@ export default {
         },
         showFieldD() {
             this.isFieldDOpenClose = this.isFieldDOpenClose ? false : true
+            console.log(this.isFieldDOpenClose)
             // 선을 다시 그려줘야 하기 때문에
             if(this.element.fieldD.length > 0) {
                 this.$nextTick(() => {
@@ -1038,9 +1039,9 @@ export default {
             this.isNotifierOpenClose = true
         },
         changeFieldTab() {
-            console.log('change'+' / ')
+            //console.log('change'+' / ')
             //이렇게 해줘야지 tab에 있는것을 다 그린다음에 선을 다시 그려줄수있다.
-            if(this.element.fieldD.length > 0){
+            if(this.element.fieldD.length > 0 && this.isFieldDOpenClose){
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].name)}, 300);
             }
         },

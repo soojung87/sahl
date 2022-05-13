@@ -691,7 +691,6 @@ export default {
             }
         },
         inputConditionalName(name) {
-            this.$store.commit('editEthernetCluster', {compo:"Condi Name", uuid:this.element.uuid, name:name, conditab: this.conditionalTab} )
             if(this.element.conditional[this.conditionalTab].channel.length>0) {
                 if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.length > 0) {
                     if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].name != '') {

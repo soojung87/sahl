@@ -135,12 +135,12 @@
                             </v-btn>
                         </div>
                         <v-tabs v-model='dependentStartupTab' v-show="isDependentStartupOpenClose" show-arrows @change="changeDependentStartupTab()">
-                            <v-tab v-for="(tab, idx) in dependentStartupItem" :key="idx" @click="clickDependentStartuptab()"> 
+                            <v-tab v-for="(tab, idx) in element.dependent" :key="idx" @click="clickDependentStartuptab()"> 
                                 {{idx}}
                                 <v-btn text x-small @click="deleteDependentStartup(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
                         </v-tabs>
                         <v-tabs-items v-model="dependentStartupTab" v-show="isDependentStartupOpenClose">
-                            <v-tab-item v-for="(tab, idx) in dependentStartupItem" :key="idx">
+                            <v-tab-item v-for="(tab, idx) in element.dependent" :key="idx">
                                 <v-card flat>
                                     <v-card-text>
                                         <v-card outlined class="mx-auto">
@@ -314,7 +314,6 @@ export default {
             selModeDeclaration: this.$store.getters.getModeDeclarationG,
             selResourceG: this.$store.getters.getResourceGroup,
             selStartupC: this.$store.getters.getStartupConfig,
-            dependentStartupItem: [],
             dependentStartupTab: 0,
             
             isdeleteFunctionG: false,
@@ -334,11 +333,6 @@ export default {
         }
     },
     mounted () {
-        this.$nextTick(() => {
-            if(this.element.dependent != undefined) {
-                this.dependentStartupItem = this.element.dependent.slice()
-            }
-        })
     },
     methods: {
         submitDialog(element) {
@@ -368,7 +362,7 @@ export default {
             this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
                 if(this.iselementOpenClose) {
-                    if(this.dependentStartupItem.length > 0) {
+                    if(this.element.dependent.length > 0) {
                         if (this.isDependentStartupOpenClose) {
                             EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.dependentStartupTab, this.dependentStartupTab)
                         } else {
@@ -385,7 +379,7 @@ export default {
         },
         showDependentStartup() {
             this.isDependentStartupOpenClose = this.isDependentStartupOpenClose ? false : true
-            if(this.dependentStartupItem.length > 0) {
+            if(this.element.dependent.length > 0) {
                 this.$nextTick(() => {
                     if(this.isDependentStartupOpenClose) {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.dependentStartupTab, this.dependentStartupTab)
@@ -407,9 +401,6 @@ export default {
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
-        },
-        inputdependentStartupItem() {
-            this.$store.commit('editProcess', {compo:"dependent", uuid:this.element.uuid, dependent: this.dependentStartupItem} )
         },
 
         clearProcessDesign() {
@@ -591,9 +582,8 @@ export default {
         addDependentStartup() {
             const editItem = { functionItem: [], resourceRef: null, startupConfigRef: null}
             const addObj = new Object(editItem)
-            this.dependentStartupItem.push(addObj)
-            this.dependentStartupTab = this.dependentStartupItem.length-1
-            this.inputdependentStartupItem()
+            this.element.dependent.push(addObj)
+            this.dependentStartupTab = this.element.dependent.length-1
             EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
         },
         clickDependentStartuptab() {
@@ -603,13 +593,13 @@ export default {
         },
         changeDependentStartupTab() {
             //console.log('changeDependentStartupTab' +this.dependentStartupTab)
-            if(this.dependentStartupItem.length > 0) {
+            if(this.element.dependent.length > 0) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.dependentStartupTab, this.dependentStartupTab)}, 300);
             }
         },
         deleteDependentStartup(idx) {
             console.log('deleteDependentStartup' + idx)
-            for(let i=0; i<this.dependentStartupItem[idx].functionItem.length; i++){
+            for(let i=0; i<this.element.dependent[idx].functionItem.length; i++){
                 var endLineCon = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgcontext-'+i+'-'+idx)
                 if(endLineCon != undefined) {
                     this.deleteLine(this.element.uuid+'/fgcontext-'+i+'-'+idx)
@@ -628,10 +618,10 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/processstartup-'+idx)
             }
-            for(let i=idx+1; i<this.dependentStartupItem.length; i++){
+            for(let i=idx+1; i<this.element.dependent.length; i++){
                 endR = this.$store.getters.getChangeEndLine(this.element.uuid+'/processresorce-'+i)
                 endS = this.$store.getters.getChangeEndLine(this.element.uuid+'/processstartup-'+i)
-                for(let n=0; n<this.dependentStartupItem[i].functionItem.length; n++){
+                for(let n=0; n<this.element.dependent[i].functionItem.length; n++){
                     var endC = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgcontext-'+n+'-'+i)
                     if(endC != undefined) {
                         this.deleteLine(this.element.uuid+'/fgcontext-'+n+'-'+i)
@@ -653,8 +643,7 @@ export default {
                 }
             }
 
-            this.dependentStartupItem.splice(idx, 1)
-            this.inputdependentStartupItem()
+            this.element.dependent.splice(idx, 1)
             this.changeDependentStartupTab()
         },
         isCheckFunctionG() {
@@ -667,7 +656,7 @@ export default {
         },
         deleteFunctionG() {
             if (this.isdeleteFunctionG == true) {
-                for(let i=0; i<this.dependentStartupItem[this.dependentStartupTab].functionItem.length; i++){
+                for(let i=0; i<this.element.dependent[this.dependentStartupTab].functionItem.length; i++){
                     var endLineCon = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgcontext-'+i+'-'+this.dependentStartupTab)
                     if(endLineCon != undefined) {
                         this.deleteLine(this.element.uuid+'/fgcontext-'+i+'-'+this.dependentStartupTab)
@@ -677,29 +666,29 @@ export default {
                         this.deleteLine(this.element.uuid+'/fgtarget-'+i+'-'+this.dependentStartupTab)
                     }
                     if(endLineCon != undefined || endLinetarg != undefined) {
-                        this.changeLineFunc.push({contextMode:this.dependentStartupItem[this.dependentStartupTab].functionItem[i].contextMode, targetMode:this.dependentStartupItem[this.dependentStartupTab].functionItem[i].targetMode, endLineCon:endLineCon, endLineTarg:endLinetarg})
+                        this.changeLineFunc.push({contextMode:this.element.dependent[this.dependentStartupTab].functionItem[i].contextMode, targetMode:this.element.dependent[this.dependentStartupTab].functionItem[i].targetMode, endLineCon:endLineCon, endLineTarg:endLinetarg})
                     }
                 }
 
-                this.dependentStartupItem[this.dependentStartupTab].functionItem = this.dependentStartupItem[this.dependentStartupTab].functionItem.filter(item => {
+                this.element.dependent[this.dependentStartupTab].functionItem = this.element.dependent[this.dependentStartupTab].functionItem.filter(item => {
                          return this.selectDelectFunctionGItem.indexOf(item) < 0 })
 
                 let idx = 0 
-                for(let n=0; n<this.dependentStartupItem[this.dependentStartupTab].functionItem.length; n++) {
+                for(let n=0; n<this.element.dependent[this.dependentStartupTab].functionItem.length; n++) {
                     let rigth= true
                     while (rigth) {
-                        if (this.dependentStartupItem[this.dependentStartupTab].functionItem[n].contextMode == this.changeLineFunc[idx].contextMode &&
-                            this.dependentStartupItem[this.dependentStartupTab].functionItem[n].targetMode == this.changeLineFunc[idx].targetMode) {
+                        if (this.element.dependent[this.dependentStartupTab].functionItem[n].contextMode == this.changeLineFunc[idx].contextMode &&
+                            this.element.dependent[this.dependentStartupTab].functionItem[n].targetMode == this.changeLineFunc[idx].targetMode) {
                                 rigth = false
                                 idx--
                         }
                         idx++
                     }
                     console.log('escape')
-                    if (this.dependentStartupItem[this.dependentStartupTab].functionItem[n].contextMode != null) {
+                    if (this.element.dependent[this.dependentStartupTab].functionItem[n].contextMode != null) {
                         this.newLine(this.element.uuid+'/fgcontext-'+n+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.changeLineFunc[idx].endLineCon)
                     }
-                    if (this.dependentStartupItem[this.dependentStartupTab].functionItem[n].targetMode != null) {
+                    if (this.element.dependent[this.dependentStartupTab].functionItem[n].targetMode != null) {
                         this.newLine(this.element.uuid+'/fgtarget-'+n+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.changeLineFunc[idx].endLineTarg)
                     }
                 }
@@ -707,59 +696,57 @@ export default {
                 this.isdeleteFunctionG = false
                 this.selectDelectFunctionGItem = []
                 this.changeLineFunc = []
-                this.inputdependentStartupItem()
             }
         },
         openFunctionG(idx) {
             this.selContextMode = this.$store.getters.getModeDeclarationGP
             this.selTargetMode = this.$store.getters.getModeDeclaration
 
-            if (this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].contextMode != null ) {
+            if (this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode != null ) {
                 var endLineC = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgcontext-'+this.dependentStartupTab+'/'+idx)
                 if (endLineC == undefined) {
-                    endLineC = this.$store.getters.getMachinePath(this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].contextMode, 2)
+                    endLineC = this.$store.getters.getMachinePath(this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode, 2)
                 }
-                this.editFunctionGItem.contextMode = { name :this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].contextMode, uuid: endLineC }
+                this.editFunctionGItem.contextMode = { name :this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode, uuid: endLineC }
             }
-            if (this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].targetMode != null) {
+            if (this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode != null) {
                 var endLineT = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgtarget-'+this.dependentStartupTab+'/'+idx)
                 if (endLineT == undefined) {
-                    endLineT = this.$store.getters.getModeDeclarationPath(this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].targetMode, 1)
+                    endLineT = this.$store.getters.getModeDeclarationPath(this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode, 1)
                 }
-                this.editFunctionGItem.targetMode = { name :this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].targetMode, uuid: endLineT }
+                this.editFunctionGItem.targetMode = { name :this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode, uuid: endLineT }
             }
         },
         editFunctionG(idx) {
             var endcontextMLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgcontext-'+idx+'-'+this.dependentStartupTab)
             if (endcontextMLine != undefined && this.editFunctionGItem.contextMode == null) {
                 this.deleteLine(this.element.uuid+'/fgcontext-'+idx+'-'+this.dependentStartupTab)
-                this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].contextMode = null
+                this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode = null
             } else if (endcontextMLine != undefined && endcontextMLine != this.editFunctionGItem.contextMode.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/fgcontext-'+idx+'-'+this.dependentStartupTab)
                 this.newLine(this.element.uuid+'/fgcontext-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.editFunctionGItem.contextMode.uuid)
-                this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].contextMode = this.editFunctionGItem.contextMode.name
+                this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode = this.editFunctionGItem.contextMode.name
             } else if(endcontextMLine == undefined && this.editFunctionGItem.contextMode != null) {
                 this.newLine(this.element.uuid+'/fgcontext-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.editFunctionGItem.contextMode.uuid)
-                this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].contextMode = this.editFunctionGItem.contextMode.name
+                this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode = this.editFunctionGItem.contextMode.name
             }
 
             var endtargetMLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgtarget-'+idx+'-'+this.dependentStartupTab)
             if (endtargetMLine != undefined && this.editFunctionGItem.targetMode == null) {
                 this.deleteLine(this.element.uuid+'/fgtarget-'+idx+'-'+this.dependentStartupTab)
-                this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].targetMode = null
+                this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode = null
             } else if (endtargetMLine != undefined && endtargetMLine != this.editFunctionGItem.targetMode.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/fgtarget-'+idx+'-'+this.dependentStartupTab)
                 this.newLine(this.element.uuid+'/fgtarget-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.editFunctionGItem.targetMode.uuid)
-                this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].targetMode = this.editFunctionGItem.targetMode.name
+                this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode = this.editFunctionGItem.targetMode.name
             } else if (endtargetMLine == undefined && this.editFunctionGItem.targetMode != undefined) {
                 this.newLine(this.element.uuid+'/fgtarget-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.editFunctionGItem.targetMode.uuid)
-                this.dependentStartupItem[this.dependentStartupTab].functionItem[idx].targetMode = this.editFunctionGItem.targetMode.name
+                this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode = this.editFunctionGItem.targetMode.name
             }
             
             this.cancelFunctionG()
-            this.inputdependentStartupItem()
         },
         cancelFunctionG() {
             this.editFunctionGItem = Object.assign({}, this.defaultFunctionGItem)
@@ -767,10 +754,10 @@ export default {
         },
         addFunctionG() {
             var datacount
-            if(this.dependentStartupItem[this.dependentStartupTab].functionItem == undefined) {
+            if(this.element.dependent[this.dependentStartupTab].functionItem == undefined) {
                 datacount = 0
             }else {
-                datacount = this.dependentStartupItem[this.dependentStartupTab].functionItem.length
+                datacount = this.element.dependent[this.dependentStartupTab].functionItem.length
             }
 
             if( this.editFunctionGItem.contextMode != null) {
@@ -782,9 +769,8 @@ export default {
                 this.editFunctionGItem.targetMode = this.editFunctionGItem.targetMode.name
             }
             const addObj = Object.assign({}, this.editFunctionGItem)
-            this.dependentStartupItem[this.dependentStartupTab].functionItem.push(addObj)
+            this.element.dependent[this.dependentStartupTab].functionItem.push(addObj)
             this.cancelFunctionG()
-            this.inputdependentStartupItem()
         },
         setContextModeSelect() {
             if (this.isEditingContextMode == true) { 
@@ -834,7 +820,6 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/processresorce-'+this.dependentStartupTab)
             }
-            this.inputdependentStartupItem()
         },
         setResourceGSelect(item) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/processresorce-'+this.dependentStartupTab)
@@ -861,7 +846,6 @@ export default {
                     this.newLine(this.element.uuid+'/processresorce-'+this.dependentStartupTab, this.element.uuid+'/processresorce'+this.dependentStartupTab, item.uuid)
                 }
                 tab.resourceRef = item.name
-                this.inputdependentStartupItem()
             }
             this.setactiveUUID()
         },
@@ -872,7 +856,6 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/processstartup-'+this.dependentStartupTab)
             }
-            this.inputdependentStartupItem()
         },
         setStartupCSelect(item) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/processstartup-'+this.dependentStartupTab)
@@ -897,7 +880,6 @@ export default {
                 //새로 추가해준다
                 this.newLine(this.element.uuid+'/processstartup-'+this.dependentStartupTab, this.element.uuid+'/processstartup'+this.dependentStartupTab, item.uuid)
                 tab.startupConfigRef = item.name
-                this.inputdependentStartupItem()
             }
             this.setactiveUUID()
         },

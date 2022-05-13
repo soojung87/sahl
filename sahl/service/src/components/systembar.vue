@@ -175,6 +175,9 @@ document.onkeydown = function(e) { //단축키 만들기
 export default({
     components: { dialogSave},
     computed: {
+        SAHLProject() {
+            return this.$store.state.SAHLProject
+        },
         setting() {
             return this.$store.state.setting
         },
@@ -202,7 +205,7 @@ export default({
                 { divider: true, inset: true},
                 { title: 'Save', Shortcut:'Shift+S', icon:'mdi-content-save', menuAction: action => { this.save(action) }},
                 { divider: true, inset: true},
-                { title: 'Exit', icon:'mdi-exit-to-app'}
+                { title: 'Exit', icon:'mdi-exit-to-app', menuAction: action => { this.exit(action) }}
             ],
             projectItem: [
                 { title: 'New Project', icon:'mdi-folder-plus',  menuAction: action => { this.newProject(action) }},
@@ -251,7 +254,9 @@ export default({
     },
     methods: {
         newProject() {
-            this.dialogNewProject = true
+            if (this.$store.state.SAHLProject.length == 0) {
+                this.dialogNewProject = true
+            }
         },
         newFile() {
             if (this.isprojectOpen) {
@@ -324,6 +329,10 @@ export default({
             var isVisible = this.$store.state.visibleLine ? false : true
             this.$store.commit('setVisibleLine', {isvisible: isVisible})
         },
+        exit() {
+            window.open('about:blank','_self').self.close()
+            window.close()
+        }
 
     },
 })

@@ -7,19 +7,35 @@
 
 svg.leader-line {
     position: fixed;
-    z-index: 2;
+    /* 넣어줘야 선이 element밑으로 들어간다*/
+    /*분할창때문에 appendChild넣으니 이것들이 필요없게 되었다*/
+    z-index: o;
+}
+
+.selectScreen {
+    position: absolute;
+    left: 500px;
+    height: 38px;
+    width: 153px;
+}
+
+.searchElement {
+    position: absolute;
+    left: 680px;
+    width: 250px;
+    height: 40px;
 }
 
 .v-navigation-drawer {
-    z-index: 11 !important;
+    /* z-index: 11 !important; */
 }
 
 .v-menu {
-    z-index: 15 !important;
+    /* z-index: 15 !important; */
 }
 
 .v-tooltip {
-    z-index: 12 !important;
+    /* z-index: 12 !important; */
 }
 
 .mini-map {
@@ -120,4 +136,45 @@ tr.v-data-table__selected {
 
 .validationList .v-list-item-title {
     height: 10px;
+}
+
+#wrapper {
+    width: 0;
+    height: 0;
+    position: relative;
+    /* Origin of coordinates for lines, and scrolled content (i.e. not `absolute`) */
+}
+
+.splitpanes {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAG0lEQVQYV2NMqL7ty4ADMIIkF7SqbsYmP+gkAbAbGgsk/ddhAAAAAElFTkSuQmCC);
+    /* 넣어줘야 선이 element밑으로 들어간다*/
+    position: absolute;
+    z-index: 2;
+    /* 넣어줘야 선이 element밑으로 들어간다*/
+}
+
+.splitpanes__splitter {
+    background-color: rgb(167, 160, 160);
+    position: relative;
+}
+
+.splitpanes__splitter:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: opacity 0.4s;
+    background-color: rgba(42, 71, 203, 0.3);
+    opacity: 0;
+    z-index: 1;
+}
+
+.splitpanes__splitter:hover:before {
+    opacity: 1;
+}
+
+.splitpanes--vertical>.splitpanes__splitter:before {
+    left: -10px;
+    right: -10px;
+    height: 100%;
 }

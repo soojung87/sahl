@@ -232,8 +232,10 @@ export default({
             //alert(this.openIds)
         },
         newElement () {
-            var elementX = Math.floor(Math.random() * (1400 - 11)) + 10 // (max - min) + min
-            var elementY = Math.floor(Math.random() * (200 - 6)) + 5
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            //const elementX = Math.floor(Math.random() * (1400 - 11)) + 10 // (max - min) + min
+            //const elementY = Math.floor(Math.random() * (200 - 6)) + 5
 
             if (this.activenode[0] == constant.CompuMethod_str) {
                 this.$store.commit('addElementCompuMehtod', {
@@ -302,7 +304,7 @@ export default({
                 this.$store.commit('addElementProcess', { //prodesign, determin, execut, machinetype  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                     name: this.$store.getters.getNameProcess, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: null
+                    prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
                 })
             } else if (this.activenode[0] == constant.ProcessDesign_str) {
                 this.$store.commit('addElementProcessDesign', { //executableref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 

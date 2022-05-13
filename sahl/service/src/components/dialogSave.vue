@@ -27,7 +27,7 @@
                                 <v-tab-item v-for="(tab, idx) in tabListItem" :key="idx">
                                     <v-card flat>
                                         <v-card-text>
-                                            <v-treeview v-model="tab.select" :items="tab.list" activatable expand-icon="mdi-chevron-down" selectable dense return-object :open.sync="tab.openIds"  item-key="name" >
+                                            <v-treeview v-model="tab.select" :items="tab.list" activatable expand-icon="mdi-chevron-down" selectable dense return-object :open.sync="tab.openIds"  item-key="uuid" >
                                             <!-- <v-treeview ref="saveTree" v-model="tab.select" :items="tab.list" activatable expand-icon="mdi-chevron-down" selectable dense return-object open-all item-key="name" > -->
                                                 <template v-slot:prepend="{item}">
                                                     <v-icon class="pa-0 ma-0">{{item.icon}}</v-icon>
@@ -71,7 +71,7 @@
                         <v-row>
                             <v-col cols="3">
                                 <v-btn @click="btnSaveFile" dense color="teal darken" dark> find save file </v-btn>
-                                <input ref="saveloader" class="d-none" type="file" @change="uploadSaveFile">
+                                <input ref="saveloader" class="d-none" type="file" @click="onClickSaveFile" @change="uploadSaveFile">
                             </v-col>
                         </v-row>
                         <v-row>
@@ -356,7 +356,7 @@ export default {
                         if (data.name != data.uuid) {
                             let isExist = false
                             list.saveFile.forEach ( item => {
-                                if (item.name == data.name) {
+                                if (item.uuid == data.uuid) {
                                     isExist = true
                                 }
                             })
@@ -410,6 +410,9 @@ export default {
         btnSaveFile() {
             this.$refs.saveloader.click()
         },
+        onClickSaveFile(e) {
+            e.target.value = ''
+        },
         uploadSaveFile () {
             let file = this.$refs.saveloader.files[0];
             if(!file || file.type !== 'text/plain') return;
@@ -421,6 +424,7 @@ export default {
                 const object = JSON.parse(evt.target.result)
                 this.saveList = []
                 object.forEach( item => {
+                    console.log(item)
                     this.saveList.push(
                         { radio: item.radio, 
                           savename: item.savename, 
@@ -432,7 +436,7 @@ export default {
             }
             reader.onerror = evt => {
                 console.error(evt);
-            }        
+            }    
         },
         endDrag() {
             this.saveList.forEach( list => {

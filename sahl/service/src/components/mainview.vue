@@ -1,389 +1,390 @@
 <template>
-    <div id="main-view"  v-dragscroll="drag" v-on:dragscrollmove="dragBackground()" v-bind:class="[{'grab-bing':'true'},{'main-view':minimaptoolbar},{'minimap-view':!minimaptoolbar}]"
+    <div :id="'main-view'+location"  v-dragscroll="drag" v-on:dragscrollmove="dragBackground()" v-bind:class="[{'grab-bing':'true'},{'main-view':minimaptoolbar},{'minimap-view':!minimaptoolbar}]"
         @mousewheel="onmouseWheel" @mousedown="onmouseDown" @scroll="onScroll">
         <v-main id="sea" v-bind:style="{ transform: 'scale(' + zoom.value + ')' }" ><!--<v-app>에서 바꿈 : v-app으로 하면 뭔가 안에 창이 하나 더생겨서 화면이 늘어나 scroll이 생긴다.-->
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form" 
                 v-for="element in SAHLProject[openProjectIndex].DataTypes.CompuMethod"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Compu Method')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <CompuMethod :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
-            </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            </vue-draggable-resizable> <!-- 화면 분할하면 창마다 scroll이 움직이지 않기 때문에 id값을 바꿔줘야한다-->
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].DataTypes.DataConstr"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Data Constr')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <DataConstr :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/>
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].DataTypes.ApplicationArrayDataType"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Application Array')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <ApplicationArrayDate :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form" 
                 v-for="element in SAHLProject[openProjectIndex].DataTypes.ImplementationDataType"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Implementation')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <ImplementationDataType :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
 
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form" 
                 v-for="element in SAHLProject[openProjectIndex].Machine.Machine"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Machine')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <Machine :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Machine.HWElement"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'HW Element')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <HWElement :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Machine.MachineDesign"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Machine Designs')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <MachineDesign :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Machine.ModeDeclarationGroup"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Mode Declaration Group')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <ModeDeclarationGroup :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Machine.EthernetCluster"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Ethernet Cluster')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <EthernetCluster :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
 
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.ProtoMachineMapping"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process to Machine Mapping Set')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <ProcessToMachine :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.SWComponents"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SW Components')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <SWComponents :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.Process"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <Process :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.ProcessDesign"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process Design')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <ProcessDesign :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.Executable"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Executable')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <Executable :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.StartupConfig"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Startup Config')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <StartupConfig :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.DeterministicClient"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Deterministic Client')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <DeterministicClient :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
 
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPServiceInterfaceDeployment"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Service Interface Deployment')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <SomeIPService :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/>  <!-- :drag-handle="'.drag-handle'" -->
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.ServiceInterface"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Service Interface')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <ServiceInterface :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/>  <!-- :drag-handle="'.drag-handle'" -->
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPClientEvent"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Client')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <Client :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPServerEvent"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Server')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <Server :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPClientServiceInstance"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Client')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <SomeIPClient :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPServerServiceInstance"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Server')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <SomeIPServer :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPServiceInstanceToMachine"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP To Machine Mapping')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <SomeIPtoMachine :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.ServiceInstanceToPortPrototype"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'To Port Prototype Mapping')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <ToPortPrototype :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.RequiredSomeIP"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Required SomeIP')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <RequiredSomeIP :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.ProvidedSomeIP"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Provided SomeIP')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <ProvidedSomeIP :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
 
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.ErrorDomain"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error Domain')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <APErrorDomain :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.ErrorSet"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error Set')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <APErrorSet :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid"
+            <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].Service.Error"
                 :key="element.uuid" :scale="zoom.value"
-                :x="element.left" :y="element.top" :w=400 :h=100 :z='element.zindex'
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
                 :resizable="true" :draggable="true"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error')"
-                @resizing="changeField()">
+                @resizing="changeElementSize()">
                 <APError :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
         </v-main>
+        <div id="wrapper"></div>
     </div>
 </template>
 
@@ -423,7 +424,7 @@ import LeaderLine from 'leader-line-vue'
 import constant from "../store/constants.js"
 
 export default{
-    props: ['minimaptoolbar'],
+    props: ['minimaptoolbar', 'location'],
     components:{CompuMethod, DataConstr, ApplicationArrayDate, ImplementationDataType, 
                 SomeIPService, ServiceInterface, Client, Server,
                 SomeIPClient, SomeIPServer, SomeIPtoMachine, ToPortPrototype, RequiredSomeIP, ProvidedSomeIP,
@@ -457,6 +458,12 @@ export default{
         },
         visibleLine() {
             return this.$store.state.visibleLine
+        },
+        numPanes() {
+            return this.$store.state.numPanes
+        },
+        selectScreen() {
+            return this.$store.state.selectScreen
         }
     },
     data() {
@@ -469,6 +476,7 @@ export default{
             },
             drag: true, //true: 배경 움직임, false: diagram움직임
             connections: [],
+            appendLine: [],
         }
     },
     watch: {
@@ -495,7 +503,7 @@ export default{
         },
         visibleLine(val) {
             //console.log('visibleLine   '+val)
-            if(this.minimaptoolbar) {
+            if(this.minimaptoolbar && this.location == '1') {
                 if (val) {
                     this.connections.forEach( item => {
                         item.show()
@@ -506,7 +514,14 @@ export default{
                     })
                 }
             }
-        }
+        },
+        numPanes() {
+            //console.log(val)
+            this.changeMinimapView()
+            this.$nextTick(() => {
+                this.moveline()
+            })
+        },
     },
     mounted() {
         this.$nextTick(() => {
@@ -515,7 +530,7 @@ export default{
         EventBus.$on('new-element', (uuid) => {
             this.$nextTick(() => {
                 //console.log('new-element')
-                document.getElementById(uuid).scrollIntoView(true)
+                document.getElementById(uuid+'1').scrollIntoView(true)
             })
         })
         EventBus.$on('new-line', (startdiagram, enddiagram) => {
@@ -527,21 +542,24 @@ export default{
             })
         });
         EventBus.$on('delete-line', (numLine) => {
-            //console.log('delete-line'+ numLine)
-            if(this.minimaptoolbar) {
+            console.log('delete-line'+ numLine)
+            if(this.minimaptoolbar && this.location == '1') {
                 if (numLine == 'all') {
                     this.connections.forEach( item => {
                         item.remove()
                     })
                     this.connections = []
                 } else {
+                    document.body.appendChild(this.appendLine[numLine])
                     this.connections[numLine].remove()
                     this.connections.splice(numLine, 1)
+                    this.appendLine.splice(numLine, 1)
+                    console.log(this.appendLine)
                 }
             }
         });
         EventBus.$on('copy-line', (uuid, endLine, index, tab, tabId) => {
-            if(this.minimaptoolbar) {
+            if(this.minimaptoolbar && this.location == '1') {
                 var startLine
                 console.log(this.connections[index].start.id)
                 if(this.connections[index].start.id.indexOf('/') !== -1) {
@@ -586,23 +604,27 @@ export default{
                 this.drawLinTabMoveSomeIPServeice(item,uuid, idx,tabname, str1, str2) //ethernet Cluster에서 conditional name와 channel name이 필요해 str1 str2로 나뉨
             })
         })
+        EventBus.$off('goElement'); //중복호출되어 같이 정의해줘야 1번 들어온다. 
         EventBus.$on('goElement', (id) => {
-            //console.log(id)
-            document.getElementById(id).scrollIntoView(true);
+            console.log('goElement  '+ this.$store.state.selectScreen)
+            document.getElementById(id+this.$store.state.selectScreen).scrollIntoView(true);
             EventBus.$emit('active-element', id)
+            this.$store.commit( 'setSelectScreen', {num: 1})
         })
     },
     methods: {
         onActivated(uuid) {
             //console.log('onActivated'+uuid)
-            //document.getElementById(uuid).scrollIntoView(true)
+            if(!this.minimaptoolbar && this.location == '1') {
+                document.getElementById(uuid+this.location).scrollIntoView(true)
+            }
             this.isMouseDiagram = true
             EventBus.$emit('active-element', uuid)
             this.drag = false
             this.setanimationLine(uuid, true)
         },
         onDeactivated(uuid) {
-            //console.log('onDeactivated'+ uuid)
+            console.log('onDeactivated'+ uuid)
             this.setanimationLine(uuid, false)
             this.isMouseDiagram = false
             EventBus.$emit('active-element', null)
@@ -668,23 +690,28 @@ export default{
                 editStr = 'editErrorSet'
             }  else if (ele == constant.ErrorDomain_str) {
                 editStr = 'editErrorDomain'
-            } 
-            document.getElementById(uuid).scrollIntoView(true)
-            this.$store.commit(editStr, {compo:"drag", uuid: uuid, top: top, left: left} )
+            }
+            document.getElementById(uuid+this.location).scrollIntoView(true)
+            this.$store.commit(editStr, {compo:"drag", uuid: uuid, top: top, left: left, location: this.location} )
             this.moveline()
         },
-        changeField() {
-            console.log('changeField')
+        changeElementSize() {
+            console.log('changeElementSize')
             this.moveline()
         },
         moveline() {
             //console.log('moveline')
-            if(this.minimaptoolbar) {
+            if(this.minimaptoolbar && this.location == '1') {
+                document.getElementById('wrapper').style.transform = 'none';
+                var rectWrapper = document.getElementById('wrapper').getBoundingClientRect();
+                document.getElementById('wrapper').style.transform = 'translate(' +
+                                (-(rectWrapper.left + document.documentElement.scrollLeft)) + 'px, ' +
+                                (-(rectWrapper.top + document.documentElement.scrollTop)) + 'px)';
                 this.connections.forEach((connection) => connection.position())
             }
          },
         addLine(start, end) {
-            if(this.minimaptoolbar) {
+            if(this.minimaptoolbar && this.location == '1') {
                 this.connections.push (
                     LeaderLine.setLine(document.getElementById(start),  document.getElementById(end), {
                                 startPlug: 'disc',
@@ -696,10 +723,12 @@ export default{
                                 size: 1,
                                 hide: !this.$store.state.visibleLine
                 }))
+                this.appendLine.push(document.querySelector('body>.leader-line:last-of-type'))
+                document.getElementById('wrapper').appendChild(this.appendLine[this.appendLine.length-1]);
             }
         },
         setanimationLine(uuid, isactive) {
-            if(this.minimaptoolbar) {
+            if(this.minimaptoolbar && this.location == '1') {
                 var activeLine = this.$store.getters.getactiveLine(uuid)
                 for (let i=0; i< activeLine.length;i++) {
                     if (isactive && this.zoom.value < 0.6) { 
@@ -723,10 +752,6 @@ export default{
         },
         onmouseDown() { //edit dialog했을경우 임의로 activeuuid 값을 넣어줬기 때문에 배경을 누르면 toolbar색이 변하지 않는 이슈
             //console.log('onmouseDown')
-            //console.log(document.getElementById('main-view').offsetHeight +'  /  '+ document.getElementById('main-view').scrollHeight)
-            //console.log(e)
-            //console.log(e.pageX +'  /  '+ e.pageY +'  /  '+e.clientX +'  /  '+e.clientY)
-            //console.log(document.getElementById("main-view").clientWidth+ '    /   '+ document.getElementById("main-view").clientHeight)
             if ((this.isMouseDiagram == false || this.isMouseDiagram == undefined) && this.drag == true) {
                 if (this.$store.state.activeUUID != null) {
                     var treeitem = Object.values(this.$store.getters.gettreeviewitems)
@@ -739,29 +764,31 @@ export default{
             }
         },
         onScroll() { //wheel을 빠르게 움직이면 line이 제대로 안그려지는데 여기에 moveline 넣으면 잘작동함
-            //console.log('onScroll   ' + this.sync)
             //console.log('onScroll')
             this.changeMinimapView()
             this.moveline()
         },
         changeMinimapView() {
-            var bodyWidth = document.getElementById('main-view').scrollWidth+200 //+200해주면 minimap에서 우측으로 갈때 element가 작게 보이는게 좀 나아짐
-            var bodyHeight
-            if(this.zoom.value < 0.75) {
-                bodyHeight = document.getElementById('main-view').scrollHeight +100
-            } else {
-                bodyHeight = document.getElementById('main-view').scrollHeight
-            }
-            var realScaleX = document.getElementsByClassName('mini-map')[0].clientWidth /bodyWidth
-            var realScaleY = document.getElementsByClassName('mini-map')[0].clientHeight /bodyHeight
+            //console.log('changeMinimapView')
+            if (this.location == '1') {
+                var bodyWidth = document.getElementById('main-view1').scrollWidth+200 //+200해주면 minimap에서 우측으로 갈때 element가 작게 보이는게 좀 나아짐
+                var bodyHeight
+                if(this.zoom.value < 0.75) {
+                    bodyHeight = document.getElementById('main-view1').scrollHeight +100
+                } else {
+                    bodyHeight = document.getElementById('main-view1').scrollHeight
+                }
+                var realScaleX = document.getElementsByClassName('mini-map')[0].clientWidth /bodyWidth
+                var realScaleY = document.getElementsByClassName('mini-map')[0].clientHeight /bodyHeight
 
-            document.getElementsByClassName('minimap-view')[0].style.transform = `scale(${realScaleX}, ${realScaleY})`
-            if(this.zoom.value < 0.75) { // minimap안에서 보여질때, 화면에서 왼쪽으로 이동시 minimap에 다 나타나지 않아서 설정해줌
-                document.getElementsByClassName('minimap-view')[0].style.width = (100 * (realScaleX+0.9-this.zoom.value)) + '%'
-            } else {
-                document.getElementsByClassName('minimap-view')[0].style.width = (100 * realScaleX) + '%'
+                document.getElementsByClassName('minimap-view')[0].style.transform = `scale(${realScaleX}, ${realScaleY})`
+                if(this.zoom.value < 0.75) { // minimap안에서 보여질때, 화면에서 왼쪽으로 이동시 minimap에 다 나타나지 않아서 설정해줌
+                    document.getElementsByClassName('minimap-view')[0].style.width = (100 * (realScaleX+0.9-this.zoom.value)) + '%'
+                } else {
+                    document.getElementsByClassName('minimap-view')[0].style.width = (100 * realScaleX) + '%'
+                }
+                document.getElementsByClassName('minimap-view')[0].style.height = (100 * realScaleY) + '%'
             }
-            document.getElementsByClassName('minimap-view')[0].style.height = (100 * realScaleY) + '%'
         },
         onmouseWheel(e) {
             //console.log('onmouseWheel   '+ e.shiftKey)
@@ -817,26 +844,36 @@ export default{
             })
             */
         },
+        changeLineAppendChild(idx) {
+            this.appendLine.splice(idx, 1, document.querySelector('body>.leader-line:last-of-type'))
+            document.getElementById('wrapper').appendChild(this.appendLine[idx])
+        },
+        changeConnectionLineSplic(idx, start) {
+            this.connections.splice(idx, 1, LeaderLine.setLine(document.getElementById(start),  document.getElementById( this.$store.getters.getEndLineInfo(idx)), {
+                                        startPlug: 'disc',
+                                        endPlug: 'arrow1',
+                                        startSocket: 'auto',
+                                        endSocket: 'auto',
+                                        endPlugSize: 2,
+                                        color: 'rgba(253, 105, 68, 0.4)',
+                                        size: 1,
+                                        hide: !this.$store.state.visibleLine
+            }))
+        },
         drawLineCloseTitlebar(uuid) {
-            if(this.minimaptoolbar) {
+            if(this.minimaptoolbar && this.location == '1') {
                 var activeLine = this.$store.getters.getactiveLine(uuid)
                 for (let i=0; i< activeLine.length;i++) {
+                    console.log(activeLine)
+                    document.body.appendChild(this.appendLine[activeLine[i]])
                     this.connections[activeLine[i]].remove()
-                    this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                startPlug: 'disc',
-                                endPlug: 'arrow1',
-                                startSocket: 'auto',
-                                endSocket: 'auto',
-                                endPlugSize: 2,
-                                color: 'rgba(253, 105, 68, 0.4)',
-                                size: 1,
-                                hide: !this.$store.state.visibleLine
-                    }))
+                    this.changeConnectionLineSplic(activeLine[i], uuid)
+                    this.changeLineAppendChild(activeLine[i])         
                 }
             }
         },
         drawLineOpenTitlebar(uuid) {
-            if(this.minimaptoolbar) {
+            if(this.minimaptoolbar && this.location == '1') {
                 var activeLine = this.$store.getters.getactiveLine(uuid)
                 var startLine
                 for (let i=0; i< activeLine.length;i++) {
@@ -848,27 +885,20 @@ export default{
                         tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient' || tableLine[0] == 'providEventG' || tableLine[0] == 'providServer' ||
                         tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' || tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup' ||
                         tableLine[0] == 'comconet')) {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(tableLine[0] == 'ddpccompu' || tableLine[0] == 'ddpcdata'){ //implementation에서 table에 ref가 두개라..
                             tableLine[0] = 'DDPC'
                         } 
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/'+tableLine[0]),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                                    hide: !this.$store.state.visibleLine
-                        }))
+                        this.changeConnectionLineSplic(activeLine[i], uuid+'/'+tableLine[0])
+                        this.changeLineAppendChild(activeLine[i]) 
                     }
                 }
             }
         },
         drawLinTabMoveSomeIPServeice(item, uuid, idx, tabname, str1, str2) {
             //console.log('drawLinTabMoveSomeIPServeice')
-            if(this.minimaptoolbar) {
+            if(this.minimaptoolbar && this.location == '1') {
                 var activeLine = this.$store.getters.getactiveLine(uuid)
                 var startLine
                 for (let i=0; i< activeLine.length;i++) {
@@ -877,412 +907,155 @@ export default{
                     var tableLine = startUUID[1].split('-')
                     if (tableLine[0] == 'field' && item == 'field') {
                         //console.log('/field')
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]){
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fieldtab'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/fieldtab'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/field'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/field')
                         }
+                        this.changeLineAppendChild(activeLine[i])
                     } else if (tableLine[0] == 'event' && item == 'event') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         //console.log('/event')
                         if(idx == tableLine[2]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/eventtab'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/eventtab'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/event'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/event')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'argtable' ) {
                         //console.log('/argtable')
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/argtable'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/argtable'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/methods')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'methoderrors') {
                         //console.log('/methoderrors')
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methoderrors'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/methoderrors'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/methods')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'methoderror') {
                         //console.log('/methoderror')
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methoderror'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/methoderror'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/methods'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/methods')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'requiredEventG') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredEventG'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredEventG'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredE')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'requiredClient') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredClient'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredClient'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/requiredE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredE')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'providEventG') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providEventG'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providEventG'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providE')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'providServer') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providServer'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providServer'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/providE'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providE')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'fgcontext') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fgtable'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/fgtable'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processStarupC')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'fgtarget') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/fgtable'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/fgtable'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processStarupC')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'processresorce') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processresorce'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processresorce'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processStarupC')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'processstartup') {
                         //console.log('processstartup')
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processstartup'+tabname),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processstartup'+tabname)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/processStarupC'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processStarupC')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'comconet' && item == 'connector') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2] && tabname == tableLine[3]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/comconet-'+str1+'-'+str2),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/comconet-'+str1+'-'+str2)
                         } else if (idx != tableLine[2] && tabname == tableLine[3]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/channel'+str2),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/channel'+str2)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/conditional'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/conditional')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'comconet' && item == 'channel') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(tabname == tableLine[3]) {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/channel'+str1),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/channel'+str1)
                         } else {
-                            this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/conditional'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                        startPlug: 'disc',
-                                        endPlug: 'arrow1',
-                                        startSocket: 'auto',
-                                        endSocket: 'auto',
-                                        endPlugSize: 2,
-                                        color: 'rgba(253, 105, 68, 0.4)',
-                                        size: 1,
-                                        hide: !this.$store.state.visibleLine
-                            }))
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/conditional')
                         }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'comconet' && item == 'conditional') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
-                        this.connections.splice(activeLine[i], 1, LeaderLine.setLine(document.getElementById(uuid+'/conditional'),  document.getElementById( this.$store.getters.getEndLineInfo(activeLine[i])), {
-                                    startPlug: 'disc',
-                                    endPlug: 'arrow1',
-                                    startSocket: 'auto',
-                                    endSocket: 'auto',
-                                    endPlugSize: 2,
-                                    color: 'rgba(253, 105, 68, 0.4)',
-                                    size: 1,
-                                    hide: !this.$store.state.visibleLine
-                        }))
-                        
+                        this.changeConnectionLineSplic(activeLine[i], uuid+'/conditional')
+                        this.changeLineAppendChild(activeLine[i]) 
                     }
                 }
-                
+                console.log(this.appendLine)
                 this.$nextTick(() => {
                     this.setanimationLine(uuid, true)
                     this.moveline()

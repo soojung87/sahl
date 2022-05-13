@@ -6,10 +6,18 @@
                     <v-icon>mdi-menu</v-icon>
                 </v-btn>
             </template>
-            <span>project menu</span>
+            <span>Project Menu</span>
+        </v-tooltip>
+        <v-tooltip bottom>  
+            <template v-slot:activator="{on, attrs}">
+                <v-btn class="d-inline-flex ml-3 mr-1" small icon v-bind="attrs" v-on="on" @click="newProject()">
+                    <v-icon>mdi-folder-plus</v-icon>
+                </v-btn>
+            </template>
+            <span>Add Profect</span>
         </v-tooltip>
         <v-dialog v-model='dialogNewProject' width="500" >
-            <template v-slot:activator="{ on:ondialog}">
+            <!-- <template v-slot:activator="{ on:ondialog}">
                 <v-tooltip bottom>  
                     <template v-slot:activator="{on:ontooltip}">
                         <v-btn class="d-inline-flex ml-3 mr-1" small icon v-on="{ ...ontooltip, ...ondialog }">
@@ -17,10 +25,10 @@
                         </v-btn>
                     </template>
                     <span>add Profect</span>
-                </v-tooltip>
-            </template>
+                </v-tooltip> 
+            </template>-->
             <v-card>
-                <v-card-title class="text-h6 green accent-1"> Name New Project </v-card-title>
+                <v-card-title class="text-h6 green accent-1"> New Project </v-card-title>
                 <v-card-text>
                     <v-text-field single-line label="project name" v-model="strProjectName">
                     </v-text-field>
@@ -41,9 +49,9 @@
                 <v-btn class="d-inline-flex ml-3 mr-1"  small icon v-bind="attrs" v-on="on" @click="inputFile()">
                     <v-icon> mdi-open-in-app</v-icon>
                 </v-btn>
-                <input ref="uploader" class="d-none" type="file" @change="uploadProject">
+                <input ref="uploader" class="d-none" type="file" @change="uploadProject" @click="onClickLoadProject">
             </template>
-            <span>File input</span>
+            <span>File Input</span>
         </v-tooltip>
         <v-tooltip bottom>  
             <template v-slot:activator="{ on, attrs }">
@@ -51,7 +59,7 @@
                     <v-icon> mdi-content-save-settings</v-icon>
                 </v-btn>
             </template>
-            <span>select save</span>
+            <span>Select Save</span>
         </v-tooltip>
         <dialogSave v-model="dialogSaveWindow"/>
         <v-tooltip bottom>
@@ -60,7 +68,7 @@
                     <v-icon>mdi-play</v-icon>
                 </v-btn>
             </template>
-            <span>validate</span>
+            <span>Validate</span>
         </v-tooltip>
         <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
@@ -97,6 +105,9 @@ import { EventBus } from '../main'
 export default({
     components: { dialogSave},//draggable
     computed: {
+        SAHLProject() {
+            return this.$store.state.SAHLProject
+        },
         openProjectIndex () {
             return this.$store.state.openProjectIndex
         },
@@ -145,15 +156,14 @@ export default({
             this.$store.commit('addProject', {name:this.strProjectName})
             this.$store.commit('selectOpenProject', {openProjectIndex: (this.$store.getters.projectCount -1 )})
             this.$store.commit('setmakeProject', {makeproject:true})
-            this.dialogNewProject = false
-            this.strProjectName = null
+            this.cancelproject()
         },
         cancelproject () {
             this.dialogNewProject = false
             this.strProjectName = null
         },
-        removeproject () {
-            alert(this.$store.s.projectCount)
+        onClickLoadProject(e) {
+            e.target.value = ''
         },
         uploadProject () {    
             let file = this.$refs.uploader.files[0];
@@ -205,6 +215,11 @@ export default({
             console.log('clickValidate')
             //this.dialogValidate = true
             this.$store.commit('setCheckValidate')
+        },
+        newProject() {
+            if (this.$store.state.SAHLProject.length == 0) {
+                this.dialogNewProject = true
+            }
         },
         showNavigation() {
             this.isOpenCloseNavigation = this.isOpenCloseNavigation ? false : true

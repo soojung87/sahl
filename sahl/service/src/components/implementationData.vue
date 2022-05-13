@@ -402,8 +402,8 @@ export default {
                 for(let n=0; n<this.element.ddpc.length; n++) {
                     let rigth= true
                     while (rigth) {
-                        console.log('while'+ idx+'+'+this.changeLineDDPC[idx].compumethod +'+'+this.changeLineDDPC[idx].dataconstr)
-                        console.log('while'+ idx+'+'+this.element.ddpc[n].compumethod +'+'+this.element.ddpc[n].dataconstr)
+                        //console.log('while'+ idx+'+'+this.changeLineDDPC[idx].compumethod +'+'+this.changeLineDDPC[idx].dataconstr)
+                        //console.log('while'+ idx+'+'+this.element.ddpc[n].compumethod +'+'+this.element.ddpc[n].dataconstr)
                         if (this.element.ddpc[n].compumethod == this.changeLineDDPC[idx].compumethod &&
                             this.element.ddpc[n].dataconstr == this.changeLineDDPC[idx].dataconstr) {
                                 rigth = false
@@ -411,7 +411,7 @@ export default {
                         }
                         idx++
                     }
-                    console.log('escape')
+                    //console.log('escape')
                     if (this.element.ddpc[n].compumethod != null) {
                         this.newLine(this.element.uuid+'/ddpccompu-'+n, this.element.uuid+'/DDPC', this.changeLineDDPC[idx].endLineCom)
                     }
@@ -731,7 +731,7 @@ export default {
         },
         deleteLine(fineLine) {
             var linenum = this.$store.getters.getconnectLineNum(fineLine)
-            console.log(linenum)
+            //console.log(linenum)
             if (linenum != -1) {
                 EventBus.$emit('delete-line', linenum)
                 this.$store.commit('deletConnectionline', {startnum: linenum} )
