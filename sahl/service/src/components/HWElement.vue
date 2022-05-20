@@ -65,7 +65,7 @@
                                     <tbody>
                                         <tr v-for="(item,idx) in items" :key="idx" >
                                             <td v-for="(header,key) in headers" :key="key">
-                                                <v-edit-dialog v-if="header.value != 'sort'" persistent cancel-text='Ok' save-text="Cancel" @open="openAttribute(idx)" @cancel="editAttribute(idx)" @save="cancelAttribute" large >
+                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openAttribute(idx)" @cancel="editAttribute(idx)" @save="cancelAttribute" large >
                                                     {{item[header.value]}}
                                                     <template v-slot:input>
                                                         <br>
@@ -267,6 +267,3 @@ export default {
     }
 }
 </script>
-
-<style>
-</style>

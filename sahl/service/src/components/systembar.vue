@@ -222,7 +222,7 @@ export default({
                 { title: 'Visible Line', icon:'mdi-vector-line', menuAction: action => { this.setVisibleLine(action) }},
             ],
             helpItem: [
-                { title: 'Manual', icon:'mdi-help-circle-outline', },
+                { title: 'Manual', icon:'mdi-help-circle-outline', menuAction: action => { this.setManual(action) }},
             ],
             dialogNewProject: false,
             dialogSetting: false,
@@ -332,7 +332,8 @@ export default({
         exit() {
             window.open('about:blank','_self').self.close()
             window.close()
-        }
+        },
+        setManual() {},
 
     },
 })

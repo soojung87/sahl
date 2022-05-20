@@ -27,6 +27,8 @@ export default new Vuex.Store({
         isOpenCloseSearch: false,
         isOpenCloseDetailView: true,
         isOpenCloseNavigationView: true,
+        isPositionLine: true,
+        isDraggable: true,
         strSavePath: [], // Path List
         isInputFileComplate: false, //input file값 저장후 화면에 그린 뒤 line 그리기 위해
         inputFileList: [], // input file 값저장 후 line 그리기 위해 어떤것이 들어왔는지 알려고
@@ -3599,6 +3601,12 @@ export default new Vuex.Store({
         setOpenCloseNavigationView(state, payload) {
             state.isOpenCloseNavigationView = payload.isopen
         },
+        setPositionofLine(state, payload) {
+            state.isPositionLine = payload.up
+        },
+        setDraggable(state, payload) {
+            state.isDraggable = payload.drag
+        },
         setSaveValidate(state, payload) {
             console.log('setSaveValidate')
             state.errorList = []
@@ -3847,24 +3855,27 @@ export default new Vuex.Store({
         },
         saveInputfile(state, payload) {
             const getEditPath = (ele, path) => {
-                    if (ele.parentNode.parentNode.nodeName == 'AR-PACKAGE') {
-                        ele.childNodes.forEach(item => {
-                            if (item.nodeName == "SHORT-NAME") {
-                                path = item.childNodes[0].nodeValue + '/' + path
-                            }
-                        })
-                        return getEditPath(ele.parentNode.parentNode, path)
-                    }
-
+                if (ele.parentNode.parentNode.nodeName == 'AR-PACKAGE') {
                     ele.childNodes.forEach(item => {
                         if (item.nodeName == "SHORT-NAME") {
                             path = item.childNodes[0].nodeValue + '/' + path
                         }
                     })
-                    path = path.substr(0, path.length - 1)
-                    return path
+                    return getEditPath(ele.parentNode.parentNode, path)
                 }
-                /// COMPU-METHOD
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        path = item.childNodes[0].nodeValue + '/' + path
+                    }
+                })
+                path = path.substr(0, path.length - 1)
+                return path
+            }
+            const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+            const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+            /// COMPU-METHOD
             var compu = payload.xmlDoc.getElementsByTagName('COMPU-METHOD')
             compu.forEach(ele => {
                     var compuName = '',
@@ -3916,8 +3927,8 @@ export default new Vuex.Store({
                         path: strPath,
                         uuid: UUID,
                         name: compuName,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         category: compuCate,
                         scales: scalesItem,
@@ -3963,8 +3974,8 @@ export default new Vuex.Store({
                         path: strPath,
                         uuid: UUID,
                         name: dataconName,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         lowerlimit: dataconLow,
                         upperlimit: dataconUpper,
@@ -4026,8 +4037,8 @@ export default new Vuex.Store({
                         path: strPath,
                         uuid: UUID,
                         name: appliName,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         category: appliCategory,
                         dynamicArrySize: appliDynamicArrySize,
@@ -4143,8 +4154,8 @@ export default new Vuex.Store({
                         path: strPath,
                         uuid: UUID,
                         name: impName,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         category: impcategory,
                         namespace: impnamespace,
@@ -4287,8 +4298,8 @@ export default new Vuex.Store({
                         path: strPath,
                         uuid: UUID,
                         name: name,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         machinedesign: machineDesign,
                         timeout: timeout,
@@ -4379,7 +4390,7 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
+                        top: elementY,
                         left: Math.floor(Math.random() * (1400 - 11)) + 10,
                         zindex: 2,
                         access: access,
@@ -4521,8 +4532,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         conditional: condition,
                         icon: "mdi-clipboard-outline",
@@ -4568,8 +4579,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         modedeclaration: mode,
                         initmode: initmode,
@@ -4625,8 +4636,8 @@ export default new Vuex.Store({
                     input: true,
                     path: strPath,
                     uuid: UUID,
-                    top: Math.floor(Math.random() * (200 - 6)) + 5,
-                    left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                    top: elementY,
+                    left: elementX,
                     zindex: 2,
                     category: category,
                     attribute: attri,
@@ -4678,8 +4689,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -4758,8 +4769,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -4847,8 +4858,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -4948,8 +4959,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5013,8 +5024,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5081,8 +5092,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5125,8 +5136,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5383,8 +5394,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5547,8 +5558,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5610,8 +5621,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5659,8 +5670,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5717,8 +5728,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5794,8 +5805,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5850,8 +5861,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5903,8 +5914,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -5992,8 +6003,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -6101,8 +6112,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -6152,8 +6163,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -6198,8 +6209,8 @@ export default new Vuex.Store({
                         input: true,
                         path: strPath,
                         uuid: UUID,
-                        top: Math.floor(Math.random() * (200 - 6)) + 5,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        top: elementY,
+                        left: elementX,
                         zindex: 2,
                         icon: "mdi-clipboard-outline",
                         validation: false,
@@ -6246,8 +6257,8 @@ export default new Vuex.Store({
                     input: true,
                     path: strPath,
                     uuid: UUID,
-                    top: Math.floor(Math.random() * (200 - 6)) + 5,
-                    left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                    top: elementY,
+                    left: elementX,
                     zindex: 2,
                     icon: "mdi-clipboard-outline",
                     validation: false,

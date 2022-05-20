@@ -78,6 +78,14 @@
             </template>
             <span>Detail View Open</span>
         </v-tooltip>
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn class="d-inline-flex ml-3 mr-1" small icon v-bind="attrs" v-on="on" @click="SetLindPosition()">
+                    <v-icon>mdi-swap-vertical</v-icon>
+                </v-btn>
+            </template>
+            <span>Position of the Line</span>
+        </v-tooltip>
         
         <!-- <v-dialog v-model="dialogValidate" hide-overlay persistent width="600">
             <v-card >
@@ -135,6 +143,7 @@ export default({
             isOpenCloseNavigation: true,
             isOpenCloseDetailV: true,
             isprojectOpen: false,
+            isPositionofLine: true, // true: element아래에  / false: element위에 보여진다.
             dialogNewProject: false,
             dialogValidate: false,
             strProjectName: null,
@@ -240,6 +249,10 @@ export default({
                 this.$refs.uploader.click()
             }
         },
+        SetLindPosition() {
+            this.isPositionofLine = this.isPositionofLine ? false : true
+            this.$store.commit('setPositionofLine', {up: this.isPositionofLine})
+        }
     },
 })
 </script>

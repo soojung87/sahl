@@ -56,7 +56,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog v-if="header.value != 'sort'" persistent cancel-text='Ok' save-text="Cancel" @open="openPPort(idx)" @cancel="editPPort(idx)" @save="cancelPPort" large >
+                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openPPort(idx)" @cancel="editPPort(idx)" @save="cancelPPort" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -126,7 +126,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog v-if="header.value != 'sort'" persistent cancel-text='Ok' save-text="Cancel" @open="openPRPort(idx)" @cancel="editPRPort(idx)" @save="cancelPRPort" large >
+                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openPRPort(idx)" @cancel="editPRPort(idx)" @save="cancelPRPort" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -196,7 +196,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog v-if="header.value != 'sort'" persistent cancel-text='Ok' save-text="Cancel" @open="openRPort(idx)" @cancel="editRPort(idx)" @save="cancelRPort" large >
+                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openRPort(idx)" @cancel="editRPort(idx)" @save="cancelRPort" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -673,9 +673,12 @@ export default {
             this.setactiveUUID()
         },
         newServiceInterface() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementService', {
                     name: this.$store.getters.getNameServiceInterface, input: false, path: '',
-                    top: this.element.top+100, left: this.element.left+ 300 , zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
+                    top: elementY, left: elementX, zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
                     versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: '',
                 })
             EventBus.$emit('add-element', constant.ServiceInterface_str)

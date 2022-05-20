@@ -206,9 +206,12 @@ export default {
             this.setactiveUUID()
         },
         newMachine() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementMachine', {
                 name: this.$store.getters.getNameMachine, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, 
+                top: elementY, left: elementX, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, 
                 admin: '', functiongroup:[], processor: [], moduleinstant: [], icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.Machine_str)
@@ -249,9 +252,12 @@ export default {
             this.setactiveUUID()
         },
         newProcess() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementProcess', { //prodesign, determin, execut, machinetype  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                 name: this.$store.getters.getNameProcess, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
             })
             EventBus.$emit('add-element', constant.Process_str)

@@ -275,7 +275,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -362,7 +362,7 @@ export default {
             this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
                 if(this.iselementOpenClose) {
-                    if(this.element.dependent.length > 0) {
+                    if(this.element.dependent.length > 0 && this.location == 1) {
                         if (this.isDependentStartupOpenClose) {
                             EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.dependentStartupTab, this.dependentStartupTab)
                         } else {
@@ -379,7 +379,7 @@ export default {
         },
         showDependentStartup() {
             this.isDependentStartupOpenClose = this.isDependentStartupOpenClose ? false : true
-            if(this.element.dependent.length > 0) {
+            if(this.element.dependent.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isDependentStartupOpenClose) {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.dependentStartupTab, this.dependentStartupTab)
@@ -437,9 +437,12 @@ export default {
             this.setactiveUUID()
         },
         newProcessDesign() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementProcessDesign', { //executableref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                 name: this.$store.getters.getNameProcessDesign, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 executableref: null, determin: [],
             })
             EventBus.$emit('add-element', constant.ProcessDesign_str)
@@ -481,9 +484,12 @@ export default {
             this.setactiveUUID()
         },
         newDeterministicClient() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementDeterministicClien', {
                 name: this.$store.getters.getNameDeterministicClient, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 cycletiem: '', numofworkers: '',
             })
             EventBus.$emit('add-element', constant.DeterministicClient_str)
@@ -525,9 +531,12 @@ export default {
             this.setactiveUUID()
         },
         newExecutable() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementExecutable', { //applicationtyperef 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                 name: this.$store.getters.getNameExecutable, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 version: '', category:'', buildType:null, loggingBehabior:null, reportingBehabior:null, swname:'', applicationtyperef: null,
             })
             EventBus.$emit('add-element', constant.Executable_str)
@@ -569,9 +578,12 @@ export default {
             this.setactiveUUID()
         },
         newModeDeclarationGroup() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementModeDeclarationGroup', {
                 name: this.$store.getters.getNameModeDeclarationGroup, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, 
+                top: elementY, left: elementX, zindex: 10, 
                 modedeclaration:[], initmode:null, icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.ModeDeclarationGroup_str)
@@ -584,7 +596,9 @@ export default {
             const addObj = new Object(editItem)
             this.element.dependent.push(addObj)
             this.dependentStartupTab = this.element.dependent.length-1
-            EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+            if (this.location == 1) {
+                EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+            }
         },
         clickDependentStartuptab() {
             //console.log('clickDependentStartuptab')
@@ -593,7 +607,7 @@ export default {
         },
         changeDependentStartupTab() {
             //console.log('changeDependentStartupTab' +this.dependentStartupTab)
-            if(this.element.dependent.length > 0) {
+            if(this.element.dependent.length > 0 && this.location == 1) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.dependentStartupTab, this.dependentStartupTab)}, 300);
             }
         },
@@ -884,9 +898,12 @@ export default {
             this.setactiveUUID()
         },
         newStartupC() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementStartupConfig', {
                 name: this.$store.getters.getNameStartupConfig, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 configname: '', policy:null, priority:'', entertimeout:'', exittimeout:''
             })
             EventBus.$emit('add-element', constant.StartupConfig_str)

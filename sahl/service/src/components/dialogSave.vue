@@ -239,12 +239,17 @@ export default {
             }
         },
         deleteSaveWindow() {
+            var num = null
             if (this.isDeleteSaveWindow) {
                 this.saveList.forEach((item,i) => {
                     if(item.radio == this.radios) {
-                        this.saveList.splice(i,1)
+                        num = i
                     }
                 })
+
+                if (num != null) {
+                    this.saveList.splice(num,1)
+                }
                 this.isDeleteSaveWindow = false
             }
         },
@@ -375,21 +380,28 @@ export default {
             }
         },
         moveLeft() {
-            this.saveList.forEach( list => {
+            var idxList = null, idxSelect = null
+            this.saveList.forEach( (list, i) => {
                 if (this.radios == list.radio && list.selectItem != undefined) {
                     var treeitem = Object.values(this.$store.getters.gettreeviewitems)
                     treeitem.forEach(data => {
                         if (data.name != data.uuid) {
                             if (data.uuid == list.saveFile[list.selectItem].uuid) {
+                                console.log('111111')
                                 this.compareList(list.saveFile[list.selectItem], data.parent)
-                                list.saveFile.splice(list.selectItem,1)
-                                list.selectItem = undefined
+                                idxList = i
+                                idxSelect = list.selectItem
                             }
                         }
                     })
 
                 }
             })
+
+            if (idxList != null && idxSelect != null) {
+                this.saveList[idxList].saveFile.splice(idxSelect,1)
+                this.saveList[idxList].selectItem = undefined
+            }
         },
         compareList(data, parent) {
             this.tabListItem[0].select.push(data)
@@ -487,6 +499,9 @@ export default {
             this.moveSaveFile = []
             this.radios = null
             this.saveList = [ {radio:'A', savename:'', label: 'A Save File Name', selectItem:undefined, saveFile: [], },]
+            this.checkAll = false
+            this.onlyList = false
+
         },
         setOpenList(idx) {
             this.tabListItem[idx].list.forEach(item => {

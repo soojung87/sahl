@@ -6,12 +6,12 @@
         <v-app-bar app dense flat clipped-left clipped-right>
             <appbar />
             <v-select v-if="panesNumber > 1 && isSearch && isprojectOpen" v-model="selectScreen" :items="screenItem" label="Select a Screen" outlined dense class="selectScreen"></v-select>
-            <v-icon v-if="isSearch && isprojectOpen" style="left: 393px;">mdi-magnify</v-icon>
+            <v-icon v-if="isSearch && isprojectOpen" style="left: 347px;">mdi-magnify</v-icon>
             <v-autocomplete v-if="isSearch && isprojectOpen" v-model='model' :items='searchList' item-text='name' item-value="uuid" class="lable-placeholer-color searchElement"
                 :search-input.sync="search" return-object clearable @click="setSearchList()"
                 hide-no-data hide-selected placeholder="Start typing to Search Element" >
             </v-autocomplete>
-            <v-btn v-if="isSearch && isprojectOpen" icon @click="goElement()" style="left: 630px;">
+            <v-btn v-if="isSearch && isprojectOpen" icon @click="goElement()" style="left: 590px;">
                 <v-icon >mdi-crosshairs-gps</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
@@ -52,9 +52,16 @@
         <v-navigation-drawer ref="detailViewer" :width="drawViewernavi.width" app v-model="drawViewernavi.shown" clipped right >
             <detailViewer />
         </v-navigation-drawer>
-        <v-footer app>
+        <v-footer padless app>
             <footbar />
         </v-footer> 
+        <v-dialog v-model="dialogErrorSelectScreen" persistent width="600">
+            <v-card >
+                <v-alert v-model="dialogErrorSelectScreen" width="600" prominent border="left" outlined type="warning" dismissible>
+                    먼저 Screen을 선택해 주세요.
+                </v-alert>
+            </v-card>
+        </v-dialog>
     </v-app>
 </template>
 
@@ -103,17 +110,19 @@ export default ({
             }
         },
         isOpenCloseDetailView(val) {
+            //console.log('isOpenCloseDetailView ' + val)
             this.drawViewernavi.shown = val
             this.setMinimapLeft()
         },
         isOpenCloseNavigationView(val) {
-            console.log(val)
+            //console.log(val)
             this.navigation.shown = val
         },
         isOpenCloseSearch(val) {
             this.isSearch = val
         },
         visibleDetailView(val) {
+            //console.log('visibleDetailView ' + val)
             this.drawViewernavi.shown = val
             this.setMinimapLeft()
         }
@@ -134,8 +143,12 @@ export default ({
             btnMinimapResize: true,
             panesNumber: 1,
             screenItem: ['1'],
-            selectScreen: null
+            selectScreen: null,
+            dialogErrorSelectScreen: false,
         }
+    },
+    updated() { //창크기 변환하면 this.drawViewernavi.show가 true로 변함
+        this.drawViewernavi.shown = this.$store.state.visibleDetailView
     },
     mounted() {
         this.setBorderNavigationWidth()
@@ -255,13 +268,20 @@ export default ({
         },
         goElement() {
             console.log('goElement')
-            if(this.model != null && this.model.uuid != null) {
-                if (this.panesNumber > 1) {
-                    this.$store.commit( 'setSelectScreen', {num: this.selectScreen})
+            if (this.panesNumber==1 || (this.selectScreen != null && this.panesNumber > 1)) {
+                if(this.model != null && this.model.uuid != null) {
+                    if (this.panesNumber > 1) {
+                        this.$store.commit( 'setSelectScreen', {num: this.selectScreen})
+                    } else {
+                        this.$store.commit( 'setSelectScreen', {num: 1})
+                    }
+                    EventBus.$emit('goElement', this.model.uuid)
                 }
-                EventBus.$emit('goElement', this.model.uuid)
+                this.model = null
+            } else if (this.selectScreen == null && this.panesNumber > 1) {
+                this.dialogErrorSelectScreen = true
+                setTimeout(() => {this.dialogErrorSelectScreen = false}, 4000);
             }
-            this.model = null
         },
         addPanes() {
             this.panesNumber++

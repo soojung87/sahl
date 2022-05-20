@@ -214,7 +214,7 @@ import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -294,7 +294,7 @@ export default {
             this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
                 if(this.iselementOpenClose) {
-                    if(this.element.requiredevent.length > 0) {
+                    if(this.element.requiredevent.length > 0 && this.location == 1) {
                         if (this.isRequiredEventOpenClose) {
                             EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].name)
                         } else {
@@ -312,7 +312,7 @@ export default {
         showRequiredEvent() {
             this.isRequiredEventOpenClose = this.isRequiredEventOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
-            if(this.element.requiredevent.length > 0) {
+            if(this.element.requiredevent.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isRequiredEventOpenClose) {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].name)
@@ -367,9 +367,12 @@ export default {
             this.setactiveUUID()
         },
         newSIDeployment() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementSomeIPService', {
                 name: this.$store.getters.getNameSomeIPService, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 service: null, majversion:'', minversion:'', id: '', eventG:null, eventD: [], methodD:[], fieldD:[],
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -414,9 +417,12 @@ export default {
             this.setactiveUUID()
         },
         newSomeIPClient() {
-                this.$store.commit('addElementSomeIPClient', { 
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+            this.$store.commit('addElementSomeIPClient', { 
                 name: this.$store.getters.getNameSomeIPClient, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 findtime: '', inidelaymax: '', inidelaymin: '', inibasedelay: '', inirepetimax: '',
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -533,11 +539,13 @@ export default {
             }
             this.element.requiredevent.push(addObj)
             this.eventGroupTab = this.element.requiredevent.length-1
-            EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+            if (this.location == 1) {
+                EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+            }
         },
         clickEeventGroupTab() {},
         changeEeventGroupTab() {
-            if(this.element.requiredevent.length > 0) {
+            if(this.element.requiredevent.length > 0 && this.location == 1) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].name)}, 300);
             }
         },
@@ -643,9 +651,12 @@ export default {
             this.setactiveUUID()
         },
         newClient() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementClient', { 
                 name: this.$store.getters.getNameClient, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 delay: '', max: '', timetolive: '', delaymax: '', delaymin:''
             })
             EventBus.$emit('add-element', constant.Service_str)

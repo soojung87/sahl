@@ -221,9 +221,12 @@ export default {
             this.setactiveUUID()
         },
         newExecutable() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementExecutable', { //applicationtyperef 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                     name: this.$store.getters.getNameExecutable, input: false, path: '',
-                    top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     version: '', category:'', buildType:null, loggingBehabior:null, reportingBehabior:null, swname:'', applicationtyperef: null,
                 })
             EventBus.$emit('add-element', constant.Executable_str)

@@ -450,7 +450,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         SAHLProject() {
@@ -582,7 +582,7 @@ export default {
             this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
                 if(this.iselementOpenClose) {
-                    if(this.element.methods.length > 0) {
+                    if(this.element.methods.length > 0 && this.location == 1) {
                         if(this.isMethodsOpenClose) {
                             EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.element.methods[this.methodTab].name)
                         } else {
@@ -604,7 +604,7 @@ export default {
         },
         showMethodItem() { 
             this.isMethodsOpenClose = this.isMethodsOpenClose ? false : true
-            if(this.element.methods.length > 0) {
+            if(this.element.methods.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isMethodsOpenClose) {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.element.methods[this.methodTab].name)
@@ -801,9 +801,12 @@ export default {
             }
         },
         newDataType() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementImplementation', {
                     name: this.$store.getters.getNameImplementation, input: false, path: '',
-                    top: this.element.top+100, left: this.element.left+ 300,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    top: elementY, left: elementX,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', 
                     typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
             })
@@ -871,7 +874,9 @@ export default {
             }
             this.element.methods.push(addObj)
             this.methodTab = this.element.methods.length-1
-            EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+            if (this.location == 1) {
+                EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+            }
         },
         clickMethodtab() {
             this.selDeleteArgItem = []
@@ -882,7 +887,7 @@ export default {
             this.isdeleteError = false
         },
         changeMethodTab() {
-            if(this.element.methods.length > 0) {
+            if(this.element.methods.length > 0 && this.location == 1) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.element.methods[this.methodTab].name)}, 300);
             }
         },
@@ -1134,9 +1139,12 @@ export default {
             this.cancelErrorSet()
         },
         newErrorSet() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementErrorSet', {
                 name: this.$store.getters.getNameErrorSet, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 errorref: [],
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -1242,9 +1250,12 @@ export default {
             this.cancelError()
         },
         newError() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementError', {
                 name: this.$store.getters.getNameError, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 desc: '', errorcode: '', errorDref: null
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -1294,6 +1305,3 @@ export default {
     }
 }
 </script>
-
-<style>
-</style>

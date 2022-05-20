@@ -509,18 +509,25 @@ export default {
             this.setactiveUUID()
         },
         newCompuMethod() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementCompuMehtod', {
                     name: this.$store.getters.getNameCompuMethod,  input: false, path: '',
-                    top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, category:null, scales:[], icon:"mdi-clipboard-outline", validation: false
+                    top: elementY, left: elementX, zindex: 10, category:null, scales:[], icon:"mdi-clipboard-outline", validation: false
                 })
             EventBus.$emit('add-element', constant.CompuMethod_str)
             EventBus.$emit('add-element', constant.DateType_str)
             this.$store.commit('editImplementation', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
         newDataConstr() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+
             this.$store.commit('addElementDataConstr', {
                     name: this.$store.getters.getNameDataConstr, input: false, path: '',
-                    top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, lowerlimit:null, upperlimit:null, icon:"mdi-clipboard-outline", validation: false })
+                    top: elementY, left: elementX, zindex: 10, lowerlimit:null, upperlimit:null, icon:"mdi-clipboard-outline", validation: false })
             EventBus.$emit('add-element', constant.DataConstr_str)
             EventBus.$emit('add-element', constant.DateType_str)
             this.$store.commit('editImplementation', {compo:"z", uuid:this.element.uuid, zindex:2} )
@@ -714,9 +721,12 @@ export default {
             this.setactiveUUID()
         },
         newTemplateType() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementImplementation', {
                     name: this.$store.getters.getNameImplementation,  input: false, path: '',
-                    top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', 
                     typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
                 })

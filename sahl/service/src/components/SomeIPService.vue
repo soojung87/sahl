@@ -406,7 +406,7 @@ import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -526,7 +526,7 @@ export default {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
-                if(this.iselementOpenClose) {
+                if(this.iselementOpenClose && this.location == 1) {
                     if(this.element.fieldD.length > 0) {
                         if (this.isFieldDOpenClose) {
                             EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].name)
@@ -546,7 +546,7 @@ export default {
         },
         showEventG() {
             this.isEventGOpenClose = this.isEventGOpenClose ? false : true
-            if(this.element.eventG.length > 0) {
+            if(this.element.eventG.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isEventGOpenClose) {
                         EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGTab, this.element.eventG[this.eventGTab].name)
@@ -574,11 +574,10 @@ export default {
         },
         showFieldD() {
             this.isFieldDOpenClose = this.isFieldDOpenClose ? false : true
-            console.log(this.isFieldDOpenClose)
             // 선을 다시 그려줘야 하기 때문에
-            if(this.element.fieldD.length > 0) {
+            if(this.element.fieldD.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
-                    if(this.isFieldDOpenClose) {
+                    if(this.isFieldDOpenClose ) {
                         EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].name)
                     } else {
                         EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, null)
@@ -620,14 +619,16 @@ export default {
             }
             this.element.eventG.push(addObj)
             this.eventGTab = this.element.eventG.length-1
-            EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, null)
+            if(this.location == 1) {
+                EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, null)
+            }
         },
         clickEventGtab() {
             this.isdeleteEvent = false
             this.selectDelectEvent = []
         },
         changeEventGTab() {
-            if(this.element.eventG.length > 0) {
+            if(this.element.eventG.length > 0 && this.location == 1) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGTab, this.element.eventG[this.eventGTab].name)}, 300);
             }
         },
@@ -772,9 +773,12 @@ export default {
             this.setactiveUUID()
         },
         newService() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementService', {
                 name: this.$store.getters.getNameServiceInterface, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: '',
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -1030,7 +1034,9 @@ export default {
             }
             this.element.fieldD.push(addObj)
             this.fieldTab = this.element.fieldD.length-1
-            EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, null)
+            if(this.location == 1) {
+                EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, null)
+            }
         },
         clickFieldtab() {
             //console.log(idx)
@@ -1041,7 +1047,7 @@ export default {
         changeFieldTab() {
             //console.log('change'+' / ')
             //이렇게 해줘야지 tab에 있는것을 다 그린다음에 선을 다시 그려줄수있다.
-            if(this.element.fieldD.length > 0 && this.isFieldDOpenClose){
+            if(this.element.fieldD.length > 0 && this.location == 1){
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].name)}, 300);
             }
         },

@@ -39,17 +39,17 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isCCOpenClose">  
-                            <v-data-table v-model="selectdeleteCCItem" :headers="headersCC" :items="element.connector" 
-                                    :show-select="isdeleteCCItem" item-key="name" height="100px" dense hide-default-footer >
+                            <v-data-table v-model="selectdeleteCCItem" :headers="headersCC" :items="element.connector"
+                                    :show-select="isdeleteCCItem" item-key="name" height="100px" dense hide-default-footer id="commun-table">
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
                                 </template>
-                                <template v-if="!isdeleteCCItem" v-slot:body="{ items, headers }">
+                                <template v-if="!isdeleteCCItem" v-slot:body="props">
                                     <tbody>
-                                        <!-- <draggable :list="items" tag="tbody"> -->
-                                        <tr v-for="(item,idx) in items" :key="idx" >
-                                            <td v-for="(header,key) in headers" :key="key">
-                                                <v-icon v-if="header.value == 'sort'" x-small class="page__grab-icon">mdi-arrow-all</v-icon>
+                                    <!-- <draggable :list="props.items" tag="tbody" handle=".my-handle" @start="start()" @end="end()"> -->
+                                        <tr v-for="(item,idx) in props.items" :key="idx" >
+                                            <td v-for="(header,key) in props.headers" :key="key">
+                                                <v-icon v-if="header.value == 'sort'" x-small class="my-handle">mdi-arrow-all</v-icon>
                                                 <v-edit-dialog v-if="header.value != 'sort'" persistent cancel-text='Ok' save-text="Cancel" @open="openCC(idx)" @cancel="editCC(idx)" @save="cancelCC" large >
                                                     {{item[header.value]}}
                                                     <template v-slot:input>
@@ -165,7 +165,7 @@ import constant from "../store/constants.js"
 import { EventBus } from "../main.js"
 //import draggable from "vuedraggable";
 import dialogPathSetting from '../components/dialogPathSetting.vue'
-
+//import Sortable from 'sortablejs';
 
 export default {
 //    components: {draggable},
@@ -532,6 +532,7 @@ export default {
                 }) == idx1
             })
         },
+
         setactiveUUID() {
             this.$store.commit('setuuid', {uuid: this.element.uuid} )
             this.$store.commit('editMachineDesign', {compo:"z", uuid:this.element.uuid, zindex:10} )
@@ -547,8 +548,6 @@ export default {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
             EventBus.$emit('new-line', drawLine, endLine)
         },
-
     }
 }
 </script>
-

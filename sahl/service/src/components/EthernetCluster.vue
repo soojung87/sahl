@@ -465,7 +465,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'viewInfo', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'viewInfo', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -479,12 +479,23 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        // detailViewUUID(val) {
-        //     this.setToolbarColorDetailView(val)
-        // }
+        detailViewUUID(val) {
+            this.setToolbarColorDetailView(val)
+        }
     },
     created() {
         this.setToolbarColor(this.$store.state.activeUUID)
+        /*endpointTab이 2차원 배열이기 때문에 복사하거나 fileInput 시 미리 정의해 줘야지 안그러면 error */
+        if (this.element.conditional.length > 0) {
+            this.element.conditional.forEach( (condi,i) => {
+                this.channelTab[i] = 0
+                if (condi.channel.length > 0) {
+                    condi.channel.forEach( () => {
+                        this.endpointTab.push([i, 0])
+                    })
+                }
+            })
+        }
     },
     data() {
         return {
@@ -601,7 +612,7 @@ export default {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
-                if(this.iselementOpenClose) {
+                if(this.iselementOpenClose && this.location == 1) {
                     if(this.isEthernetClusterOpenClose) {
                         if(this.element.conditional[this.conditionalTab].channel.length > 0) {
                             if(this.isPhysicalChannelOpenClose) {
@@ -620,26 +631,29 @@ export default {
         },
         showEthernetClusterItem() {
             this.isEthernetClusterOpenClose = this.isEthernetClusterOpenClose ? false : true
-            this.$nextTick(() => {
-                if(this.isEthernetClusterOpenClose) {
-                    if(this.element.conditional[this.conditionalTab].channel.length > 0) {
-                        if(this.isPhysicalChannelOpenClose) {
-                            setTimeout(() => {EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name, this.element.conditional[this.conditionalTab].name)}, 300);
+            var activeLine = this.$store.getters.getactiveLine(this.element.uuid)
+            if (this.location == 1 && activeLine.length > 0) {
+                this.$nextTick(() => {
+                    if(this.isEthernetClusterOpenClose) {
+                        if(this.element.conditional[this.conditionalTab].channel.length > 0) {
+                            if(this.isPhysicalChannelOpenClose) {
+                                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name, this.element.conditional[this.conditionalTab].name)}, 300);
+                            } else {
+                                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'channel', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].name)}, 300);
+                            }
                         } else {
-                            setTimeout(() => {EventBus.$emit('changeLine-someipService', 'channel', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].name)}, 300);
+                            EventBus.$emit('changeLine-someipService', 'conditional', this.element.uuid, null)
                         }
                     } else {
                         EventBus.$emit('changeLine-someipService', 'conditional', this.element.uuid, null)
                     }
-                } else {
-                    EventBus.$emit('changeLine-someipService', 'conditional', this.element.uuid, null)
-                }
-                EventBus.$emit('drawLine')
-            })
+                    EventBus.$emit('drawLine')
+                })
+            }
         },
         showPhysicalChannelItem() {
             this.isPhysicalChannelOpenClose = this.isPhysicalChannelOpenClose ? false : true
-            if(this.element.conditional[this.conditionalTab].channel.length > 0) {
+            if(this.element.conditional[this.conditionalTab].channel.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isPhysicalChannelOpenClose) {
                         EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name, this.element.conditional[this.conditionalTab].name)
@@ -734,22 +748,26 @@ export default {
             addObj.name = 'Ethernet_'+(this.element.conditional.length+1)
             this.element.conditional.push(addObj)
             this.conditionalTab = this.element.conditional.length-1
-            EventBus.$emit('changeLine-someipService', 'conditional', this.element.uuid, null)
+            if (this.location == 1) {
+                EventBus.$emit('changeLine-someipService', 'conditional', this.element.uuid, null)
+            }
         },
-        clickConditionaltab() {
-            //this.conditionalTab = idx
+        clickConditionaltab(idx) {
+            this.conditionalTab = idx
             this.clickChanneltab(0)
         },
         changeConditionalTab() {
             console.log('changeConditionalTab    ' + this.conditionalTab)
-            if(this.element.conditional.length > 0) {
-                if(this.isPhysicalChannelOpenClose) {
-                    setTimeout(() => {EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name, this.element.conditional[this.conditionalTab].name)}, 300);
+            if (this.location == 1) {
+                if(this.element.conditional.length > 0) {
+                    if(this.isPhysicalChannelOpenClose) {
+                        setTimeout(() => {EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name, this.element.conditional[this.conditionalTab].name)}, 300);
+                    } else {
+                        setTimeout(() => {EventBus.$emit('changeLine-someipService', 'channel', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].name)}, 300);
+                    }
                 } else {
-                    setTimeout(() => {EventBus.$emit('changeLine-someipService', 'channel', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].name)}, 300);
+                    setTimeout(() => {EventBus.$emit('changeLine-someipService', 'conditional', this.element.uuid, this.conditionalTab, this.conditionalTab)}, 300);
                 }
-            } else {
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'conditional', this.element.uuid, this.conditionalTab, this.conditionalTab)}, 300);
             }
         },
         deleteConditional(idx) {
@@ -791,7 +809,11 @@ export default {
             addObj.name = 'PhysicalChannel_'+(this.element.conditional[this.conditionalTab].channel.length+1)
             this.element.conditional[this.conditionalTab].channel.push(addObj)
             this.channelTab[this.conditionalTab] = this.element.conditional[this.conditionalTab].channel.length-1
-            EventBus.$emit('changeLine-someipService', 'channel', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].name)
+            if (this.location == 1) {
+                EventBus.$emit('changeLine-someipService', 'channel', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].name)
+            }
+            //console.log(this.channelTab)
+            //console.log(this.endpointTab)
         },
         clickChanneltab(idx) {
            // console.log('clickChanneltab ' + this.channelTab[this.conditionalTab]+ '  /  '+ idx +'   /  '+this.conditionalTab)
@@ -801,7 +823,7 @@ export default {
             this.clickEndpointTab(0)
         },
         changeChannelTab() {
-            if (this.element.conditional[this.conditionalTab].channel.length > 0) {
+            if (this.element.conditional[this.conditionalTab].channel.length > 0 && this.location == 1) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name, this.element.conditional[this.conditionalTab].name)}, 300);
             }
         },
@@ -940,7 +962,7 @@ export default {
             this.endpointTab[this.conditionalTab][this.channelTab] = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.length-1
         },
         clickEndpointTab(idx) {
-            //console.log('clickEndpointTab '+ this.endpointTab[this.conditionalTab][this.channelTab] +'  /  '+idx)
+            //console.log('clickEndpointTab '+ this.conditionalTab +'  /  ' + this.channelTab)
             this.endpointTab[this.conditionalTab][this.channelTab] = idx
             this.isdeleteIP4Item = false
             this.isdeleteIP6Item = false

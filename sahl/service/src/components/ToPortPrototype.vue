@@ -309,9 +309,12 @@ export default {
             this.setactiveUUID()
         },
         newProcess() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementProcessDesign', {
                 name: this.$store.getters.getNameProcessDesign, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
                 executableref: null, determin: [],
             })
             EventBus.$emit('add-element', constant.ProcessDesign_str)
@@ -374,17 +377,20 @@ export default {
             this.setactiveUUID()
         },
         newServiceIns() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             if (this.element.selectServiceIns == "PROVIDED-SOMEIP-SERVICE-INSTANCE") {
                 this.$store.commit('addElementProvidedSomeIP', {
                     name: this.$store.getters.getNameProvidedSomeIP, input: false, path: '',
-                    top: this.element.top+100, left: this.element.left+ 300, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     deployref: null, someipserver: null, id: '', eventP: [], method: [], eventG: [],
                 })
                 EventBus.$emit('add-element', constant.ProvidedSomeIP_str)
             } else if (this.element.selectServiceIns == "REQUIRED-SOMEIP-SERVICE-INSTANCE") {
                 this.$store.commit('addElementRequiredSomeIP', {  //deployref, clientref,ver는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                     name: this.$store.getters.getNameRequiredSomeIP, input: false, path: '',
-                    top: this.element.top+100, left: this.element.left+ 300, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    top: elementY, left: this.elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     deployref: null, minover: '', id: '', clientref: null, ver: null, method: [], requiredevent: [],
                 })
                 EventBus.$emit('add-element', constant.RequiredSomeIP_str)

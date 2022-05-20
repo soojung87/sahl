@@ -275,7 +275,7 @@ import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -365,7 +365,7 @@ export default {
             this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
                 if(this.iselementOpenClose) {
-                    if(this.element.eventG.length > 0) {
+                    if(this.element.eventG.length > 0 && this.location == 1) {
                         if (this.isProvidEventOpenClose) {
                             EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].name)
                         } else {
@@ -390,7 +390,7 @@ export default {
                 this.element.eventG = this.element.eventG.slice()
             }
             this.isProvidEventOpenClose = this.isProvidEventOpenClose ? false : true
-            if(this.element.eventG.length > 0) {
+            if(this.element.eventG.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isProvidEventOpenClose) {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].name)
@@ -445,9 +445,12 @@ export default {
             this.setactiveUUID()
         },
         newSIDeployment() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementSomeIPService', {
                 name: this.$store.getters.getNameSomeIPService, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 service: null, majversion:'', minversion:'', id: '', eventG:null, eventD: [], methodD:[], fieldD:[],
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -492,9 +495,12 @@ export default {
             this.setactiveUUID()
         },
         newSomeIPServer() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementSomeIPServer', { 
                 name: this.$store.getters.getNameSomeIPServer, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 inidelaymax: '', inidelaymin: '', inibasedelay: '', inirepetimax: '', delaymax: '', delaymin: '',
                 offer: '', tiemtolive: '',
             })
@@ -707,13 +713,15 @@ export default {
             }
             this.element.eventG.push(addObj)
             this.eventGroupTab = this.element.eventG.length-1
-            EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+            if (this.location == 1) {
+                EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+            }
         },
         clickEeventGroupTab() {
         },
         changeEeventGroupTab() {
             console.log('changeEeventGroupTab')
-            if(this.element.eventG.length > 0) {
+            if(this.element.eventG.length > 0 && this.location == 1) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].name)}, 300);
             }
         },
@@ -819,9 +827,12 @@ export default {
             this.setactiveUUID()
         },
         newServer() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementServer', { 
                 name: this.$store.getters.getNameServer, input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 delaymax: '', delaymin: '',
             })
             EventBus.$emit('add-element', constant.Service_str)

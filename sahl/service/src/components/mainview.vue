@@ -1,6 +1,7 @@
 <template>
     <div :id="'main-view'+location"  v-dragscroll="drag" v-on:dragscrollmove="dragBackground()" v-bind:class="[{'grab-bing':'true'},{'main-view':minimaptoolbar},{'minimap-view':!minimaptoolbar}]"
         @mousewheel="onmouseWheel" @mousedown="onmouseDown" @scroll="onScroll">
+        <div id="wrapper"></div>
         <v-main id="sea" v-bind:style="{ transform: 'scale(' + zoom.value + ')' }" ><!--<v-app>에서 바꿈 : v-app으로 하면 뭔가 안에 창이 하나 더생겨서 화면이 늘어나 scroll이 생긴다.-->
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -8,7 +9,7 @@
                 v-for="element in SAHLProject[openProjectIndex].DataTypes.CompuMethod"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Compu Method')"
@@ -21,7 +22,7 @@
                 v-for="element in SAHLProject[openProjectIndex].DataTypes.DataConstr"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Data Constr')"
@@ -34,7 +35,7 @@
                 v-for="element in SAHLProject[openProjectIndex].DataTypes.ApplicationArrayDataType"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Application Array')"
@@ -47,7 +48,7 @@
                 v-for="element in SAHLProject[openProjectIndex].DataTypes.ImplementationDataType"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Implementation')"
@@ -61,7 +62,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Machine.Machine"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Machine')"
@@ -74,7 +75,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Machine.HWElement"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'HW Element')"
@@ -87,7 +88,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Machine.MachineDesign"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Machine Designs')"
@@ -100,7 +101,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Machine.ModeDeclarationGroup"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Mode Declaration Group')"
@@ -113,12 +114,12 @@
                 v-for="element in SAHLProject[openProjectIndex].Machine.EthernetCluster"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Ethernet Cluster')"
                 @resizing="changeElementSize()">
-                <EthernetCluster :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <EthernetCluster :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
 
             <vue-draggable-resizable :id="element.uuid+location"
@@ -127,7 +128,7 @@
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.ProtoMachineMapping"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process to Machine Mapping Set')"
@@ -140,7 +141,7 @@
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.SWComponents"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SW Components')"
@@ -153,12 +154,12 @@
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.Process"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process')"
                 @resizing="changeElementSize()">
-                <Process :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <Process :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -166,7 +167,7 @@
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.ProcessDesign"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process Design')"
@@ -179,7 +180,7 @@
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.Executable"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Executable')"
@@ -192,7 +193,7 @@
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.StartupConfig"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Startup Config')"
@@ -205,7 +206,7 @@
                 v-for="element in SAHLProject[openProjectIndex].AdaptiveApplication.DeterministicClient"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Deterministic Client')"
@@ -219,12 +220,12 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPServiceInterfaceDeployment"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Service Interface Deployment')"
                 @resizing="changeElementSize()">
-                <SomeIPService :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/>  <!-- :drag-handle="'.drag-handle'" -->
+                <SomeIPService :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/>  <!-- :drag-handle="'.drag-handle'" -->
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -232,12 +233,12 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.ServiceInterface"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Service Interface')"
                 @resizing="changeElementSize()">
-                <ServiceInterface :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/>  <!-- :drag-handle="'.drag-handle'" -->
+                <ServiceInterface :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/>  <!-- :drag-handle="'.drag-handle'" -->
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -245,7 +246,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPClientEvent"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Client')"
@@ -258,7 +259,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPServerEvent"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Server')"
@@ -271,7 +272,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPClientServiceInstance"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Client')"
@@ -284,7 +285,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPServerServiceInstance"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Server')"
@@ -297,7 +298,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.SomeIPServiceInstanceToMachine"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP To Machine Mapping')"
@@ -310,7 +311,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.ServiceInstanceToPortPrototype"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'To Port Prototype Mapping')"
@@ -323,12 +324,12 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.RequiredSomeIP"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Required SomeIP')"
                 @resizing="changeElementSize()">
-                <RequiredSomeIP :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <RequiredSomeIP :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -336,12 +337,12 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.ProvidedSomeIP"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Provided SomeIP')"
                 @resizing="changeElementSize()">
-                <ProvidedSomeIP :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <ProvidedSomeIP :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
 
             <vue-draggable-resizable :id="element.uuid+location"
@@ -350,7 +351,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.ErrorDomain"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error Domain')"
@@ -363,7 +364,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.ErrorSet"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error Set')"
@@ -376,7 +377,7 @@
                 v-for="element in SAHLProject[openProjectIndex].Service.Error"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="true"
+                :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error')"
@@ -384,7 +385,6 @@
                 <APError :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
         </v-main>
-        <div id="wrapper"></div>
     </div>
 </template>
 
@@ -464,7 +464,13 @@ export default{
         },
         selectScreen() {
             return this.$store.state.selectScreen
-        }
+        },
+        isPositionLine() {
+            return this.$store.state.isPositionLine
+        },
+        isDraggable() {
+            return this.$store.state.isDraggable
+        },
     },
     data() {
         return {
@@ -516,12 +522,17 @@ export default{
             }
         },
         numPanes() {
-            //console.log(val)
-            this.changeMinimapView()
-            this.$nextTick(() => {
-                this.moveline()
+            this.$nextTick(() => { /* pane delete시 선이 제 위치에 있지 않아 텀을 좀 주었다*/
+                setTimeout(() => { this.moveline(); this.changeMinimapView() }, 150)
             })
         },
+        isPositionLine(val) {
+            if (val) {
+                document.getElementById('wrapper').style.zIndex = 1;
+            } else {
+                document.getElementById('wrapper').style.zIndex = 0;
+            }
+        }
     },
     mounted() {
         this.$nextTick(() => {
@@ -599,12 +610,13 @@ export default{
                 this.moveline()
             })
         })
+        /*tab있는 element들은 화면 분할할때 선이 이상한 곳으로 가기때문에 location을 넘겨줘야한다 */
         EventBus.$on('changeLine-someipService', (item,uuid, idx,tabname, str1, str2) => {  //하나의 element에 tab이 2개가 있을 경우 item으로 구분해줘야한다.
             this.$nextTick(() => { 
                 this.drawLinTabMoveSomeIPServeice(item,uuid, idx,tabname, str1, str2) //ethernet Cluster에서 conditional name와 channel name이 필요해 str1 str2로 나뉨
             })
         })
-        EventBus.$off('goElement'); //중복호출되어 같이 정의해줘야 1번 들어온다. 
+        EventBus.$off('goElement'); //중복호출되어 같이 정의해줘야 한번 들어온다. 
         EventBus.$on('goElement', (id) => {
             console.log('goElement  '+ this.$store.state.selectScreen)
             document.getElementById(id+this.$store.state.selectScreen).scrollIntoView(true);
@@ -624,7 +636,7 @@ export default{
             this.setanimationLine(uuid, true)
         },
         onDeactivated(uuid) {
-            console.log('onDeactivated'+ uuid)
+            //console.log('onDeactivated'+ uuid)
             this.setanimationLine(uuid, false)
             this.isMouseDiagram = false
             EventBus.$emit('active-element', null)
@@ -696,7 +708,7 @@ export default{
             this.moveline()
         },
         changeElementSize() {
-            console.log('changeElementSize')
+            //console.log('changeElementSize')
             this.moveline()
         },
         moveline() {
@@ -1055,7 +1067,7 @@ export default{
                         this.changeLineAppendChild(activeLine[i]) 
                     }
                 }
-                console.log(this.appendLine)
+                //console.log(this.appendLine)
                 this.$nextTick(() => {
                     this.setanimationLine(uuid, true)
                     this.moveline()
@@ -1065,42 +1077,3 @@ export default{
     },
 }
 </script>
-
-<style>
-.main-view {
-    width: 100%;
-    height: 100%;
-    white-space: nowrap; /* 줄바꿈을 하지 않아서 가로 스크롤이 생기게 해준다. */
-    overflow: auto;
-}
-
-.basic-form {
-    cursor: pointer;
-    position: absolute; /* 이게 없으면 z값이 이상해짐 나중에 생긴게 z값이 가장 크게됨 */
-}
-
-.main-view::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-.main-view::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-.main-view::-webkit-scrollbar-thumb {
-  border-radius: 3px;
-  background-color: gray;
-}
-.main-view::-webkit-scrollbar-button {
-  width: 0;
-  height: 0;
-}
-
-div /* 텍스트를 마우스로 드래그하는 것을 방지하는 CSS */
-{
-  -ms-user-select: none;  /*익스플로러 */
-  -moz-user-select: none; /*파이어폭스 */
-  -khtml-user-select: none; /**/
-  -webkit-user-select: none; /*크롬, 사파리 */
-  user-select: none;
-} 
-</style>

@@ -190,9 +190,12 @@ export default {
             this.setactiveUUID()
         },
         newSWComponent() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
             this.$store.commit('addElementSWComponents', {
                     name: this.$store.getters.getNameSWComponents,  input: false, path: '',
-                    top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     pport: [], rport: [], prport: [],
                 })
             EventBus.$emit('add-element', constant.SWComponents_str)

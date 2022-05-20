@@ -286,9 +286,13 @@ export default {
             this.setactiveUUID()
         },
         newError() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+
             this.$store.commit('addElementError', {
                 name: this.$store.getters.getNameError,  input: false, path: '',
-                top: this.element.top+100, left: this.element.left+ 300 , zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 desc: '', errorcode: '', errorDref: null
             })
             EventBus.$emit('add-element', constant.Service_str)
