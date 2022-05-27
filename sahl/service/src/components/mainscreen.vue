@@ -148,7 +148,14 @@ export default ({
         }
     },
     updated() { //창크기 변환하면 this.drawViewernavi.show가 true로 변함
-        this.drawViewernavi.shown = this.$store.state.visibleDetailView
+        if(this.$store.state.visibleDetailView == true && this.$store.state.isOpenCloseDetailView == true) {
+            this.drawViewernavi.shown = true
+        } else if(this.$store.state.visibleDetailView == true && this.$store.state.isOpenCloseDetailView == false) {
+            this.drawViewernavi.shown = false
+        } else {
+            this.drawViewernavi.shown = false
+        }
+
     },
     mounted() {
         this.setBorderNavigationWidth()

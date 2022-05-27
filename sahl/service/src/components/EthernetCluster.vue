@@ -87,7 +87,7 @@
                                                                     <v-icon>mdi-minus</v-icon>
                                                                 </v-btn>
                                                             </div>
-                                                            <v-data-table v-model="selectDelectCommConnectItem" :headers="headerCommConnector" :items="subtab.comconnect" 
+                                                            <v-data-table v-model="selectDelectCommConnectItem" :headers="headerCommConnector" :items="subtab.comconnect" :items-per-page='20'
                                                                     :show-select="isdeleteCommConnect" item-key="connector" height="100px" v-if="isCommConnectOpenClose" dense hide-default-footer >
                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -162,7 +162,7 @@
                                                                             <v-icon>mdi-minus</v-icon>
                                                                         </v-btn>
                                                                     </div>
-                                                                    <v-data-table v-model="selectDelectIP4tem" :headers="headerIP4" :items="subendpointtab.ip4address" 
+                                                                    <v-data-table v-model="selectDelectIP4tem" :headers="headerIP4" :items="subendpointtab.ip4address" :items-per-page='20'
                                                                             :show-select="isdeleteIP4Item" v-if="isIP4OpenClose" item-key="address" height="100px" dense hide-default-footer >
                                                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -218,7 +218,7 @@
                                                                             <v-icon>mdi-minus</v-icon>
                                                                         </v-btn>
                                                                     </div>
-                                                                    <v-data-table v-model="selectDelectIP6tem" :headers="headerIP6" :items="subendpointtab.ip6address"
+                                                                    <v-data-table v-model="selectDelectIP6tem" :headers="headerIP6" :items="subendpointtab.ip6address" :items-per-page='20'
                                                                             :show-select="isdeleteIP6Item" v-if="isIP6OpenClose" item-key="address" height="100px" dense hide-default-footer >
                                                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -272,7 +272,7 @@
                             </v-tabs-items>
                         </div>
                         <div v-else>
-                            <v-data-table v-if="isEthernetClusterOpenClose" :headers="viewHeader" :items="viewList" item-key="id" single-select
+                            <v-data-table v-if="isEthernetClusterOpenClose" :headers="viewHeader" :items="viewList" item-key="id" single-select :items-per-page='20'
                                 height="370px" dense hide-default-footer @click:row="editDialogEthernetCluster" @click="setactiveUUID" class="elevation-1">
                             </v-data-table>
                         </div>
@@ -301,7 +301,7 @@
                             </v-btn>
                         </div>
                         <v-data-table v-model="selectDelectInfoCC" :headers="headerCommConnector" :items="element.conditional[viewInfo.idxConditional].channel[viewInfo.idxChannel].comconnect"  
-                                :show-select="isdeleteInfoCC" item-key="connector" height="100px" dense hide-default-footer >
+                                :show-select="isdeleteInfoCC" item-key="connector" height="100px" dense hide-default-footer :items-per-page='20'>
                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                             </template>
@@ -355,7 +355,7 @@
                                 </v-btn>
                             </div>
                             <v-data-table v-model="selectDelectInfoIP4" :headers="headerIP4" :items="element.conditional[viewInfo.idxConditional].channel[viewInfo.idxChannel].endpoint[viewInfo.idxEndpoint].ip4address" 
-                                    :show-select="isdeleteInfoIPV4" item-key="address" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteInfoIPV4" item-key="address" height="100px" dense hide-default-footer :items-per-page='20'>
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -406,7 +406,7 @@
                                 </v-btn>
                             </div>
                             <v-data-table v-model="selectDelectInfoIP6" :headers="headerIP6" :items="element.conditional[viewInfo.idxConditional].channel[viewInfo.idxChannel].endpoint[viewInfo.idxEndpoint].ip6address"
-                                    :show-select="isdeleteInfoIPV6" item-key="address" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteInfoIPV6" item-key="address" height="100px" dense hide-default-footer :items-per-page='20'>
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>

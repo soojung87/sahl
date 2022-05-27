@@ -474,7 +474,7 @@ export default {
                             this.moveSaveFile.push({parent: arrelement.parent, uuid: item.uuid})
                         })
                         if(this.moveSaveFile.length > 0) {
-                            this.$store.commit('saveElement', {list: this.moveSaveFile, saveName: list.savename+".xml"} )
+                            this.$store.commit('saveElement', {list: this.moveSaveFile, saveName: list.savename+".arxml"} )
                         }
                     }
                 })

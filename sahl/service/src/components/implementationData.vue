@@ -85,7 +85,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isDDPCOpenClose">  
-                            <v-data-table v-model="selectDelectDDPCItem" :headers="headerDDPC" :items="element.ddpc"
+                            <v-data-table v-model="selectDelectDDPCItem" :headers="headerDDPC" :items="element.ddpc" :items-per-page='20'
                                     :show-select="isdeleteDDPCItem" item-key="compumethod" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -172,7 +172,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isIDTElementOpenClose">  
-                            <v-data-table v-model="selectDelectIDTElementItem" :headers="headerIDTElement" :items="element.idtelement"
+                            <v-data-table v-model="selectDelectIDTElementItem" :headers="headerIDTElement" :items="element.idtelement" :items-per-page='20'
                                     :show-select="isdeleteIDTElementItem" item-key="name" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -281,9 +281,8 @@ export default {
 
             isdeleteDDPCItem: false,
             headerDDPC: [
-                { text: '', sortable: false, value: 'sort' },
-                { text: 'Compu Method', align: 'start', sortable: false, value: 'compumethod' },
-                { text: 'Data Constr', sortable: false, value: 'dataconstr' },
+                { text: 'Compu Method', align: 'start', sortable: false, value: 'compumethod', width: '180px' },
+                { text: 'Data Constr', sortable: false, value: 'dataconstr', width:'180px' },
             ],
             selectDelectDDPCItem: [],
             defaultDDPCItem: { compumethod: null, dataconstr: null },

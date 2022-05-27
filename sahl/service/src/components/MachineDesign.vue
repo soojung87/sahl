@@ -39,14 +39,14 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isCCOpenClose">  
-                            <v-data-table v-model="selectdeleteCCItem" :headers="headersCC" :items="element.connector"
+                            <v-data-table v-model="selectdeleteCCItem" :headers="headersCC" :items="element.connector" :items-per-page='20'
                                     :show-select="isdeleteCCItem" item-key="name" height="100px" dense hide-default-footer id="commun-table">
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
                                 </template>
                                 <template v-if="!isdeleteCCItem" v-slot:body="props">
-                                    <tbody>
-                                    <!-- <draggable :list="props.items" tag="tbody" handle=".my-handle" @start="start()" @end="end()"> -->
+                                    <!-- <tbody> -->
+                                    <draggable v-model="props.items" tag="tbody" handle=".my-handle">
                                         <tr v-for="(item,idx) in props.items" :key="idx" >
                                             <td v-for="(header,key) in props.headers" :key="key">
                                                 <v-icon v-if="header.value == 'sort'" x-small class="my-handle">mdi-arrow-all</v-icon>
@@ -86,8 +86,8 @@
                                                 </v-edit-dialog>
                                             </th>
                                         </tr>
-                                    <!-- </draggable> -->
-                                    </tbody>
+                                    </draggable>
+                                    <!-- </tbody> -->
                                 </template>
                             </v-data-table>
                         </v-card-text>
@@ -108,7 +108,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isSDCOpenClose"> 
-                            <v-data-table v-model="selectdeleteSDCItem" :headers="headersSDC" :items="element.servicediscover"
+                            <v-data-table v-model="selectdeleteSDCItem" :headers="headersSDC" :items="element.servicediscover" :items-per-page='20'
                                     :show-select="isdeleteSDCItem" item-key="ssdp" style="width:100%" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
@@ -163,14 +163,14 @@
 <script>
 import constant from "../store/constants.js"
 import { EventBus } from "../main.js"
-//import draggable from "vuedraggable";
+import draggable from "vuedraggable";
 import dialogPathSetting from '../components/dialogPathSetting.vue'
-//import Sortable from 'sortablejs';
+import Sortable from 'sortablejs';
 
 export default {
 //    components: {draggable},
     props: ['element', 'isDatailView', 'minimaptoolbar'],
-    components:{dialogPathSetting},
+    components:{dialogPathSetting, draggable},
     computed: { 
         activeUUID() {
             return this.$store.state.activeUUID
@@ -248,6 +248,19 @@ export default {
     mounted () {
     },
     methods: {
+        initSortable() {
+            let table = document.getElementById("commun-table");
+            Sortable.create(table, {
+                handle: ".my-handle",
+                onStart() {console.log('111111111111111111')},
+                onMove() { console.log('move')},
+                onEnd({newIndex,oldIndex }) {
+                    const movedItem = this.element.connector.splice(oldIndex, 1)[0]
+                    this.element.connector.splice(newIndex, 0, movedItem)
+                    console.log(this.element.connector);
+                }
+            });
+        },
         submitDialog(element) {
             this.element.path = element
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
@@ -357,6 +370,7 @@ export default {
             const addObj = Object.assign({}, this.editedItemCC);
             this.element.connector.push(addObj);
             this.cancelCC()
+            //this.initSortable()
         },
         editCC(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+idx)

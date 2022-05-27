@@ -1308,236 +1308,265 @@ export default new Vuex.Store({
                 sortList = []
 
             savelist.forEach(data => {
-                var idxelement
+                var idxelement, path
                 if (data.parent == constant.CompuMethod_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.DataConstr_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.ApplicationArray_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.Implementation_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.Machine_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.MachineDesigne_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.EthernetCluster_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.ModeDeclarationGroup_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.HWElement_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.ProcesstoMachineMapping_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.SWComponents_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.Process_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.ProcessDesign_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.Executable_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.StartupConfig_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.DeterministicClient_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.SomeIPServiceInterfaceDeployment_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.ServiceInterface_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.Client_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.Server_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.SomeIPClient_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.SomeIPServer_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.SomeIPToMachineMapping_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.ToPortPrototypeMapping_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.RequiredSomeIP_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.ProvidedSomeIP_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.Error_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.Error[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.Error[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.Error[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.Errorset_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
                 } else if (data.parent == constant.ErrorDomain_str) {
                     idxelement = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.findIndex(item => item.uuid === data.uuid)
+                    path = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxelement].path.substr(1)
                     pathList.push({
-                        path: state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxelement].path,
-                        pathLength: state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxelement].path.split('/').length,
+                        path: path,
+                        pathLength: path.split('/').length,
                         idx: idxelement,
                         parent: data.parent
                     })
@@ -1572,19 +1601,34 @@ export default new Vuex.Store({
             console.log(sortList)
             return sortList
         },
-        getSaveObject: (state) => (savelist) => {
+        getEndterStr: () => (idx) => {
+            var strEnter = '\n'
+            for (let i = 0; i < idx; i++) {
+                strEnter += '\t'
+            }
+            return strEnter
+        },
+        getSaveObject: (state, getters) => (savelist) => {
             var saveStr = '',
                 namespace
-            let xmlDoc, endPath = 0
-
+            let xmlDoc, endPath = 0,
+                enterLine = 1
+            saveStr += '<?xml version="1.0" encoding="UTF-8"?>'
+            saveStr += '\n'
             saveStr += '<AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00048.xsd">'
+            saveStr += getters.getEndterStr(enterLine++)
             var start_one = savelist[0].path.split('/')
             start_one.forEach(ele => {
-                saveStr += "<AR-PACKAGES><AR-PACKAGE>"
+                saveStr += "<AR-PACKAGES>"
+                saveStr += getters.getEndterStr(enterLine++)
+                saveStr += "<AR-PACKAGE>"
+                saveStr += getters.getEndterStr(enterLine)
                 saveStr += "<SHORT-NAME>" + ele + "</SHORT-NAME>"
+                saveStr += getters.getEndterStr(enterLine++)
             })
             saveStr += "<ELEMENTS>"
-                //console.log(saveStr)
+            enterLine--
+            //console.log(saveStr)
 
             savelist.forEach((data, i) => {
                 if (data != savelist[0]) {
@@ -1608,7 +1652,10 @@ export default new Vuex.Store({
                     console.log('**   ' + savelist[i - 1].path + '  /  ' + savelist[i - 1].pathLength)
                     console.log('**   ' + data.path + '  /  ' + data.pathLength)
                     if (notsame != 0) {
+                        saveStr += getters.getEndterStr(--enterLine)
                         saveStr += "</ELEMENTS>"
+                    } else {
+                        enterLine--
                     }
                     //if (endPath == savelist[i - 1].pathLength) { // 앞 뒤의 path가 같은게 없으면 </AR-PACKAGES>까지 가면 안되니 하나 줄여줘야함
                     if ((beforPath.length - endPath == 0) || (data.pathLength + endPath != beforPath.length)) {
@@ -1617,7 +1664,10 @@ export default new Vuex.Store({
 
                     if (otherPath != endPath) {
                         while (notsame > 0) {
-                            saveStr += "</AR-PACKAGE></AR-PACKAGES>"
+                            saveStr += getters.getEndterStr(--enterLine)
+                            saveStr += "</AR-PACKAGE>"
+                            saveStr += getters.getEndterStr(--enterLine)
+                            saveStr += "</AR-PACKAGES>"
                             notsame--
                         }
                     }
@@ -1628,707 +1678,1039 @@ export default new Vuex.Store({
                     }
                     console.log('repeat = ' + repeat)
                     if (repeat > 0 && savelist[i - 1].path.indexOf(data.path) == -1) {
+                        saveStr += getters.getEndterStr(--enterLine)
                         saveStr += "</AR-PACKAGE>"
-                        saveStr += "<AR-PACKAGE><SHORT-NAME>" + nowPath[otherPath++] + "</SHORT-NAME>"
+                        saveStr += getters.getEndterStr(enterLine) //saveStr += '\n'
+                        saveStr += "<AR-PACKAGE>"
+                        saveStr += getters.getEndterStr(++enterLine)
+                        saveStr += "<SHORT-NAME>" + nowPath[otherPath++] + "</SHORT-NAME>"
                         repeat--
                     }
                     while (repeat > 0) {
-                        saveStr += "<AR-PACKAGES><AR-PACKAGE>"
+                        saveStr += getters.getEndterStr(enterLine) //saveStr += '\n'
+                        saveStr += "<AR-PACKAGES>"
+                        saveStr += getters.getEndterStr(++enterLine)
+                        saveStr += "<AR-PACKAGE>"
+                        saveStr += getters.getEndterStr(++enterLine)
                         saveStr += "<SHORT-NAME>" + nowPath[otherPath++] + "</SHORT-NAME>"
                         repeat--
                     }
                     if (endPath != 0) {
+                        saveStr += getters.getEndterStr(enterLine) //saveStr += '\n'
                         saveStr += "<ELEMENTS>"
                     }
                     console.log(saveStr)
                 }
-
+                var elementTab
                 if (data.parent == constant.CompuMethod_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<COMPU-METHOD UUID ="' + state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].category != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<CATEGORY>" + state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].category + "</CATEGORY>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].scales.length > 0) {
-                        saveStr += "<COMPU-INTERNAL-TO-PHYS><COMPU-SCALES>"
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += "<COMPU-INTERNAL-TO-PHYS>"
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<COMPU-SCALES>"
                         state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].scales.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<COMPU-SCALE>"
                             if (ele.const != '') {
-                                saveStr += "<COMPU-CONST><VT>" + ele.const+"</VT></COMPU-CONST>"
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "<COMPU-CONST>"
+                                saveStr += getters.getEndterStr(elementTab + 4)
+                                saveStr += "<VT>" + ele.const+"</VT>"
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "</COMPU-CONST>"
                             }
                             if (ele.symbol != '') {
+                                saveStr += getters.getEndterStr(elementTab + 3)
                                 saveStr += "<SYMBOL>" + ele.symbol + "</SYMBOL>"
                             }
                             if (ele.lowerlimit != '') {
+                                saveStr += getters.getEndterStr(elementTab + 3)
                                 saveStr += '<LOWER-LIMIT INTERVAL-TYPE="CLOSED">' + ele.lowerlimit + "</LOWER-LIMIT>"
                             }
                             if (ele.upperlimit != '') {
+                                saveStr += getters.getEndterStr(elementTab + 3)
                                 saveStr += '<UPPER-LIMIT INTERVAL-TYPE="CLOSED">' + ele.upperlimit + "</UPPER-LIMIT>"
                             }
                             if (ele.desc != '') {
-                                saveStr += '<DESC><L-2 L="EN">' + ele.desc + "</L-2></DESC>"
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += '<DESC>'
+                                saveStr += getters.getEndterStr(elementTab + 4)
+                                saveStr += '<L-2 L="EN">' + ele.desc + "</L-2>"
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "</DESC>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "</COMPU-SCALE>"
                         })
-                        saveStr += "</COMPU-SCALES></COMPU-INTERNAL-TO-PHYS>"
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</COMPU-SCALES>"
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += "</COMPU-INTERNAL-TO-PHYS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</COMPU-METHOD>"
                 } else if (data.parent == constant.DataConstr_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<DATA-CONSTR UUID ="' + state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].name + "</SHORT-NAME>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].lowerlimit != '') {
-                        saveStr += "<DATA-CONSTR-RULES><DATA-CONSTR-RULE><INTERNAL-CONSTRS><LOWER-LIMIT>" +
-                            state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].lowerlimit + "</LOWER-LIMIT>"
+                    if (state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].lowerlimit != '' ||
+                        state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].upperlimit != '') {
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += "<DATA-CONSTR-RULES>"
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<DATA-CONSTR-RULE>"
+                        saveStr += getters.getEndterStr(elementTab + 2)
+                        saveStr += "<INTERNAL-CONSTRS>"
+                        if (state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].lowerlimit != '') {
+                            saveStr += getters.getEndterStr(elementTab + 3)
+                            saveStr += "<LOWER-LIMIT>" +
+                                state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].lowerlimit + "</LOWER-LIMIT>"
+                        }
+                        if (state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].upperlimit != '') {
+                            saveStr += getters.getEndterStr(elementTab + 3)
+                            saveStr += "<UPPER-LIMIT>" + state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].upperlimit +
+                                "</UPPER-LIMIT>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 2)
+                        saveStr += "</INTERNAL-CONSTRS>"
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</DATA-CONSTR-RULE>"
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += "</DATA-CONSTR-RULES>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].upperlimit != '') {
-                        saveStr += "<UPPER-LIMIT>" + state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[data.idx].upperlimit +
-                            "</UPPER-LIMIT></INTERNAL-CONSTRS></DATA-CONSTR-RULE></DATA-CONSTR-RULES>"
-                    }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</DATA-CONSTR>"
                 } else if (data.parent == constant.ApplicationArray_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<APPLICATION-ARRAY-DATA-TYPE UUID="' + state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].category != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<CATEGORY>" + state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].category + "</CATEGORY>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].dynamicArrySize != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<DYNAMIC-ARRAY-SIZE-PROFILE>" + state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].dynamicArrySize + "</DYNAMIC-ARRAY-SIZE-PROFILE>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elename != '' ||
                         state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elehandling != null ||
                         state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elesemantics != null ||
                         state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elemaxnumber != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<ELEMENT>"
                         if (state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elename != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elename + "</SHORT-NAME>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elehandling != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<ARRAY-SIZE-HANDLING>" + state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elehandling + "</ARRAY-SIZE-HANDLING>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elesemantics != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<ARRAY-SIZE-SEMANTICS>" + state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elesemantics + "</ARRAY-SIZE-SEMANTICS>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elemaxnumber != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<MAX-NUMBER-OF-ELEMENTS>" + state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[data.idx].elemaxnumber + "</MAX-NUMBER-OF-ELEMENTS>"
                         }
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</ELEMENT>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += '</APPLICATION-ARRAY-DATA-TYPE>'
                 } else if (data.parent == constant.Implementation_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<STD-CPP-IMPLEMENTATION-DATA-TYPE UUID="' + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].category) {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<CATEGORY>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].category + "</CATEGORY>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].namespace != '') {
                         namespace = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].namespace.split(',')
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<NAMESPACES>"
                         namespace.forEach(ele => {
                             var symbol = ele.split('/')
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "<SYMBOL-PROPS>"
+                            saveStr += getters.getEndterStr(enterLine + 2)
                             saveStr += "<SHORT-NAME>" + symbol[0] + "</SHORT-NAME>"
+                            saveStr += getters.getEndterStr(enterLine + 2)
                             saveStr += "<SYMBOL>" + symbol[1] + "</SYMBOL>"
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "</SYMBOL-PROPS>"
                         })
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "</NAMESPACES>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].arraysize != '') {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<ARRAY-SIZE>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].arraysize + "</ARRAY-SIZE>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].typeemitter != '') {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<TYPE-EMITTER>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].typeemitter + "</TYPE-EMITTER>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].typeref != null) {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += '<TYPE-REFERENCE-REF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].typeref + "</TYPE-REFERENCE-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].templatetype != null) {
-                        saveStr += '<TEMPLATE-ARGUMENTS><CPP-TEMPLATE-ARGUMENT><TEMPLATE-TYPE-REF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].templatetype +
-                            "</TEMPLATE-TYPE-REF></CPP-TEMPLATE-ARGUMENT></TEMPLATE-ARGUMENTS>"
+                        saveStr += getters.getEndterStr(enterLine)
+                        saveStr += '<TEMPLATE-ARGUMENTS>'
+                        saveStr += getters.getEndterStr(enterLine + 1)
+                        saveStr += '<CPP-TEMPLATE-ARGUMENT>'
+                        saveStr += getters.getEndterStr(enterLine + 2)
+                        saveStr += '<TEMPLATE-TYPE-REF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].templatetype + "</TEMPLATE-TYPE-REF>"
+                        saveStr += getters.getEndterStr(enterLine + 1)
+                        saveStr += '</CPP-TEMPLATE-ARGUMENT>'
+                        saveStr += getters.getEndterStr(enterLine)
+                        saveStr += "</TEMPLATE-ARGUMENTS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].desc != '') {
-                        saveStr += '<DESC><L-2 L="EN">' + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].desc + "</L-2></DESC>"
+                        saveStr += getters.getEndterStr(enterLine)
+                        saveStr += '<DESC>'
+                        saveStr += getters.getEndterStr(enterLine + 1)
+                        saveStr += '<L-2 L="EN">' + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].desc + "</L-2>"
+                        saveStr += getters.getEndterStr(enterLine)
+                        saveStr += "</DESC>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].ddpc.length > 0) {
-                        saveStr += "<SW-DATA-DEF-PROPS><SW-DATA-DEF-PROPS-VARIANTS>"
+                        saveStr += getters.getEndterStr(enterLine)
+                        saveStr += "<SW-DATA-DEF-PROPS>"
+                        saveStr += getters.getEndterStr(enterLine + 1)
+                        saveStr += "<SW-DATA-DEF-PROPS-VARIANTS>"
                         state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].ddpc.forEach(ele => {
+                            saveStr += getters.getEndterStr(enterLine + 2)
                             saveStr += '<SW-DATA-DEF-PROPS-CONDITIONAL>'
                             if (ele.compumethod != null) {
+                                saveStr += getters.getEndterStr(enterLine + 3)
                                 saveStr += '<COMPU-METHOD-REF DEST="COMPU-METHOD">' + ele.compumethod + '</COMPU-METHOD-REF>'
                             }
                             if (ele.dataconstr != null) {
+                                saveStr += getters.getEndterStr(enterLine + 3)
                                 saveStr += '<DATA-CONSTR-REF DEST="DATA-CONSTR">' + ele.dataconstr + '</DATA-CONSTR-REF>'
                             }
+                            saveStr += getters.getEndterStr(enterLine + 2)
                             saveStr += '</SW-DATA-DEF-PROPS-CONDITIONAL>'
                         })
-                        saveStr += "</SW-DATA-DEF-PROPS-VARIANTS></SW-DATA-DEF-PROPS>"
+                        saveStr += getters.getEndterStr(enterLine + 1)
+                        saveStr += "</SW-DATA-DEF-PROPS-VARIANTS>"
+                        saveStr += getters.getEndterStr(enterLine)
+                        saveStr += "</SW-DATA-DEF-PROPS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].idtelement.length > 0) {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<SUB-ELEMENTS>"
                         state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].idtelement.forEach(ele => {
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "<CPP-IMPLEMENTATION-DATA-TYPE-ELEMENT>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.desc != '') {
-                                saveStr += '<DESC><L-2 L="EN">' + ele.desc + "</L-2></DESC>"
+                                saveStr += getters.getEndterStr(enterLine + 2)
+                                saveStr += '<DESC>'
+                                saveStr += getters.getEndterStr(enterLine + 3)
+                                saveStr += '<L-2 L="EN">' + ele.desc + "</L-2>"
+                                saveStr += getters.getEndterStr(enterLine + 2)
+                                saveStr += "</DESC>"
                             }
                             if (ele.typeref != null) {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<TYPE-REFERENCE>"
+                                saveStr += getters.getEndterStr(enterLine + 3)
                                 saveStr += "<INPLACE>" + ele.inplace + "</INPLACE>"
+                                saveStr += getters.getEndterStr(enterLine + 3)
                                 saveStr += '<TYPE-REFERENCE-REF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + ele.typeref + "</TYPE-REFERENCE-REF>"
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "</TYPE-REFERENCE>"
                             }
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "</CPP-IMPLEMENTATION-DATA-TYPE-ELEMENT>"
                         })
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "</SUB-ELEMENTS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</STD-CPP-IMPLEMENTATION-DATA-TYPE>"
                 } else if (data.parent == constant.Machine_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<MACHINE UUID="' + state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].machinedesign != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<MACHINE-DESIGN-REF DEST="MACHINE-DESIGN">' + state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].machinedesign + "</MACHINE-DESIGN-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].timeout != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<DEFAULT-APPLICATION-TIMEOUT>"
+                        saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += "<EXIT-TIMEOUT-VALUE>" + state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].timeout + "</EXIT-TIMEOUT-VALUE>"
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</DEFAULT-APPLICATION-TIMEOUT>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].hwelement.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<HW-ELEMENT-REFS>"
                         state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].hwelement.forEach(ele => {
                             if (ele.hwelement != null) {
+                                saveStr += getters.getEndterStr(elementTab + 1)
                                 saveStr += '<HW-ELEMENT-REF DEST="HW-ELEMENT">' + ele.hwelement + "</HW-ELEMENT-REF>"
                             }
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</HW-ELEMENT-REFS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].executable != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<TRUSTED-PLATFORM-EXECUTABLE-LAUNCH-BEHAVIOR>" + state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].executable + "</TRUSTED-PLATFORM-EXECUTABLE-LAUNCH-BEHAVIOR>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].admin != '') {
-                        saveStr += '<ADMIN-DATA><SDGS><SDG GID="PER-STORAGE-PATH"><SD GID="PATH">' + state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].admin + "</SD></SDG></SDGS></ADMIN-DATA>"
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += '<ADMIN-DATA>'
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += '<SDGS>'
+                        saveStr += getters.getEndterStr(elementTab + 2)
+                        saveStr += '<SDG GID="PER-STORAGE-PATH">'
+                        saveStr += getters.getEndterStr(elementTab + 3)
+                        saveStr += '<SD GID="PATH">' + state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].admin + "</SD>"
+                        saveStr += getters.getEndterStr(elementTab + 2)
+                        saveStr += '</SDG>'
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += '</SDGS>'
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += "</ADMIN-DATA>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].functiongroup != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<FUNCTION-GROUPS>"
                         state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].functiongroup.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<MODE-DECLARATION-GROUP-PROTOTYPE>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.type != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<TYPE-TREF DEST="MODE-DECLARATION-GROUP">' + ele.type + "</TYPE-TREF>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</MODE-DECLARATION-GROUP-PROTOTYPE>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</FUNCTION-GROUPS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].processor != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<PROCESSORS>"
                         state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].processor.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<PROCESSOR>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.core != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<CORES>"
                                 ele.core.forEach(core => {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<PROCESSOR-CORE>"
                                     if (core.name != '') {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += "<SHORT-NAME>" + core.name + "</SHORT-NAME>"
                                     }
                                     if (core.id != '') {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += "<CORE-ID>" + core.id + "</CORE-ID>"
                                     }
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "</PROCESSOR-CORE>"
                                 })
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "</CORES>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</PROCESSOR>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</PROCESSORS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].moduleinstant != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<MODULE-INSTANTIATIONS>"
                         state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].moduleinstant.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<OS-MODULE-INSTANTIATION>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.resource != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<RESOURCE-GROUPS>"
                                 ele.resource.forEach(res => {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<RESOURCE-GROUP>"
                                     if (res.name != '') {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += "<SHORT-NAME>" + res.name + "</SHORT-NAME>"
                                     }
                                     if (res.cpuUsage != '') {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += "<CPU-USAGE>" + res.cpuUsage + "</CPU-USAGE>"
                                     }
                                     if (res.memoryUsage != '') {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += "<MEM-USAGE>" + res.memoryUsage + "</MEM-USAGE>"
                                     }
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "</RESOURCE-GROUP>"
                                 })
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "</RESOURCE-GROUPS>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</OS-MODULE-INSTANTIATION>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</MODULE-INSTANTIATIONS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</MACHINE>"
                 } else if (data.parent == constant.MachineDesigne_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<MACHINE-DESIGN UUID="' + state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].access != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<ACCESS-CONTROL>" + state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].access + "</ACCESS-CONTROL>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].resettimer != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<PN-RESET-TIMER>" + state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].resettimer + "</PN-RESET-TIMER>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].connector.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<COMMUNICATION-CONNECTORS>"
                         state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].connector.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<ETHERNET-COMMUNICATION-CONNECTOR>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.mtu != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<MAXIMUM-TRANSMISSION-UNIT>" + ele.mtu + "</MAXIMUM-TRANSMISSION-UNIT>"
                             }
                             if (ele.mtuenable != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<PATH-MTU-ENABLED>" + ele.mtuenable + "</PATH-MTU-ENABLED>"
                             }
                             if (ele.timeout != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<PATH-MTU-TIMEOUT>" + ele.timeout + "</PATH-MTU-TIMEOUT>"
                             }
                             if (ele.endpoint != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<UNICAST-NETWORK-ENDPOINT-REF DEST="NETWORK-ENDPOINT">' + ele.endpoint + "</UNICAST-NETWORK-ENDPOINT-REF>"
                             }
                             if (ele.mask != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<PNC-FILTER-DATA-MASK>" + ele.mask + "</PNC-FILTER-DATA-MASK>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</ETHERNET-COMMUNICATION-CONNECTOR>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</COMMUNICATION-CONNECTORS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].servicediscover.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SERVICE-DISCOVER-CONFIGS>"
                         state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[data.idx].servicediscover.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SOMEIP-SERVICE-DISCOVERY>"
                             if (ele.msia != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<MULTICAST-SD-IP-ADDRESS-REF DEST="NETWORK-ENDPOINT">' + ele.msia + "</MULTICAST-SD-IP-ADDRESS-REF>"
                             }
                             if (ele.ssdp != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SOMEIP-SERVICE-DISCOVERY-PORT>" + ele.ssdp + "</SOMEIP-SERVICE-DISCOVERY-PORT>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SOMEIP-SERVICE-DISCOVERY>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</SERVICE-DISCOVER-CONFIGS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</MACHINE-DESIGN>"
                 } else if (data.parent == constant.EthernetCluster_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<ETHERNET-CLUSTER UUID="' + state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[data.idx].conditional.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<ETHERNET-CLUSTER-VARIANTS>"
                         state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[data.idx].conditional.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<ETHERNET-CLUSTER-CONDITIONAL>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<PROTOCOL-NAME>" + ele.name + "</PROTOCOL-NAME>"
                             }
                             if (ele.version != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<PROTOCOL-VERSION>" + ele.version + "</PROTOCOL-VERSION>"
                             }
                             if (ele.channel != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<PHYSICAL-CHANNELS>"
                                 ele.channel.forEach(channel => {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<ETHERNET-PHYSICAL-CHANNEL>"
                                     if (channel.name != '') {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += "<SHORT-NAME>" + channel.name + "</SHORT-NAME>"
                                     }
                                     if (channel.comconnect.length > 0) {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += "<COMM-CONNECTORS>"
                                         channel.comconnect.forEach(com => {
+                                            saveStr += getters.getEndterStr(elementTab + 5)
                                             saveStr += "<COMMUNICATION-CONNECTOR-REF-CONDITIONAL>"
                                             if (com.connector != null) {
+                                                saveStr += getters.getEndterStr(elementTab + 6)
                                                 saveStr += '<COMMUNICATION-CONNECTOR-REF DEST="ETHERNET-COMMUNICATION-CONNECTOR">' + com.connector + "</COMMUNICATION-CONNECTOR-REF>"
                                             }
+                                            saveStr += getters.getEndterStr(elementTab + 5)
                                             saveStr += "</COMMUNICATION-CONNECTOR-REF-CONDITIONAL>"
                                         })
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += "</COMM-CONNECTORS>"
                                     }
                                     if (channel.endpoint.length > 0) {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += "<NETWORK-ENDPOINTS>"
                                         channel.endpoint.forEach(endpoint => {
+                                            saveStr += getters.getEndterStr(elementTab + 5)
                                             saveStr += "<NETWORK-ENDPOINT>"
                                             if (endpoint.name != '') {
+                                                saveStr += getters.getEndterStr(elementTab + 6)
                                                 saveStr += "<SHORT-NAME>" + endpoint.name + "</SHORT-NAME>"
                                             }
                                             if (endpoint.domainname != '') {
+                                                saveStr += getters.getEndterStr(elementTab + 6)
                                                 saveStr += "<FULLY-QUALIFIED-DOMAIN-NAME>" + endpoint.domainname + "</FULLY-QUALIFIED-DOMAIN-NAME>"
                                             }
                                             if (endpoint.ip4address.length > 0 || endpoint.ip6address.length > 0) {
+                                                saveStr += getters.getEndterStr(elementTab + 6)
                                                 saveStr += "<NETWORK-ENDPOINT-ADDRESSES>"
                                             }
                                             if (endpoint.ip4address.length > 0) {
                                                 endpoint.ip4address.forEach(ip4 => {
+                                                    saveStr += getters.getEndterStr(elementTab + 7)
                                                     saveStr += "<IPV-4-CONFIGURATION>"
                                                     if (ip4.gateway != '') {
+                                                        saveStr += getters.getEndterStr(elementTab + 8)
                                                         saveStr += "<DEFAULT-GATEWAY>" + ip4.gateway + "</DEFAULT-GATEWAY>"
                                                     }
                                                     if (ip4.behavior != null) {
+                                                        saveStr += getters.getEndterStr(elementTab + 8)
                                                         saveStr += "<IP-ADDRESS-KEEP-BEHAVIOR>" + ip4.behavior + "</IP-ADDRESS-KEEP-BEHAVIOR>"
                                                     }
                                                     if (ip4.address != '') {
+                                                        saveStr += getters.getEndterStr(elementTab + 8)
                                                         saveStr += "<IPV-4-ADDRESS>" + ip4.address + "</IPV-4-ADDRESS>"
                                                     }
                                                     if (ip4.addresssorce != null) {
+                                                        saveStr += getters.getEndterStr(elementTab + 8)
                                                         saveStr += "<IPV-4-ADDRESS-SOURCE>" + ip4.addresssorce + "</IPV-4-ADDRESS-SOURCE>"
                                                     }
                                                     if (ip4.mask != '') {
+                                                        saveStr += getters.getEndterStr(elementTab + 8)
                                                         saveStr += "<NETWORK-MASK>" + ip4.mask + "</NETWORK-MASK>"
                                                     }
+                                                    saveStr += getters.getEndterStr(elementTab + 7)
                                                     saveStr += "</IPV-4-CONFIGURATION>"
                                                 })
                                             }
                                             if (endpoint.ip6address.length > 0) {
                                                 endpoint.ip6address.forEach(ip6 => {
+                                                    saveStr += getters.getEndterStr(elementTab + 7)
                                                     saveStr += "<IPV-6-CONFIGURATION>"
                                                     if (ip6.priority != '') {
+                                                        saveStr += getters.getEndterStr(elementTab + 8)
                                                         saveStr += "<ASSIGNMENT-PRIORITY>" + ip6.priority + "</ASSIGNMENT-PRIORITY>"
                                                     }
                                                     if (ip6.behavior != null) {
+                                                        saveStr += getters.getEndterStr(elementTab + 8)
                                                         saveStr += "<IP-ADDRESS-KEEP-BEHAVIOR>" + ip6.behavior + "</IP-ADDRESS-KEEP-BEHAVIOR>"
                                                     }
                                                     if (ip6.prelength != '') {
+                                                        saveStr += getters.getEndterStr(elementTab + 8)
                                                         saveStr += "<IP-ADDRESS-PREFIX-LENGTH>" + ip6.prelength + "</IP-ADDRESS-PREFIX-LENGTH>"
                                                     }
-                                                    if (ip6.address != null) {
+                                                    if (ip6.address != '') {
+                                                        saveStr += getters.getEndterStr(elementTab + 8)
                                                         saveStr += "<IPV-6-ADDRESS>" + ip6.address + "</IPV-6-ADDRESS>"
                                                     }
-                                                    if (ip6.addresssource != '') {
+                                                    if (ip6.addresssource != null) {
+                                                        saveStr += getters.getEndterStr(elementTab + 8)
                                                         saveStr += "<IPV-6-ADDRESS-SOURCE>" + ip6.addresssource + "</IPV-6-ADDRESS-SOURCE>"
                                                     }
+                                                    saveStr += getters.getEndterStr(elementTab + 7)
                                                     saveStr += "</IPV-6-CONFIGURATION>"
                                                 })
 
                                             }
                                             if (endpoint.ip4address.length > 0 || endpoint.ip6address.length > 0) {
+                                                saveStr += getters.getEndterStr(elementTab + 6)
                                                 saveStr += "</NETWORK-ENDPOINT-ADDRESSES>"
                                             }
                                             if (endpoint.priority != '') {
+                                                saveStr += getters.getEndterStr(elementTab + 6)
                                                 saveStr += "<PRIORITY>" + endpoint.priority + "</PRIORITY>"
                                             }
+                                            saveStr += getters.getEndterStr(elementTab + 5)
                                             saveStr += "</NETWORK-ENDPOINT>"
                                         })
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += "</NETWORK-ENDPOINTS>"
                                     }
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "</ETHERNET-PHYSICAL-CHANNEL>"
                                 })
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "</PHYSICAL-CHANNELS>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</ETHERNET-CLUSTER-CONDITIONAL>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</ETHERNET-CLUSTER-VARIANTS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</ETHERNET-CLUSTER>"
                 } else if (data.parent == constant.ModeDeclarationGroup_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<MODE-DECLARATION-GROUP UUID="' + state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].initmode != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<INITIAL-MODE-REF DEST="MODE-DECLARATION">' + state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].initmode + "</INITIAL-MODE-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].modedeclaration.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<MODE-DECLARATIONS>"
                         state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].modedeclaration.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<MODE-DECLARATION>"
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<SHORT-NAME>" + ele + "</SHORT-NAME>"
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</MODE-DECLARATION>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</MODE-DECLARATIONS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</MODE-DECLARATION-GROUP>"
                 } else if (data.parent == constant.HWElement_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<HW-ELEMENT UUID="' + state.SAHLProject[state.openProjectIndex].Machine.HWElement[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Machine.HWElement[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[data.idx].category != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<HW-CATEGORY-REFS>"
+                        saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += '<HW-CATEGORY-REF DEST="HW-CATEGORY">' + state.SAHLProject[state.openProjectIndex].Machine.HWElement[data.idx].category + "</HW-CATEGORY-REF>"
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</HW-CATEGORY-REFS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[data.idx].attribute.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<HW-ATTRIBUTE-VALUES>"
                         state.SAHLProject[state.openProjectIndex].Machine.HWElement[data.idx].attribute.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<HW-ATTRIBUTE-VALUE>"
                             if (ele.attr != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<HW-ATTRIBUTE-DEF-REF DEST="HW-ATTRIBUTE-DEF">' + ele.attr + "</HW-ATTRIBUTE-DEF-REF>"
                             }
                             if (ele.vt != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<VT>" + ele.vt + "</VT>"
                             }
                             if (ele.v != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<V>" + ele.v + "</V>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</HW-ATTRIBUTE-VALUE>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</HW-ATTRIBUTE-VALUES>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</HW-ELEMENT>"
                 } else if (data.parent == constant.ProcesstoMachineMapping_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<PROCESS-TO-MACHINE-MAPPING-SET UUID="' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmname != '' ||
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmMachine != null ||
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmProcess != null) {
-                        saveStr += "<PROCESS-TO-MACHINE-MAPPINGS><PROCESS-TO-MACHINE-MAPPING>"
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += "<PROCESS-TO-MACHINE-MAPPINGS>"
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<PROCESS-TO-MACHINE-MAPPING>"
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmname != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmname + "</SHORT-NAME>"
+                        }
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmMachine != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<MACHINE-REF DEST="MACHINE">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmMachine + "</MACHINE-REF>"
+                        }
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmProcess != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<PROCESS-REF DEST="PROCESS">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmProcess + "</PROCESS-REF>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</PROCESS-TO-MACHINE-MAPPING>"
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += "</PROCESS-TO-MACHINE-MAPPINGS>"
                     }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmname != '') {
-                        saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmname + "</SHORT-NAME>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmMachine != null) {
-                        saveStr += '<MACHINE-REF DEST="MACHINE">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmMachine + "</MACHINE-REF>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmProcess != null) {
-                        saveStr += '<PROCESS-REF DEST="PROCESS">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmProcess + "</PROCESS-REF>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmname != '' ||
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmMachine != null ||
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmProcess != null) {
-                        saveStr += "</PROCESS-TO-MACHINE-MAPPING></PROCESS-TO-MACHINE-MAPPINGS>"
-                    }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</PROCESS-TO-MACHINE-MAPPING-SET>"
                 } else if (data.parent == constant.SWComponents_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<ADAPTIVE-APPLICATION-SW-COMPONENT-TYPE UUID="' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport.length > 0 ||
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport.length > 0 ||
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<PORTS>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport.length > 0) {
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport.forEach(ele => {
-                            saveStr += "<P-PORT-PROTOTYPE>"
-                            if (ele.name != '') {
-                                saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
-                            }
-                            if (ele.interface != null) {
-                                saveStr += '<PROVIDED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</PROVIDED-INTERFACE-TREF>"
-                            }
-                            saveStr += "</P-PORT-PROTOTYPE>"
-                        })
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport.length > 0) {
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport.forEach(ele => {
-                            saveStr += "<R-PORT-PROTOTYPE>"
-                            if (ele.name != '') {
-                                saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
-                            }
-                            if (ele.interface != null) {
-                                saveStr += '<REQUIRED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</REQUIRED-INTERFACE-TREF>"
-                            }
-                            saveStr += "</R-PORT-PROTOTYPE>"
-                        })
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport.length > 0) {
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport.forEach(ele => {
-                            saveStr += "<PR-PORT-PROTOTYPE>"
-                            if (ele.name != '') {
-                                saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
-                            }
-                            if (ele.interface != null) {
-                                saveStr += '<PROVIDED-REQUIRED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</PROVIDED-REQUIRED-INTERFACE-TREF>"
-                            }
-                            saveStr += "</PR-PORT-PROTOTYPE>"
-                        })
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport.length > 0 ||
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport.length > 0 ||
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport.length > 0) {
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport.length > 0) {
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].pport.forEach(ele => {
+                                saveStr += getters.getEndterStr(elementTab + 1)
+                                saveStr += "<P-PORT-PROTOTYPE>"
+                                if (ele.name != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 2)
+                                    saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
+                                }
+                                if (ele.interface != null) {
+                                    saveStr += getters.getEndterStr(elementTab + 2)
+                                    saveStr += '<PROVIDED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</PROVIDED-INTERFACE-TREF>"
+                                }
+                                saveStr += getters.getEndterStr(elementTab + 1)
+                                saveStr += "</P-PORT-PROTOTYPE>"
+                            })
+                        }
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport.length > 0) {
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].rport.forEach(ele => {
+                                saveStr += getters.getEndterStr(elementTab + 1)
+                                saveStr += "<R-PORT-PROTOTYPE>"
+                                if (ele.name != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 2)
+                                    saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
+                                }
+                                if (ele.interface != null) {
+                                    saveStr += getters.getEndterStr(elementTab + 2)
+                                    saveStr += '<REQUIRED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</REQUIRED-INTERFACE-TREF>"
+                                }
+                                saveStr += getters.getEndterStr(elementTab + 1)
+                                saveStr += "</R-PORT-PROTOTYPE>"
+                            })
+                        }
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport.length > 0) {
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[data.idx].prport.forEach(ele => {
+                                saveStr += getters.getEndterStr(elementTab + 1)
+                                saveStr += "<PR-PORT-PROTOTYPE>"
+                                if (ele.name != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 2)
+                                    saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
+                                }
+                                if (ele.interface != null) {
+                                    saveStr += getters.getEndterStr(elementTab + 2)
+                                    saveStr += '<PROVIDED-REQUIRED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</PROVIDED-REQUIRED-INTERFACE-TREF>"
+                                }
+                                saveStr += getters.getEndterStr(elementTab + 1)
+                                saveStr += "</PR-PORT-PROTOTYPE>"
+                            })
+                        }
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</PORTS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</ADAPTIVE-APPLICATION-SW-COMPONENT-TYPE>"
                 } else if (data.parent == constant.Process_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<PROCESS UUID="' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].prodesign != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<DESIGN-REF DEST="PROCESS-DESIGN">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].prodesign + "</DESIGN-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].determin != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<DETERMINISTIC-CLIENT-REF DEST="DETERMINISTIC-CLIENT">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].determin + "</DETERMINISTIC-CLIENT-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].execut != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<EXECUTABLE-REF DEST="EXECUTABLE">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].execut + "</EXECUTABLE-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinname != '' ||
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinetype != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<PROCESS-STATE-MACHINE>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinname != '') {
-                        saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinname + "</SHORT-NAME>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinetype != null) {
-                        saveStr += '<TYPE-TREF DEST="MODE-DECLARATION-GROUP">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinetype + "</TYPE-TREF>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinname != '' ||
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinetype != null) {
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinname != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinname + "</SHORT-NAME>"
+                        }
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinetype != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += '<TYPE-TREF DEST="MODE-DECLARATION-GROUP">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinetype + "</TYPE-TREF>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</PROCESS-STATE-MACHINE>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].dependent.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<STATE-DEPENDENT-STARTUP-CONFIGS>"
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].dependent.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<STATE-DEPENDENT-STARTUP-CONFIG>"
                             if (ele.functionItem.length > 0) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<FUNCTION-GROUP-STATE-IREFS>"
                                 ele.functionItem.forEach(fun => {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<FUNCTION-GROUP-STATE-IREF>"
                                     if (fun.contextMode != null) {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += '<CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF DEST="MODE-DECLARATION-GROUP-PROTOTYPE">' + fun.contextMode + "</CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF>"
                                     }
                                     if (fun.targetMode != null) {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
                                         saveStr += '<TARGET-MODE-DECLARATION-REF DEST="MODE-DECLARATION">' + fun.targetMode + "</TARGET-MODE-DECLARATION-REF>"
                                     }
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "</FUNCTION-GROUP-STATE-IREF>"
                                 })
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "</FUNCTION-GROUP-STATE-IREFS>"
                             }
                             if (ele.resourceRef != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<RESOURCE-GROUP-REF DEST="RESOURCE-GROUP">' + ele.resourceRef + "</RESOURCE-GROUP-REF>"
                             }
                             if (ele.startupConfigRef != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<STARTUP-CONFIG-REF DEST="STARTUP-CONFIG">' + ele.startupConfigRef + "</STARTUP-CONFIG-REF>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</STATE-DEPENDENT-STARTUP-CONFIG>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</STATE-DEPENDENT-STARTUP-CONFIGS>"
                     }
-
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</PROCESS>"
                 } else if (data.parent == constant.ProcessDesign_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<PROCESS-DESIGN UUID="' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].executableref != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<EXECUTABLE-REF DEST="EXECUTABLE">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].executableref + "</EXECUTABLE-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].determin.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<DETERMINISTIC-CLIENT-RESOURCE-NEEDSS>"
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[data.idx].determin.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<DETERMINISTIC-CLIENT-RESOURCE-NEEDS>"
                             if (ele.swname != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SHORT-NAME>" + ele.swname + "</SHORT-NAME>"
                             }
                             if (ele.hardwareP != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<HARDWARE-PLATFORM>" + ele.hardwareP + "</HARDWARE-PLATFORM>"
                             }
-                            if (ele.initnofinstruction != '' || ele.initsequentialbegin != '' ||
-                                ele.initsequentialend != '' || ele.initspeedup != '') {
+                            if (ele.initnofinstruction != '' || ele.initsequentialbegin != '' || ele.initsequentialend != '' || ele.initspeedup != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<INIT-RESOURCE>"
-                            }
-                            if (ele.initnofinstruction != '') {
-                                saveStr += "<NUMBER-OF-INSTRUCTIONS>" + ele.initnofinstruction + "</NUMBER-OF-INSTRUCTIONS>"
-                            }
-                            if (ele.initsequentialbegin != '') {
-                                saveStr += "<SEQUENTIAL-INSTRUCTIONS-BEGIN>" + ele.initsequentialbegin + "</SEQUENTIAL-INSTRUCTIONS-BEGIN>"
-                            }
-                            if (ele.initsequentialend != '') {
-                                saveStr += "<SEQUENTIAL-INSTRUCTIONS-END>" + ele.initsequentialend + "</SEQUENTIAL-INSTRUCTIONS-END>"
-                            }
-                            if (ele.initspeedup != '') {
-                                saveStr += "<SPEEDUP>" + ele.initspeedup + "</SPEEDUP>"
-                            }
-                            if (ele.initnofinstruction != '' || ele.initsequentialbegin != '' ||
-                                ele.initsequentialend != '' || ele.initspeedup != '') {
+                                if (ele.initnofinstruction != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "<NUMBER-OF-INSTRUCTIONS>" + ele.initnofinstruction + "</NUMBER-OF-INSTRUCTIONS>"
+                                }
+                                if (ele.initsequentialbegin != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "<SEQUENTIAL-INSTRUCTIONS-BEGIN>" + ele.initsequentialbegin + "</SEQUENTIAL-INSTRUCTIONS-BEGIN>"
+                                }
+                                if (ele.initsequentialend != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "<SEQUENTIAL-INSTRUCTIONS-END>" + ele.initsequentialend + "</SEQUENTIAL-INSTRUCTIONS-END>"
+                                }
+                                if (ele.initspeedup != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "<SPEEDUP>" + ele.initspeedup + "</SPEEDUP>"
+                                }
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "</INIT-RESOURCE>"
                             }
-                            if (ele.runnofinstruction != '' || ele.runsequentialbegin != '' ||
-                                ele.runsequentialend != '' || ele.runspeedup != '') {
+                            if (ele.runnofinstruction != '' || ele.runsequentialbegin != '' || ele.runsequentialend != '' || ele.runspeedup != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<RUN-RESOURCE>"
-                            }
-                            if (ele.runnofinstruction != '') {
-                                saveStr += "<NUMBER-OF-INSTRUCTIONS>" + ele.runnofinstruction + "</NUMBER-OF-INSTRUCTIONS>"
-                            }
-                            if (ele.runsequentialbegin != '') {
-                                saveStr += "<SEQUENTIAL-INSTRUCTIONS-BEGIN>" + ele.runsequentialbegin + "</SEQUENTIAL-INSTRUCTIONS-BEGIN>"
-                            }
-                            if (ele.runsequentialend != '') {
-                                saveStr += "<SEQUENTIAL-INSTRUCTIONS-END>" + ele.runsequentialend + "</SEQUENTIAL-INSTRUCTIONS-END>"
-                            }
-                            if (ele.runspeedup != '') {
-                                saveStr += "<SPEEDUP>" + ele.runspeedup + "</SPEEDUP>"
-                            }
-                            if (ele.runnofinstruction != '' || ele.runsequentialbegin != '' ||
-                                ele.runsequentialend != '' || ele.runspeedup != '') {
+                                if (ele.runnofinstruction != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "<NUMBER-OF-INSTRUCTIONS>" + ele.runnofinstruction + "</NUMBER-OF-INSTRUCTIONS>"
+                                }
+                                if (ele.runsequentialbegin != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "<SEQUENTIAL-INSTRUCTIONS-BEGIN>" + ele.runsequentialbegin + "</SEQUENTIAL-INSTRUCTIONS-BEGIN>"
+                                }
+                                if (ele.runsequentialend != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "<SEQUENTIAL-INSTRUCTIONS-END>" + ele.runsequentialend + "</SEQUENTIAL-INSTRUCTIONS-END>"
+                                }
+                                if (ele.runspeedup != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "<SPEEDUP>" + ele.runspeedup + "</SPEEDUP>"
+                                }
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "</RUN-RESOURCE>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</DETERMINISTIC-CLIENT-RESOURCE-NEEDS>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</DETERMINISTIC-CLIENT-RESOURCE-NEEDSS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</PROCESS-DESIGN>"
                 } else if (data.parent == constant.Executable_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<EXECUTABLE UUID="' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].category != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<CATEGORY>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].category + "</CATEGORY>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].buildType != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<BUILD-TYPE>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].buildType + "</BUILD-TYPE>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].loggingBehabior != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<LOGGING-BEHAVIOR>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].loggingBehabior + "</LOGGING-BEHAVIOR>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].reportingBehabior != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<REPORTING-BEHAVIOR>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].reportingBehabior + "</REPORTING-BEHAVIOR>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].version != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<VERSION>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].version + "</VERSION>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].swname != '' ||
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].applicationtyperef != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<ROOT-SW-COMPONENT-PROTOTYPE>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].swname != '') {
-                        saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].swname + "</SHORT-NAME>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].applicationtyperef != null) {
-                        saveStr += '<APPLICATION-TYPE-TREF DEST="ADAPTIVE-APPLICATION-SW-COMPONENT-TYPE">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].applicationtyperef + "</APPLICATION-TYPE-TREF>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].swname != '' ||
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].applicationtyperef != null) {
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].swname != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].swname + "</SHORT-NAME>"
+                        }
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].applicationtyperef != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += '<APPLICATION-TYPE-TREF DEST="ADAPTIVE-APPLICATION-SW-COMPONENT-TYPE">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[data.idx].applicationtyperef + "</APPLICATION-TYPE-TREF>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</ROOT-SW-COMPONENT-PROTOTYPE>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</EXECUTABLE>"
                 } else if (data.parent == constant.StartupConfig_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<STARTUP-CONFIG-SET UUID="' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].configname != '' ||
@@ -2336,693 +2718,992 @@ export default new Vuex.Store({
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].priority != '' ||
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].entertimeout != '' ||
                         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].exittimeout != '') {
-                        saveStr += "<STARTUP-CONFIGS><STARTUP-CONFIG>"
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += "<STARTUP-CONFIGS>"
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<STARTUP-CONFIG>"
                         if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].configname != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].configname + "</SHORT-NAME>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].policy != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<SCHEDULING-POLICY>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].policy + "</SCHEDULING-POLICY>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].priority != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<SCHEDULING-PRIORITY>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].priority + "</SCHEDULING-PRIORITY>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].entertimeout != '' ||
                             state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].exittimeout != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<TIMEOUT>"
-                        }
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].entertimeout != '') {
-                            saveStr += "<ENTER-TIMEOUT-VALUE>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].entertimeout + "</ENTER-TIMEOUT-VALUE>"
-                        }
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].exittimeout != '') {
-                            saveStr += "<EXIT-TIMEOUT-VALUE>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].exittimeout + "</EXIT-TIMEOUT-VALUE>"
-                        }
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].entertimeout != '' ||
-                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].exittimeout != '') {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].entertimeout != '') {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "<ENTER-TIMEOUT-VALUE>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].entertimeout + "</ENTER-TIMEOUT-VALUE>"
+                            }
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].exittimeout != '') {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "<EXIT-TIMEOUT-VALUE>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].exittimeout + "</EXIT-TIMEOUT-VALUE>"
+                            }
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "</TIMEOUT>"
                         }
-                        saveStr += "</STARTUP-CONFIG></STARTUP-CONFIGS>"
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</STARTUP-CONFIG>"
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += "</STARTUP-CONFIGS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</STARTUP-CONFIG-SET>"
                 } else if (data.parent == constant.DeterministicClient_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<DETERMINISTIC-CLIENT UUID="' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[data.idx].cycletiem != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<CYCLE-TIME-VALUE>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[data.idx].cycletiem + "</CYCLE-TIME-VALUE>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[data.idx].numofworkers != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<NUMBER-OF-WORKERS>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient[data.idx].numofworkers + "</NUMBER-OF-WORKERS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</DETERMINISTIC-CLIENT>"
                 } else if (data.parent == constant.SomeIPServiceInterfaceDeployment_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<SOMEIP-SERVICE-INTERFACE-DEPLOYMENT UUID="' + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].service != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<SERVICE-INTERFACE-REF DEST="SERVICE-INTERFACE">' + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].service + "</SERVICE-INTERFACE-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].majversion != '' ||
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].minversion != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SERVICE-INTERFACE-VERSION>"
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].majversion != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<MAJOR-VERSION>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].majversion + "</MAJOR-VERSION>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].minversion != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<MINOR-VERSION>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].minversion + "</MINOR-VERSION>"
                         }
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</SERVICE-INTERFACE-VERSION>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].id != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SERVICE-INTERFACE-ID>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].id + "</SERVICE-INTERFACE-ID>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].eventG.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<EVENT-GROUPS>"
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].eventG.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SOMEIP-EVENT-GROUP>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.id != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<EVENT-GROUP-ID>" + ele.id + "</EVENT-GROUP-ID>"
                             }
                             if (ele.event != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<EVENT-REFS>"
                                 ele.event.forEach(item => {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += '<EVENT-REF DEST="SOMEIP-EVENT-DEPLOYMENT">' + item.event + "</EVENT-REF>"
                                 })
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "</EVENT-REFS>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SOMEIP-EVENT-GROUP>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</EVENT-GROUPS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].eventD.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<EVENT-DEPLOYMENTS>"
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].eventD.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SOMEIP-EVENT-DEPLOYMENT>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.event != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<EVENT-REF DEST="VARIABLE-DATA-PROTOTYPE">' + ele.event + "</EVENT-REF>"
                             }
                             if (ele.id != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<EVENT-ID>" + ele.id + "</EVENT-ID>"
                             }
                             if (ele.maxlength != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<MAXIMUM-SEGMENT-LENGTH>" + ele.maxlength + "</MAXIMUM-SEGMENT-LENGTH>"
                             }
                             if (ele.time != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SEPARATION-TIME>" + ele.time + "</SEPARATION-TIME>"
                             }
                             if (ele.serializer != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<SERIALIZER>' + ele.serializer + "</SERIALIZER>"
                             }
                             if (ele.protocal != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<TRANSPORT-PROTOCOL>' + ele.protocal + "</TRANSPORT-PROTOCOL>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SOMEIP-EVENT-DEPLOYMENT>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</EVENT-DEPLOYMENTS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].methodD.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<METHOD-DEPLOYMENTS>"
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].methodD.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SOMEIP-METHOD-DEPLOYMENT>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.method != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<METHOD-REF DEST="CLIENT-SERVER-OPERATION">' + ele.method + "</METHOD-REF>"
                             }
                             if (ele.id != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<METHOD-ID>" + ele.id + "</METHOD-ID>"
                             }
                             if (ele.maxrequest != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<MAXIMUM-SEGMENT-LENGTH-REQUEST>" + ele.maxrequest + "</MAXIMUM-SEGMENT-LENGTH-REQUEST>"
                             }
                             if (ele.maxresponse != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<MAXIMUM-SEGMENT-LENGTH-RESPONSE>" + ele.maxresponse + "</MAXIMUM-SEGMENT-LENGTH-RESPONSE>"
                             }
                             if (ele.timerequest != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SEPARATION-TIME-REQUEST>" + ele.timerequest + "</SEPARATION-TIME-REQUEST>"
                             }
                             if (ele.timeresponse != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SEPARATION-TIME-RESPONSE>" + ele.timeresponse + "</SEPARATION-TIME-RESPONSE>"
                             }
                             if (ele.protocal != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<TRANSPORT-PROTOCOL>' + ele.protocal + "</TRANSPORT-PROTOCOL>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SOMEIP-METHOD-DEPLOYMENT>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</METHOD-DEPLOYMENTS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].fieldD.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<FIELD-DEPLOYMENTS>"
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[data.idx].fieldD.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SOMEIP-FIELD-DEPLOYMENT>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.field != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<FIELD-REF DEST="FIELD">' + ele.field + "</FIELD-REF>"
                             }
                             if (ele.getname != '' || ele.getid != '' || ele.getmaxreq != '' ||
                                 ele.getmaxres != '' || ele.gettimereq != '' || ele.gettimeres != '' || ele.getproto != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<GET>"
                                 if (ele.getname != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<SHORT-NAME>" + ele.getname + "</SHORT-NAME>"
                                 }
                                 if (ele.getid != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<METHOD-ID>" + ele.getid + "</METHOD-ID>"
                                 }
                                 if (ele.getmaxreq != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<MAXIMUM-SEGMENT-LENGTH-REQUEST>" + ele.getmaxreq + "</MAXIMUM-SEGMENT-LENGTH-REQUEST>"
                                 }
                                 if (ele.getmaxres != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<MAXIMUM-SEGMENT-LENGTH-RESPONSE>" + ele.getmaxres + "</MAXIMUM-SEGMENT-LENGTH-RESPONSE>"
                                 }
                                 if (ele.gettimereq != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<SEPARATION-TIME-REQUEST>" + ele.gettimereq + "</SEPARATION-TIME-REQUEST>"
                                 }
                                 if (ele.gettimeres != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<SEPARATION-TIME-RESPONSE>" + ele.gettimeres + "</SEPARATION-TIME-RESPONSE>"
                                 }
                                 if (ele.getproto != null) {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += '<TRANSPORT-PROTOCOL>' + ele.getproto + "</TRANSPORT-PROTOCOL>"
                                 }
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "</GET>"
                             }
                             if (ele.setname != '' || ele.setid != '' || ele.setmaxreq != '' ||
                                 ele.setmaxres != '' || ele.settimereq != '' || ele.settimeres != '' || ele.setproto != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SET>"
                                 if (ele.setname != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<SHORT-NAME>" + ele.setname + "</SHORT-NAME>"
                                 }
                                 if (ele.setid != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<METHOD-ID>" + ele.setid + "</METHOD-ID>"
                                 }
                                 if (ele.setmaxreq != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<MAXIMUM-SEGMENT-LENGTH-REQUEST>" + ele.setmaxreq + "</MAXIMUM-SEGMENT-LENGTH-REQUEST>"
                                 }
                                 if (ele.setmaxres != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<MAXIMUM-SEGMENT-LENGTH-RESPONSE>" + ele.setmaxres + "</MAXIMUM-SEGMENT-LENGTH-RESPONSE>"
                                 }
                                 if (ele.settimereq != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<SEPARATION-TIME-REQUEST>" + ele.settimereq + "</SEPARATION-TIME-REQUEST>"
                                 }
                                 if (ele.settimeres != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<SEPARATION-TIME-RESPONSE>" + ele.settimeres + "</SEPARATION-TIME-RESPONSE>"
                                 }
                                 if (ele.setproto != null) {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += '<TRANSPORT-PROTOCOL>' + ele.setproto + "</TRANSPORT-PROTOCOL>"
                                 }
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "</SET>"
                             }
                             if (ele.notname != '' || ele.notid != '' || ele.notmax != '' ||
                                 ele.nottime != '' || ele.notserial != null || ele.notproto != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<NOTIFIER>"
                                 if (ele.notname != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<SHORT-NAME>" + ele.notname + "</SHORT-NAME>"
                                 }
                                 if (ele.notid != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<EVENT-ID>" + ele.notid + "</EVENT-ID>"
                                 }
                                 if (ele.notmax != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<MAXIMUM-SEGMENT-LENGTH>" + ele.notmax + "</MAXIMUM-SEGMENT-LENGTH>"
                                 }
                                 if (ele.nottime != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<SEPARATION-TIME>" + ele.nottime + "</SEPARATION-TIME>"
                                 }
                                 if (ele.notserial != null) {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += "<SERIALIZER>" + ele.notserial + "</SERIALIZER>"
                                 }
                                 if (ele.notproto != null) {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
                                     saveStr += '<TRANSPORT-PROTOCOL>' + ele.notproto + "</TRANSPORT-PROTOCOL>"
                                 }
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "</NOTIFIER>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SOMEIP-FIELD-DEPLOYMENT>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</FIELD-DEPLOYMENTS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</SOMEIP-SERVICE-INTERFACE-DEPLOYMENT>"
                 } else if (data.parent == constant.ServiceInterface_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<SERVICE-INTERFACE UUID="' + state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].majversion != '') {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<MAJOR-VERSION>" + state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].majversion + "</MAJOR-VERSION>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].minversion != '') {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<MINOR-VERSION>" + state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].minversion + "</MINOR-VERSION>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].namespace != '') {
                         namespace = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].namespace.split(',')
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<NAMESPACES>"
                         namespace.forEach(ele => {
                             var symbol = ele.split('/')
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "<SYMBOL-PROPS>"
+                            saveStr += getters.getEndterStr(enterLine + 2)
                             saveStr += "<SHORT-NAME>" + symbol[0] + "</SHORT-NAME>"
+                            saveStr += getters.getEndterStr(enterLine + 2)
                             saveStr += "<SYMBOL>" + symbol[1] + "</SYMBOL>"
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "</SYMBOL-PROPS>"
                         })
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "</NAMESPACES>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].isservice != '') {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<IS-SERVICE>" + state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].isservice + "</IS-SERVICE>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].events.length > 0) {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<EVENTS>"
                         state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].events.forEach(ele => {
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "<VARIABLE-DATA-PROTOTYPE>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.type != null) {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += '<TYPE-TREF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + ele.type + "</TYPE-TREF>"
                             }
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "</VARIABLE-DATA-PROTOTYPE>"
                         })
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "</EVENTS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].fields.length > 0) {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<FIELDS>"
                         state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].fields.forEach(ele => {
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "<FIELD>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.type != null) {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += '<TYPE-TREF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + ele.type + "</TYPE-TREF>"
                             }
                             if (ele.getter != null) {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<HAS-GETTER>" + ele.getter + "</HAS-GETTER>"
                             }
                             if (ele.setter != null) {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<HAS-SETTER>" + ele.setter + "</HAS-SETTER>"
                             }
                             if (ele.notifier != null) {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<HAS-NOTIFIER>" + ele.notifier + "</HAS-NOTIFIER>"
                             }
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "</FIELD>"
                         })
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "</FIELDS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].methods.length > 0) {
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<METHODS>"
                         state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].methods.forEach(ele => {
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "<CLIENT-SERVER-OPERATION>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.fireforget != null) {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<FIRE-AND-FORGET>" + ele.fireforget + "</FIRE-AND-FORGET>"
                             }
                             if (ele.argument.length > 0) {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<ARGUMENTS>"
                                 ele.argument.forEach(arg => {
+                                    saveStr += getters.getEndterStr(enterLine + 3)
                                     saveStr += "<ARGUMENT-DATA-PROTOTYPE>"
                                     if (arg.name != '') {
+                                        saveStr += getters.getEndterStr(enterLine + 4)
                                         saveStr += "<SHORT-NAME>" + arg.name + "</SHORT-NAME>"
                                     }
                                     if (arg.type != null) {
+                                        saveStr += getters.getEndterStr(enterLine + 4)
                                         saveStr += '<TYPE-TREF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + arg.type + "</TYPE-TREF>"
                                     }
                                     if (arg.dir != null) {
+                                        saveStr += getters.getEndterStr(enterLine + 4)
                                         saveStr += "<DIRECTION>" + arg.dir + "</DIRECTION>"
                                     }
                                     if (arg.descrip != '') {
-                                        saveStr += '<DESC><L-2 L="EN">' + arg.descrip + "</L-2></DESC>"
+                                        saveStr += getters.getEndterStr(enterLine + 4)
+                                        saveStr += '<DESC>'
+                                        saveStr += getters.getEndterStr(enterLine + 5)
+                                        saveStr += '<L-2 L="EN">' + arg.descrip + "</L-2>"
+                                        saveStr += getters.getEndterStr(enterLine + 4)
+                                        saveStr += "</DESC>"
                                     }
+                                    saveStr += getters.getEndterStr(enterLine + 3)
                                     saveStr += "</ARGUMENT-DATA-PROTOTYPE>"
                                 })
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "</ARGUMENTS>"
                             }
                             if (ele.errorSet.length > 0) {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<POSSIBLE-AP-ERROR-SET-REFS>"
                                 ele.errorSet.forEach(errset => {
                                     if (errset.error != null) {
+                                        saveStr += getters.getEndterStr(enterLine + 3)
                                         saveStr += '<POSSIBLE-AP-ERROR-SET-REF DEST="AP-APPLICATION-ERROR-SET">' + errset.error + "</POSSIBLE-AP-ERROR-SET-REF>"
                                     }
                                 })
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "</POSSIBLE-AP-ERROR-SET-REFS>"
                             }
                             if (ele.error.length > 0) {
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "<POSSIBLE-AP-ERROR-REFS>"
                                 ele.error.forEach(err => {
                                     if (err.error != null) {
+                                        saveStr += getters.getEndterStr(enterLine + 3)
                                         saveStr += '<POSSIBLE-AP-ERROR-REF DEST="AP-APPLICATION-ERROR">' + err.error + "</POSSIBLE-AP-ERROR-REF>"
                                     }
                                 })
+                                saveStr += getters.getEndterStr(enterLine + 2)
                                 saveStr += "</POSSIBLE-AP-ERROR-REFS>"
                             }
                             if (ele.descrip != '') {
-                                saveStr += '<DESC><L-2 L="EN">' + ele.descrip + "</L-2></DESC>"
+                                saveStr += getters.getEndterStr(enterLine + 2)
+                                saveStr += '<DESC>'
+                                saveStr += getters.getEndterStr(enterLine + 3)
+                                saveStr += '<L-2 L="EN">' + ele.descrip + "</L-2>"
+                                saveStr += getters.getEndterStr(enterLine + 2)
+                                saveStr += "</DESC>"
                             }
+                            saveStr += getters.getEndterStr(enterLine + 1)
                             saveStr += "</CLIENT-SERVER-OPERATION>"
                         })
+                        saveStr += getters.getEndterStr(enterLine)
                         saveStr += "</METHODS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</SERVICE-INTERFACE>"
                 } else if (data.parent == constant.Client_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<SOMEIP-SD-CLIENT-EVENT-GROUP-TIMING-CONFIG UUID="' + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].retrydelay != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SUBSCRIBE-EVENTGROUP-RETRY-DELAY>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].retrydelay + "</SUBSCRIBE-EVENTGROUP-RETRY-DELAY>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].retrymax != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SUBSCRIBE-EVENTGROUP-RETRY-MAX>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].retrymax + "</SUBSCRIBE-EVENTGROUP-RETRY-MAX>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].timetolive != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<TIME-TO-LIVE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].timetolive + "</TIME-TO-LIVE>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].delaymax != '' ||
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].delaymin != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<REQUEST-RESPONSE-DELAY>"
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].delaymax != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<MAX-VALUE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].delaymax + "</MAX-VALUE>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].delaymin != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<MIN-VALUE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[data.idx].delaymin + "</MIN-VALUE>"
                         }
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</REQUEST-RESPONSE-DELAY>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</SOMEIP-SD-CLIENT-EVENT-GROUP-TIMING-CONFIG>"
                 } else if (data.parent == constant.Server_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<SOMEIP-SD-SERVER-EVENT-GROUP-TIMING-CONFIG UUID="' + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[data.idx].delaymax != '' ||
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[data.idx].delaymin != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<REQUEST-RESPONSE-DELAY>"
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[data.idx].delaymax != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<MAX-VALUE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[data.idx].delaymax + "</MAX-VALUE>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[data.idx].delaymin != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<MIN-VALUE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[data.idx].delaymin + "</MIN-VALUE>"
                         }
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</REQUEST-RESPONSE-DELAY>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</SOMEIP-SD-SERVER-EVENT-GROUP-TIMING-CONFIG>"
                 } else if (data.parent == constant.SomeIPClient_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<SOMEIP-SD-CLIENT-SERVICE-INSTANCE-CONFIG UUID="' + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].findtime != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SERVICE-FIND-TIME-TO-LIVE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].findtime + "</SERVICE-FIND-TIME-TO-LIVE>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inidelaymax != '' ||
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inidelaymin != '' ||
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inibasedelay != '' ||
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inirepetimax != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<INITIAL-FIND-BEHAVIOR>"
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inidelaymax != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<INITIAL-DELAY-MAX-VALUE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inidelaymax + "</INITIAL-DELAY-MAX-VALUE>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inidelaymin != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<INITIAL-DELAY-MIN-VALUE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inidelaymin + "</INITIAL-DELAY-MIN-VALUE>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inibasedelay != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<INITIAL-REPETITIONS-BASE-DELAY>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inibasedelay + "</INITIAL-REPETITIONS-BASE-DELAY>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inirepetimax != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<INITIAL-REPETITIONS-MAX>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[data.idx].inirepetimax + "</INITIAL-REPETITIONS-MAX>"
                         }
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</INITIAL-FIND-BEHAVIOR>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</SOMEIP-SD-CLIENT-SERVICE-INSTANCE-CONFIG>"
                 } else if (data.parent == constant.SomeIPServer_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<SOMEIP-SD-SERVER-SERVICE-INSTANCE-CONFIG UUID="' + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inidelaymax != '' ||
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inidelaymin != '' ||
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inibasedelay != '' ||
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inirepetimax != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<INITIAL-OFFER-BEHAVIOR>"
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inidelaymax != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<INITIAL-DELAY-MAX-VALUE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inidelaymax + "</INITIAL-DELAY-MAX-VALUE>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inidelaymin != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<INITIAL-DELAY-MIN-VALUE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inidelaymin + "</INITIAL-DELAY-MIN-VALUE>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inibasedelay != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<INITIAL-REPETITIONS-BASE-DELAY>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inibasedelay + "</INITIAL-REPETITIONS-BASE-DELAY>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inirepetimax != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<INITIAL-REPETITIONS-MAX>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].inirepetimax + "</INITIAL-REPETITIONS-MAX>"
                         }
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</INITIAL-OFFER-BEHAVIOR>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].delaymax != '' ||
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].delaymin != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<REQUEST-RESPONSE-DELAY>"
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].delaymax != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<MAX-VALUE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].delaymax + "</MAX-VALUE>"
                         }
                         if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].delaymin != '') {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<MIN-VALUE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].delaymin + "</MIN-VALUE>"
                         }
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</REQUEST-RESPONSE-DELAY>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].offer != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<OFFER-CYCLIC-DELAY>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].offer + "</OFFER-CYCLIC-DELAY>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].timetolive != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SERVICE-OFFER-TIME-TO-LIVE>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[data.idx].timetolive + "</SERVICE-OFFER-TIME-TO-LIVE>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</SOMEIP-SD-SERVER-SERVICE-INSTANCE-CONFIG>"
                 } else if (data.parent == constant.SomeIPToMachineMapping_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<SOMEIP-SERVICE-INSTANCE-TO-MACHINE-MAPPING UUID="' + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].ccref != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<COMMUNICATION-CONNECTOR-REF DEST="ETHERNET-COMMUNICATION-CONNECTOR">' + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].ccref + "</COMMUNICATION-CONNECTOR-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].siref != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SERVICE-INSTANCE-REFS>"
+                        saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += '<SERVICE-INSTANCE-REF DEST="PROVIDED-SOMEIP-SERVICE-INSTANCE">' + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].siref + "</SERVICE-INSTANCE-REF>"
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</SERVICE-INSTANCE-REFS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].tcp != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<TCP-PORT>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].tcp + "</TCP-PORT>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].udp != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<UDP-PORT>" + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].udp + "</UDP-PORT>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</SOMEIP-SERVICE-INSTANCE-TO-MACHINE-MAPPING>"
                 } else if (data.parent == constant.ToPortPrototypeMapping_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<SERVICE-INSTANCE-TO-PORT-PROTOTYPE-MAPPING UUID="' + state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].porttype != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<PORT-PROTOTYPE-IREF>"
                         if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].selectPort == "P-PORT-PROTOTYPE") {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += '<TARGET-PORT-PROTOTYPE-REF DEST="P-PORT-PROTOTYPE">' + state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].porttype + "</TARGET-PORT-PROTOTYPE-REF>"
                         } else if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].selectPort == "R-PORT-PROTOTYPE") {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += '<TARGET-PORT-PROTOTYPE-REF DEST="R-PORT-PROTOTYPE">' + state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].porttype + "</TARGET-PORT-PROTOTYPE-REF>"
                         } else if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].selectPort == "PR-PORT-PROTOTYPE") {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += '<TARGET-PORT-PROTOTYPE-REF DEST="PR-PORT-PROTOTYPE">' + state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].porttype + "</TARGET-PORT-PROTOTYPE-REF>"
                         }
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</PORT-PROTOTYPE-IREF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].process != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<PROCESS-REF DEST="PROCESS-DESIGN">' + state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].process + "</PROCESS-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].serviceIns != null) {
                         if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].selectServiceIns == "PROVIDED-SOMEIP-SERVICE-INSTANCE") {
+                            saveStr += getters.getEndterStr(elementTab)
                             saveStr += '<SERVICE-INSTANCE-REF DEST="PROVIDED-SOMEIP-SERVICE-INSTANCE">' + state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].serviceIns + "</SERVICE-INSTANCE-REF>"
                         } else if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].selectServiceIns == "REQUIRED-SOMEIP-SERVICE-INSTANCE") {
+                            saveStr += getters.getEndterStr(elementTab)
                             saveStr += '<SERVICE-INSTANCE-REF DEST="REQUIRED-SOMEIP-SERVICE-INSTANCE">' + state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].serviceIns + "</SERVICE-INSTANCE-REF>"
                         }
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</SERVICE-INSTANCE-TO-PORT-PROTOTYPE-MAPPING>"
                 } else if (data.parent == constant.RequiredSomeIP_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<REQUIRED-SOMEIP-SERVICE-INSTANCE UUID="' + state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].deployref != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<SERVICE-INTERFACE-DEPLOYMENT-REF DEST="SOMEIP-SERVICE-INTERFACE-DEPLOYMENT">' + state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].deployref + "</SERVICE-INTERFACE-DEPLOYMENT-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].minorver != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<REQUIRED-MINOR-VERSION>" + state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].minorver + "</REQUIRED-MINOR-VERSION>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].serviceInsid != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<REQUIRED-SERVICE-INSTANCE-ID>" + state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].serviceInsid + "</REQUIRED-SERVICE-INSTANCE-ID>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].someipclient != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<SD-CLIENT-CONFIG-REF DEST="SOMEIP-SD-CLIENT-SERVICE-INSTANCE-CONFIG">' + state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].someipclient + "</SD-CLIENT-CONFIG-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].version != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<VERSION-DRIVEN-FIND-BEHAVIOR>" + state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].version + "</VERSION-DRIVEN-FIND-BEHAVIOR>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].method.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<METHOD-REQUEST-PROPSS>"
                         state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].method.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SOMEIP-METHOD-PROPS>"
                             if (ele.method != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<METHOD-REF DEST="SOMEIP-METHOD-DEPLOYMENT">' + ele.method + "</METHOD-REF>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SOMEIP-METHOD-PROPS>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</METHOD-REQUEST-PROPSS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].requiredevent.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<REQUIRED-EVENT-GROUPS>"
                         state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].requiredevent.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SOMEIP-REQUIRED-EVENT-GROUP>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.eventG != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<EVENT-GROUP-REF DEST="SOMEIP-EVENT-GROUP">' + ele.eventG + "</EVENT-GROUP-REF>"
                             }
                             if (ele.client != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<SD-CLIENT-EVENT-GROUP-TIMING-CONFIG-REF DEST="SOMEIP-SD-CLIENT-EVENT-GROUP-TIMING-CONFIG">' + ele.client + "</SD-CLIENT-EVENT-GROUP-TIMING-CONFIG-REF>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SOMEIP-REQUIRED-EVENT-GROUP>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</REQUIRED-EVENT-GROUPS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</REQUIRED-SOMEIP-SERVICE-INSTANCE>"
                 } else if (data.parent == constant.ProvidedSomeIP_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<PROVIDED-SOMEIP-SERVICE-INSTANCE UUID="' + state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].deployref != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<SERVICE-INTERFACE-DEPLOYMENT-REF DEST="SOMEIP-SERVICE-INTERFACE-DEPLOYMENT">' + state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].deployref + "</SERVICE-INTERFACE-DEPLOYMENT-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].someipserver != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<SD-SERVER-CONFIG-REF DEST="SOMEIP-SD-SERVER-SERVICE-INSTANCE-CONFIG">' + state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].someipserver + "</SD-SERVER-CONFIG-REF>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].instanceid != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SERVICE-INSTANCE-ID>" + state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].instanceid + "</SERVICE-INSTANCE-ID>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].eventP.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<EVENT-PROPSS>"
                         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].eventP.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SOMEIP-EVENT-PROPS>"
                             if (ele.event != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<EVENT-REF DEST="SOMEIP-EVENT-DEPLOYMENT">' + ele.event + "</EVENT-REF>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SOMEIP-EVENT-PROPS>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</EVENT-PROPSS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].method != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<METHOD-RESPONSE-PROPSS>"
                         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].method.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SOMEIP-METHOD-PROPS>"
                             if (ele.method != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<METHOD-REF DEST="SOMEIP-METHOD-DEPLOYMENT">' + ele.method + "</METHOD-REF>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SOMEIP-METHOD-PROPS>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</METHOD-RESPONSE-PROPSS>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].eventG.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<PROVIDED-EVENT-GROUPS>"
                         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].eventG.forEach(ele => {
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SOMEIP-PROVIDED-EVENT-GROUP>"
                             if (ele.name != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                             }
                             if (ele.eventG != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<EVENT-GROUP-REF DEST="SOMEIP-EVENT-GROUP">' + ele.eventG + "</EVENT-GROUP-REF>"
                             }
                             if (ele.udp != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<EVENT-MULTICAST-UDP-PORT>" + ele.udp + "</EVENT-MULTICAST-UDP-PORT>"
                             }
                             if (ele.ipv4 != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<IPV-4-MULTICAST-IP-ADDRESS>" + ele.ipv4 + "</IPV-4-MULTICAST-IP-ADDRESS>"
                             }
                             if (ele.ipv6 != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<IPV-6-MULTICAST-IP-ADDRESS>" + ele.ipv6 + "</IPV-6-MULTICAST-IP-ADDRESS>"
                             }
                             if (ele.threshold != '') {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<MULTICAST-THRESHOLD>" + ele.threshold + "</MULTICAST-THRESHOLD>"
                             }
                             if (ele.server != null) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += '<SD-SERVER-EVENT-GROUP-TIMING-CONFIG-REF DEST="SOMEIP-SD-SERVER-EVENT-GROUP-TIMING-CONFIG">' + ele.server + "</SD-SERVER-EVENT-GROUP-TIMING-CONFIG-REF>"
                             }
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SOMEIP-PROVIDED-EVENT-GROUP>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</PROVIDED-EVENT-GROUPS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</PROVIDED-SOMEIP-SERVICE-INSTANCE>"
                 } else if (data.parent == constant.Error_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<AP-APPLICATION-ERROR UUID="' + state.SAHLProject[state.openProjectIndex].Service.Error[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.Error[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.Error[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.Error[data.idx].desc != '') {
-                        saveStr += '<DESC><L-2 L="EN">' + state.SAHLProject[state.openProjectIndex].Service.Error[data.idx].desc + "</L-2></DESC>"
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += '<DESC>'
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += '<L-2 L="EN">' + state.SAHLProject[state.openProjectIndex].Service.Error[data.idx].desc + "</L-2>"
+                        saveStr += getters.getEndterStr(elementTab)
+                        saveStr += "</DESC>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.Error[data.idx].errorcode != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<ERROR-CODE>" + state.SAHLProject[state.openProjectIndex].Service.Error[data.idx].errorcode + "</ERROR-CODE>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.Error[data.idx].errorDref != null) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += '<ERROR-DOMAIN-REF DEST="AP-APPLICATION-ERROR-DOMAIN">' + state.SAHLProject[state.openProjectIndex].Service.Error[data.idx].errorDref + "</ERROR-DOMAIN-REF>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</AP-APPLICATION-ERROR>"
                 } else if (data.parent == constant.Errorset_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<AP-APPLICATION-ERROR-SET UUID="' + state.SAHLProject[state.openProjectIndex].Service.ErrorSet[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.ErrorSet[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.ErrorSet[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ErrorSet[data.idx].errorref.length > 0) {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<AP-APPLICATION-ERROR-REFS>"
                         state.SAHLProject[state.openProjectIndex].Service.ErrorSet[data.idx].errorref.forEach(ele => {
                             if (ele.error != null) {
+                                saveStr += getters.getEndterStr(elementTab + 1)
                                 saveStr += '<AP-APPLICATION-ERROR-REF DEST="AP-APPLICATION-ERROR">' + ele.error + "</AP-APPLICATION-ERROR-REF>"
                             }
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</AP-APPLICATION-ERROR-REFS>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</AP-APPLICATION-ERROR-SET>"
                 } else if (data.parent == constant.ErrorDomain_str) {
+                    saveStr += getters.getEndterStr(++enterLine)
+                    elementTab = enterLine + 1
                     saveStr += '<AP-APPLICATION-ERROR-DOMAIN UUID="' + state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[data.idx].uuid + '">'
                     if (state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[data.idx].name != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[data.idx].name + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[data.idx].namespace != '') {
                         namespace = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[data.idx].namespace.split(',')
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<NAMESPACES>"
                         namespace.forEach(ele => {
                             var symbol = ele.split('/')
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SYMBOL-PROPS>"
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<SHORT-NAME>" + symbol[0] + "</SHORT-NAME>"
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<SYMBOL>" + symbol[1] + "</SYMBOL>"
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SYMBOL-PROPS>"
                         })
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</NAMESPACES>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[data.idx].value != '') {
+                        saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<VALUE>" + state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[data.idx].value + "</VALUE>"
                     }
+                    saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</AP-APPLICATION-ERROR-DOMAIN>"
                 }
                 console.log(saveStr)
             })
             var repeat = savelist[savelist.length - 1].path.split('/').length
+            saveStr += getters.getEndterStr(--enterLine)
             saveStr += "</ELEMENTS>"
             console.log('endPath = ' + endPath + ' / ' + 'repeat = ' + repeat)
             while (repeat--) {
-                saveStr += "</AR-PACKAGE></AR-PACKAGES>"
+                saveStr += getters.getEndterStr(--enterLine)
+                saveStr += "</AR-PACKAGE>"
+                saveStr += getters.getEndterStr(--enterLine)
+                saveStr += "</AR-PACKAGES>"
             }
+            saveStr += getters.getEndterStr(--enterLine)
             saveStr += "</AUTOSAR>"
 
             const parser = new DOMParser() //XML이 포함된 문자열을 구문 분석하여 입력 데이터를 기반으로 XMLDocument 또는 문서를 적절히 반환하여 DOM 트리를 생성합니다.
@@ -3786,7 +4467,6 @@ export default new Vuex.Store({
             state.strSavePath = state.strSavePath.filter(item => {
                 return payload.deletePath.indexOf(item) < 0
             })
-
             localStorage.setItem("savePath", JSON.stringify(state.strSavePath))
         },
         setzIndex(state, payload) {
@@ -3866,14 +4546,12 @@ export default new Vuex.Store({
 
                 ele.childNodes.forEach(item => {
                     if (item.nodeName == "SHORT-NAME") {
-                        path = item.childNodes[0].nodeValue + '/' + path
+                        path = '/' + item.childNodes[0].nodeValue + '/' + path
                     }
                 })
                 path = path.substr(0, path.length - 1)
                 return path
             }
-            const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-            const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
             /// COMPU-METHOD
             var compu = payload.xmlDoc.getElementsByTagName('COMPU-METHOD')
@@ -3892,28 +4570,32 @@ export default new Vuex.Store({
                             compuCate = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "COMPU-INTERNAL-TO-PHYS") {
-                            var scales = item.childNodes[0].childNodes
-                            scales.forEach(scale => {
-                                var editScaleItem = { const: '', symbol: '', lowerlimit: '', upperlimit: '', desc: '' }
-                                scale.childNodes.forEach(data => {
-                                    if (data.nodeName == "COMPU-CONST") {
-                                        editScaleItem.const = data.childNodes[0].childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "SYMBOL") {
-                                        editScaleItem.symbol = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "LOWER-LIMIT") {
-                                        editScaleItem.lowerlimit = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "UPPER-LIMIT") {
-                                        editScaleItem.upperlimit = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "DESC") {
-                                        editScaleItem.desc = data.childNodes[0].childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editScaleItem)
-                                scalesItem.push(addObj)
+                            var scales = item.childNodes[1].childNodes
+                            scales.forEach((scale, s) => {
+                                if (s % 2 != 0) {
+                                    var editScaleItem = { const: '', symbol: '', lowerlimit: '', upperlimit: '', desc: '' }
+                                    scale.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "COMPU-CONST") {
+                                                editScaleItem.const = data.childNodes[1].childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "SYMBOL") {
+                                                editScaleItem.symbol = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "LOWER-LIMIT") {
+                                                editScaleItem.lowerlimit = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "UPPER-LIMIT") {
+                                                editScaleItem.upperlimit = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "DESC") {
+                                                editScaleItem.desc = data.childNodes[1].childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editScaleItem)
+                                    scalesItem.push(addObj)
+                                }
                             })
                         }
                     })
@@ -3922,6 +4604,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementCompuMehtod', {
                         input: true,
                         path: strPath,
@@ -3953,7 +4638,7 @@ export default new Vuex.Store({
                             dataconName = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "DATA-CONSTR-RULES") {
-                            var rules = item.childNodes[0].childNodes[0].childNodes
+                            var rules = item.childNodes[1].childNodes[1].childNodes
                             rules.forEach(data => {
                                 if (data.nodeName == "LOWER-LIMIT") {
                                     dataconLow = data.childNodes[0].nodeValue
@@ -3969,6 +4654,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementDataConstr', {
                         input: true,
                         path: strPath,
@@ -4031,6 +4719,8 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
                     this.commit('addElementApplicationArray', {
                         input: true,
@@ -4068,6 +4758,7 @@ export default new Vuex.Store({
                         impdesc = ''
                     var DDPCItem = [],
                         IDTElementItem = []
+                    console.log(ele.childNodes)
 
                     ele.childNodes.forEach(item => {
                         if (item.nodeName == "SHORT-NAME") {
@@ -4077,13 +4768,17 @@ export default new Vuex.Store({
                             impcategory = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "NAMESPACES") {
-                            item.childNodes.forEach(symbol => {
-                                symbol.childNodes.forEach(data => {
-                                    impnamespace += data.childNodes[0].nodeValue
-                                    impnamespace += '/'
-                                })
-                                impnamespace = impnamespace.substr(0, impnamespace.length - 1)
-                                impnamespace += ','
+                            item.childNodes.forEach((symbol, s) => {
+                                if (s % 2 != 0) {
+                                    symbol.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            impnamespace += data.childNodes[0].nodeValue
+                                            impnamespace += '/'
+                                        }
+                                    })
+                                    impnamespace = impnamespace.substr(0, impnamespace.length - 1)
+                                    impnamespace += ','
+                                }
                             })
                         }
                         if (item.nodeName == "ARRAY-SIZE") {
@@ -4096,50 +4791,60 @@ export default new Vuex.Store({
                             imptyperef = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "TEMPLATE-ARGUMENTS") {
-                            imptemplatetype = item.childNodes[0].childNodes[0].childNodes[0].nodeValue
+                            imptemplatetype = item.childNodes[1].childNodes[1].childNodes[0].nodeValue
                         }
                         if (item.nodeName == "DESC") {
-                            impdesc = item.childNodes[0].childNodes[0].nodeValue
+                            impdesc = item.childNodes[1].childNodes[0].nodeValue
                         }
                         if (item.nodeName == "SW-DATA-DEF-PROPS") {
-                            var swdata = item.childNodes[0].childNodes
-                            swdata.forEach(condi => {
+                            var swdata = item.childNodes[1].childNodes
+                            swdata.forEach((condi, c) => {
                                 var editDDPCItem = { compumethod: null, dataconstr: null }
-                                condi.childNodes.forEach(data => {
-                                    if (data.nodeName == "COMPU-METHOD-REF") {
-                                        editDDPCItem.compumethod = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "DATA-CONSTR-REF") {
-                                        editDDPCItem.dataconstr = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editDDPCItem)
-                                DDPCItem.push(addObj)
+                                if (c % 2 != 0) {
+                                    condi.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "COMPU-METHOD-REF") {
+                                                editDDPCItem.compumethod = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "DATA-CONSTR-REF") {
+                                                editDDPCItem.dataconstr = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editDDPCItem)
+                                    DDPCItem.push(addObj)
+                                }
                             })
                         }
                         if (item.nodeName == "SUB-ELEMENTS") {
-                            item.childNodes.forEach(cppImp => {
+                            item.childNodes.forEach((cppImp, c) => {
                                 var editIDTElementItem = { name: '', typeref: null, inplace: false, desc: '' }
-                                cppImp.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editIDTElementItem.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "DESC") {
-                                        editIDTElementItem.desc = data.childNodes[0].childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "TYPE-REFERENCE") {
-                                        data.childNodes.forEach(typeR => {
-                                            if (typeR.nodeName == "INPLACE") {
-                                                editIDTElementItem.inplace = typeR.childNodes[0].nodeValue
+                                if (c % 2 != 0) {
+                                    cppImp.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editIDTElementItem.name = data.childNodes[0].nodeValue
                                             }
-                                            if (typeR.nodeName == "TYPE-REFERENCE-REF") {
-                                                editIDTElementItem.typeref = typeR.childNodes[0].nodeValue
+                                            if (data.nodeName == "DESC") {
+                                                editIDTElementItem.desc = data.childNodes[1].childNodes[0].nodeValue
                                             }
-                                        })
-                                    }
-                                })
-                                const addObj = Object.assign({}, editIDTElementItem)
-                                IDTElementItem.push(addObj)
+                                            if (data.nodeName == "TYPE-REFERENCE") {
+                                                data.childNodes.forEach((typeR, t) => {
+                                                    if (t % 2 != 0) {
+                                                        if (typeR.nodeName == "INPLACE") {
+                                                            editIDTElementItem.inplace = typeR.childNodes[0].nodeValue
+                                                        }
+                                                        if (typeR.nodeName == "TYPE-REFERENCE-REF") {
+                                                            editIDTElementItem.typeref = typeR.childNodes[0].nodeValue
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editIDTElementItem)
+                                    IDTElementItem.push(addObj)
+                                }
                             })
                         }
                     })
@@ -4148,6 +4853,8 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
                     this.commit('addElementImplementation', {
                         input: true,
@@ -4196,94 +4903,116 @@ export default new Vuex.Store({
                             machineDesign = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "DEFAULT-APPLICATION-TIMEOUT") {
-                            timeout = item.childNodes[0].childNodes[0].nodeValue
+                            timeout = item.childNodes[1].childNodes[0].nodeValue
                         }
                         if (item.nodeName == "TRUSTED-PLATFORM-EXECUTABLE-LAUNCH-BEHAVIOR") {
                             exelaunch = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "ADMIN-DATA") {
-                            admin = item.childNodes[0].childNodes[0].childNodes[0].childNodes[0].nodeValue
+                            admin = item.childNodes[1].childNodes[1].childNodes[1].childNodes[0].nodeValue
                         }
                         if (item.nodeName == "HW-ELEMENT-REFS") {
-                            item.childNodes.forEach(data => {
+                            item.childNodes.forEach((data, d) => {
                                 var editHWItem = { hwelement: null }
-                                if (data.nodeName == "HW-ELEMENT-REF") {
-                                    editHWItem.hwelement = data.childNodes[0].nodeValue
-                                    const addObj = Object.assign({}, editHWItem)
-                                    hwele.push(addObj)
+                                if (d % 2 != 0) {
+                                    if (data.nodeName == "HW-ELEMENT-REF") {
+                                        editHWItem.hwelement = data.childNodes[0].nodeValue
+                                        const addObj = Object.assign({}, editHWItem)
+                                        hwele.push(addObj)
+                                    }
                                 }
                             })
                         }
                         if (item.nodeName == "FUNCTION-GROUPS") {
-                            item.childNodes.forEach(mode => {
+                            item.childNodes.forEach((mode, m) => {
                                 var editFunctionItem = { name: '', type: null, }
-                                mode.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editFunctionItem.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "TYPE-TREF") {
-                                        editFunctionItem.type = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editFunctionItem)
-                                functionG.push(addObj)
+                                if (m % 2 != 0) {
+                                    mode.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editFunctionItem.name = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "TYPE-TREF") {
+                                                editFunctionItem.type = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editFunctionItem)
+                                    functionG.push(addObj)
+                                }
                             })
                         }
                         if (item.nodeName == "PROCESSORS") {
-                            item.childNodes.forEach(pros => {
+                            item.childNodes.forEach((pros, p) => {
                                 var editPro = { name: '', core: [] }
-                                pros.childNodes.forEach(pro => {
-                                    if (pro.nodeName == "SHORT-NAME") {
-                                        editPro.name = pro.childNodes[0].nodeValue
-                                    }
-                                    if (pro.nodeName == "CORES") {
-                                        pro.childNodes.forEach(procor => {
-                                            var editCoreItem = { name: '', id: '' }
-                                            procor.childNodes.forEach(data => {
-                                                if (data.nodeName == "SHORT-NAME") {
-                                                    editCoreItem.name = data.childNodes[0].nodeValue
-                                                }
-                                                if (data.nodeName == "CORE-ID") {
-                                                    editCoreItem.id = data.childNodes[0].nodeValue
-                                                }
-                                            })
-                                            const addObjRes = Object.assign({}, editCoreItem)
-                                            editPro.core.push(addObjRes)
-                                        })
-                                    }
-                                })
-                                const addObj = Object.assign({}, editPro)
-                                processor.push(addObj)
+                                if (p % 2 != 0) {
+                                    pros.childNodes.forEach((pro, r) => {
+                                        if (r % 2 != 0) {
+                                            if (pro.nodeName == "SHORT-NAME") {
+                                                editPro.name = pro.childNodes[0].nodeValue
+                                            }
+                                            if (pro.nodeName == "CORES") {
+                                                pro.childNodes.forEach((procor, o) => {
+                                                    if (o % 2 != 0) {
+                                                        var editCoreItem = { name: '', id: '' }
+                                                        procor.childNodes.forEach((data, d) => {
+                                                            if (d % 2 != 0) {
+                                                                if (data.nodeName == "SHORT-NAME") {
+                                                                    editCoreItem.name = data.childNodes[0].nodeValue
+                                                                }
+                                                                if (data.nodeName == "CORE-ID") {
+                                                                    editCoreItem.id = data.childNodes[0].nodeValue
+                                                                }
+                                                            }
+                                                        })
+                                                        const addObjRes = Object.assign({}, editCoreItem)
+                                                        editPro.core.push(addObjRes)
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editPro)
+                                    processor.push(addObj)
+                                }
                             })
                         }
                         if (item.nodeName == "MODULE-INSTANTIATIONS") {
-                            item.childNodes.forEach(os => {
+                            item.childNodes.forEach((os, o) => {
                                 var editModule = { name: '', resource: [] }
-                                os.childNodes.forEach(osmodul => {
-                                    if (osmodul.nodeName == "SHORT-NAME") {
-                                        editModule.name = osmodul.childNodes[0].nodeValue
-                                    }
-                                    if (osmodul.nodeName == "RESOURCE-GROUPS") {
-                                        osmodul.childNodes.forEach(group => {
-                                            var editModuleInsItem = { name: '', cpuUsage: '', memoryUsage: '' }
-                                            group.childNodes.forEach(data => {
-                                                if (data.nodeName == "SHORT-NAME") {
-                                                    editModuleInsItem.name = data.childNodes[0].nodeValue
-                                                }
-                                                if (data.nodeName == "CPU-USAGE") {
-                                                    editModuleInsItem.cpuUsage = data.childNodes[0].nodeValue
-                                                }
-                                                if (data.nodeName == "MEM-USAGE") {
-                                                    editModuleInsItem.memoryUsage = data.childNodes[0].nodeValue
-                                                }
-                                            })
-                                            const addObjRes = Object.assign({}, editModuleInsItem)
-                                            editModule.resource.push(addObjRes)
-                                        })
-                                    }
-                                })
-                                const addObj = Object.assign({}, editModule)
-                                module.push(addObj)
+                                if (o % 2 != 0) {
+                                    os.childNodes.forEach((osmodul, s) => {
+                                        if (s % 2 != 0) {
+                                            if (osmodul.nodeName == "SHORT-NAME") {
+                                                editModule.name = osmodul.childNodes[0].nodeValue
+                                            }
+                                            if (osmodul.nodeName == "RESOURCE-GROUPS") {
+                                                osmodul.childNodes.forEach((group, g) => {
+                                                    var editModuleInsItem = { name: '', cpuUsage: '', memoryUsage: '' }
+                                                    if (g % 2 != 0) {
+                                                        group.childNodes.forEach((data, d) => {
+                                                            if (d % 2 != 0) {
+                                                                if (data.nodeName == "SHORT-NAME") {
+                                                                    editModuleInsItem.name = data.childNodes[0].nodeValue
+                                                                }
+                                                                if (data.nodeName == "CPU-USAGE") {
+                                                                    editModuleInsItem.cpuUsage = data.childNodes[0].nodeValue
+                                                                }
+                                                                if (data.nodeName == "MEM-USAGE") {
+                                                                    editModuleInsItem.memoryUsage = data.childNodes[0].nodeValue
+                                                                }
+                                                            }
+                                                        })
+                                                        const addObjRes = Object.assign({}, editModuleInsItem)
+                                                        editModule.resource.push(addObjRes)
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editModule)
+                                    module.push(addObj)
+                                }
                             })
                         }
                     })
@@ -4292,6 +5021,8 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
                     this.commit('addElementMachine', {
                         input: true,
@@ -4337,45 +5068,53 @@ export default new Vuex.Store({
                             pntimer = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "COMMUNICATION-CONNECTORS") {
-                            item.childNodes.forEach(ethernet => {
+                            item.childNodes.forEach((ethernet, e) => {
                                 var editedItemCC = { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: '' }
-                                ethernet.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editedItemCC.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "MAXIMUM-TRANSMISSION-UNIT") {
-                                        editedItemCC.mtu = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "PATH-MTU-ENABLED") {
-                                        editedItemCC.mtuenable = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "PATH-MTU-TIMEOUT") {
-                                        editedItemCC.timeout = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "UNICAST-NETWORK-ENDPOINT-REF") {
-                                        editedItemCC.endpoint = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "PNC-FILTER-DATA-MASK") {
-                                        editedItemCC.mask = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editedItemCC)
-                                communi.push(addObj)
+                                if (e % 2 != 0) {
+                                    ethernet.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editedItemCC.name = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "MAXIMUM-TRANSMISSION-UNIT") {
+                                                editedItemCC.mtu = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "PATH-MTU-ENABLED") {
+                                                editedItemCC.mtuenable = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "PATH-MTU-TIMEOUT") {
+                                                editedItemCC.timeout = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "UNICAST-NETWORK-ENDPOINT-REF") {
+                                                editedItemCC.endpoint = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "PNC-FILTER-DATA-MASK") {
+                                                editedItemCC.mask = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editedItemCC)
+                                    communi.push(addObj)
+                                }
                             })
                         }
                         if (item.nodeName == "SERVICE-DISCOVER-CONFIGS") {
-                            item.childNodes.forEach(someIP => {
+                            item.childNodes.forEach((someIP, s) => {
                                 var editedItemSDC = { msia: null, ssdp: '' }
-                                someIP.childNodes.forEach(data => {
-                                    if (data.nodeName == "MULTICAST-SD-IP-ADDRESS-REF") {
-                                        editedItemSDC.msia = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "SOMEIP-SERVICE-DISCOVERY-PORT") {
-                                        editedItemSDC.ssdp = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editedItemSDC)
-                                service.push(addObj)
+                                if (s % 2 != 0) {
+                                    someIP.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "MULTICAST-SD-IP-ADDRESS-REF") {
+                                                editedItemSDC.msia = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "SOMEIP-SERVICE-DISCOVERY-PORT") {
+                                                editedItemSDC.ssdp = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editedItemSDC)
+                                    service.push(addObj)
+                                }
                             })
                         }
                     })
@@ -4384,6 +5123,8 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
                     this.commit('addElementMachineDesign', {
                         name: Name,
@@ -4391,7 +5132,7 @@ export default new Vuex.Store({
                         path: strPath,
                         uuid: UUID,
                         top: elementY,
-                        left: Math.floor(Math.random() * (1400 - 11)) + 10,
+                        left: elementX,
                         zindex: 2,
                         access: access,
                         resettimer: pntimer,
@@ -4416,108 +5157,128 @@ export default new Vuex.Store({
                             Name = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "ETHERNET-CLUSTER-VARIANTS") {
-                            item.childNodes.forEach(ethernet => {
-                                var editedEthernet = { name: '', version: '', channel: [] }
-                                ethernet.childNodes.forEach(protocol => {
-                                    if (protocol.nodeName == "PROTOCOL-NAME") {
-                                        editedEthernet.name = protocol.childNodes[0].nodeValue
-                                    }
-                                    if (protocol.nodeName == "PROTOCOL-VERSION") {
-                                        editedEthernet.version = protocol.childNodes[0].nodeValue
-                                    }
-                                    if (protocol.nodeName == "PHYSICAL-CHANNELS") {
-                                        protocol.childNodes.forEach(channels => {
-                                            var editChannel = { name: '', comconnect: [], endpoint: [] }
-                                            channels.childNodes.forEach(channel => {
-                                                if (channel.nodeName == "SHORT-NAME") {
-                                                    editChannel.name = channel.childNodes[0].nodeValue
-                                                }
-                                                if (channel.nodeName == "COMM-CONNECTORS") {
-                                                    channel.childNodes.forEach(comm => {
-                                                        var editCCItem = { connector: null }
-                                                        comm.childNodes.forEach(data => {
-                                                            if (data.nodeName == "COMMUNICATION-CONNECTOR-REF") {
-                                                                editCCItem.connector = data.childNodes[0].nodeValue
+                            item.childNodes.forEach((ethernet, e) => {
+                                if (e % 2 != 0) {
+                                    var editedEthernet = { name: '', version: '', channel: [] }
+                                    ethernet.childNodes.forEach((protocol, p) => {
+                                        if (p % 2 != 0) {
+                                            if (protocol.nodeName == "PROTOCOL-NAME") {
+                                                editedEthernet.name = protocol.childNodes[0].nodeValue
+                                            }
+                                            if (protocol.nodeName == "PROTOCOL-VERSION") {
+                                                editedEthernet.version = protocol.childNodes[0].nodeValue
+                                            }
+                                            if (protocol.nodeName == "PHYSICAL-CHANNELS") {
+                                                protocol.childNodes.forEach((channels, c) => {
+                                                    if (c % 2 != 0) {
+                                                        var editChannel = { name: '', comconnect: [], endpoint: [] }
+                                                        channels.childNodes.forEach((channel, h) => {
+                                                            if (h % 2 != 0) {
+                                                                if (channel.nodeName == "SHORT-NAME") {
+                                                                    editChannel.name = channel.childNodes[0].nodeValue
+                                                                }
+                                                                if (channel.nodeName == "COMM-CONNECTORS") {
+                                                                    channel.childNodes.forEach((comm, o) => {
+                                                                        if (o % 2 != 0) {
+                                                                            var editCCItem = { connector: null }
+                                                                            comm.childNodes.forEach(data => {
+                                                                                if (data.nodeName == "COMMUNICATION-CONNECTOR-REF") {
+                                                                                    editCCItem.connector = data.childNodes[0].nodeValue
+                                                                                }
+                                                                            })
+                                                                            const addObj = Object.assign({}, editCCItem)
+                                                                            editChannel.comconnect.push(addObj)
+                                                                        }
+                                                                    })
+                                                                }
+                                                                if (channel.nodeName == "NETWORK-ENDPOINTS") {
+                                                                    channel.childNodes.forEach((network, n) => {
+                                                                        if (n % 2 != 0) {
+                                                                            var editNetwork = { name: '', domainname: '', ip4address: [], ip6address: [], priority: '' }
+                                                                            network.childNodes.forEach((endpoint, d) => {
+                                                                                if (d % 2 != 0) {
+                                                                                    if (endpoint.nodeName == "SHORT-NAME") {
+                                                                                        editNetwork.name = endpoint.childNodes[0].nodeValue
+                                                                                    }
+                                                                                    if (endpoint.nodeName == "FULLY-QUALIFIED-DOMAIN-NAME") {
+                                                                                        editNetwork.domainname = endpoint.childNodes[0].nodeValue
+                                                                                    }
+                                                                                    if (endpoint.nodeName == "PRIORITY") {
+                                                                                        editNetwork.priority = endpoint.childNodes[0].nodeValue
+                                                                                    }
+                                                                                    if (endpoint.nodeName == "NETWORK-ENDPOINT-ADDRESSES") {
+                                                                                        endpoint.childNodes.forEach((config, f) => {
+                                                                                            if (f % 2 != 0) {
+                                                                                                var editIP4Item = { gateway: '', behavior: null, address: '', addresssorce: null, mask: '', }
+                                                                                                var editIP6Item = { priority: '', behavior: null, prelength: '', address: '', addresssource: null, }
+                                                                                                if (config.nodeName == "IPV-4-CONFIGURATION") {
+                                                                                                    config.childNodes.forEach((data, a) => {
+                                                                                                        if (a % 2 != 0) {
+                                                                                                            if (data.nodeName == "DEFAULT-GATEWAY") {
+                                                                                                                editIP4Item.gateway = data.childNodes[0].nodeValue
+                                                                                                            }
+                                                                                                            if (data.nodeName == "IP-ADDRESS-KEEP-BEHAVIOR") {
+                                                                                                                editIP4Item.behavior = data.childNodes[0].nodeValue
+                                                                                                            }
+                                                                                                            if (data.nodeName == "IPV-4-ADDRESS") {
+                                                                                                                editIP4Item.address = data.childNodes[0].nodeValue
+                                                                                                            }
+                                                                                                            if (data.nodeName == "IPV-4-ADDRESS-SOURCE") {
+                                                                                                                editIP4Item.addresssorce = data.childNodes[0].nodeValue
+                                                                                                            }
+                                                                                                            if (data.nodeName == "NETWORK-MASK") {
+                                                                                                                editIP4Item.mask = data.childNodes[0].nodeValue
+                                                                                                            }
+                                                                                                        }
+                                                                                                    })
+                                                                                                    const addObj = Object.assign({}, editIP4Item)
+                                                                                                    editNetwork.ip4address.push(addObj)
+                                                                                                }
+                                                                                                if (config.nodeName == "IPV-6-CONFIGURATION") {
+                                                                                                    config.childNodes.forEach((data, t) => {
+                                                                                                        if (t % 2 != 0) {
+                                                                                                            if (data.nodeName == "ASSIGNMENT-PRIORITY") {
+                                                                                                                editIP6Item.priority = data.childNodes[0].nodeValue
+                                                                                                            }
+                                                                                                            if (data.nodeName == "IP-ADDRESS-KEEP-BEHAVIOR") {
+                                                                                                                editIP6Item.behavior = data.childNodes[0].nodeValue
+                                                                                                            }
+                                                                                                            if (data.nodeName == "IP-ADDRESS-PREFIX-LENGTH") {
+                                                                                                                editIP6Item.prelength = data.childNodes[0].nodeValue
+                                                                                                            }
+                                                                                                            if (data.nodeName == "IPV-6-ADDRESS") {
+                                                                                                                editIP6Item.address = data.childNodes[0].nodeValue
+                                                                                                            }
+                                                                                                            if (data.nodeName == "IPV-6-ADDRESS-SOURCE") {
+                                                                                                                editIP6Item.addresssource = data.childNodes[0].nodeValue
+                                                                                                            }
+                                                                                                        }
+                                                                                                    })
+                                                                                                    const addObj = Object.assign({}, editIP6Item)
+                                                                                                    editNetwork.ip6address.push(addObj)
+                                                                                                }
+                                                                                            }
+                                                                                        })
+                                                                                    }
+                                                                                }
+                                                                            })
+                                                                            const addObj = Object.assign({}, editNetwork)
+                                                                            editChannel.endpoint.push(addObj)
+                                                                        }
+                                                                    })
+                                                                }
                                                             }
                                                         })
-                                                        const addObj = Object.assign({}, editCCItem)
-                                                        editChannel.comconnect.push(addObj)
-                                                    })
-                                                }
-                                                if (channel.nodeName == "NETWORK-ENDPOINTS") {
-                                                    channel.childNodes.forEach(network => {
-                                                        var editNetwork = { name: '', domainname: '', ip4address: [], ip6address: [], priority: '' }
-                                                        network.childNodes.forEach(endpoint => {
-                                                            if (endpoint.nodeName == "SHORT-NAME") {
-                                                                editNetwork.name = endpoint.childNodes[0].nodeValue
-                                                            }
-                                                            if (endpoint.nodeName == "FULLY-QUALIFIED-DOMAIN-NAME") {
-                                                                editNetwork.domainname = endpoint.childNodes[0].nodeValue
-                                                            }
-                                                            if (endpoint.nodeName == "PRIORITY") {
-                                                                editNetwork.priority = endpoint.childNodes[0].nodeValue
-                                                            }
-                                                            if (endpoint.nodeName == "NETWORK-ENDPOINT-ADDRESSES") {
-                                                                endpoint.childNodes.forEach(config => {
-                                                                    var editIP4Item = { gateway: '', behavior: null, address: '', addresssorce: null, mask: '', }
-                                                                    var editIP6Item = { priority: '', behavior: null, prelength: '', address: '', addresssource: null, }
-                                                                    if (config.nodeName == "IPV-4-CONFIGURATION") {
-                                                                        config.childNodes.forEach(data => {
-                                                                            if (data.nodeName == "DEFAULT-GATEWAY") {
-                                                                                editIP4Item.gateway = data.childNodes[0].nodeValue
-                                                                            }
-                                                                            if (data.nodeName == "IP-ADDRESS-KEEP-BEHAVIOR") {
-                                                                                editIP4Item.behavior = data.childNodes[0].nodeValue
-                                                                            }
-                                                                            if (data.nodeName == "IPV-4-ADDRESS") {
-                                                                                editIP4Item.address = data.childNodes[0].nodeValue
-                                                                            }
-                                                                            if (data.nodeName == "IPV-4-ADDRESS-SOURCE") {
-                                                                                editIP4Item.addresssorce = data.childNodes[0].nodeValue
-                                                                            }
-                                                                            if (data.nodeName == "NETWORK-MASK") {
-                                                                                editIP4Item.mask = data.childNodes[0].nodeValue
-                                                                            }
-                                                                        })
-                                                                        const addObj = Object.assign({}, editIP4Item)
-                                                                        editNetwork.ip4address.push(addObj)
-                                                                    }
-                                                                    if (config.nodeName == "IPV-6-CONFIGURATION") {
-                                                                        config.childNodes.forEach(data => {
-                                                                            if (data.nodeName == "ASSIGNMENT-PRIORITY") {
-                                                                                editIP6Item.priority = data.childNodes[0].nodeValue
-                                                                            }
-                                                                            if (data.nodeName == "IP-ADDRESS-KEEP-BEHAVIOR") {
-                                                                                editIP6Item.behavior = data.childNodes[0].nodeValue
-                                                                            }
-                                                                            if (data.nodeName == "IP-ADDRESS-PREFIX-LENGTH") {
-                                                                                editIP6Item.prelength = data.childNodes[0].nodeValue
-                                                                            }
-                                                                            if (data.nodeName == "IPV-6-ADDRESS") {
-                                                                                editIP6Item.address = data.childNodes[0].nodeValue
-                                                                            }
-                                                                            if (data.nodeName == "IPV-6-ADDRESS-SOURCE") {
-                                                                                editIP6Item.addresssource = data.childNodes[0].nodeValue
-                                                                            }
-                                                                        })
-                                                                        const addObj = Object.assign({}, editIP6Item)
-                                                                        editNetwork.ip6address.push(addObj)
-                                                                    }
-                                                                })
-                                                            }
-                                                        })
-                                                        const addObj = Object.assign({}, editNetwork)
-                                                        editChannel.endpoint.push(addObj)
-                                                    })
-                                                }
-                                            })
-                                            const addObjRes = Object.assign({}, editChannel)
-                                            editedEthernet.channel.push(addObjRes)
-                                        })
-                                    }
-                                })
-                                const addObj = Object.assign({}, editedEthernet)
-                                condition.push(addObj)
+                                                        const addObjRes = Object.assign({}, editChannel)
+                                                        editedEthernet.channel.push(addObjRes)
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editedEthernet)
+                                    condition.push(addObj)
+                                }
                             })
                         }
                     })
@@ -4526,6 +5287,8 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
                     this.commit('addElementEthernetCluster', {
                         name: Name,
@@ -4559,12 +5322,16 @@ export default new Vuex.Store({
                             initmode = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "MODE-DECLARATIONS") {
-                            item.childNodes.forEach(modede => {
-                                modede.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        mode.push(data.childNodes[0].nodeValue)
-                                    }
-                                })
+                            item.childNodes.forEach((modede, m) => {
+                                if (m % 2 != 0) {
+                                    modede.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                mode.push(data.childNodes[0].nodeValue)
+                                            }
+                                        }
+                                    })
+                                }
                             })
                         }
                     })
@@ -4573,6 +5340,8 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
                     this.commit('addElementModeDeclarationGroup', {
                         name: Name,
@@ -4604,24 +5373,28 @@ export default new Vuex.Store({
                         Name = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "HW-CATEGORY-REFS") {
-                        category = item.childNodes[0].childNodes[0].nodeValue
+                        category = item.childNodes[1].childNodes[0].nodeValue
                     }
                     if (item.nodeName == "HW-ATTRIBUTE-VALUES") {
-                        item.childNodes.forEach(value => {
-                            var editAttributeItem = { attr: null, vt: '', v: '' }
-                            value.childNodes.forEach(data => {
-                                if (data.nodeName == "HW-ATTRIBUTE-DEF-REF") {
-                                    editAttributeItem.attr = data.childNodes[0].nodeValue
-                                }
-                                if (data.nodeName == "VT") {
-                                    editAttributeItem.vt = data.childNodes[0].nodeValue
-                                }
-                                if (data.nodeName == "V") {
-                                    editAttributeItem.v = data.childNodes[0].nodeValue
-                                }
-                            })
-                            const addObj = Object.assign({}, editAttributeItem)
-                            attri.push(addObj)
+                        item.childNodes.forEach((value, v) => {
+                            if (v % 2 != 0) {
+                                var editAttributeItem = { attr: null, vt: '', v: '' }
+                                value.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "HW-ATTRIBUTE-DEF-REF") {
+                                            editAttributeItem.attr = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "VT") {
+                                            editAttributeItem.vt = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "V") {
+                                            editAttributeItem.v = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                const addObj = Object.assign({}, editAttributeItem)
+                                attri.push(addObj)
+                            }
                         })
                     }
                 })
@@ -4630,6 +5403,8 @@ export default new Vuex.Store({
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
                 this.commit('addElementHWElement', {
                     name: Name,
@@ -4663,18 +5438,22 @@ export default new Vuex.Store({
                             Name = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "PROCESS-TO-MACHINE-MAPPINGS") {
-                            item.childNodes.forEach(mapping => {
-                                mapping.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        ptmmname = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "MACHINE-REF") {
-                                        machine = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "PROCESS-REF") {
-                                        process = data.childNodes[0].nodeValue
-                                    }
-                                })
+                            item.childNodes.forEach((mapping, m) => {
+                                if (m % 2 != 0) {
+                                    mapping.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                ptmmname = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "MACHINE-REF") {
+                                                machine = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "PROCESS-REF") {
+                                                process = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                }
                             })
                         }
                     })
@@ -4683,6 +5462,8 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
                     this.commit('addElementProtoMachineMapping', {
                         name: Name,
@@ -4716,45 +5497,53 @@ export default new Vuex.Store({
                             Name = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "PORTS") {
-                            item.childNodes.forEach(port => {
-                                if (port.nodeName == "P-PORT-PROTOTYPE") {
-                                    var editPPortItem = { name: '', interface: null }
-                                    port.childNodes.forEach(data => {
-                                        if (data.nodeName == "SHORT-NAME") {
-                                            editPPortItem.name = data.childNodes[0].nodeValue
-                                        }
-                                        if (data.nodeName == "PROVIDED-INTERFACE-TREF") {
-                                            editPPortItem.interface = data.childNodes[0].nodeValue
-                                        }
-                                    })
-                                    const addObj = Object.assign({}, editPPortItem)
-                                    pPort.push(addObj)
-                                }
-                                if (port.nodeName == "PR-PORT-PROTOTYPE") {
-                                    var editPRPortItem = { name: '', interface: null }
-                                    port.childNodes.forEach(data => {
-                                        if (data.nodeName == "SHORT-NAME") {
-                                            editPRPortItem.name = data.childNodes[0].nodeValue
-                                        }
-                                        if (data.nodeName == "PROVIDED-REQUIRED-INTERFACE-TREF") {
-                                            editPRPortItem.interface = data.childNodes[0].nodeValue
-                                        }
-                                    })
-                                    const addObj = Object.assign({}, editPRPortItem)
-                                    prPort.push(addObj)
-                                }
-                                if (port.nodeName == "R-PORT-PROTOTYPE") {
-                                    var editRPortItem = { name: '', interface: null }
-                                    port.childNodes.forEach(data => {
-                                        if (data.nodeName == "SHORT-NAME") {
-                                            editRPortItem.name = data.childNodes[0].nodeValue
-                                        }
-                                        if (data.nodeName == "REQUIRED-INTERFACE-TREF") {
-                                            editRPortItem.interface = data.childNodes[0].nodeValue
-                                        }
-                                    })
-                                    const addObj = Object.assign({}, editRPortItem)
-                                    rPort.push(addObj)
+                            item.childNodes.forEach((port, p) => {
+                                if (p % 2 != 0) {
+                                    if (port.nodeName == "P-PORT-PROTOTYPE") {
+                                        var editPPortItem = { name: '', interface: null }
+                                        port.childNodes.forEach((data, d) => {
+                                            if (d % 2 != 0) {
+                                                if (data.nodeName == "SHORT-NAME") {
+                                                    editPPortItem.name = data.childNodes[0].nodeValue
+                                                }
+                                                if (data.nodeName == "PROVIDED-INTERFACE-TREF") {
+                                                    editPPortItem.interface = data.childNodes[0].nodeValue
+                                                }
+                                            }
+                                        })
+                                        const addObj = Object.assign({}, editPPortItem)
+                                        pPort.push(addObj)
+                                    }
+                                    if (port.nodeName == "PR-PORT-PROTOTYPE") {
+                                        var editPRPortItem = { name: '', interface: null }
+                                        port.childNodes.forEach((data, d) => {
+                                            if (d % 2 != 0) {
+                                                if (data.nodeName == "SHORT-NAME") {
+                                                    editPRPortItem.name = data.childNodes[0].nodeValue
+                                                }
+                                                if (data.nodeName == "PROVIDED-REQUIRED-INTERFACE-TREF") {
+                                                    editPRPortItem.interface = data.childNodes[0].nodeValue
+                                                }
+                                            }
+                                        })
+                                        const addObj = Object.assign({}, editPRPortItem)
+                                        prPort.push(addObj)
+                                    }
+                                    if (port.nodeName == "R-PORT-PROTOTYPE") {
+                                        var editRPortItem = { name: '', interface: null }
+                                        port.childNodes.forEach((data, d) => {
+                                            if (d % 2 != 0) {
+                                                if (data.nodeName == "SHORT-NAME") {
+                                                    editRPortItem.name = data.childNodes[0].nodeValue
+                                                }
+                                                if (data.nodeName == "REQUIRED-INTERFACE-TREF") {
+                                                    editRPortItem.interface = data.childNodes[0].nodeValue
+                                                }
+                                            }
+                                        })
+                                        const addObj = Object.assign({}, editRPortItem)
+                                        rPort.push(addObj)
+                                    }
                                 }
                             })
                         }
@@ -4764,6 +5553,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementSWComponents', {
                         name: Name,
                         input: true,
@@ -4818,33 +5610,41 @@ export default new Vuex.Store({
                             })
                         }
                         if (item.nodeName == "STATE-DEPENDENT-STARTUP-CONFIGS") {
-                            item.childNodes.forEach(state => {
+                            item.childNodes.forEach((state, s) => {
                                 var editItem = { functionItem: [], resourceRef: null, startupConfigRef: null }
-                                state.childNodes.forEach(con => {
-                                    if (con.nodeName == "RESOURCE-GROUP-REF") {
-                                        editItem.resourceRef = con.childNodes[0].nodeValue
-                                    }
-                                    if (con.nodeName == "STARTUP-CONFIG-REF") {
-                                        editItem.startupConfigRef = con.childNodes[0].nodeValue
-                                    }
-                                    if (con.nodeName == "FUNCTION-GROUP-STATE-IREFS") {
-                                        con.childNodes.forEach(iref => {
-                                            var editFunctionGItem = { contextMode: null, targetMode: null }
-                                            iref.childNodes.forEach(data => {
-                                                if (data.nodeName == "CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF") {
-                                                    editFunctionGItem.contextMode = data.childNodes[0].nodeValue
-                                                }
-                                                if (data.nodeName == "TARGET-MODE-DECLARATION-REF") {
-                                                    editFunctionGItem.targetMode = data.childNodes[0].nodeValue
-                                                }
-                                            })
-                                            const addObj = Object.assign({}, editFunctionGItem)
-                                            editItem.functionItem.push(addObj)
-                                        })
-                                    }
-                                })
-                                const addObj = Object.assign({}, editItem)
-                                config.push(addObj)
+                                if (s % 2 != 0) {
+                                    state.childNodes.forEach((con, c) => {
+                                        if (c % 2 != 0) {
+                                            if (con.nodeName == "RESOURCE-GROUP-REF") {
+                                                editItem.resourceRef = con.childNodes[0].nodeValue
+                                            }
+                                            if (con.nodeName == "STARTUP-CONFIG-REF") {
+                                                editItem.startupConfigRef = con.childNodes[0].nodeValue
+                                            }
+                                            if (con.nodeName == "FUNCTION-GROUP-STATE-IREFS") {
+                                                con.childNodes.forEach((iref, i) => {
+                                                    var editFunctionGItem = { contextMode: null, targetMode: null }
+                                                    if (i % 2 != 0) {
+                                                        iref.childNodes.forEach((data, d) => {
+                                                            if (d % 2 != 0) {
+                                                                if (data.nodeName == "CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF") {
+                                                                    editFunctionGItem.contextMode = data.childNodes[0].nodeValue
+                                                                }
+                                                                if (data.nodeName == "TARGET-MODE-DECLARATION-REF") {
+                                                                    editFunctionGItem.targetMode = data.childNodes[0].nodeValue
+                                                                }
+                                                            }
+                                                        })
+                                                        const addObj = Object.assign({}, editFunctionGItem)
+                                                        editItem.functionItem.push(addObj)
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editItem)
+                                    config.push(addObj)
+                                }
                             })
                         }
                     })
@@ -4853,6 +5653,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementProcess', {
                         name: Name,
                         input: true,
@@ -4890,7 +5693,7 @@ export default new Vuex.Store({
                             exe = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "DETERMINISTIC-CLIENT-RESOURCE-NEEDSS") {
-                            item.childNodes.forEach(need => {
+                            item.childNodes.forEach((need, n) => {
                                 var editItem = {
                                     swname: '',
                                     hardwareP: '',
@@ -4903,48 +5706,56 @@ export default new Vuex.Store({
                                     runsequentialend: '',
                                     runspeedup: ''
                                 }
-                                need.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editItem.swname = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "HARDWARE-PLATFORM") {
-                                        editItem.hardwareP = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "INIT-RESOURCE") {
-                                        data.childNodes.forEach(init => {
-                                            if (init.nodeName == "NUMBER-OF-INSTRUCTIONS") {
-                                                editItem.initnofinstruction = init.childNodes[0].nodeValue
+                                if (n % 2 != 0) {
+                                    need.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editItem.swname = data.childNodes[0].nodeValue
                                             }
-                                            if (init.nodeName == "SEQUENTIAL-INSTRUCTIONS-BEGIN") {
-                                                editItem.initsequentialbegin = init.childNodes[0].nodeValue
+                                            if (data.nodeName == "HARDWARE-PLATFORM") {
+                                                editItem.hardwareP = data.childNodes[0].nodeValue
                                             }
-                                            if (init.nodeName == "SEQUENTIAL-INSTRUCTIONS-END") {
-                                                editItem.initsequentialend = init.childNodes[0].nodeValue
+                                            if (data.nodeName == "INIT-RESOURCE") {
+                                                data.childNodes.forEach((init, i) => {
+                                                    if (i % 2 != 0) {
+                                                        if (init.nodeName == "NUMBER-OF-INSTRUCTIONS") {
+                                                            editItem.initnofinstruction = init.childNodes[0].nodeValue
+                                                        }
+                                                        if (init.nodeName == "SEQUENTIAL-INSTRUCTIONS-BEGIN") {
+                                                            editItem.initsequentialbegin = init.childNodes[0].nodeValue
+                                                        }
+                                                        if (init.nodeName == "SEQUENTIAL-INSTRUCTIONS-END") {
+                                                            editItem.initsequentialend = init.childNodes[0].nodeValue
+                                                        }
+                                                        if (init.nodeName == "SPEEDUP") {
+                                                            editItem.initspeedup = init.childNodes[0].nodeValue
+                                                        }
+                                                    }
+                                                })
                                             }
-                                            if (init.nodeName == "SPEEDUP") {
-                                                editItem.initspeedup = init.childNodes[0].nodeValue
+                                            if (data.nodeName == "RUN-RESOURCE") {
+                                                data.childNodes.forEach((run, r) => {
+                                                    if (r % 2 != 0) {
+                                                        if (run.nodeName == "NUMBER-OF-INSTRUCTIONS") {
+                                                            editItem.runnofinstruction = run.childNodes[0].nodeValue
+                                                        }
+                                                        if (run.nodeName == "SEQUENTIAL-INSTRUCTIONS-BEGIN") {
+                                                            editItem.runsequentialbegin = run.childNodes[0].nodeValue
+                                                        }
+                                                        if (run.nodeName == "SEQUENTIAL-INSTRUCTIONS-END") {
+                                                            editItem.runsequentialend = run.childNodes[0].nodeValue
+                                                        }
+                                                        if (run.nodeName == "SPEEDUP") {
+                                                            editItem.runspeedup = run.childNodes[0].nodeValue
+                                                        }
+                                                    }
+                                                })
                                             }
-                                        })
-                                    }
-                                    if (data.nodeName == "RUN-RESOURCE") {
-                                        data.childNodes.forEach(run => {
-                                            if (run.nodeName == "NUMBER-OF-INSTRUCTIONS") {
-                                                editItem.runnofinstruction = run.childNodes[0].nodeValue
-                                            }
-                                            if (run.nodeName == "SEQUENTIAL-INSTRUCTIONS-BEGIN") {
-                                                editItem.runsequentialbegin = run.childNodes[0].nodeValue
-                                            }
-                                            if (run.nodeName == "SEQUENTIAL-INSTRUCTIONS-END") {
-                                                editItem.runsequentialend = run.childNodes[0].nodeValue
-                                            }
-                                            if (run.nodeName == "SPEEDUP") {
-                                                editItem.runspeedup = run.childNodes[0].nodeValue
-                                            }
-                                        })
-                                    }
-                                })
-                                const addObj = Object.assign({}, editItem)
-                                determininistic.push(addObj)
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editItem)
+                                    determininistic.push(addObj)
+                                }
                             })
                         }
                     })
@@ -4953,6 +5764,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
 
                     this.commit('addElementProcessDesign', {
                         name: Name,
@@ -5004,12 +5818,14 @@ export default new Vuex.Store({
                             version = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "ROOT-SW-COMPONENT-PROTOTYPE") {
-                            item.childNodes.forEach(data => {
-                                if (data.nodeName == "SHORT-NAME") {
-                                    swname = data.childNodes[0].nodeValue
-                                }
-                                if (data.nodeName == "APPLICATION-TYPE-TREF") {
-                                    appli = data.childNodes[0].nodeValue
+                            item.childNodes.forEach((data, d) => {
+                                if (d % 2 != 0) {
+                                    if (data.nodeName == "SHORT-NAME") {
+                                        swname = data.childNodes[0].nodeValue
+                                    }
+                                    if (data.nodeName == "APPLICATION-TYPE-TREF") {
+                                        appli = data.childNodes[0].nodeValue
+                                    }
                                 }
                             })
                         }
@@ -5019,6 +5835,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementExecutable', {
                         name: Name,
                         input: true,
@@ -5057,28 +5876,32 @@ export default new Vuex.Store({
                             Name = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "STARTUP-CONFIGS") {
-                            item.childNodes.forEach(configs => {
-                                configs.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        configName = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "SCHEDULING-POLICY") {
-                                        policy = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "SCHEDULING-PRIORITY") {
-                                        priority = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "TIMEOUT") {
-                                        data.childNodes.forEach(time => {
-                                            if (time.nodeName == "ENTER-TIMEOUT-VALUE") {
-                                                enter = time.childNodes[0].nodeValue
+                            item.childNodes.forEach((configs, c) => {
+                                if (c % 2 != 0) {
+                                    configs.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                configName = data.childNodes[0].nodeValue
                                             }
-                                            if (time.nodeName == "EXIT-TIMEOUT-VALUE") {
-                                                exit = time.childNodes[0].nodeValue
+                                            if (data.nodeName == "SCHEDULING-POLICY") {
+                                                policy = data.childNodes[0].nodeValue
                                             }
-                                        })
-                                    }
-                                })
+                                            if (data.nodeName == "SCHEDULING-PRIORITY") {
+                                                priority = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "TIMEOUT") {
+                                                data.childNodes.forEach(time => {
+                                                    if (time.nodeName == "ENTER-TIMEOUT-VALUE") {
+                                                        enter = time.childNodes[0].nodeValue
+                                                    }
+                                                    if (time.nodeName == "EXIT-TIMEOUT-VALUE") {
+                                                        exit = time.childNodes[0].nodeValue
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                }
                             })
                         }
                     })
@@ -5087,6 +5910,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementStartupConfig', {
                         name: Name,
                         input: true,
@@ -5131,6 +5957,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementDeterministicClien', {
                         name: Name,
                         input: true,
@@ -5168,78 +5997,90 @@ export default new Vuex.Store({
                             Name = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "EVENT-DEPLOYMENTS") {
-                            item.childNodes.forEach(eve => {
+                            item.childNodes.forEach((eve, e) => {
                                 var editEventD = { name: '', event: null, id: '', maxlength: '', time: '', serializer: null, protocal: null }
-                                eve.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editEventD.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "EVENT-REF") {
-                                        editEventD.event = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "EVENT-ID") {
-                                        editEventD.id = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "MAXIMUM-SEGMENT-LENGTH") {
-                                        editEventD.maxlength = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "EVENT") {
-                                        editEventD.time = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "SEPARATION-TIME") {
-                                        editEventD.serializer = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "TRANSPORT-PROTOCOL") {
-                                        editEventD.protocal = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editEventD)
-                                eventD.push(addObj)
+                                if (e % 2 != 0) {
+                                    eve.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editEventD.name = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "EVENT-REF") {
+                                                editEventD.event = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "EVENT-ID") {
+                                                editEventD.id = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "MAXIMUM-SEGMENT-LENGTH") {
+                                                editEventD.maxlength = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "EVENT") {
+                                                editEventD.time = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "SEPARATION-TIME") {
+                                                editEventD.serializer = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "TRANSPORT-PROTOCOL") {
+                                                editEventD.protocal = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editEventD)
+                                    eventD.push(addObj)
+                                }
                             })
                         }
                         if (item.nodeName == "SERVICE-INTERFACE-REF") {
                             service = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "EVENT-GROUPS") {
-                            item.childNodes.forEach(eve => {
+                            item.childNodes.forEach((eve, e) => {
                                 var editItem = { name: '', id: '', event: [] }
-                                eve.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editItem.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "EVENT-GROUP-ID") {
-                                        editItem.id = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "EVENT-REFS") {
-                                        var editEvent = { event: null }
-                                        data.childNodes.forEach(eventref => {
-                                            if (eventref.nodeName == "EVENT-REF") {
-                                                editEvent.event = eventref.childNodes[0].nodeValue
+                                if (e % 2 != 0) {
+                                    eve.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editItem.name = data.childNodes[0].nodeValue
                                             }
-                                        })
-                                        const addObjObj = Object.assign({}, editEvent)
-                                        editItem.event.push(addObjObj)
-                                    }
-                                })
-                                const addObj = Object.assign({}, editItem)
-                                eventG.push(addObj)
+                                            if (data.nodeName == "EVENT-GROUP-ID") {
+                                                editItem.id = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "EVENT-REFS") {
+                                                var editEvent = { event: null }
+                                                data.childNodes.forEach((eventref, v) => {
+                                                    if (v % 2 != 0) {
+                                                        if (eventref.nodeName == "EVENT-REF") {
+                                                            editEvent.event = eventref.childNodes[0].nodeValue
+                                                        }
+                                                    }
+                                                })
+                                                const addObjObj = Object.assign({}, editEvent)
+                                                editItem.event.push(addObjObj)
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editItem)
+                                    eventG.push(addObj)
+                                }
                             })
                         }
                         if (item.nodeName == "SERVICE-INTERFACE-ID") {
                             id = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "SERVICE-INTERFACE-VERSION") {
-                            item.childNodes.forEach(data => {
-                                if (data.nodeName == "MAJOR-VERSION") {
-                                    majversion = data.childNodes[0].nodeValue
-                                }
-                                if (data.nodeName == "MINOR-VERSION") {
-                                    minversion = data.childNodes[0].nodeValue
+                            item.childNodes.forEach((data, d) => {
+                                if (d % 2 != 0) {
+                                    if (data.nodeName == "MAJOR-VERSION") {
+                                        majversion = data.childNodes[0].nodeValue
+                                    }
+                                    if (data.nodeName == "MINOR-VERSION") {
+                                        minversion = data.childNodes[0].nodeValue
+                                    }
                                 }
                             })
                         }
                         if (item.nodeName == "FIELD-DEPLOYMENTS") {
-                            item.childNodes.forEach(fie => {
+                            item.childNodes.forEach((fie, f) => {
                                 var editItem = {
                                     name: '',
                                     field: null,
@@ -5264,122 +6105,135 @@ export default new Vuex.Store({
                                     notserial: null,
                                     notproto: null
                                 }
-                                fie.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editItem.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "FIELD-REF") {
-                                        editItem.field = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "GET") {
-                                        data.childNodes.forEach(getfield => {
-                                            if (getfield.nodeName == "SHORT-NAME") {
-                                                editItem.getname = getfield.childNodes[0].nodeValue
+                                if (f % 2 != 0) {
+                                    fie.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editItem.name = data.childNodes[0].nodeValue
                                             }
-                                            if (getfield.nodeName == "METHOD-ID") {
-                                                editItem.getid = getfield.childNodes[0].nodeValue
+                                            if (data.nodeName == "FIELD-REF") {
+                                                editItem.field = data.childNodes[0].nodeValue
                                             }
-                                            if (getfield.nodeName == "MAXIMUM-SEGMENT-LENGTH-REQUEST") {
-                                                editItem.getmaxreq = getfield.childNodes[0].nodeValue
+                                            if (data.nodeName == "GET") {
+                                                data.childNodes.forEach((getfield, g) => {
+                                                    if (g % 2 != 0) {
+                                                        if (getfield.nodeName == "SHORT-NAME") {
+                                                            editItem.getname = getfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (getfield.nodeName == "METHOD-ID") {
+                                                            editItem.getid = getfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (getfield.nodeName == "MAXIMUM-SEGMENT-LENGTH-REQUEST") {
+                                                            editItem.getmaxreq = getfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (getfield.nodeName == "MAXIMUM-SEGMENT-LENGTH-RESPONSE") {
+                                                            editItem.getmaxres = getfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (getfield.nodeName == "SEPARATION-TIME-REQUEST") {
+                                                            editItem.gettimereq = getfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (getfield.nodeName == "SEPARATION-TIME-RESPONSE") {
+                                                            editItem.gettimeres = getfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (getfield.nodeName == "TRANSPORT-PROTOCOL") {
+                                                            editItem.getproto = getfield.childNodes[0].nodeValue
+                                                        }
+                                                    }
+                                                })
                                             }
-                                            if (getfield.nodeName == "MAXIMUM-SEGMENT-LENGTH-RESPONSE") {
-                                                editItem.getmaxres = getfield.childNodes[0].nodeValue
+                                            if (data.nodeName == "SET") {
+                                                data.childNodes.forEach((setfield, s) => {
+                                                    if (s % 2 != 0) {
+                                                        if (setfield.nodeName == "SHORT-NAME") {
+                                                            editItem.setname = setfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (setfield.nodeName == "METHOD-ID") {
+                                                            editItem.setid = setfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (setfield.nodeName == "MAXIMUM-SEGMENT-LENGTH-REQUEST") {
+                                                            editItem.setmaxreq = setfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (setfield.nodeName == "MAXIMUM-SEGMENT-LENGTH-RESPONSE") {
+                                                            editItem.setmaxres = setfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (setfield.nodeName == "SEPARATION-TIME-REQUEST") {
+                                                            editItem.settimereq = setfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (setfield.nodeName == "SEPARATION-TIME-RESPONSE") {
+                                                            editItem.settimeres = setfield.childNodes[0].nodeValue
+                                                        }
+                                                        if (setfield.nodeName == "TRANSPORT-PROTOCOL") {
+                                                            editItem.setproto = setfield.childNodes[0].nodeValue
+                                                        }
+                                                    }
+                                                })
                                             }
-                                            if (getfield.nodeName == "SEPARATION-TIME-REQUEST") {
-                                                editItem.gettimereq = getfield.childNodes[0].nodeValue
+                                            if (data.nodeName == "NOTIFIER") {
+                                                data.childNodes.forEach((noti, n) => {
+                                                    if (n % 2 != 0) {
+                                                        if (noti.nodeName == "SHORT-NAME") {
+                                                            editItem.notname = noti.childNodes[0].nodeValue
+                                                        }
+                                                        if (noti.nodeName == "EVENT-ID") {
+                                                            editItem.notid = noti.childNodes[0].nodeValue
+                                                        }
+                                                        if (noti.nodeName == "MAXIMUM-SEGMENT-LENGTH") {
+                                                            editItem.notmax = noti.childNodes[0].nodeValue
+                                                        }
+                                                        if (noti.nodeName == "SEPARATION-TIME") {
+                                                            editItem.nottime = noti.childNodes[0].nodeValue
+                                                        }
+                                                        if (noti.nodeName == "SERIALIZER") {
+                                                            editItem.notserial = noti.childNodes[0].nodeValue
+                                                        }
+                                                        if (noti.nodeName == "TRANSPORT-PROTOCOL") {
+                                                            editItem.notproto = noti.childNodes[0].nodeValue
+                                                        }
+                                                    }
+                                                })
                                             }
-                                            if (getfield.nodeName == "SEPARATION-TIME-RESPONSE") {
-                                                editItem.gettimeres = getfield.childNodes[0].nodeValue
-                                            }
-                                            if (getfield.nodeName == "TRANSPORT-PROTOCOL") {
-                                                editItem.getproto = getfield.childNodes[0].nodeValue
-                                            }
-                                        })
-                                    }
-                                    if (data.nodeName == "SET") {
-                                        data.childNodes.forEach(setfield => {
-                                            if (setfield.nodeName == "SHORT-NAME") {
-                                                editItem.setname = setfield.childNodes[0].nodeValue
-                                            }
-                                            if (setfield.nodeName == "METHOD-ID") {
-                                                editItem.setid = setfield.childNodes[0].nodeValue
-                                            }
-                                            if (setfield.nodeName == "MAXIMUM-SEGMENT-LENGTH-REQUEST") {
-                                                editItem.setmaxreq = setfield.childNodes[0].nodeValue
-                                            }
-                                            if (setfield.nodeName == "MAXIMUM-SEGMENT-LENGTH-RESPONSE") {
-                                                editItem.setmaxres = setfield.childNodes[0].nodeValue
-                                            }
-                                            if (setfield.nodeName == "SEPARATION-TIME-REQUEST") {
-                                                editItem.settimereq = setfield.childNodes[0].nodeValue
-                                            }
-                                            if (setfield.nodeName == "SEPARATION-TIME-RESPONSE") {
-                                                editItem.settimeres = setfield.childNodes[0].nodeValue
-                                            }
-                                            if (setfield.nodeName == "TRANSPORT-PROTOCOL") {
-                                                editItem.setproto = setfield.childNodes[0].nodeValue
-                                            }
-                                        })
-                                    }
-                                    if (data.nodeName == "NOTIFIER") {
-                                        data.childNodes.forEach(noti => {
-                                            if (noti.nodeName == "SHORT-NAME") {
-                                                editItem.notname = noti.childNodes[0].nodeValue
-                                            }
-                                            if (noti.nodeName == "EVENT-ID") {
-                                                editItem.notid = noti.childNodes[0].nodeValue
-                                            }
-                                            if (noti.nodeName == "MAXIMUM-SEGMENT-LENGTH") {
-                                                editItem.notmax = noti.childNodes[0].nodeValue
-                                            }
-                                            if (noti.nodeName == "SEPARATION-TIME") {
-                                                editItem.nottime = noti.childNodes[0].nodeValue
-                                            }
-                                            if (noti.nodeName == "SERIALIZER") {
-                                                editItem.notserial = noti.childNodes[0].nodeValue
-                                            }
-                                            if (noti.nodeName == "TRANSPORT-PROTOCOL") {
-                                                editItem.notproto = noti.childNodes[0].nodeValue
-                                            }
-                                        })
-                                    }
-                                })
-                                const addObj = Object.assign({}, editItem)
-                                fieldD.push(addObj)
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editItem)
+                                    fieldD.push(addObj)
+                                }
                             })
-
                         }
                         if (item.nodeName == "METHOD-DEPLOYMENTS") {
-                            item.childNodes.forEach(met => {
+                            item.childNodes.forEach((met, m) => {
                                 var editMethodD = { name: '', method: null, id: '', maxrequest: '', maxresponse: '', timerequest: '', timeresponse: '', protocal: null }
-                                met.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editMethodD.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "METHOD-REF") {
-                                        editMethodD.method = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "METHOD-ID") {
-                                        editMethodD.id = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "MAXIMUM-SEGMENT-LENGTH-REQUEST") {
-                                        editMethodD.maxrequest = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "MAXIMUM-SEGMENT-LENGTH-RESPONSE") {
-                                        editMethodD.maxresponse = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "SEPARATION-TIME-REQUEST") {
-                                        editMethodD.timerequest = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "SEPARATION-TIME-RESPONSE") {
-                                        editMethodD.timeresponse = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "TRANSPORT-PROTOCOL") {
-                                        editMethodD.protocal = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editMethodD)
-                                methodD.push(addObj)
+                                if (m % 2 != 0) {
+                                    met.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editMethodD.name = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "METHOD-REF") {
+                                                editMethodD.method = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "METHOD-ID") {
+                                                editMethodD.id = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "MAXIMUM-SEGMENT-LENGTH-REQUEST") {
+                                                editMethodD.maxrequest = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "MAXIMUM-SEGMENT-LENGTH-RESPONSE") {
+                                                editMethodD.maxresponse = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "SEPARATION-TIME-REQUEST") {
+                                                editMethodD.timerequest = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "SEPARATION-TIME-RESPONSE") {
+                                                editMethodD.timeresponse = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "TRANSPORT-PROTOCOL") {
+                                                editMethodD.protocal = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editMethodD)
+                                    methodD.push(addObj)
+                                }
                             })
                         }
                     })
@@ -5388,6 +6242,8 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
                     this.commit('addElementSomeIPService', {
                         name: Name,
@@ -5431,13 +6287,17 @@ export default new Vuex.Store({
                             Name = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "NAMESPACES") {
-                            item.childNodes.forEach(symbol => {
-                                symbol.childNodes.forEach(data => {
-                                    namespace += data.childNodes[0].nodeValue
-                                    namespace += '/'
-                                })
-                                namespace = namespace.substr(0, namespace.length - 1)
-                                namespace += ','
+                            item.childNodes.forEach((symbol, s) => {
+                                if (s % 2 != 0) {
+                                    symbol.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            namespace += data.childNodes[0].nodeValue
+                                            namespace += '/'
+                                        }
+                                    })
+                                    namespace = namespace.substr(0, namespace.length - 1)
+                                    namespace += ','
+                                }
                             })
                         }
                         if (item.nodeName == "IS-SERVICE") {
@@ -5450,101 +6310,119 @@ export default new Vuex.Store({
                             min = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "EVENTS") {
-                            item.childNodes.forEach(eve => {
+                            item.childNodes.forEach((eve, e) => {
                                 var editEvent = { name: '', type: null }
-                                eve.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editEvent.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "TYPE-TREF") {
-                                        editEvent.type = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editEvent)
-                                events.push(addObj)
+                                if (e % 2 != 0) {
+                                    eve.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editEvent.name = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "TYPE-TREF") {
+                                                editEvent.type = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editEvent)
+                                    events.push(addObj)
+                                }
                             })
                         }
                         if (item.nodeName == "FIELDS") {
-                            item.childNodes.forEach(fie => {
+                            item.childNodes.forEach((fie, f) => {
                                 var editField = { name: '', type: null, getter: null, setter: null, notifier: null }
-                                fie.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editField.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "TYPE-TREF") {
-                                        editField.type = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "HAS-GETTER") {
-                                        editField.getter = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "HAS-SETTER") {
-                                        editField.setter = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "HAS-NOTIFIER") {
-                                        editField.notifier = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editField)
-                                fields.push(addObj)
+                                if (f % 2 != 0) {
+                                    fie.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editField.name = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "TYPE-TREF") {
+                                                editField.type = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "HAS-GETTER") {
+                                                editField.getter = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "HAS-SETTER") {
+                                                editField.setter = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "HAS-NOTIFIER") {
+                                                editField.notifier = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editField)
+                                    fields.push(addObj)
+                                }
                             })
                         }
                         if (item.nodeName == "METHODS") {
-                            item.childNodes.forEach(met => {
+                            item.childNodes.forEach((met, m) => {
                                 var editedItem = { name: '', fireforget: null, argument: [], errorSet: [], error: [], descrip: '' }
-                                met.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editedItem.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "ARGUMENTS") {
-                                        data.childNodes.forEach(arg => {
-                                            var editArgItem = { name: '', type: null, dir: null, descrip: '' }
-                                            arg.childNodes.forEach(proto => {
-                                                if (proto.nodeName == "SHORT-NAME") {
-                                                    editArgItem.name = proto.childNodes[0].nodeValue
-                                                }
-                                                if (proto.nodeName == "TYPE-TREF") {
-                                                    editArgItem.type = proto.childNodes[0].nodeValue
-                                                }
-                                                if (proto.nodeName == "DIRECTION") {
-                                                    editArgItem.dir = proto.childNodes[0].nodeValue
-                                                }
-                                                if (proto.nodeName == "DESC") {
-                                                    editArgItem.descrip = proto.childNodes[0].childNodes[0].nodeValue
-                                                }
-                                            })
-                                            const addObj = Object.assign({}, editArgItem)
-                                            editedItem.argument.push(addObj)
-                                        })
-                                    }
-                                    if (data.nodeName == "FIRE-AND-FORGET") {
-                                        editedItem.fireforget = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "POSSIBLE-AP-ERROR-SET-REFS") {
-                                        var editErrorSetItem = { error: null }
-                                        data.childNodes.forEach(err => {
-                                            if (err.nodeName == "POSSIBLE-AP-ERROR-SET-REF") {
-                                                editErrorSetItem.error = err.childNodes[0].nodeValue
+                                if (m % 2 != 0) {
+                                    met.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editedItem.name = data.childNodes[0].nodeValue
                                             }
-                                        })
-                                        const addObj = Object.assign({}, editErrorSetItem)
-                                        editedItem.errorSet.push(addObj)
-                                    }
-                                    if (data.nodeName == "POSSIBLE-AP-ERROR-REFS") {
-                                        var editErrorItem = { error: null }
-                                        data.childNodes.forEach(err => {
-                                            if (err.nodeName == "POSSIBLE-AP-ERROR-REF") {
-                                                editErrorItem.error = err.childNodes[0].nodeValue
+                                            if (data.nodeName == "ARGUMENTS") {
+                                                data.childNodes.forEach((arg, a) => {
+                                                    var editArgItem = { name: '', type: null, dir: null, descrip: '' }
+                                                    if (a % 2 != 0) {
+                                                        arg.childNodes.forEach(proto => {
+                                                            if (proto.nodeName == "SHORT-NAME") {
+                                                                editArgItem.name = proto.childNodes[0].nodeValue
+                                                            }
+                                                            if (proto.nodeName == "TYPE-TREF") {
+                                                                editArgItem.type = proto.childNodes[0].nodeValue
+                                                            }
+                                                            if (proto.nodeName == "DIRECTION") {
+                                                                editArgItem.dir = proto.childNodes[0].nodeValue
+                                                            }
+                                                            if (proto.nodeName == "DESC") {
+                                                                editArgItem.descrip = proto.childNodes[1].childNodes[0].nodeValue
+                                                            }
+                                                        })
+                                                        const addObj = Object.assign({}, editArgItem)
+                                                        editedItem.argument.push(addObj)
+                                                    }
+                                                })
                                             }
-                                        })
-                                        const addObj = Object.assign({}, editErrorItem)
-                                        editedItem.error.push(addObj)
-                                    }
-                                    if (data.nodeName == "DESC") {
-                                        editedItem.descrip = data.childNodes[0].childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editedItem)
-                                methods.push(addObj)
+                                            if (data.nodeName == "FIRE-AND-FORGET") {
+                                                editedItem.fireforget = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "POSSIBLE-AP-ERROR-SET-REFS") {
+                                                var editErrorSetItem = { error: null }
+                                                data.childNodes.forEach((err, e) => {
+                                                    if (e % 2 != 0) {
+                                                        if (err.nodeName == "POSSIBLE-AP-ERROR-SET-REF") {
+                                                            editErrorSetItem.error = err.childNodes[0].nodeValue
+                                                        }
+                                                    }
+                                                })
+                                                const addObj = Object.assign({}, editErrorSetItem)
+                                                editedItem.errorSet.push(addObj)
+                                            }
+                                            if (data.nodeName == "POSSIBLE-AP-ERROR-REFS") {
+                                                var editErrorItem = { error: null }
+                                                data.childNodes.forEach((err, e) => {
+                                                    if (e % 2 != 0) {
+                                                        if (err.nodeName == "POSSIBLE-AP-ERROR-REF") {
+                                                            editErrorItem.error = err.childNodes[0].nodeValue
+                                                        }
+                                                    }
+                                                })
+                                                const addObj = Object.assign({}, editErrorItem)
+                                                editedItem.error.push(addObj)
+                                            }
+                                            if (data.nodeName == "DESC") {
+                                                editedItem.descrip = data.childNodes[1].childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editedItem)
+                                    methods.push(addObj)
+                                }
                             })
                         }
                     })
@@ -5553,6 +6431,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementService', {
                         name: Name,
                         input: true,
@@ -5616,6 +6497,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementClient', {
                         name: Name,
                         input: true,
@@ -5665,6 +6549,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementServer', {
                         name: Name,
                         input: true,
@@ -5723,6 +6610,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementSomeIPClient', {
                         name: Name,
                         input: true,
@@ -5800,6 +6690,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementSomeIPServer', {
                         name: Name,
                         input: true,
@@ -5842,7 +6735,7 @@ export default new Vuex.Store({
                             connect = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "SERVICE-INSTANCE-REFS") {
-                            service = item.childNodes[0].childNodes[0].nodeValue
+                            service = item.childNodes[1].childNodes[0].nodeValue
                         }
                         if (item.nodeName == "UDP-PORT") {
                             udp = item.childNodes[0].nodeValue
@@ -5856,6 +6749,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementSomeIPtoMachine', {
                         name: Name,
                         input: true,
@@ -5893,8 +6789,8 @@ export default new Vuex.Store({
                             Name = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "PORT-PROTOTYPE-IREF") {
-                            selectPort = item.childNodes[0].getAttribute("DEST")
-                            porttype = item.childNodes[0].childNodes[0].nodeValue
+                            selectPort = item.childNodes[1].getAttribute("DEST")
+                            porttype = item.childNodes[1].childNodes[0].nodeValue
                         }
                         if (item.nodeName == "PROCESS-REF") {
                             process = item.childNodes[0].nodeValue
@@ -5909,6 +6805,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementToPortPrototype', {
                         name: Name,
                         input: true,
@@ -5963,33 +6862,41 @@ export default new Vuex.Store({
                             ver = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "METHOD-REQUEST-PROPSS") {
-                            item.childNodes.forEach(prop => {
+                            item.childNodes.forEach((prop, p) => {
                                 var editMethodItem = { method: null }
-                                prop.childNodes.forEach(data => {
-                                    if (data.nodeName == "METHOD-REF") {
-                                        editMethodItem.method = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editMethodItem)
-                                methodP.push(addObj)
+                                if (p % 2 != 0) {
+                                    prop.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "METHOD-REF") {
+                                                editMethodItem.method = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editMethodItem)
+                                    methodP.push(addObj)
+                                }
                             })
                         }
                         if (item.nodeName == "REQUIRED-EVENT-GROUPS") {
-                            item.childNodes.forEach(group => {
+                            item.childNodes.forEach((group, g) => {
                                 var editItem = { name: '', eventG: null, client: null }
-                                group.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editItem.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "EVENT-GROUP-REF") {
-                                        editItem.eventG = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "SD-CLIENT-EVENT-GROUP-TIMING-CONFIG-REF") {
-                                        editItem.client = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editItem)
-                                requiredevent.push(addObj)
+                                if (g % 2 != 0) {
+                                    group.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editItem.name = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "EVENT-GROUP-REF") {
+                                                editItem.eventG = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "SD-CLIENT-EVENT-GROUP-TIMING-CONFIG-REF") {
+                                                editItem.client = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editItem)
+                                    requiredevent.push(addObj)
+                                }
                             })
                         }
                     })
@@ -5998,6 +6905,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementRequiredSomeIP', {
                         name: Name,
                         input: true,
@@ -6048,57 +6958,69 @@ export default new Vuex.Store({
                             id = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "EVENT-PROPSS") {
-                            item.childNodes.forEach(prop => {
+                            item.childNodes.forEach((prop, p) => {
                                 var editItem = { event: null }
-                                prop.childNodes.forEach(data => {
-                                    if (data.nodeName == "EVENT-REF") {
-                                        editItem.event = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editItem)
-                                eventP.push(addObj)
+                                if (p % 2 != 0) {
+                                    prop.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "EVENT-REF") {
+                                                editItem.event = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editItem)
+                                    eventP.push(addObj)
+                                }
                             })
                         }
                         if (item.nodeName == "METHOD-RESPONSE-PROPSS") {
-                            item.childNodes.forEach(prop => {
+                            item.childNodes.forEach((prop, p) => {
                                 var editMethodItem = { method: null }
-                                prop.childNodes.forEach(data => {
-                                    if (data.nodeName == "METHOD-REF") {
-                                        editMethodItem.method = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editMethodItem)
-                                method.push(addObj)
+                                if (p % 2 != 0) {
+                                    prop.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "METHOD-REF") {
+                                                editMethodItem.method = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editMethodItem)
+                                    method.push(addObj)
+                                }
                             })
                         }
                         if (item.nodeName == "PROVIDED-EVENT-GROUPS") {
-                            item.childNodes.forEach(group => {
+                            item.childNodes.forEach((group, g) => {
                                 var editItem = { name: '', eventG: null, udp: '', ipv4: '', ipv6: '', threshold: '', server: null }
-                                group.childNodes.forEach(data => {
-                                    if (data.nodeName == "SHORT-NAME") {
-                                        editItem.name = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "EVENT-GROUP-REF") {
-                                        editItem.eventG = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "EVENT-MULTICAST-UDP-PORT") {
-                                        editItem.udp = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "IPV-4-MULTICAST-IP-ADDRESS") {
-                                        editItem.ipv4 = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "IPV-6-MULTICAST-IP-ADDRESS") {
-                                        editItem.ipv6 = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "MULTICAST-THRESHOLD") {
-                                        editItem.threshold = data.childNodes[0].nodeValue
-                                    }
-                                    if (data.nodeName == "SD-SERVER-EVENT-GROUP-TIMING-CONFIG-REF") {
-                                        editItem.server = data.childNodes[0].nodeValue
-                                    }
-                                })
-                                const addObj = Object.assign({}, editItem)
-                                eventG.push(addObj)
+                                if (g % 2 != 0) {
+                                    group.childNodes.forEach((data, d) => {
+                                        if (d % 2 != 0) {
+                                            if (data.nodeName == "SHORT-NAME") {
+                                                editItem.name = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "EVENT-GROUP-REF") {
+                                                editItem.eventG = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "EVENT-MULTICAST-UDP-PORT") {
+                                                editItem.udp = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "IPV-4-MULTICAST-IP-ADDRESS") {
+                                                editItem.ipv4 = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "IPV-6-MULTICAST-IP-ADDRESS") {
+                                                editItem.ipv6 = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "MULTICAST-THRESHOLD") {
+                                                editItem.threshold = data.childNodes[0].nodeValue
+                                            }
+                                            if (data.nodeName == "SD-SERVER-EVENT-GROUP-TIMING-CONFIG-REF") {
+                                                editItem.server = data.childNodes[0].nodeValue
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editItem)
+                                    eventG.push(addObj)
+                                }
                             })
                         }
                     })
@@ -6107,6 +7029,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementProvidedSomeIP', {
                         name: Name,
                         input: true,
@@ -6144,7 +7069,7 @@ export default new Vuex.Store({
                             Name = item.childNodes[0].nodeValue
                         }
                         if (item.nodeName == "DESC") {
-                            desc = item.childNodes[0].childNodes[0].nodeValue
+                            desc = item.childNodes[1].childNodes[0].nodeValue
                         }
                         if (item.nodeName == "ERROR-CODE") {
                             code = item.childNodes[0].nodeValue
@@ -6158,6 +7083,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementError', {
                         name: Name,
                         input: true,
@@ -6193,9 +7121,9 @@ export default new Vuex.Store({
                                 var editItem = { error: null }
                                 if (data.nodeName == "AP-APPLICATION-ERROR-REF") {
                                     editItem.error = data.childNodes[0].nodeValue
+                                    const addObj = Object.assign({}, editItem)
+                                    errorref.push(addObj)
                                 }
-                                const addObj = Object.assign({}, editItem)
-                                errorref.push(addObj)
                             })
                         }
                     })
@@ -6204,6 +7132,9 @@ export default new Vuex.Store({
                     if (UUID == null || idxEle != -1) {
                         UUID = uuid.v1()
                     }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                     this.commit('addElementErrorSet', {
                         name: Name,
                         input: true,
@@ -6234,13 +7165,17 @@ export default new Vuex.Store({
                         Name = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "NAMESPACES") {
-                        item.childNodes.forEach(symbol => {
-                            symbol.childNodes.forEach(data => {
-                                namespace += data.childNodes[0].nodeValue
-                                namespace += '/'
-                            })
-                            namespace = namespace.substr(0, namespace.length - 1)
-                            namespace += ','
+                        item.childNodes.forEach((symbol, s) => {
+                            if (s % 2 != 0) {
+                                symbol.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        namespace += data.childNodes[0].nodeValue
+                                        namespace += '/'
+                                    }
+                                })
+                                namespace = namespace.substr(0, namespace.length - 1)
+                                namespace += ','
+                            }
                         })
                     }
                     if (item.nodeName == "VALUE") {
@@ -6252,6 +7187,9 @@ export default new Vuex.Store({
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
                 this.commit('addElementErrorDomain', {
                     name: Name,
                     input: true,
@@ -6275,7 +7213,7 @@ export default new Vuex.Store({
             state.isInputFileComplate = false // element들이 다 그려졌다는걸 알려 주는것임
         },
         checkLineInputXml(state) {
-            //console.log(state.inputFileList)
+            console.log(state.inputFileList)
             state.inputFileList.forEach(ele => {
                 var idxelement = null
                 if (ele.parent == constant.Implementation_str) {
@@ -6290,6 +7228,7 @@ export default new Vuex.Store({
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].templatetype != null) {
                         state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
+                            console.log(state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].templatetype + ' ==== ' + item.path + '/' + item.name)
                             if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].templatetype == (item.path + '/' + item.name)) {
                                 this.commit('setConnectionline', { start: ele.uuid + '/templateType', end: item.uuid })
                                 EventBus.$emit('new-line', ele.uuid + '/templateType', item.uuid)
@@ -6653,7 +7592,7 @@ export default new Vuex.Store({
                                                     if (group.event == (item.path + '/' + item.name + '/' + data.name)) {
                                                         this.commit('setConnectionline', { start: ele.uuid + '/event-' + g + '-' + i, end: item.uuid })
                                                         if (i == 0) {
-                                                            EventBus.$emit('new-line', ele.uuid + '/eventtab' + group.name, item.uuid)
+                                                            EventBus.$emit('new-line', ele.uuid + '/eventtab' + eve.name, item.uuid)
                                                         } else {
                                                             EventBus.$emit('new-line', ele.uuid + '/event', item.uuid)
                                                         }

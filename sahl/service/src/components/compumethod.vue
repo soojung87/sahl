@@ -38,8 +38,8 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isScaleOpenClose">  
-                            <v-data-table v-model="selectDelectScaleItem" :headers="headerScale" :items="element.scales" 
-                                    :show-select="isdeleteScaleItem" item-key="const" height="150px" dense hide-default-footer >
+                            <v-data-table v-model="selectDelectScaleItem" :headers="headerScale" :items="element.scales"  :items-per-page='20'
+                                    :show-select="isdeleteScaleItem" item-key="symbol" height="150px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>

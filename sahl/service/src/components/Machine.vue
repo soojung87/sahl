@@ -62,7 +62,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isHWElementOpenClose">
-                            <v-data-table v-model="selectDelectHWElement" :headers="headerHWElement" :items="element.hwelement"
+                            <v-data-table v-model="selectDelectHWElement" :headers="headerHWElement" :items="element.hwelement" :items-per-page='20'
                                     :show-select="isdeleteHWElementItem" item-key="hwelement" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -130,7 +130,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isFunctionGroupOpenClose">
-                            <v-data-table v-model="selectDelectFunctionItem" :headers="headerFunctionGroup" :items="element.functiongroup"
+                            <v-data-table v-model="selectDelectFunctionItem" :headers="headerFunctionGroup" :items="element.functiongroup" :items-per-page='20'
                                     :show-select="isdeleteFunctionGroupItem" item-key="name" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -221,7 +221,7 @@
                                             </v-btn>
                                         </div>
                                         <v-data-table v-if="isCoreOpenClose" v-model="selectDelectCoreItem" :headers="headerCore" :items="tab.core" :id="element.uuid+'/processorCore-'"
-                                                :show-select="isdeleteCoreItem" item-key="name" height="100px" dense hide-default-footer >
+                                                :show-select="isdeleteCoreItem" item-key="name" height="100px" dense hide-default-footer :items-per-page='20'>
                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                             </template>
@@ -298,7 +298,7 @@
                                             </v-btn>
                                         </div>
                                         <v-data-table v-if="isResourceGOpenClose" v-model="selectDelectModuleInsItem" :headers="headerModuleIns" :items="tab.resource" :id="element.uuid+'/moduleInsable'"
-                                                :show-select="isdeleteResourceGItem" item-key="name" height="100px" dense hide-default-footer >
+                                                :show-select="isdeleteResourceGItem" item-key="name" height="100px" dense hide-default-footer :items-per-page='20'>
                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                 <v-simple-checkbox color="green" :value="isSelected" @input="select($event)" :ripple="false"></v-simple-checkbox>
                                             </template>

@@ -37,7 +37,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isErrorRefOpenClose">
-                            <v-data-table v-model="selectDelectErrorRef" :headers="headerErrorRef" :items="element.errorref"
+                            <v-data-table v-model="selectDelectErrorRef" :headers="headerErrorRef" :items="element.errorref" :items-per-page='20'
                                     :show-select="isdeleteErrorRefItem" item-key="error" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>

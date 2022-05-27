@@ -5,7 +5,7 @@
         <v-divider></v-divider>
         <v-list dense>
             <v-list-group v-for="(item,idx) in navigatorList" :key="idx"
-                    prepend-icon="mdi-alpha-p-circle-outline" no-action sub-group> <!--  sub-group 빼면 리스트가 하나씩만 보인다-->
+                    prepend-icon="mdi-alpha-p-circle-outline" no-action sub-group v-model="openlist"> <!--  sub-group 빼면 리스트가 하나씩만 보인다-->
                 <template v-slot:activator>
                     <v-list-item-icon v-if="item.validation">
                         <v-icon color="red" dark>mdi-exclamation</v-icon>
@@ -161,6 +161,7 @@ export default({
             showMenu: false,
             x: 0,
             y: 0,
+            openlist: true,
             ismenu: 0,
             activenode: [],
             openIds: [],
@@ -430,12 +431,12 @@ export default({
         activeElement() {
             var treeitem
             var arrelement
-            //console.log('00 '+ this.$store.state.activeUUID)
+            console.log('00 '+ this.$store.state.activeUUID)
             if(this.activenode[0] != this.$store.state.activeUUID) {
                 if(this.$store.state.activeUUID != null) {
                     treeitem = Object.values(this.$store.getters.gettreeviewitems)
                     arrelement = treeitem.find(data =>  data.uuid === this.$store.state.activeUUID)
-                    //console.log(arrelement)
+                    console.log(arrelement)
                     if (this.activenode[0] != undefined && this.activenode[0].indexOf('-') !== -1) {
                         var actelement = treeitem.find(data =>  data.uuid === this.activenode[0])
                         this.$store.commit('setzIndex', {parent:arrelement.parent, uuid: this.$store.state.activeUUID, zindex: 2} )
@@ -445,7 +446,7 @@ export default({
                         this.$store.commit('setuuid', {uuid: this.activenode[0]} )
 
                         if(actelement.validation) { 
-                            //console.log('111111'+this.activenode[0])
+                            console.log('111111'+this.activenode[0])
                             this.$store.commit('setValidation', {parent:actelement.parent, uuid:this.activenode[0]})
                         }
 
@@ -455,11 +456,11 @@ export default({
                         this.$store.commit('setuuid', {uuid: null} )
                     }
                 } else if (this.activenode[0] != undefined){
-                    //console.log('=====    '+ this.activenode[0])
+                    console.log('=====    '+ this.activenode[0])
                     if (this.activenode[0].indexOf('-') !== -1) {
                         treeitem = Object.values(this.$store.getters.gettreeviewitems)
                         arrelement = treeitem.find(data =>  data.uuid === this.activenode[0])
-                        //console.log(arrelement)
+                        console.log(arrelement)
                         this.$store.commit('setzIndex', {parent:arrelement.parent, uuid: this.activenode[0], zindex: 10} )
                         this.$store.commit('setuuid', {uuid: this.activenode[0]} )
                         EventBus.$emit('setLineActive', this.activenode[0], true)

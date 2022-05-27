@@ -84,7 +84,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isMethodRefOpenClose">
-                            <v-data-table v-model="selectMethodRef" :headers="headerMethodRef" :items="element.method"
+                            <v-data-table v-model="selectMethodRef" :headers="headerMethodRef" :items="element.method" :items-per-page='20'
                                     :show-select="isdeleteMethodRef" item-key="method" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -373,7 +373,7 @@ export default {
             this.$store.commit('addElementSomeIPService', {
                 name: this.$store.getters.getNameSomeIPService, input: false, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                service: null, majversion:'', minversion:'', id: '', eventG:null, eventD: [], methodD:[], fieldD:[],
+                service: null, majversion:'', minversion:'', id: '', eventG:[], eventD: [], methodD:[], fieldD:[],
             })
             EventBus.$emit('add-element', constant.Service_str)
             EventBus.$emit('add-element', constant.ServiceInterfaces_str)

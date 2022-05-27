@@ -56,7 +56,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-if="isAttributeOpenClose">  
-                            <v-data-table v-model="selectdeleteAttribut" :headers="headersAttribut" :items="element.attribute" 
+                            <v-data-table v-model="selectdeleteAttribut" :headers="headersAttribut" :items="element.attribute" :items-per-page='20'
                                     :show-select="isdeleteAttributeItem" item-key="attr" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>

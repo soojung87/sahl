@@ -498,7 +498,7 @@ export default{
         isInputFileComplate(value) {
             //Input file한뒤에 그림이 그려지기 전에 선을 그리려고 하니 에러 
             //console.log(this.connections)
-            //console.log(value)
+            console.log(value)
             if (value) {
                 this.$nextTick(() => {
                     console.log('updata')

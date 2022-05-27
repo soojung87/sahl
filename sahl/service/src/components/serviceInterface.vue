@@ -47,7 +47,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isEventsOpenClose">  
-                            <v-data-table v-model="selectDelectEventItem" :headers="headerEvents" :items="element.events" 
+                            <v-data-table v-model="selectDelectEventItem" :headers="headerEvents" :items="element.events" :items-per-page='20'
                                     :show-select="isdeleteEventItem" item-key="name" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
@@ -117,7 +117,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isFieldOpenClose">                            
-                            <v-data-table v-model="selectDelectFieldItem" :headers="headerField" :items="element.fields" 
+                            <v-data-table v-model="selectDelectFieldItem" :headers="headerField" :items="element.fields" :items-per-page='20'
                                         :show-select="isdeleteFieldItem" item-key="name" height="100px" dense hide-default-footer>
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
@@ -233,7 +233,7 @@
                                                 </v-btn>
                                             </div>
                                             <v-card-text v-show="isArgumentOpenClose">
-                                                <v-data-table v-model="selDeleteArgItem" :headers="headerArg" :items="tab.argument" 
+                                                <v-data-table v-model="selDeleteArgItem" :headers="headerArg" :items="tab.argument" :items-per-page='20'
                                                         :show-select="isdeleteArg" item-key="name" height="100px" dense hide-default-footer >
                                                     <template v-slot:item.data-table-select="{ isSelected, select }">
                                                         <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -257,7 +257,7 @@
                                                                                 </template>
                                                                             </v-autocomplete>
                                                                             <v-select v-model="editArgItem.dir" clearable :items="argDirection" label="Direction" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
-                                                                            <v-text-field v-model="editArgItem.descirp" label="Description" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                            <v-text-field v-model="editArgItem.descrip" label="Description" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                         </template>
                                                                     </v-edit-dialog>
                                                                 </td>
@@ -281,7 +281,7 @@
                                                                                 </template>
                                                                             </v-autocomplete>
                                                                             <v-select v-model="editArgItem.dir" clearable :items="argDirection" label="Direction" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
-                                                                            <v-text-field v-model="editArgItem.descirp" label="Description" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                            <v-text-field v-model="editArgItem.descrip" label="Description" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                         </template>
                                                                     </v-edit-dialog>
                                                                 </th>
@@ -307,7 +307,7 @@
                                                 </v-btn>
                                             </div>
                                             <v-card-text v-show="isErrorSetOpenClose">
-                                                <v-data-table v-model="selDeleteErrorSet" :headers="headerErrorSet" :items="tab.errorSet" 
+                                                <v-data-table v-model="selDeleteErrorSet" :headers="headerErrorSet" :items="tab.errorSet" :items-per-page='20'
                                                         :show-select="isdeleteErrorSet" item-key="error" height="100px" dense hide-default-footer >
                                                     <template v-slot:item.data-table-select="{ isSelected, select }">
                                                         <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -375,7 +375,7 @@
                                                 </v-btn>
                                             </div>
                                             <v-card-text v-show="isErrorOpenClose">
-                                                <v-data-table v-model="selDeleteError" :headers="headerError" :items="tab.error"
+                                                <v-data-table v-model="selDeleteError" :headers="headerError" :items="tab.error" :items-per-page='20'
                                                         :show-select="isdeleteError" item-key="error" height="100px" dense hide-default-footer >
                                                     <template v-slot:item.data-table-select="{ isSelected, select }">
                                                         <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -529,7 +529,7 @@ export default {
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
                 { text: 'Data Type', sortable: false, value: 'type' },
                 { text: 'Direction', sortable: false, value: 'dir' },
-                { text: 'Description', sortable: false, value: 'descirp' },
+                { text: 'Description', sortable: false, value: 'descrip' },
             ],
             headerErrorSet: [
                 { text: 'Possible AP Error Set Ref', align: 'start', sortable: false, value: 'error' },
@@ -990,7 +990,7 @@ export default {
                 this.editArgItem.type = { name: this.element.methods[this.methodTab].argument[idx].type, uuid: endLine }
             }
             this.editArgItem.dir = this.element.methods[this.methodTab].argument[idx].dir
-            this.editArgItem.descirp = this.element.methods[this.methodTab].argument[idx].descirp
+            this.editArgItem.descrip = this.element.methods[this.methodTab].argument[idx].descrip
         },
         editArg(idx) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab)
@@ -1009,7 +1009,7 @@ export default {
 
             this.element.methods[this.methodTab].argument[idx].name = this.editArgItem.name
             this.element.methods[this.methodTab].argument[idx].dir = this.editArgItem.dir
-            this.element.methods[this.methodTab].argument[idx].descirp = this.editArgItem.descirp
+            this.element.methods[this.methodTab].argument[idx].descrip = this.editArgItem.descrip
             this.cancelArg()
         },
         cancelArg() {

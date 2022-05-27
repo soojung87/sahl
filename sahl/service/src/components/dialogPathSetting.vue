@@ -4,7 +4,7 @@
                 <v-card-title class="text-h6 green accent-1"> Select Path  </v-card-title>
                 <v-card-text>
                     <br>
-                    <v-text-field v-model="editPath" label="New Path" placeholder="String/String/String......" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                    <v-text-field v-model="editPath" label="New Path" placeholder="/String/String/String......" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="deep-purple" x-small @click="deletPathList" dark> delete </v-btn>
@@ -101,6 +101,9 @@ export default {
                 if (this.editPath != '') {
                     if (this.$store.getters.getSamePathList(this.editPath) < 0) {
                         console.log('~~~~~~')
+                        if (this.editPath.charAt(0) != '/'){
+                            this.editPath = '/'+this.editPath
+                        }
                         this.$store.commit('setSavePath', {strPath: this.editPath} )
                     }
                     this.$emit("submit", this.editPath)

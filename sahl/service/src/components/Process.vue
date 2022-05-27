@@ -159,7 +159,7 @@
                                                 </v-btn>
                                             </div>
                                             <v-card-text v-show="isFunctionGOpenClose">
-                                                <v-data-table v-model="selectDelectFunctionGItem" :headers="headerFunctionG" :items="tab.functionItem"
+                                                <v-data-table v-model="selectDelectFunctionGItem" :headers="headerFunctionG" :items="tab.functionItem" :items-per-page='20'
                                                         :show-select="isdeleteFunctionG" item-key="contextMode" height="100px" dense hide-default-footer >
                                                     <template v-slot:item.data-table-select="{ isSelected, select }">
                                                         <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>

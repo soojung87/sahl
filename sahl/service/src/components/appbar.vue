@@ -176,7 +176,12 @@ export default({
         },
         uploadProject () {    
             let file = this.$refs.uploader.files[0];
-            if(!file || file.type !== 'text/xml') return;
+            let type = file.name.split('.')
+            console.log(type)
+            if(!file && (type[1] != "arxml" || type[1] != 'xml')){//file.type !== 'text/xml')) {
+                console.log(file)
+                return;
+            }
             
             let reader = new FileReader();
             reader.readAsText(file, "UTF-8");

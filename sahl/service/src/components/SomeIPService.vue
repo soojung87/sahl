@@ -75,7 +75,7 @@
                                     <v-card flat>
                                         <v-card-text>
                                             <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputEventGName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                            <v-text-field v-model="tab.size" label="Size" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                            <v-text-field v-model="tab.id" label="Group Id" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                             <v-card outlined class="mx-auto">
                                                 <div class="subtitle-2" style="height:20px" :id="element.uuid+'/eventtab'+tab.name">
                                                     <v-hover v-slot="{ hover }">
@@ -92,7 +92,7 @@
                                                     </v-btn>
                                                 </div>
                                                 <v-card-text v-show="isEventOpenClose">
-                                                    <v-data-table v-model="selectDelectEvent" :headers="headerEvent" :items="tab.event"
+                                                    <v-data-table v-model="selectDelectEvent" :headers="headerEvent" :items="tab.event" :items-per-page='20'
                                                             :show-select="isdeleteEvent" item-key="event" height="100px" dense hide-default-footer >
                                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -156,7 +156,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isEventDOpenClose">
-                            <v-data-table v-model="selectDelectEventD" :headers="headerEventD" :items="element.eventD" 
+                            <v-data-table v-model="selectDelectEventD" :headers="headerEventD" :items="element.eventD" :items-per-page='20'
                                     :show-select="isdeleteEventD" item-key="name" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -226,7 +226,7 @@
                             </v-btn>
                         </div>
                         <v-card-text v-show="isMethodDOpenClose">
-                            <v-data-table v-model="selectDelectMethodD" :headers="headerMethodD" :items="element.methodD"
+                            <v-data-table v-model="selectDelectMethodD" :headers="headerMethodD" :items="element.methodD" :items-per-page='20'
                                     :show-select="isdeleteMethodD" item-key="name" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -609,7 +609,7 @@ export default {
         },
 
         addEventG() {
-            const editItem = {name: '', size: '', event: []}
+            const editItem = {name: '', id: '', event: []}
             const addObj = new Object(editItem)
             let res = true, n = 0
 

@@ -47,7 +47,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isPPortOpenClose">  
-                                    <v-data-table v-model="selectDelectPPort" :headers="headerPPort" :items="element.pport"
+                                    <v-data-table v-model="selectDelectPPort" :headers="headerPPort" :items="element.pport" :items-per-page='20'
                                             :show-select="isdeletePPort" item-key="name" height="100px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -117,7 +117,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isPRPortOpenClose">  
-                                    <v-data-table v-model="selectDelectPRPort" :headers="headerPRPort" :items="element.prport"
+                                    <v-data-table v-model="selectDelectPRPort" :headers="headerPRPort" :items="element.prport" :items-per-page='20'
                                             :show-select="isdeletePRPort" item-key="name" height="100px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -187,7 +187,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isRPortOpenClose">  
-                                    <v-data-table v-model="selectDelectRPort" :headers="headerRPort" :items="element.rport"
+                                    <v-data-table v-model="selectDelectRPort" :headers="headerRPort" :items="element.rport" :items-per-page='20'
                                             :show-select="isdeleteRPort" item-key="name" height="100px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
