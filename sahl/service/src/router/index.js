@@ -5,7 +5,6 @@ import VueRouter from 'vue-router'
 // import HWElement from '../components/HWElement.vue'
 // import ModeDeclarationGroup from '../components/ModeDeclarationGroup.vue'
 import mainview from '../components/mainview.vue'
-import NotFound from '../components/notFound.vue'
 // import serviceInterface from '../components/serviceInterface.vue'
 // import mainscreen from '../components/mainscreen.vue'
 // import systembar from '../components/systembar.vue'
@@ -80,10 +79,6 @@ const routes = [
     // { path: '/dialogPathSetting', name: dialogPathSetting, component: dialogPathSetting },
     // { path: '/dialogSave', name: dialogSave, component: dialogSave },
     {
-        path: '/:notFound(.*)', //소괄호 사이의 정규 표현식
-        component: NotFound
-    },
-    {
         path: '/about',
         name: 'About',
         // route level code-splitting
@@ -95,8 +90,8 @@ const routes = [
 ]
 
 const router = new VueRouter({
-    mode: 'hash',
-    //base: process.env.BASE_URL,
+    mode: 'history',
+    base: process.env.BASE_URL,
     routes
 })
 
