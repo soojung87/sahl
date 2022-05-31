@@ -214,7 +214,7 @@ export default {
 </script>
 <style>
 .zoom-width{
-    -webkit-transform-origin: 0 0; /* 이거 넣으니 확대했을때 title안나오던거 보임 */
+    transform-origin: 0 0; /* 이거 넣으니 확대했을때 title안나오던거 보임 */
     margin: 0 10px 0 0;
 }
 </style>
