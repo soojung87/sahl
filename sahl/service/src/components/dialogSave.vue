@@ -107,7 +107,7 @@
                     Save
                 </v-btn>
                 <v-snackbar v-model="snackbar" :timeout="timeout" color="red accent-2">
-                    {{ text }}
+                    {{ textSaveError }}
                         <template v-slot:action="{ attrs }">
                         <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
                             Close
@@ -184,7 +184,7 @@ export default {
             ],
             dialogNoValidation: false,
             snackbar: false,
-            text: '정확하게 작성한 뒤 저장을 시도해 주세요.',
+            textSaveError: '정확하게 작성한 뒤 저장을 시도해 주세요.',
             timeout: 2000,
             dialogOpen: false,
             reOpen: true, // update,beforeupdate는 무언가를 누를때마다 불린다. cancle누르면  둘다 불려서 dialogOpen이 true로 변하기 떄문에 이걸로 바뀌지 않게 잡아줘야함.

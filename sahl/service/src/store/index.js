@@ -21,7 +21,7 @@ export default new Vuex.Store({
         idexDetailView: undefined,
         errorList: [],
         detailViewer: { uuid: '', element: '' },
-        setting: { zoomMain: 0, zoomDetail: 0, },
+        setting: { zoomMain: 0.8, zoomDetail: 0.9, },
         visibleDetailView: true,
         visibleLine: true,
         isOpenCloseSearch: false,
@@ -1613,8 +1613,8 @@ export default new Vuex.Store({
                 namespace
             let xmlDoc, endPath = 0,
                 enterLine = 1
-            saveStr += '<?xml version="1.0" encoding="UTF-8"?>'
-            saveStr += '\n'
+
+            //saveStr += '<?xml version="1.0" encoding="UTF-8"?>'
             saveStr += '<AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00048.xsd">'
             saveStr += getters.getEndterStr(enterLine++)
             var start_one = savelist[0].path.split('/')
@@ -1854,16 +1854,18 @@ export default new Vuex.Store({
                         namespace = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].namespace.split(',')
                         saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<NAMESPACES>"
-                        namespace.forEach(ele => {
-                            var symbol = ele.split('/')
-                            saveStr += getters.getEndterStr(enterLine + 1)
-                            saveStr += "<SYMBOL-PROPS>"
-                            saveStr += getters.getEndterStr(enterLine + 2)
-                            saveStr += "<SHORT-NAME>" + symbol[0] + "</SHORT-NAME>"
-                            saveStr += getters.getEndterStr(enterLine + 2)
-                            saveStr += "<SYMBOL>" + symbol[1] + "</SYMBOL>"
-                            saveStr += getters.getEndterStr(enterLine + 1)
-                            saveStr += "</SYMBOL-PROPS>"
+                        namespace.forEach((ele, e) => {
+                            if (!(ele == '' && e == namespace.length - 1)) {
+                                var symbol = ele.split('/')
+                                saveStr += getters.getEndterStr(enterLine + 1)
+                                saveStr += "<SYMBOL-PROPS>"
+                                saveStr += getters.getEndterStr(enterLine + 2)
+                                saveStr += "<SHORT-NAME>" + symbol[0] + "</SHORT-NAME>"
+                                saveStr += getters.getEndterStr(enterLine + 2)
+                                saveStr += "<SYMBOL>" + symbol[1] + "</SYMBOL>"
+                                saveStr += getters.getEndterStr(enterLine + 1)
+                                saveStr += "</SYMBOL-PROPS>"
+                            }
                         })
                         saveStr += getters.getEndterStr(enterLine)
                         saveStr += "</NAMESPACES>"
@@ -3062,16 +3064,18 @@ export default new Vuex.Store({
                         namespace = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].namespace.split(',')
                         saveStr += getters.getEndterStr(enterLine)
                         saveStr += "<NAMESPACES>"
-                        namespace.forEach(ele => {
-                            var symbol = ele.split('/')
-                            saveStr += getters.getEndterStr(enterLine + 1)
-                            saveStr += "<SYMBOL-PROPS>"
-                            saveStr += getters.getEndterStr(enterLine + 2)
-                            saveStr += "<SHORT-NAME>" + symbol[0] + "</SHORT-NAME>"
-                            saveStr += getters.getEndterStr(enterLine + 2)
-                            saveStr += "<SYMBOL>" + symbol[1] + "</SYMBOL>"
-                            saveStr += getters.getEndterStr(enterLine + 1)
-                            saveStr += "</SYMBOL-PROPS>"
+                        namespace.forEach((ele, e) => {
+                            if (!(ele == '' && e == namespace.length - 1)) {
+                                var symbol = ele.split('/')
+                                saveStr += getters.getEndterStr(enterLine + 1)
+                                saveStr += "<SYMBOL-PROPS>"
+                                saveStr += getters.getEndterStr(enterLine + 2)
+                                saveStr += "<SHORT-NAME>" + symbol[0] + "</SHORT-NAME>"
+                                saveStr += getters.getEndterStr(enterLine + 2)
+                                saveStr += "<SYMBOL>" + symbol[1] + "</SYMBOL>"
+                                saveStr += getters.getEndterStr(enterLine + 1)
+                                saveStr += "</SYMBOL-PROPS>"
+                            }
                         })
                         saveStr += getters.getEndterStr(enterLine)
                         saveStr += "</NAMESPACES>"
@@ -3670,16 +3674,18 @@ export default new Vuex.Store({
                         namespace = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[data.idx].namespace.split(',')
                         saveStr += getters.getEndterStr(elementTab)
                         saveStr += "<NAMESPACES>"
-                        namespace.forEach(ele => {
-                            var symbol = ele.split('/')
-                            saveStr += getters.getEndterStr(elementTab + 1)
-                            saveStr += "<SYMBOL-PROPS>"
-                            saveStr += getters.getEndterStr(elementTab + 2)
-                            saveStr += "<SHORT-NAME>" + symbol[0] + "</SHORT-NAME>"
-                            saveStr += getters.getEndterStr(elementTab + 2)
-                            saveStr += "<SYMBOL>" + symbol[1] + "</SYMBOL>"
-                            saveStr += getters.getEndterStr(elementTab + 1)
-                            saveStr += "</SYMBOL-PROPS>"
+                        namespace.forEach((ele, e) => {
+                            if (!(ele == '' && e == namespace.length - 1)) {
+                                var symbol = ele.split('/')
+                                saveStr += getters.getEndterStr(elementTab + 1)
+                                saveStr += "<SYMBOL-PROPS>"
+                                saveStr += getters.getEndterStr(elementTab + 2)
+                                saveStr += "<SHORT-NAME>" + symbol[0] + "</SHORT-NAME>"
+                                saveStr += getters.getEndterStr(elementTab + 2)
+                                saveStr += "<SYMBOL>" + symbol[1] + "</SYMBOL>"
+                                saveStr += getters.getEndterStr(elementTab + 1)
+                                saveStr += "</SYMBOL-PROPS>"
+                            }
                         })
                         saveStr += getters.getEndterStr(elementTab)
                         saveStr += "</NAMESPACES>"
@@ -4323,14 +4329,33 @@ export default new Vuex.Store({
                 if (data != 'uuid' && data != 'name') {
                     for (var datatype in state.SAHLProject[state.openProjectIndex][data]) {
                         state.SAHLProject[state.openProjectIndex][data][datatype].forEach((ele, elidx) => {
+                            var checkNameSpace = false
+
                             if (ele.name == '') {
                                 state.errorList.push({ uuid: ele.uuid, name: ele.name, parent: data, path: ele.path, error: 'name' })
                             }
                             if (ele.path == '') {
                                 state.errorList.push({ uuid: ele.uuid, name: ele.name, parent: data, path: ele.path, error: 'path' })
                             }
+                            if (ele.namespace != undefined) {
+                                var namespace = ele.namespace.split(',')
+                                console.log(namespace)
+                                namespace.forEach((item, i) => {
+                                    if (!(item == '' && i == namespace.length - 1)) {
+                                        var strSymble = item.split('/')
+                                        console.log(strSymble)
+                                        if (strSymble.length != 2 || strSymble[0] == '' || strSymble[0] == undefined || strSymble[1] == '' || strSymble[1] == undefined) {
+                                            if (checkNameSpace == false) {
+                                                state.errorList.push({ uuid: ele.uuid, name: ele.name, parent: data, path: ele.path, error: 'Name Space' })
+                                            }
+                                            checkNameSpace = true
+                                        }
+                                    }
+                                })
 
-                            if (ele.name == '' || ele.path == '') {
+                            }
+
+                            if (ele.name == '' || ele.path == '' || checkNameSpace == true) {
                                 this.commit('checkVaildationElement', { datatype: datatype, elidx: elidx })
                             }
                         })
@@ -9490,6 +9515,22 @@ export default new Vuex.Store({
                     if (item.error == 'path' && payload.path != '') {
                         state.errorList.splice(i, 1)
                     }
+                    if (item.error == 'Name Space') {
+                        var namespace = payload.namespace.split(',')
+                        var isTrue = true
+                        namespace.forEach((item, i) => {
+                            if (!(item == '' && i == namespace.length - 1)) {
+                                var strSymble = item.split('/')
+                                console.log(strSymble)
+                                if (strSymble.length != 2 || strSymble[0] == '' || strSymble[0] == undefined || strSymble[1] == '' || strSymble[1] == undefined) {
+                                    isTrue = false
+                                }
+                            }
+                        })
+                        if (isTrue) {
+                            state.errorList.splice(i, 1)
+                        }
+                    }
                 }
             })
         },
@@ -10632,7 +10673,8 @@ export default new Vuex.Store({
             var s = new XMLSerializer(); //DOM 트리를 직렬화하여 XML을 포함하는 문자열로 변환합니다.
             var saveList = this.getters.sortSaveList(payload.list)
             var d = this.getters.getSaveObject(saveList);
-            var str = s.serializeToString(d); //문서의 DOM 트리를 XML로 다시 직렬화할 수 있습니다.
+            var str = '<?xml version="1.0" encoding="UTF-8"?>\n'
+            str += s.serializeToString(d); //문서의 DOM 트리를 XML로 다시 직렬화할 수 있습니다.
             var blob = new Blob([str], { type: "text/xml" });
             try { FileSaver.saveAs(blob, payload.saveName); } catch (e) { alert('Failed to save the file !'); }
         },

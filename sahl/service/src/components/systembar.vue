@@ -153,22 +153,22 @@ document.onkeydown = function(e) { //단축키 만들기
     EventBus.$emit('shortcut-keys', 'newfile')
   } 
   if(e.shiftKey && e.keyCode == 79) { //shift+o => open file
-  EventBus.$emit('shortcut-keys-appbar', 'openfile')
+    EventBus.$emit('shortcut-keys-appbar', 'openfile')
   }
   if(e.shiftKey && e.keyCode == 83) { //shift+s => save
-  EventBus.$emit('shortcut-keys', 'save')
+    EventBus.$emit('shortcut-keys', 'save')
   }
   if(e.ctrlKey && e.keyCode == 86 && e.shiftKey) { //ctrl+shift+v => validation check
-  EventBus.$emit('shortcut-keys-appbar', 'validation')
+    EventBus.$emit('shortcut-keys-appbar', 'validation')
   }
   if(e.ctrlKey && e.keyCode == 70 && e.shiftKey) { //ctrl+shift+f => search
-  EventBus.$emit('shortcut-keys', 'search')
+    EventBus.$emit('shortcut-keys', 'search')
   }
   if(e.ctrlKey && e.keyCode == 68 && e.shiftKey) { //ctrl+shift+d => delete file
-  EventBus.$emit('shortcut-keys', 'deletefile')
+    EventBus.$emit('shortcut-keys', 'deletefile')
   }
   if(e.shiftKey && e.keyCode == 69) { //shift+e => setting
-  EventBus.$emit('shortcut-keys', 'setting')
+    EventBus.$emit('shortcut-keys', 'setting')
   }
 }
 
@@ -209,7 +209,7 @@ export default({
             ],
             projectItem: [
                 { title: 'New Project', icon:'mdi-folder-plus',  menuAction: action => { this.newProject(action) }},
-                { title: 'Delete Project', icon:'mdi-delete', menuAction: () => {  }},
+                { title: 'Delete Project', icon:'mdi-delete', menuAction: action => { this.deleteProject(action) }},
                 { title: 'Close Project', icon:'mdi-window-close', menuAction: () => {  }},
                 { divider: true, inset: true},
                 { title: 'Save', Shortcut:'Shift+S', icon:'mdi-content-save', menuAction: action => { this.save(action) }}
@@ -257,6 +257,9 @@ export default({
             if (this.$store.state.SAHLProject.length == 0) {
                 this.dialogNewProject = true
             }
+        },
+        deleteProject() {
+            EventBus.$emit('delete-project')
         },
         newFile() {
             if (this.isprojectOpen) {

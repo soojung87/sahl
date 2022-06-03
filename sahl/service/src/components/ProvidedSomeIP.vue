@@ -73,7 +73,7 @@
                                     <v-icon>{{ isEventPOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
                                 </v-btn>
                             </v-hover>
-                            Event Propss
+                            Event Props
                             <v-btn @click="isCheckEventP" text x-small color="indigo" v-if="isEventPOpenClose">
                                 <v-icon>mdi-check</v-icon>
                             </v-btn>
@@ -131,7 +131,7 @@
                                     <v-icon>{{ isMethodRefOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
                                 </v-btn>
                             </v-hover>
-                            Method Response Propss
+                            Method Response Props
                             <v-btn @click="isCheckMethodRef" text x-small color="indigo" v-if="isMethodRefOpenClose">
                                 <v-icon>mdi-check</v-icon>
                             </v-btn>

@@ -21,7 +21,7 @@
                 <v-card-text v-if="iselementOpenClose">
                     <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                 @input='inputErrorDomainName' outlined dense></v-text-field>
-                    <v-text-field v-model="element.namespace" label="Name Space" placeholder="String/String/,String/String/,...." style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
+                    <v-text-field v-model="element.namespace" label="Name Space" @input='inputNameSpace' placeholder="String/String/,String/String/,...." style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
                     <v-text-field v-model="element.value" label="Value" placeholder="int" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
 
                 </v-card-text>
@@ -104,6 +104,9 @@ export default {
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
+        },
+        inputNameSpace() {
+            this.$store.commit('isintoErrorList', {uuid:this.element.uuid, namespace:this.element.namespace, path:this.element.path})
         },
     },
 

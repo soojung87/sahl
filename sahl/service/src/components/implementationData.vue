@@ -21,7 +21,7 @@
                     <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                 @input='inputImplementationName' outlined dense></v-text-field>
                     <v-text-field v-model="element.category" label="Category" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                    <v-text-field v-model="element.namespace" label="Name space" placeholder="String/String/,String/String/,..." style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                    <v-text-field v-model="element.namespace" label="Name space" @input='inputNameSpace' placeholder="String/String/,String/String/,..." style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                     <v-text-field v-model="element.arraysize" label="Array Size" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                     <v-text-field v-model="element.typeemitter" label="Type Emitter" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                     <v-row style="height: 45px">
@@ -354,6 +354,9 @@ export default {
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
+        },
+        inputNameSpace() {
+            this.$store.commit('isintoErrorList', {uuid:this.element.uuid, namespace:this.element.namespace, path:this.element.path})
         },
         clearTemplateType() {
             this.element.templatetype = null

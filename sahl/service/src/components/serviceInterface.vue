@@ -21,7 +21,7 @@
                 <v-card-text v-show="iselementOpenClose"> <!-- edit -->
                     <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                 @input='inputServiceInfName' outlined dense></v-text-field>
-                    <v-text-field v-model="element.namespace" label="Name Spaces" placeholder="String/String/..." style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                    <v-text-field v-model="element.namespace" label="Name Spaces" @input='inputNameSpace' placeholder="String/String/..." style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                     <v-row>
                         <v-col col="6">
                             <v-text-field v-model="element.majversion" label="Major Version" placeholder="number.number" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -799,6 +799,9 @@ export default {
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
+        },
+        inputNameSpace() {
+            this.$store.commit('isintoErrorList', {uuid:this.element.uuid, namespace:this.element.namespace, path:this.element.path})
         },
         newDataType() {
             const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)

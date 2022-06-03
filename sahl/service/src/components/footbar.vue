@@ -13,7 +13,8 @@
                                 <v-icon color="red lighten-1">mdi-alert-circle-outline</v-icon>
                             </v-list-item-avatar>                               
                             <v-list-item-content>
-                                <v-list-item-title class="red--text" >{{ item.parent +'/'+item.name +' ===> '+ item.error +' is null'}}</v-list-item-title>
+                                <v-list-item-title v-if="item.error == 'Name Space'" class="red--text" >{{ item.parent +'/'+item.name +' ===> '+ item.error +' is wrong'}}</v-list-item-title>
+                                <v-list-item-title v-else class="red--text" >{{ item.parent +'/'+item.name +' ===> '+ item.error +' is null'}}</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
                     </v-list>

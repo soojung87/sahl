@@ -98,7 +98,9 @@ export default {
                 this.snackbar = true
                 // editpath 를 작성하거나 checkSavePath하라고 popup 띄어줘라
             } else {
-                if (this.editPath != '') {
+                if (this.checkSavePath[0] != null) {
+                    this.$emit("submit", this.checkSavePath)
+                } else if (this.editPath != '') {
                     if (this.$store.getters.getSamePathList(this.editPath) < 0) {
                         console.log('~~~~~~')
                         if (this.editPath.charAt(0) != '/'){
@@ -107,9 +109,7 @@ export default {
                         this.$store.commit('setSavePath', {strPath: this.editPath} )
                     }
                     this.$emit("submit", this.editPath)
-                } else if (this.checkSavePath != null) {
-                    this.$emit("submit", this.checkSavePath)
-                } 
+                }
                 this.cancelPath()
             }
         },

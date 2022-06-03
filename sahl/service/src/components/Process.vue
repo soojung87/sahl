@@ -45,7 +45,7 @@
                     </v-row>
                     <v-row style="height: 45px">
                         <v-col cols="10">
-                            <v-text-field v-model="element.determin" readonly @click="setDeterminSelect()" clearable @click:clear='clearDetermin()' label="Deterministic Client Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.determin" readonly @click="setDeterminSelect()" clearable @click:clear='clearDetermin()' label="Deterministric Client Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                         </v-col>
                         <v-col cols="2">
                             <v-menu>

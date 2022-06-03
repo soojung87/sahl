@@ -14,7 +14,7 @@
                     <v-icon>mdi-folder-plus</v-icon>
                 </v-btn>
             </template>
-            <span>Add Profect</span>
+            <span>New Profect</span>
         </v-tooltip>
         <v-dialog v-model='dialogNewProject' width="500" >
             <!-- <template v-slot:activator="{ on:ondialog}">
@@ -51,7 +51,7 @@
                 </v-btn>
                 <input ref="uploader" class="d-none" type="file" @change="uploadProject" @click="onClickLoadProject">
             </template>
-            <span>File Input</span>
+            <span>Open File</span>
         </v-tooltip>
         <v-tooltip bottom>  
             <template v-slot:activator="{ on, attrs }">
