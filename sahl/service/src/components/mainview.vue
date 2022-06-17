@@ -384,6 +384,165 @@
                 @resizing="changeElementSize()">
                 <APError :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
+
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].Per.PERFileArray"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'File Array')"
+                @resizing="changeElementSize()">
+                <PerFileArray :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].Per.PERKeyValueD"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'KeyV Database')"
+                @resizing="changeElementSize()">
+                <PerKeyValueDB :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].Per.PERPPtoFileArray"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'PP To File Array Mapping')"
+                @resizing="changeElementSize()">
+                <PPPtoFileArray :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].Per.PERPPtoKeyValue"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'PP To Key Value Database Mapping')"
+                @resizing="changeElementSize()">
+                <PPPtoKeyValue :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].Phm.PHMRecovery"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Recovery Action Interface')"
+                @resizing="changeElementSize()">
+                <PHMRecovery :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].Phm.RecoveryVia"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Recovery VIA Application')"
+                @resizing="changeElementSize()">
+                <PHMRecoveryVia :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].IamG.MethodGD"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Method Grant Design')"
+                @resizing="changeElementSize()">
+                <MethodGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].IamG.EventGD"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Event Grant Design')"
+                @resizing="changeElementSize()">
+                <EventGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].IamG.FieldGD"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Field Grant Design')"
+                @resizing="changeElementSize()">
+                <FieldGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].IamG.MethodG"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Method Grant')"
+                @resizing="changeElementSize()">
+                <MethodGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].IamG.EventG"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Event Grant')"
+                @resizing="changeElementSize()">
+                <EventGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].IamG.FieldG"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Field Grant')"
+                @resizing="changeElementSize()">
+                <FieldGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+
         </v-main>
     </div>
 </template>
@@ -419,6 +578,19 @@ import ToPortPrototype from '../components/ToPortPrototype.vue'
 import RequiredSomeIP from '../components/RequiredSomeIP.vue'
 import ProvidedSomeIP from '../components/ProvidedSomeIP.vue'
 
+import PerFileArray from '../components/FileArray.vue'
+import PerKeyValueDB from '../components/PerKeyValueDB.vue'
+import PPPtoKeyValue from '../components/PPPtoKeyValue.vue'
+import PPPtoFileArray from '../components/PPPtoFileArray.vue'
+import PHMRecovery from '../components/PHMRecoveryAction.vue'
+import PHMRecoveryVia from '../components/PHMRecoveryVia.vue'
+import MethodGrantD from '../components/MethodGrantDesign.vue'
+import EventGrantD from '../components/EventGrantDesign.vue'
+import FieldGrantD from '../components/FieldGrantDesign.vue'
+import MethodGrant from '../components/MethodGrant.vue'
+import EventGrant from '../components/EventGrant.vue'
+import FieldGrant from '../components/FieldGrant.vue'
+
 import { EventBus } from '../main'
 import LeaderLine from 'leader-line-vue'
 import constant from "../store/constants.js"
@@ -430,7 +602,10 @@ export default{
                 SomeIPClient, SomeIPServer, SomeIPtoMachine, ToPortPrototype, RequiredSomeIP, ProvidedSomeIP,
                 APErrorDomain, APErrorSet, APError,
                 Machine, HWElement, ModeDeclarationGroup, MachineDesign, EthernetCluster,
-                DeterministicClient, Executable, Process, ProcessDesign, ProcessToMachine, StartupConfig, SWComponents},
+                DeterministicClient, Executable, Process, ProcessDesign, ProcessToMachine, StartupConfig, SWComponents,
+                PerFileArray, PerKeyValueDB, PPPtoKeyValue, PPPtoFileArray,
+                PHMRecovery, PHMRecoveryVia,
+                MethodGrantD, EventGrantD, FieldGrantD, MethodGrant, EventGrant, FieldGrant},
     computed: {
         SAHLProject() {
             return this.$store.state.SAHLProject
@@ -702,6 +877,38 @@ export default{
                 editStr = 'editErrorSet'
             }  else if (ele == constant.ErrorDomain_str) {
                 editStr = 'editErrorDomain'
+            } else if (ele == constant.FileArray_str) {
+                editStr = 'editPERFileArray'
+            } else if (ele == constant.KeyValueData_str) {
+                editStr = 'editPERKeyValueD'
+            } else if (ele == constant.PortProtoFileA_str) {
+                editStr = 'editPERPPtoFileArray'
+            } else if (ele == constant.PortProtoKeyV_str) {
+                editStr = 'editPERPPtoKeyValue'
+            } else if (ele == constant.PlatformHealthManagC_str) {
+                editStr = 'editPHMContribution'
+            } else if (ele == constant.ContritoMachine_str) {
+                editStr = 'editPHMtoMachine'
+            } else if (ele == constant.HealthChannel_str) {
+                editStr = 'editPHMHealth'
+            } else if (ele == constant.RecoveryVA_str) {
+                editStr = 'editPHMRecovery'
+            } else if (ele == constant.PHMSupervised_str) {
+                editStr = 'editPHMSupervised'
+            } else if (ele == constant.RecoveryActionInterf_str) {
+                editStr = 'editPHMRecoveryVia'
+            } else if (ele == constant.ComMethodGDesign_str) {
+                editStr = 'editMethodGD'
+            } else if (ele == constant.ComEventGDesign_str) {
+                editStr = 'editEventGD'
+            } else if (ele == constant.ComFieldGDesign_str) {
+                editStr = 'editFieldGD'
+            } else if (ele == constant.ComMethodGrant_str) {
+                editStr = 'editMethodG'
+            } else if (ele == constant.ComEventGrant_str) {
+                editStr = 'editEventG'
+            } else if (ele == constant.ComFieldGrant_str) {
+                editStr = 'editFieldG'
             }
             document.getElementById(uuid+this.location).scrollIntoView(true)
             this.$store.commit(editStr, {compo:"drag", uuid: uuid, top: top, left: left, location: this.location} )

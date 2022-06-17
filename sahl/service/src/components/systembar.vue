@@ -218,7 +218,7 @@ export default({
                 { title: 'Search', Shortcut:'Ctrl+Shift+F', icon:'mdi-magnify', menuAction: action => { this.setSearch(action) }},
             ],
             settingItem: [
-                { title: 'Setting', Shortcut:'Shigt+E', icon:'mdi-cog-outline', menuAction: action => { this.setSetting(action) }},
+                { title: 'Setting', Shortcut:'Shift+E', icon:'mdi-cog-outline', menuAction: action => { this.setSetting(action) }},
                 { title: 'Visible Line', icon:'mdi-vector-line', menuAction: action => { this.setVisibleLine(action) }},
             ],
             helpItem: [

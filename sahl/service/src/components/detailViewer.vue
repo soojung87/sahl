@@ -95,6 +95,25 @@
                 <Provided :element= this.$store.getters.getDataProvidedSomeIP(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
 
+            <div v-else-if="detailViewer.element == 'File Array'">
+                <PerFileArray :element= this.$store.getters.getDataPERFileArray(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+            <div v-else-if="detailViewer.element == 'KeyV Database'">
+                <PerKeyValueDB :element= this.$store.getters.getDataPERKeyValueD(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+             <div v-else-if="detailViewer.element == 'Recovery Action Interface'">
+                <PHMRecovery :element= this.$store.getters.getDataPHMRecovery(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+            <div v-else-if="detailViewer.element == 'Com MEthod Grant Design'">
+                <MethodGrantD :element= this.$store.getters.getDataMethodGrantDesign(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+            <div v-else-if="detailViewer.element == 'Com Event Grant Design'">
+                <EventGrantD :element= this.$store.getters.getDataEventGrantDesign(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+            <div v-else-if="detailViewer.element == 'Com Field Grant Design'">
+                <FieldGrantD :element= this.$store.getters.getDataFieldGrantDesign(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+
         </v-card>
     </div>
 </template>
@@ -128,13 +147,23 @@ import SomeIPServer from '../components/SomeIPServer.vue'
 import Required from '../components/RequiredSomeIP.vue'
 import Provided from '../components/ProvidedSomeIP.vue'
 
+import PerFileArray from '../components/FileArray.vue'
+import PerKeyValueDB from '../components/PerKeyValueDB.vue'
+import PHMRecovery from '../components/PHMRecoveryAction.vue'
+import MethodGrantD from '../components/MethodGrantDesign.vue'
+import EventGrantD from '../components/EventGrantDesign.vue'
+import FieldGrantD from '../components/FieldGrantDesign.vue'
+
 export default {
     components:{CompuMethod, DataConstr, ApplicationArrayDate, ImplementationDataType,
                 SomeIPService, ServiceInterface, Client, Server,
                 SomeIPClient, SomeIPServer, Required, Provided,
                 APError, APErrorDomain, APErrorSet,
                 SWComponents, ProcessDesign, Executable, StartupConfig, DeterministicClient,
-                Machine, MachineDesign, EthernetCluster, ModeDeclarationGroup, HWElement },
+                Machine, MachineDesign, EthernetCluster, ModeDeclarationGroup, HWElement,
+                PerFileArray, PerKeyValueDB,
+                PHMRecovery,
+                MethodGrantD, EventGrantD, FieldGrantD },
     computed: {
         detailViewer() {
             return this.$store.state.detailViewer

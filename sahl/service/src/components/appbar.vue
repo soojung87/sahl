@@ -80,7 +80,7 @@
         </v-tooltip>
         <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-                <v-btn class="d-inline-flex ml-3 mr-1" small icon v-bind="attrs" v-on="on" @click="SetLindPosition()">
+                <v-btn class="d-inline-flex ml-3 mr-1" small icon v-bind="attrs" v-on="on" @click="setLindPosition()">
                     <v-icon>mdi-swap-vertical</v-icon>
                 </v-btn>
             </template>
@@ -254,7 +254,7 @@ export default({
                 this.$refs.uploader.click()
             }
         },
-        SetLindPosition() {
+        setLindPosition() {
             this.isPositionofLine = this.isPositionofLine ? false : true
             this.$store.commit('setPositionofLine', {up: this.isPositionofLine})
         }
