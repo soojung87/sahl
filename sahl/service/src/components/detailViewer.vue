@@ -147,12 +147,15 @@ import SomeIPServer from '../components/SomeIPServer.vue'
 import Required from '../components/RequiredSomeIP.vue'
 import Provided from '../components/ProvidedSomeIP.vue'
 
-import PerFileArray from '../components/FileArray.vue'
+import PerFileArray from './PerFileArray.vue'
 import PerKeyValueDB from '../components/PerKeyValueDB.vue'
+//PHMContribution
 import PHMRecovery from '../components/PHMRecoveryAction.vue'
 import MethodGrantD from '../components/MethodGrantDesign.vue'
 import EventGrantD from '../components/EventGrantDesign.vue'
 import FieldGrantD from '../components/FieldGrantDesign.vue'
+
+//SWCluster_str
 
 export default {
     components:{CompuMethod, DataConstr, ApplicationArrayDate, ImplementationDataType,

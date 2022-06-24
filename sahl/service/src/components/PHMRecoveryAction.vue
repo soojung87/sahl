@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
@@ -105,9 +104,6 @@ export default {
         },
         showPHMRecovery() {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
-            this.$nextTick(() => {
-                EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
-            })
         },
         inputPHMRecoveryName() {
             this.$store.commit('editPHMRecovery', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )

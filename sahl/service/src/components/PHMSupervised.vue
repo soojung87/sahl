@@ -4,7 +4,7 @@
             <v-card outlined :color="minimaptoolbar ? null : colorToolbar">
                 <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                     <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
-                        <v-btn icon @click="showPERFileProxy">
+                        <v-btn icon @click="showPHMSupervised">
                             <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
                         </v-btn>
                     </v-hover>
@@ -12,70 +12,60 @@
                         <v-icon> mdi-routes</v-icon>
                     </v-btn>
                     <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
-                    <v-toolbar-title>Persistency File Proxy Interface</v-toolbar-title>
+                    <v-toolbar-title>PHM Supervised Entity Interface</v-toolbar-title>
                     <v-spacer></v-spacer>
                 </v-toolbar>
                 <v-toolbar v-else hide-on-scroll dense flat>
-                    <v-toolbar-title>Persistency File Proxy Interface</v-toolbar-title>
+                    <v-toolbar-title>PHM Supervised Entity Interface</v-toolbar-title>
                 </v-toolbar>
                 <v-card-text v-if="iselementOpenClose">
                     <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                @input='inputPERFileProxyName' outlined dense></v-text-field>
-                    <v-text-field v-model="element.category" label="Category" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                    <v-text-field v-model="element.minisize" label="Minimun Sustained Size" placeholder="Integer" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                    <v-select v-model="element.redundancy" :items="enumRedundancy" clearable label="Redundance" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
-                    <v-select v-model="element.updateS" :items="strategy" clearable label="Update Strategy" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
-                    <v-text-field v-model="element.encoding" label="Encoding" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                    <v-text-field v-model="element.maxfiles" label="Max Number Of Files" placeholder="Integer" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                @input='inputPHMSupervisedName' outlined dense></v-text-field>
                     <v-card outlined class="mx-auto">
                         <div class="subtitle-2" style="height:20px">
                             <v-hover v-slot="{ hover }">
-                                <v-btn text @click="showFileProxy" x-small color="indigo">
-                                    <v-icon>{{ isFileProxyOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                <v-btn text @click="showCheckP" x-small color="indigo">
+                                    <v-icon>{{ isCheckPOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
                                 </v-btn>
                             </v-hover>
-                            File Proxy
-                            <v-btn @click="isCheckFileProxy" text x-small color="indigo" v-if="isFileProxyOpenClose">
+                            Check Points
+                            <v-btn @click="isCheckCheckP" text x-small color="indigo" v-if="isCheckPOpenClose">
                                 <v-icon>mdi-check</v-icon>
                             </v-btn>
-                            <v-btn v-if="isFileProxyOpenClose && isdeleteFileProxyItem" @click="deletFileProxy" text x-small color="indigo">
+                            <v-btn v-if="isCheckPOpenClose && isdeleteCheckPItem" @click="deletCheckP" text x-small color="indigo">
                                 <v-icon>mdi-minus</v-icon>
                             </v-btn>
                         </div>
-                        <v-card-text v-if="isFileProxyOpenClose">
-                            <v-data-table v-model="selectDelectFileProxy" :headers="headerFileProxy" :items="element.proxy" :items-per-page='20'
-                                    :show-select="isdeleteFileProxyItem" item-key="name" height="100px" dense hide-default-footer >
+                        <v-card-text v-if="isCheckPOpenClose">
+                            <v-data-table v-model="selectDelectCheckP" :headers="headerCheckP" :items="element.checkpoint" :items-per-page='20'
+                                    :show-select="isdeleteCheckPItem" item-key="name" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
-                                <template v-if="!isdeleteFileProxyItem" v-slot:body="{ items, headers }">
+                                <template v-if="!isdeleteCheckPItem" v-slot:body="{ items, headers }">
                                     <tbody>
                                         <tr v-for="(item,idx) in items" :key="idx">
                                             <td v-for="(header,key) in headers" :key="key">
-                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editFileProxy(idx)" @save="cancelFileProxy" large >
+                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editCheckP(idx)" @save="cancelCheckP" large >
                                                     {{item[header.value]}}
                                                     <template v-slot:input>
                                                         <br>
                                                         <v-text-field v-model="editItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="editItem.url" label="Content URL" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="editItem.filename" label="File Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-select v-model="editItem.strategy" :items="strategy" clearable label="Update Strategy" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                        <v-text-field v-model="editItem.id" label="Check Point ID" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </template>
                                                 </v-edit-dialog>
                                             </td>
                                         </tr>
                                         <tr>
                                             <th colspan="3">
-                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addFileProxy()" @save="cancelFileProxy"> 
+                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addCheckP()" @save="cancelCheckP"> 
                                                     <v-btn outlined color="indigo" dense text small block width="270px" >
                                                         <v-icon >mdi-plus</v-icon>New Item
                                                     </v-btn>
                                                     <template v-slot:input>
                                                         <br>
                                                         <v-text-field v-model="editItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="editItem.url" label="Content URL" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="editItem.filename" label="File Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-select v-model="editItem.strategy" :items="strategy" clearable label="Update Strategy" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                        <v-text-field v-model="editItem.id" label="Check Point ID" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </template>
                                                 </v-edit-dialog>
                                             </th>
@@ -120,7 +110,6 @@ export default {
     created() {
         this.setToolbarColor(this.$store.state.activeUUID)
     },
-
     data() {
         return {
             rules: {
@@ -129,20 +118,19 @@ export default {
             dialogPath : false,
             colorToolbar: "#6A5ACD",
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
-            enumRedundancy: ['NONE', ' REDUNDANT', 'REDUNDANTPER-ELEMENT'],
-            strategy: ['DELETE', 'KEEPEXISTING', 'OVERWRITE'],
-            isFileProxyOpenClose: true,
-            isdeleteFileProxyItem: false,
-            selectDelectFileProxy: [],
-            headerFileProxy: [
+            isCheckPOpenClose: true,
+            isEditingError: true,
+            isdeleteCheckPItem: false,
+            selectDelectCheckP: [],
+            headerCheckP: [
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
-                { text: 'Content URL', align: 'start', sortable: false, value: 'url' },
-                { text: 'File Name', align: 'start', sortable: false, value: 'filename' },
-                { text: 'Update Strategy', align: 'start', sortable: false, value: 'strategy' },
+                { text: 'ID', align: 'start', sortable: false, value: 'id' },
             ],
-            editItem: { name : '', url: '', filename: '', strategy: null},
-
+            errorItem: [],
+            editItem: { name : '', id: ''},
         }
+    },
+    mounted () {
     },
     methods: {
         submitDialog(element) {
@@ -150,9 +138,9 @@ export default {
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
             this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
         },
-        setToolbarColor(activeid) 
+        setToolbarColor(uuid) 
         {
-            if(this.element.uuid == activeid) {
+            if(this.element.uuid == uuid) {
                 this.colorToolbar = "#FF1493" 
             } else {
                 this.colorToolbar = "#6A5ACD"
@@ -167,65 +155,63 @@ export default {
                 this.colorToolbar = "#6A5ACD"
             }
         },
-        showPERFileProxy() {
+        showPHMSupervised () {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
         },
-        showFileProxy() {
-            this.isFileProxyOpenClose = this.isFileProxyOpenClose ? false : true
+        showCheckP() {
+            this.isCheckPOpenClose = this.isCheckPOpenClose ? false : true
         },
-        inputPERFileProxyName() {
-            this.$store.commit('editPERFileProxy', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
+        inputPHMSupervisedName () {
+            this.$store.commit('editPHMSupervised', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
-        }, 
-  
-        isCheckFileProxy() {
-            if (this.isdeleteFileProxyItem == true) {
-                this.isdeleteFileProxyItem = false
-                this.selectDelectFileProxy = []
+        },
+
+        isCheckCheckP() {
+            if (this.isdeleteCheckPItem == true) {
+                this.isdeleteCheckPItem = false
+                this.selectDelectCheckP = []
             } else {
-                this.isdeleteFileProxyItem = true
+                this.isdeleteCheckPItem = true
             }
         },
-        deletFileProxy() {
-            if (this.isdeleteFileProxyItem == true) {
-                this.element.proxy = this.element.proxy.filter(item => {
-                        return this.selectDelectFileProxy.indexOf(item) < 0 })
+        deletCheckP() {
+            if (this.isdeleteCheckPItem == true) {
+                this.element.checkpoint = this.element.checkpoint.filter(item => {
+                        return this.selectDelectCheckP.indexOf(item) < 0 })
 
-                this.isdeleteFileProxyItem = false
-                this.selectDelectFileProxy = []
+                this.isdeleteCheckPItem = false
+                this.selectDelectCheckP = []
             } 
         },
-        editFileProxy(idx) {
-            if (this.element.proxy[idx].name != this.editItem.name){
+        editCheckP(idx) {
+            if (this.element.checkpoint[idx].name != this.editItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'PerFileProxy', listname: this.editItem.name} )
+                                                          changeName: 'PHMSupervise', listname: this.editItem.name} )
             }
-            this.element.proxy[idx].name = this.editItem.name
-            this.element.proxy[idx].url = this.editItem.url
-            this.element.proxy[idx].filename = this.editItem.filename
-            this.element.proxy[idx].strategy = this.editItem.strategy
-            this.cancelFileProxy()
+
+            this.element.checkpoint[idx].name = this.editItem.name
+            this.element.checkpoint[idx].id = this.editItem.id
+            this.cancelCheckP()
         },
-        cancelFileProxy() {
+        cancelCheckP() {
             this.editItem.name = ''
-            this.editItem.url = ''
-            this.editItem.filename = ''
-            this.editItem.strategy = null
+            this.editItem.id = ''
             this.setactiveUUID()
         },
-        addFileProxy() {
+        addCheckP() {
             const addObj = Object.assign({}, this.editItem)
-            this.element.proxy.push(addObj)
-            this.cancelFileProxy()
+            this.element.checkpoint.push(addObj);
+            this.cancelCheckP()
         },
 
         setactiveUUID() {
             this.$store.commit('setuuid', {uuid: this.element.uuid} )
-            this.$store.commit('editPERFileProxy', {compo:"z", uuid:this.element.uuid, zindex:10} )
+            this.$store.commit('editPHMSupervised', {compo:"z", uuid:this.element.uuid, zindex:10} )
         },
     },
+
 }
 </script>

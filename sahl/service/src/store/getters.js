@@ -335,6 +335,17 @@ const getters = {
         }
         return name
     },
+    getNamePERFileProxy(state) {
+        let name = null,
+            res = true,
+            n = 0
+
+        while (res) {
+            name = constant.FileArray_str + '_' + n++;
+            res = state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.some(ele => ele.name === name)
+        }
+        return name
+    },
     getNamePERKeyValueD(state) {
         let name = null,
             res = true,
@@ -343,6 +354,17 @@ const getters = {
         while (res) {
             name = constant.KeyValueData_str + '_' + n++;
             res = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.some(ele => ele.name === name)
+        }
+        return name
+    },
+    getNamePERKeyValueDI(state) {
+        let name = null,
+            res = true,
+            n = 0
+
+        while (res) {
+            name = constant.KeyValueDI_str + '_' + n++;
+            res = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.some(ele => ele.name === name)
         }
         return name
     },
@@ -497,6 +519,39 @@ const getters = {
         while (res) {
             name = constant.ComFieldGrant_str + '_' + n++;
             res = state.SAHLProject[state.openProjectIndex].IamG.FieldG.some(ele => ele.name === name)
+        }
+        return name
+    },
+    getNameSoftWareCluster(state) {
+        let name = null,
+            res = true,
+            n = 0
+
+        while (res) {
+            name = constant.SWCluster_str + '_' + n++;
+            res = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.some(ele => ele.name === name)
+        }
+        return name
+    },
+    getNameSoftWarePackage(state) {
+        let name = null,
+            res = true,
+            n = 0
+
+        while (res) {
+            name = constant.SWPackage_str + '_' + n++;
+            res = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.some(ele => ele.name === name)
+        }
+        return name
+    },
+    getNameVehiclePackage(state) {
+        let name = null,
+            res = true,
+            n = 0
+
+        while (res) {
+            name = constant.VehiclePackage_str + '_' + n++;
+            res = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.some(ele => ele.name === name)
         }
         return name
     },
@@ -946,6 +1001,15 @@ const getters = {
         })
         return datatype
     },
+    getPHMContribution(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].Phm.PHMContribution.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
     getPHMRecovery(state) {
         var datatype = state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.map(ele => {
             var returnObj = {}
@@ -975,6 +1039,15 @@ const getters = {
     },
     getMethodGrantDesign(state) {
         var datatype = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
+    getSWCluster(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.map(ele => {
             var returnObj = {}
             returnObj['name'] = ele.path + '/' + ele.name
             returnObj['uuid'] = ele.uuid
@@ -1538,6 +1611,16 @@ const getters = {
         })
         return uuidRef
     },
+    getPHMContributionPath: (state) => (keyvalue) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].Phm.PHMContribution.forEach(data => {
+            var strPath = data.path + '/' + data.name
+            if (strPath === keyvalue) {
+                uuidRef = data.uuid
+            }
+        })
+        return uuidRef
+    },
     getPHMRecoveryPath: (state) => (keyvalue) => {
         var uuidRef = null
         state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.forEach(data => {
@@ -1571,6 +1654,16 @@ const getters = {
     getMethodDesignPath: (state) => (methodD) => {
         var uuidRef = null
         state.SAHLProject[state.openProjectIndex].IamG.MethodGD.forEach(data => {
+            var strPath = data.path + '/' + data.name
+            if (strPath === methodD) {
+                uuidRef = data.uuid
+            }
+        })
+        return uuidRef
+    },
+    getSWClusterPath: (state) => (methodD) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.forEach(data => {
             var strPath = data.path + '/' + data.name
             if (strPath === methodD) {
                 uuidRef = data.uuid
@@ -2002,6 +2095,33 @@ const getters = {
             } else if (data.parent == constant.ComMethodGDesign_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(item => item.uuid === data.uuid)
                 path = state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxelement].path.substr(1)
+                pathList.push({
+                    path: path,
+                    pathLength: path.split('/').length,
+                    idx: idxelement,
+                    parent: data.parent
+                })
+            } else if (data.parent == constant.SWCluster_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(item => item.uuid === data.uuid)
+                path = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].path.substr(1)
+                pathList.push({
+                    path: path,
+                    pathLength: path.split('/').length,
+                    idx: idxelement,
+                    parent: data.parent
+                })
+            } else if (data.parent == constant.SWPackage_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(item => item.uuid === data.uuid)
+                path = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxelement].path.substr(1)
+                pathList.push({
+                    path: path,
+                    pathLength: path.split('/').length,
+                    idx: idxelement,
+                    parent: data.parent
+                })
+            } else if (data.parent == constant.VehiclePackage_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(item => item.uuid === data.uuid)
+                path = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxelement].path.substr(1)
                 pathList.push({
                     path: path,
                     pathLength: path.split('/').length,
@@ -4134,6 +4254,358 @@ const getters = {
                 }
                 saveStr += getters.getEndterStr(enterLine)
                 saveStr += "</AP-APPLICATION-ERROR-DOMAIN>"
+            } else if (data.parent == constant.FileArray_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<PERSISTENCY-FILE-ARRAY UUID="' + state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].sdgs.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<ADMIN-DATA>"
+                    saveStr += getters.getEndterStr(elementTab + 1)
+                    saveStr += "<SDGS>"
+                    state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].sdgs.forEach(item => {
+                        if (item.sdg == "DATA-ENCRYPTION") {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SDG GID="DATA-ENCRYPTION">'
+                            if (item.sd != null) {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += '<SD GID="USE-DATA-ENCRYPTION">' + item.sd + "</SD>"
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += '<SD GID="CRYPTO-ALGORITHM"/>'
+                            }
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '</SDG>'
+                        } else if (item.sdg == 'PERSISTENCY-DEPLOYMENT-EXTENSION') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SDG GID="PERSISTENCY-DEPLOYMENT-EXTENSION">'
+                            if (item.port != null) {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += '<SDX-REF DEST="PR-PORT-PROTOTYPE">' + item.port + "</SDX-REF>"
+                            }
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '</SDG>'
+                        }
+                    })
+                    saveStr += getters.getEndterStr(elementTab + 1)
+                    saveStr += "</SDGS>"
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</ADMIN-DATA>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].maxSize != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<MAXIMUM-ALLOWED-SIZE>' + state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].maxSize + "</MAXIMUM-ALLOWED-SIZE>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].miniSize != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<MINIMUM-SUSTAINED-SIZE>' + state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].miniSize + "</MINIMUM-SUSTAINED-SIZE>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].updateS != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<UPDATE-STRATEGY>" + state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].updateS + "</UPDATE-STRATEGY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].files.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<FILES>"
+                    state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].files.forEach(item => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<PERSISTENCY-FILE>"
+                        if (item.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SHORT-NAME>' + item.name + "</SHORT-NAME>"
+                        }
+                        if (item.url != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<CONTENT-URI>' + item.url + "</CONTENT-URI>"
+                        }
+                        if (item.filename != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<FILE-NAME>' + item.filename + "</FILE-NAME>"
+                        }
+                        if (item.strategy != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<UPDATE-STRATEGY>' + item.strategy + "</UPDATE-STRATEGY>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</PERSISTENCY-FILE>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</FILES>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].uri != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<URI>" + state.SAHLProject[state.openProjectIndex].Per.PERFileArray[data.idx].uri + "</URI>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</PERSISTENCY-FILE-ARRAY>"
+            } else if (data.parent == constant.FileProxyInterf_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<PERSISTENCY-FILE-PROXY-INTERFACE UUID="' + state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].category != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<CATEGORY>' + state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].category + "</CATEGORY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].minisize != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<MINIMUM-SUSTAINED-SIZE>' + state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].minisize + "</MINIMUM-SUSTAINED-SIZE>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].redundancy != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<REDUNDANCY>" + state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].redundancy + "</REDUNDANCY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].updateS != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<UPDATE-STRATEGY>" + state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].updateS + "</UPDATE-STRATEGY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].encoding != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<ENCODING>" + state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].encoding + "</ENCODING>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].proxy.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<FILE-PROXYS>"
+                    state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].proxy.forEach(item => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<PERSISTENCY-FILE-PROXY>"
+                        if (item.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SHORT-NAME>' + item.name + "</SHORT-NAME>"
+                        }
+                        if (item.url != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<CONTENT-URI>' + item.url + "</CONTENT-URI>"
+                        }
+                        if (item.filename != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<FILE-NAME>' + item.filename + "</FILE-NAME>"
+                        }
+                        if (item.strategy != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<UPDATE-STRATEGY>' + item.strategy + "</UPDATE-STRATEGY>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</PERSISTENCY-FILE-PROXY>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</FILE-PROXYS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].maxfiles != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<MAX-NUMBER-OF-FILES>" + state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[data.idx].maxfiles + "</MAX-NUMBER-OF-FILES>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</PERSISTENCY-FILE-PROXY-INTERFACE>"
+            } else if (data.parent == constant.KeyValueData_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<PERSISTENCY-KEY-VALUE-DATABASE UUID="' + state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].sdgs.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<ADMIN-DATA>"
+                    saveStr += getters.getEndterStr(elementTab + 1)
+                    saveStr += "<SDGS>"
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].sdgs.forEach(item => {
+                        if (item.sdg == "DATA-ENCRYPTION") {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SDG GID="DATA-ENCRYPTION">'
+                            if (item.sd != null) {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += '<SD GID="USE-DATA-ENCRYPTION">' + item.sd + "</SD>"
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += '<SD GID="CRYPTO-ALGORITHM"/>'
+                            }
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '</SDG>'
+                        } else if (item.sdg == 'PERSISTENCY-DEPLOYMENT-EXTENSION') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SDG GID="PERSISTENCY-DEPLOYMENT-EXTENSION">'
+                            if (item.port != null) {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += '<SDX-REF DEST="PR-PORT-PROTOTYPE">' + item.port + "</SDX-REF>"
+                            }
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '</SDG>'
+                        }
+                    })
+                    saveStr += getters.getEndterStr(elementTab + 1)
+                    saveStr += "</SDGS>"
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</ADMIN-DATA>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].maxSize != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<MAXIMUM-ALLOWED-SIZE>' + state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].maxSize + "</MAXIMUM-ALLOWED-SIZE>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].miniSize != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<MINIMUM-SUSTAINED-SIZE>' + state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].miniSize + "</MINIMUM-SUSTAINED-SIZE>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].redundancy.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<REDUNDANCY-HANDLINGS>"
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].redundancy.forEach(item => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<PERSISTENCY-REDUNDANCY-M-OUT-OF-N>"
+                        if (item.scope != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SHORT-NAME>' + item.scope + "</SHORT-NAME>"
+                        }
+                        if (item.m != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<M>' + item.m + "</M>"
+                        }
+                        if (item.n != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<N>' + item.n + "</N>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</PERSISTENCY-REDUNDANCY-M-OUT-OF-N>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</REDUNDANCY-HANDLINGS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].updateS != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<UPDATE-STRATEGY>" + state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].updateS + "</UPDATE-STRATEGY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].keyValue.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<KEY-VALUE-PAIRS>"
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].keyValue.forEach(item => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<PERSISTENCY-KEY-VALUE-PAIR>"
+                        if (item.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SHORT-NAME>' + item.name + "</SHORT-NAME>"
+                        }
+                        if (item.update != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<UPDATE-STRATEGY>' + item.update + "</UPDATE-STRATEGY>"
+                        }
+                        if (item.datatype != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<VALUE-DATA-TYPE-REF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + item.datatype + "</VALUE-DATA-TYPE-REF>"
+                        }
+                        if (item.array.length > 0 || item.numerical.length > 0) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<INIT-VALUE>'
+                            if (item.array.length > 0) {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "<ARRAY-VALUE-SPECIFICATION>"
+                                saveStr += getters.getEndterStr(elementTab + 4)
+                                saveStr += "<ELEMENTS>"
+                                item.array.forEach(arr => {
+                                    saveStr += getters.getEndterStr(elementTab + 5)
+                                    saveStr += "<NUMERICAL-VALUE-SPECIFICATION>"
+                                    if (arr.value != '') {
+                                        saveStr += getters.getEndterStr(elementTab + 6)
+                                        saveStr += '<VALUE>' + arr.value + "</VALUE>"
+                                    }
+                                    saveStr += getters.getEndterStr(elementTab + 5)
+                                    saveStr += "</NUMERICAL-VALUE-SPECIFICATION>"
+                                })
+                                saveStr += getters.getEndterStr(elementTab + 4)
+                                saveStr += "<ELEMENTS>"
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "</ARRAY-VALUE-SPECIFICATION>"
+                            }
+                            if (item.numerical.length > 0) {
+                                item.numerical.forEach(numeri => {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "<NUMERICAL-VALUE-SPECIFICATION>"
+                                    if (numeri.value != '') {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
+                                        saveStr += '<VALUE>' + numeri.value + "</VALUE>"
+                                    }
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "</NUMERICAL-VALUE-SPECIFICATION>"
+                                })
+                            }
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "</INIT-VALUE>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</PERSISTENCY-KEY-VALUE-PAIR>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</KEY-VALUE-PAIRS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].uri != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<URI>" + state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[data.idx].uri + "</URI>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</PERSISTENCY-KEY-VALUE-DATABASE>"
+            } else if (data.parent == constant.KeyValueDI_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE UUID="' + state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].minisize != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<MINIMUM-SUSTAINED-SIZE>' + state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].minisize + "</MINIMUM-SUSTAINED-SIZE>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].redundancy != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<REDUNDANCY>" + state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].redundancy + "</REDUNDANCY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].updateS != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<UPDATE-STRATEGY>" + state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].updateS + "</UPDATE-STRATEGY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].data.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<DATA-ELEMENTS>"
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].data.forEach(item => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<PERSISTENCY-DATA-ELEMENT>"
+                        if (item.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SHORT-NAME>' + item.name + "</SHORT-NAME>"
+                        }
+                        if (item.type != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<TYPE-TREF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + item.type + "</TYPE-TREF>"
+                        }
+                        if (item.strategy != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<UPDATE-STRATEGY>' + item.strategy + "</UPDATE-STRATEGY>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</PERSISTENCY-DATA-ELEMENT>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</DATA-ELEMENTS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].serialization.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<DATA-TYPE-FOR-SERIALIZATION-REFS>"
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[data.idx].serialization.forEach(item => {
+                        if (item.serial != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += '<DATA-TYPE-FOR-SERIALIZATION-REF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + item.serial + "</DATA-TYPE-FOR-SERIALIZATION-REF>"
+                        }
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</DATA-TYPE-FOR-SERIALIZATION-REFS>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE>"
             } else if (data.parent == constant.PortProtoFileA_str) {
                 saveStr += getters.getEndterStr(++enterLine)
                 elementTab = enterLine + 1
@@ -4186,6 +4658,62 @@ const getters = {
                 }
                 saveStr += getters.getEndterStr(enterLine)
                 saveStr += "</PERSISTENCY-PORT-PROTOTYPE-TO-KEY-VALUE-DATABASE-MAPPING>"
+            } else if (data.parent == constant.ContritoMachine_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<PHM-CONTRIBUTION-TO-MACHINE-MAPPING UUID="' + state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[data.idx].machine != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<MACHINE-REF DEST="MACHINE">' + state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[data.idx].machine + "</MACHINE-REF>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[data.idx].contri.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<PHM-CONTRIBUTION-REFS>"
+                    state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[data.idx].contri.forEach(ele => {
+                        if (ele.con != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += '<PHM-CONTRIBUTION-REF DEST="PLATFORM-HEALTH-MANAGEMENT-CONTRIBUTION">' + ele.con + "</PHM-CONTRIBUTION-REF>"
+                        }
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</PHM-CONTRIBUTION-REFS>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</PHM-CONTRIBUTION-TO-MACHINE-MAPPING>"
+            } else if (data.parent == constant.HealthChannel_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<PHM-HEALTH-CHANNEL-INTERFACE UUID="' + state.SAHLProject[state.openProjectIndex].Phm.PHMHealth[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].Phm.PHMHealth[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Phm.PHMHealth[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Phm.PHMHealth[data.idx].status.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<STATUSS>"
+                    state.SAHLProject[state.openProjectIndex].Phm.PHMHealth[data.idx].status.forEach(item => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<PHM-HEALTH-CHANNEL-STATUS>"
+                        if (item.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SHORT-NAME>' + item.name + "</SHORT-NAME>"
+                        }
+                        if (item.id != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<STATUS-ID>' + item.id + "</STATUS-ID>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</PHM-HEALTH-CHANNEL-STATUS>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</STATUSS>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</PHM-HEALTH-CHANNEL-INTERFACE>"
             } else if (data.parent == constant.RecoveryVA_str) {
                 saveStr += getters.getEndterStr(++enterLine)
                 elementTab = enterLine + 1
@@ -4211,6 +4739,36 @@ const getters = {
                 }
                 saveStr += getters.getEndterStr(enterLine)
                 saveStr += "</PHM-RECOVERY-ACTION-INTERFACE>"
+            } else if (data.parent == constant.PHMSupervised_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<PHM-SUPERVISED-ENTITY-INTERFACE UUID="' + state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised[data.idx].checkpoint.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<CHECKPOINTS>"
+                    state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised[data.idx].checkpoint.forEach(item => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<PHM-CHECKPOINT>"
+                        if (item.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SHORT-NAME>' + item.name + "</SHORT-NAME>"
+                        }
+                        if (item.id != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<CHECKPOINT-ID>' + item.id + "</CHECKPOINT-ID>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</PHM-CHECKPOINT>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</CHECKPOINTS>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</PHM-SUPERVISED-ENTITY-INTERFACE>"
             } else if (data.parent == constant.RecoveryActionInterf_str) {
                 saveStr += getters.getEndterStr(++enterLine)
                 elementTab = enterLine + 1
@@ -4373,6 +4931,60 @@ const getters = {
                 }
                 saveStr += getters.getEndterStr(enterLine)
                 saveStr += "</COM-METHOD-GRANT-DESIGN>"
+            } else if (data.parent == constant.SWPackage_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<SOFTWARE-PACKAGE UUID="' + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].action != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<ACTION-TYPE>' + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].action + "</ACTION-TYPE>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].activation != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<ACTIVATION-ACTION>' + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].activation + "</ACTIVATION-ACTION>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].compSWPsize != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<COMPRESSED-SOFTWARE-PACKAGE-SIZE>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].compSWPsize + "</COMPRESSED-SOFTWARE-PACKAGE-SIZE>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].deltaPakage != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<IS-DELTA-PACKAGE>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].deltaPakage + "</IS-DELTA-PACKAGE>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].maximunVer != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<MAXIMUM-SUPPORTED-UCM-VERSION>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].maximunVer + "</MAXIMUM-SUPPORTED-UCM-VERSION>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].minimunVer != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<MINIMUM-SUPPORTED-UCM-VERSION>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].minimunVer + "</MINIMUM-SUPPORTED-UCM-VERSION>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].id != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<PACKAGER-ID>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].id + "</PACKAGER-ID>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].postReboot != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<POST-VERIFICATION-REBOOT>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].postReboot + "</POST-VERIFICATION-REBOOT>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].preReboot != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<PRE-ACTIVATION-REBOOT>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].preReboot + "</PRE-ACTIVATION-REBOOT>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].swcluster != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<SOFTWARE-CLUSTER-REF DEST="SOFTWARE-CLUSTER">' + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].swcluster + "</SOFTWARE-CLUSTER-REF>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].uncompSWCsize != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<UNCOMPRESSED-SOFTWARE-CLUSTER-SIZE>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].uncompSWCsize + "</UNCOMPRESSED-SOFTWARE-CLUSTER-SIZE>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</SOFTWARE-PACKAGE>"
             }
             console.log(saveStr)
         })

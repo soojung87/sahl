@@ -403,11 +403,25 @@ export default({
                 this.$store.commit('addElementPERFileArray', {
                     name: this.$store.getters.getNamePERFileArray, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    sdgs: [], maxSize: '', miniSize: null, updateS: null, uri: '', files: [],
+                })
+            } else if (this.activenode[0] == constant.FileProxyInterf_str) {
+                this.$store.commit('addElementPERFileProxy', {
+                    name: this.$store.getters.getNamePERFileProxy, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    category: '', minisize: '', redundancy: null, updateS: null, encoding: '', proxy: [], maxfiles: ''
                 })
             } else if (this.activenode[0] == constant.KeyValueData_str) {
                 this.$store.commit('addElementPERKeyValueD', {
                     name: this.$store.getters.getNamePERKeyValueD, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    maxSize: '', miniSize: null, updateS: null, uri: '', redundancy: [], keyValue: []
+                })
+            } else if (this.activenode[0] == constant.KeyValueDI_str) {
+                this.$store.commit('addElementPERKeyValueDI', {
+                    name: this.$store.getters.getNamePERKeyValueDI, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    minisize: '', redundancy: null, updateS: null, data: [], serialization: []
                 })
             } else if (this.activenode[0] == constant.PortProtoFileA_str) {
                 this.$store.commit('addElementPERPPtoFileArray', {
@@ -430,11 +444,13 @@ export default({
                 this.$store.commit('addElementPHMtoMachine', {
                     name: this.$store.getters.getNamePHMtoMachine, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    machine: null, contri: []
                 })
             } else if (this.activenode[0] == constant.HealthChannel_str) {
                 this.$store.commit('addElementPHMHealth', {
                     name: this.$store.getters.getNamePHMHealth, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    status: []
                 })
             } else if (this.activenode[0] == constant.RecoveryVA_str) {
                 this.$store.commit('addElementPHMRecovery', {
@@ -446,6 +462,7 @@ export default({
                 this.$store.commit('addElementPHMSupervised', {
                     name: this.$store.getters.getNamePHMSupervised, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    checkpoint: []
                 })
             } else if (this.activenode[0] == constant.RecoveryActionInterf_str) {
                 this.$store.commit('addElementRecoveryVia', {
@@ -488,6 +505,13 @@ export default({
                     name: this.$store.getters.getNameFieldG, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     fieldD: null, provide: null, role: null
+                })
+            } else if (this.activenode[0] == constant.SWPackage_str) {
+                this.$store.commit('addElementSoftWarePackage', {
+                    name: this.$store.getters.getNameSoftWarePackage, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    action: null, activation: null, compSWPsize: '', deltaPakage: null, maximunVer: '', minimunVer: '',
+                    id: '', postReboot: null, preReboot: null, swcluster: null, uncompSWCsize: ''
                 })
             }
 

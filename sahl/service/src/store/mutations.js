@@ -42,7 +42,8 @@ const mutations = {
             AdaptiveApplication: { ProtoMachineMapping: [], SWComponents: [], Process: [], Executable: [], StartupConfig: [], DeterministicClient: [], ProcessDesign: [] },
             Per: { PERFileArray: [], PERFileProxy: [], PERKeyValueD: [], PERKeyValueDI: [], PERPPtoFileArray: [], PERPPtoKeyValue: [] },
             Phm: { PHMContribution: [], PHMtoMachine: [], PHMHealth: [], PHMRecovery: [], PHMSupervised: [], RecoveryVia: [] },
-            IamG: { FieldG: [], EventG: [], MethodG: [], FieldGD: [], EventGD: [], MethodGD: [] }
+            IamG: { FieldG: [], EventG: [], MethodG: [], FieldGD: [], EventGD: [], MethodGD: [] },
+            UCM: { SoftWareCluster: [], SoftWarePackage: [], VehiclePackage: [] }
         })
         state.navigatorList.push({
             uuid: newUUid,
@@ -600,7 +601,7 @@ const mutations = {
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.PlatformHealthManagC_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMContribution.findIndex(item => item.uuid === payload.uuid)
-            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Per.PHMContribution[idxEle]))
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Phm.PHMContribution[idxEle]))
             state.SAHLProject[state.openProjectIndex].Phm.PHMContribution[idxEle].zindex = 2
             copyEle.uuid = uuid.v1()
             copyEle.name = this.getters.getNamePHMContribution
@@ -610,7 +611,7 @@ const mutations = {
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.PlatformHealthManagC_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.ContritoMachine_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(item => item.uuid === payload.uuid)
-            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Per.PHMtoMachine[idxEle]))
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxEle]))
             state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxEle].zindex = 2
             copyEle.uuid = uuid.v1()
             copyEle.name = this.getters.getNamePHMtoMachine
@@ -620,7 +621,7 @@ const mutations = {
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.HealthChannel_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.findIndex(item => item.uuid === payload.uuid)
-            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Per.PHMHealth[idxEle]))
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Phm.PHMHealth[idxEle]))
             state.SAHLProject[state.openProjectIndex].Phm.PHMHealth[idxEle].zindex = 2
             copyEle.uuid = uuid.v1()
             copyEle.name = this.getters.getNamePHMHealth
@@ -630,7 +631,7 @@ const mutations = {
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.HealthChannel_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.RecoveryVA_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.findIndex(item => item.uuid === payload.uuid)
-            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Per.PHMRecovery[idxEle]))
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery[idxEle]))
             state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery[idxEle].zindex = 2
             copyEle.uuid = uuid.v1()
             copyEle.name = this.getters.getNamePHMRecovery
@@ -640,7 +641,7 @@ const mutations = {
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryVA_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.PHMSupervised_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.findIndex(item => item.uuid === payload.uuid)
-            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Per.PHMSupervised[idxEle]))
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised[idxEle]))
             state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised[idxEle].zindex = 2
             copyEle.uuid = uuid.v1()
             copyEle.name = this.getters.getNamePHMSupervised
@@ -650,7 +651,7 @@ const mutations = {
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.PHMSupervised_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.RecoveryActionInterf_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(item => item.uuid === payload.uuid)
-            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Per.RecoveryVia[idxEle]))
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxEle]))
             state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxEle].zindex = 2
             copyEle.uuid = uuid.v1()
             copyEle.name = this.getters.getNameRecoveryVia
@@ -718,6 +719,36 @@ const mutations = {
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].IamG.MethodGD.push(copyEle)
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+        } else if (payload.parent == constant.SWCluster_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(item => item.uuid === payload.uuid)
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxEle]))
+            state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxEle].zindex = 2
+            copyEle.uuid = uuid.v1()
+            copyEle.name = this.getters.getNameSoftWareCluster
+            copyEle.left = elementX
+            copyEle.top = elementY
+            state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.push(copyEle)
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+        } else if (payload.parent == constant.SWCluster_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(item => item.uuid === payload.uuid)
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxEle]))
+            state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxEle].zindex = 2
+            copyEle.uuid = uuid.v1()
+            copyEle.name = this.getters.getNameSoftWarePackage
+            copyEle.left = elementX
+            copyEle.top = elementY
+            state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.push(copyEle)
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+        } else if (payload.parent == constant.SWCluster_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(item => item.uuid === payload.uuid)
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxEle]))
+            state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxEle].zindex = 2
+            copyEle.uuid = uuid.v1()
+            copyEle.name = this.getters.getNameVehiclePackage
+            copyEle.left = elementX
+            copyEle.top = elementY
+            state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.push(copyEle)
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         }
         state.activeUUID = copyEle.uuid
         Vue.nextTick(() => { // 선 하나씩 그려주기 때문에 끝날때 active line 해줘야한다.
@@ -740,7 +771,7 @@ const mutations = {
                             if (tableLine[0] == 'field' || tableLine[0] == 'event' || tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror' ||
                                 tableLine[0] == 'providEventG' || tableLine[0] == 'providServer' || tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient' ||
                                 tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' || tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup' ||
-                                tableLine[0] == 'comconet') {
+                                tableLine[0] == 'comconet' || tableLine[0] == 'PERKeyV') {
                                 changTab = true
                                 if (tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror') {
                                     tabId = 'methods'
@@ -1123,6 +1154,18 @@ const mutations = {
             idxService = constant.IAM_index
             idxchild = constant.Platform_index
             idxchildchild = constant.ComMethodGDesign_index
+        } else if (payload.datatype == 'SoftWareCluster') {
+            idxService = constant.UCM_index
+            idxchild = constant.Platform_index
+            idxchildchild = constant.SWCluster_index
+        } else if (payload.datatype == 'SoftWarePackage') {
+            idxService = constant.UCM_index
+            idxchild = constant.Platform_index
+            idxchildchild = constant.SWPackage_index
+        } else if (payload.datatype == 'VehiclePackage') {
+            idxService = constant.UCM_index
+            idxchild = constant.Platform_index
+            idxchildchild = constant.VehiclePackage_index
         }
 
         if (idxchild == constant.Service_index) {
@@ -1246,6 +1289,12 @@ const mutations = {
             this.commit('editEventG', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.ComFieldGrant_str) {
             this.commit('editFieldG', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
+        } else if (payload.parent == constant.SWCluster_str) {
+            this.commit('editSoftWareCluster', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
+        } else if (payload.parent == constant.SWPackage_str) {
+            this.commit('editSoftWarePackage', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
+        } else if (payload.parent == constant.VehiclePackage_str) {
+            this.commit('editVehiclePackage', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         }
     },
     saveInputfile(state, payload) {
@@ -3923,6 +3972,410 @@ const mutations = {
                 EventBus.$emit('add-element', constant.Errors_str)
                 EventBus.$emit('add-element', constant.ErrorDomain_str)
             })
+            // PERSISTENCY-FILE-ARRAY
+        var perFileArray = payload.xmlDoc.getElementsByTagName('PERSISTENCY-FILE-ARRAY')
+        perFileArray.forEach(ele => {
+                var Name = '',
+                    maxsize = '',
+                    minisize = '',
+                    updateS = null,
+                    files = [],
+                    uri = '',
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "MAXIMUM-ALLOWED-SIZE") {
+                        maxsize = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "MINIMUM-SUSTAINED-SIZE") {
+                        minisize = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "UPDATE-STRATEGY") {
+                        updateS = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "URI") {
+                        uri = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "FILES") {
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { name: '', url: '', filename: '', strategy: null }
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            editItem.name = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "CONTENT-URI") {
+                                            editItem.url = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "FILE-NAME") {
+                                            editItem.filename = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "UPDATE-STRATEGY") {
+                                            editItem.strategy = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                const addObj = Object.assign({}, editItem)
+                                files.push(addObj)
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+                this.commit('addElementPERFileArray', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    maxSize: maxsize,
+                    miniSize: minisize,
+                    updateS: updateS,
+                    uri: uri,
+                    files: files,
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.FileArray_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.PER_str)
+                EventBus.$emit('add-element', constant.FileArray_str)
+            })
+            // PERSISTENCY-FILE-PROXY-INTERFACE
+        var perFileProxy = payload.xmlDoc.getElementsByTagName('PERSISTENCY-FILE-PROXY-INTERFACE')
+        perFileProxy.forEach(ele => {
+                var Name = '',
+                    category = '',
+                    minisize = '',
+                    redundancy = null,
+                    updateS = null,
+                    encoding = '',
+                    proxy = [],
+                    maxfiles = '',
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "CATEGORY") {
+                        category = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "MINIMUM-SUSTAINED-SIZE") {
+                        minisize = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "REDUNDANCY") {
+                        redundancy = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "UPDATE-STRATEGY") {
+                        updateS = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "ENCODING") {
+                        encoding = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "FILE-PROXYS") {
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { name: '', url: '', filename: '', strategy: null }
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            editItem.name = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "CONTENT-URI") {
+                                            editItem.url = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "FILE-NAME") {
+                                            editItem.filename = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "UPDATE-STRATEGY") {
+                                            editItem.strategy = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                const addObj = Object.assign({}, editItem)
+                                proxy.push(addObj)
+                            }
+                        })
+                    }
+                    if (item.nodeName == "MAX-NUMBER-OF-FILES") {
+                        maxfiles = item.childNodes[0].nodeValue
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+                this.commit('addElementPERFileProxy', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    category: category,
+                    minisize: minisize,
+                    redundancy: redundancy,
+                    updateS: updateS,
+                    encoding: encoding,
+                    proxy: proxy,
+                    maxfiles: maxfiles
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.FileProxyInterf_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.PER_str)
+                EventBus.$emit('add-element', constant.FileProxyInterf_str)
+            })
+            // PERSISTENCY-KEY-VALUE-DATABASE 
+        var perKeyValueD = payload.xmlDoc.getElementsByTagName('PERSISTENCY-KEY-VALUE-DATABASE')
+        perKeyValueD.forEach(ele => {
+                var Name = '',
+                    maxsize = '',
+                    minisize = '',
+                    updateS = null,
+                    redundancy = [],
+                    keyValue = [],
+                    uri = '',
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "MAXIMUM-ALLOWED-SIZE") {
+                        maxsize = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "MINIMUM-SUSTAINED-SIZE") {
+                        minisize = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "UPDATE-STRATEGY") {
+                        updateS = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "URI") {
+                        uri = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "REDUNDANCY-HANDLINGS") {
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { scope: null, m: '', n: '' }
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SCOPE") {
+                                            editItem.scope = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "M") {
+                                            editItem.m = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "N") {
+                                            editItem.n = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                const addObj = Object.assign({}, editItem)
+                                redundancy.push(addObj)
+                            }
+                        })
+                    }
+                    if (item.nodeName == "KEY-VALUE-PAIRS") {
+                        item.childNodes.forEach((fie, f) => {
+                            var editItem = {
+                                name: '',
+                                update: null,
+                                datatype: null,
+                                array: [],
+                                numerical: []
+                            }
+                            if (f % 2 != 0) {
+                                fie.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            editItem.name = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "UPDATE-STRATEGY") {
+                                            editItem.update = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "VALUE-DATA-TYPE-REF") {
+                                            editItem.datatype = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "INIT-VALUE") {
+                                            data.childNodes.forEach(init => {
+                                                if (init.nodeName == "NUMERICAL-VALUE-SPECIFICATION") {
+                                                    var editNumItem = { value: '' }
+                                                    init.childNodes.forEach(val => {
+                                                        if (val.nodeName == 'VALUE') {
+                                                            editNumItem.value = val.childNodes[0].nodeValue
+                                                            const addObj = Object.assign({}, editNumItem)
+                                                            editItem.numerical.push(addObj)
+                                                        }
+                                                    })
+                                                }
+                                                if (init.nodeName == "ARRAY-VALUE-SPECIFICATION") {
+                                                    var editArrItem = { value: '' }
+                                                    init.childNodes.forEach((arr, g) => {
+                                                        if (g % 2 != 0) {
+                                                            if (arr.nodeName == "NUMERICAL-VALUE-SPECIFICATION") {
+                                                                arr.childNodes.forEach(val => {
+                                                                    if (val.nodeName == 'VALUE') {
+                                                                        editArrItem.value = val.childNodes[0].nodeValue
+                                                                        const addObj = Object.assign({}, editArrItem)
+                                                                        editItem.array.push(addObj)
+                                                                    }
+                                                                })
+                                                            }
+                                                        }
+                                                    })
+
+                                                }
+                                            })
+                                        }
+                                    }
+                                })
+                                const addObj = Object.assign({}, editItem)
+                                keyValue.push(addObj)
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+                this.commit('addElementPERKeyValueD', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    maxSize: maxsize,
+                    miniSize: minisize,
+                    updateS: updateS,
+                    uri: uri,
+                    redundancy: redundancy,
+                    keyValue: keyValue
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.KeyValueData_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.PER_str)
+                EventBus.$emit('add-element', constant.KeyValueData_str)
+            })
+            // PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE
+        var perKeyValueDI = payload.xmlDoc.getElementsByTagName('PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE')
+        perKeyValueDI.forEach(ele => {
+                var Name = '',
+                    minisize = '',
+                    redundancy = null,
+                    updateS = null,
+                    data = [],
+                    serialization = [],
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "MINIMUM-SUSTAINED-SIZE") {
+                        minisize = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "REDUNDANCY") {
+                        redundancy = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "UPDATE-STRATEGY") {
+                        updateS = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "DATA-ELEMENTS") {
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { name: '', type: null, strategy: null }
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((el, d) => {
+                                    if (d % 2 != 0) {
+                                        if (el.nodeName == "SHORT-NAME") {
+                                            editItem.name = el.childNodes[0].nodeValue
+                                        }
+                                        if (el.nodeName == "TYPE-TREF") {
+                                            editItem.type = el.childNodes[0].nodeValue
+                                        }
+                                        if (el.nodeName == "UPDATE-STRATEGY") {
+                                            editItem.strategy = el.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                const addObj = Object.assign({}, editItem)
+                                data.push(addObj)
+                            }
+                        })
+                    }
+                    if (item.nodeName == "DATA-TYPE-FOR-SERIALIZATION-REFS") {
+                        item.childNodes.forEach(data => {
+                            var editItem = { serial: null }
+                            if (data.nodeName == "DATA-TYPE-FOR-SERIALIZATION-REF") {
+                                editItem.serial = data.childNodes[0].nodeValue
+                                const addObj = Object.assign({}, editItem)
+                                serialization.push(addObj)
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+                this.commit('addElementPERKeyValueDI', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    minisize: minisize,
+                    redundancy: redundancy,
+                    updateS: updateS,
+                    data: data,
+                    serialization: serialization
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.KeyValueDI_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.PER_str)
+                EventBus.$emit('add-element', constant.KeyValueDI_str)
+            })
             // PERSISTENCY-PORT-PROTOTYPE-TO-FILE-ARRAY-MAPPING
         var perPPtoFileArray = payload.xmlDoc.getElementsByTagName('PERSISTENCY-PORT-PROTOTYPE-TO-FILE-ARRAY-MAPPING')
         perPPtoFileArray.forEach(ele => {
@@ -4025,6 +4478,115 @@ const mutations = {
                 EventBus.$emit('add-element', constant.PER_str)
                 EventBus.$emit('add-element', constant.PortProtoKeyV_str)
             })
+            // PHM-CONTRIBUTION-TO-MACHINE-MAPPING
+        var phmtoMachine = payload.xmlDoc.getElementsByTagName('PHM-CONTRIBUTION-TO-MACHINE-MAPPING')
+        phmtoMachine.forEach(ele => {
+                var Name = '',
+                    machine = null,
+                    contri = [],
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "MACHINE-REF") {
+                        machine = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "PHM-CONTRIBUTION-REFS") {
+                        item.childNodes.forEach(data => {
+                            var editItem = { con: null }
+                            if (data.nodeName == "PHM-CONTRIBUTION-REF") {
+                                editItem.con = data.childNodes[0].nodeValue
+                                const addObj = Object.assign({}, editItem)
+                                contri.push(addObj)
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+                this.commit('addElementPHMtoMachine', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    machine: machine,
+                    contri: contri
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ContritoMachine_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.PHM_str)
+                EventBus.$emit('add-element', constant.ContritoMachine_str)
+            })
+            // PHM-HEALTH-CHANNEL-INTERFACE
+        var phmHealth = payload.xmlDoc.getElementsByTagName('PHM-HEALTH-CHANNEL-INTERFACE')
+        phmHealth.forEach(ele => {
+                var Name = '',
+                    status = [],
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "STATUSS") {
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { name: '', id: '', }
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            editItem.name = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "STATUS-ID") {
+                                            editItem.id = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                const addObj = Object.assign({}, editItem)
+                                status.push(addObj)
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+                this.commit('addElementPHMHealth', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    status: status,
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.HealthChannel_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.PHM_str)
+                EventBus.$emit('add-element', constant.HealthChannel_str)
+            })
             // PHM-RECOVERY-ACTION-INTERFACE
         var phmRecovery = payload.xmlDoc.getElementsByTagName('PHM-RECOVERY-ACTION-INTERFACE')
         phmRecovery.forEach(ele => {
@@ -4076,69 +4638,125 @@ const mutations = {
                 EventBus.$emit('add-element', constant.PHM_str)
                 EventBus.$emit('add-element', constant.RecoveryVA_str)
             })
+            // PHM-SUPERVISED-ENTITY-INTERFACE
+        var phmSupervised = payload.xmlDoc.getElementsByTagName('PHM-SUPERVISED-ENTITY-INTERFACE')
+        phmSupervised.forEach(ele => {
+                var Name = '',
+                    checkpoint = [],
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "CHECKPOINTS") {
+                        item.childNodes.forEach((check, m) => {
+                            var editItem = { name: '', id: '', }
+                            if (m % 2 != 0) {
+                                check.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            editItem.name = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "CHECKPOINT-ID") {
+                                            editItem.id = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                const addObj = Object.assign({}, editItem)
+                                checkpoint.push(addObj)
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+                this.commit('addElementPHMSupervised', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    checkpoint: checkpoint,
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.PHMSupervised_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.PHM_str)
+                EventBus.$emit('add-element', constant.PHMSupervised_str)
+            })
             // RECOVERY-VIA-APPLICATION-ACTION-TO-CLIENT-SERVER-OPERATION-MAPPING
         var phmRecoveryVia = payload.xmlDoc.getElementsByTagName('RECOVERY-VIA-APPLICATION-ACTION-TO-CLIENT-SERVER-OPERATION-MAPPING')
         phmRecoveryVia.forEach(ele => {
-            var Name = '',
-                swcomponent = null,
-                port = null,
-                process = null,
-                phmRecovery = null,
-                path = '',
-                strPath = getEditPath(ele.parentNode.parentNode, path)
+                var Name = '',
+                    swcomponent = null,
+                    port = null,
+                    process = null,
+                    phmRecovery = null,
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
 
-            ele.childNodes.forEach(item => {
-                if (item.nodeName == "SHORT-NAME") {
-                    Name = item.childNodes[0].nodeValue
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "PROCESS-REF") {
+                        process = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "RECOVERY-ACTION-IREF") {
+                        item.childNodes.forEach(data => {
+                            if (data.nodeName == "CONTEXT-ROOT-SW-COMPONENT-PROTOTYPE-REF") {
+                                swcomponent = data.childNodes[0].nodeValue
+                            }
+                            if (data.nodeName == "CONTEXT-P-PORT-PROTOTYPE-REF") {
+                                port = data.childNodes[0].nodeValue
+                            }
+                            if (data.nodeName == "TARGET-METHOD-REF") {
+                                phmRecovery = data.childNodes[0].nodeValue
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
                 }
-                if (item.nodeName == "PROCESS-REF") {
-                    process = item.childNodes[0].nodeValue
-                }
-                if (item.nodeName == "RECOVERY-ACTION-IREF") {
-                    item.childNodes.forEach(data => {
-                        if (data.nodeName == "CONTEXT-ROOT-SW-COMPONENT-PROTOTYPE-REF") {
-                            swcomponent = data.childNodes[0].nodeValue
-                        }
-                        if (data.nodeName == "CONTEXT-P-PORT-PROTOTYPE-REF") {
-                            port = data.childNodes[0].nodeValue
-                        }
-                        if (data.nodeName == "TARGET-METHOD-REF") {
-                            phmRecovery = data.childNodes[0].nodeValue
-                        }
-                    })
-                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+                this.commit('addElementRecoveryVia', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    process: process,
+                    swcomponent: swcomponent,
+                    port: port,
+                    phmRecovery: phmRecovery,
+
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.RecoveryActionInterf_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.PHM_str)
+                EventBus.$emit('add-element', constant.RecoveryActionInterf_str)
             })
-            var UUID = ele.getAttribute("UUID")
-            var idxEle = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === UUID)
-            if (UUID == null || idxEle != -1) {
-                UUID = uuid.v1()
-            }
-            const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-            const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
-
-            this.commit('addElementRecoveryVia', {
-                name: Name,
-                input: true,
-                path: strPath,
-                uuid: UUID,
-                top: elementY,
-                left: elementX,
-                zindex: 2,
-                icon: "mdi-clipboard-outline",
-                validation: false,
-                process: process,
-                swcomponent: swcomponent,
-                port: port,
-                phmRecovery: phmRecovery,
-
-            })
-            state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.RecoveryActionInterf_str })
-            EventBus.$emit('add-element', constant.Platform_str)
-            EventBus.$emit('add-element', constant.PHM_str)
-            EventBus.$emit('add-element', constant.RecoveryActionInterf_str)
-        })
-
-        // COM-FIELD-GRANT
+            // COM-FIELD-GRANT
         var fieldG = payload.xmlDoc.getElementsByTagName('COM-FIELD-GRANT')
         fieldG.forEach(ele => {
                 var Name = '',
@@ -4381,9 +4999,64 @@ const mutations = {
             // COM-METHOD-GRANT-DESIGN
         var methodGD = payload.xmlDoc.getElementsByTagName('COM-METHOD-GRANT-DESIGN')
         methodGD.forEach(ele => {
+                var Name = '',
+                    serviceI = null,
+                    processD = null,
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "METHOD-IREF") {
+                        serviceI = item.childNodes[1].childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "PROCESS-DESIGN-REF") {
+                        processD = item.childNodes[0].nodeValue
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+                this.commit('addElementMethodGD', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    processD: processD,
+                    SIMethod: serviceI,
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComMethodGDesign_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.IAM_str)
+                EventBus.$emit('add-element', constant.ComMethodGDesign_str)
+            })
+            // SOFTWARE-PACKAGE
+        var softwareP = payload.xmlDoc.getElementsByTagName('SOFTWARE-PACKAGE')
+        softwareP.forEach(ele => {
             var Name = '',
-                serviceI = null,
-                processD = null,
+                action = null,
+                activation = null,
+                compSWPsize = '',
+                deltaPakage = null,
+                maximunVer = '',
+                minimunVer = '',
+                id = '',
+                postReboot = null,
+                preReboot = null,
+                swcluster = null,
+                uncompSWCsize = '',
                 path = '',
                 strPath = getEditPath(ele.parentNode.parentNode, path)
 
@@ -4391,22 +5064,49 @@ const mutations = {
                 if (item.nodeName == "SHORT-NAME") {
                     Name = item.childNodes[0].nodeValue
                 }
-                if (item.nodeName == "METHOD-IREF") {
-                    serviceI = item.childNodes[1].childNodes[0].nodeValue
+                if (item.nodeName == "ACTION-TYPE") {
+                    action = item.childNodes[1].childNodes[0].nodeValue
                 }
-                if (item.nodeName == "PROCESS-DESIGN-REF") {
-                    processD = item.childNodes[0].nodeValue
+                if (item.nodeName == "ACTIVATION-ACTION") {
+                    activation = item.childNodes[0].nodeValue
+                }
+                if (item.nodeName == "COMPRESSED-SOFTWARE-PACKAGE-SIZE") {
+                    compSWPsize = item.childNodes[0].nodeValue
+                }
+                if (item.nodeName == "IS-DELTA-PACKAGE") {
+                    deltaPakage = item.childNodes[0].nodeValue
+                }
+                if (item.nodeName == "MAXIMUM-SUPPORTED-UCM-VERSION") {
+                    maximunVer = item.childNodes[0].nodeValue
+                }
+                if (item.nodeName == "MINIMUM-SUPPORTED-UCM-VERSION") {
+                    minimunVer = item.childNodes[0].nodeValue
+                }
+                if (item.nodeName == "PACKAGER-ID") {
+                    id = item.childNodes[0].nodeValue
+                }
+                if (item.nodeName == "POST-VERIFICATION-REBOOT") {
+                    postReboot = item.childNodes[0].nodeValue
+                }
+                if (item.nodeName == "PRE-ACTIVATION-REBOOT") {
+                    preReboot = item.childNodes[0].nodeValue
+                }
+                if (item.nodeName == "SOFTWARE-CLUSTER-REF") {
+                    swcluster = item.childNodes[0].nodeValue
+                }
+                if (item.nodeName == "UNCOMPRESSED-SOFTWARE-CLUSTER-SIZE") {
+                    uncompSWCsize = item.childNodes[0].nodeValue
                 }
             })
             var UUID = ele.getAttribute("UUID")
-            var idxEle = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(data => data.uuid === UUID)
+            var idxEle = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === UUID)
             if (UUID == null || idxEle != -1) {
                 UUID = uuid.v1()
             }
             const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
             const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
-            this.commit('addElementMethodGD', {
+            this.commit('addElementSoftWarePackage', {
                 name: Name,
                 input: true,
                 path: strPath,
@@ -4416,17 +5116,23 @@ const mutations = {
                 zindex: 2,
                 icon: "mdi-clipboard-outline",
                 validation: false,
-                processD: processD,
-                SIMethod: serviceI,
+                action: action,
+                activation: activation,
+                compSWPsize: compSWPsize,
+                deltaPakage: deltaPakage,
+                maximunVer: maximunVer,
+                minimunVer: minimunVer,
+                id: id,
+                postReboot: postReboot,
+                preReboot: preReboot,
+                swcluster: swcluster,
+                uncompSWCsize: uncompSWCsize
             })
-            state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComMethodGDesign_str })
+            state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SWPackage_str })
             EventBus.$emit('add-element', constant.Platform_str)
-            EventBus.$emit('add-element', constant.IAM_str)
-            EventBus.$emit('add-element', constant.ComMethodGDesign_str)
+            EventBus.$emit('add-element', constant.UCM_str)
+            EventBus.$emit('add-element', constant.SWPackage_str)
         })
-
-
-
 
     },
     setInputFileComplate(state) { //바로 라인 그리면 element가 다 그려지기 전이라 선의 id값을 찾지 못한다.
@@ -5172,6 +5878,50 @@ const mutations = {
                         }
                     })
                 }
+            } else if (ele.parent == constant.KeyValueData_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(item => item.uuid === ele.uuid)
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxelement].keyValue.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxelement].keyValue.forEach((data, i) => {
+                        if (data.datatype != null) {
+                            state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
+                                if (data.datatype == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/PERKeyV-' + i, end: item.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/PERDBImple' + data.name, item.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/PERKeyV', item.uuid)
+                                    }
+                                }
+                            })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.KeyValueDI_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(item => item.uuid === ele.uuid)
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxelement].data.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxelement].data.forEach((el, i) => {
+                        if (el.type != null) {
+                            state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
+                                if (el.type == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/PERData-' + i, end: item.uuid })
+                                    EventBus.$emit('new-line', ele.uuid + '/PERData', item.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxelement].serialization.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxelement].serialization.forEach((data, i) => {
+                        if (data.serial != null) {
+                            state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
+                                if (data.serial == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/PERSerial-' + i, end: item.uuid })
+                                    EventBus.$emit('new-line', ele.uuid + '/PERSerial', item.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
             } else if (ele.parent == constant.PortProtoFileA_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxelement].fileArray != null) {
@@ -5229,6 +5979,28 @@ const mutations = {
                         if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxelement].process == (pro.path + '/' + pro.name)) {
                             this.commit('setConnectionline', { start: ele.uuid + '/PPPtoKeyProcess', end: pro.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/PPPtoKeyProcess', pro.uuid)
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.ContritoMachine_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(item => item.uuid === ele.uuid)
+                if (state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxelement].machine != null) {
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(data => {
+                        if (state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxelement].machine == (data.path + '/' + data.name)) {
+                            this.commit('setConnectionline', { start: ele.uuid + '/PHMtoMachine', end: data.uuid })
+                            EventBus.$emit('new-line', ele.uuid + '/PHMtoMachine', data.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxelement].contri.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxelement].contri.forEach((data, i) => {
+                        if (data.con != null) {
+                            state.SAHLProject[state.openProjectIndex].Phm.PHMContribution.forEach(item => {
+                                if (data.con == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/PHMContri-' + i, end: item.uuid })
+                                    EventBus.$emit('new-line', ele.uuid + '/PHMContri', item.uuid)
+                                }
+                            })
                         }
                     })
                 }
@@ -5388,6 +6160,16 @@ const mutations = {
                                     EventBus.$emit('new-line', ele.uuid + '/MGDserviceI', item.uuid)
                                 }
                             })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.SWPackage_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(item => item.uuid === ele.uuid)
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxelement].swcluster != null) {
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.forEach(swc => {
+                        if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxelement].swcluster == (swc.path + '/' + swc.name)) {
+                            this.commit('setConnectionline', { start: ele.uuid + '/UCMSWPSWC', end: swc.uuid })
+                            EventBus.$emit('new-line', ele.uuid + '/UCMSWPSWC', swc.uuid)
                         }
                     })
                 }
@@ -6529,6 +7311,12 @@ const mutations = {
             left: payload.left,
             zindex: payload.zindex,
             name: payload.name,
+            sdgs: payload.sdgs,
+            maxSize: payload.maxSize,
+            miniSize: payload.miniSize,
+            updateS: payload.updateS,
+            uri: payload.uri,
+            files: payload.files,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -6536,7 +7324,7 @@ const mutations = {
         }
         EventBus.$emit('new-element', newUUid)
     },
-    editPERFileArrayD(state, payload) {
+    editPERFileArray(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
@@ -6548,7 +7336,47 @@ const mutations = {
             state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxElement].zindex = payload.zindex
         }
     },
+    addElementPERFileProxy(state, payload) {
+        var newUUid
+        if (!payload.input) {
+            newUUid = uuid.v1()
+        } else {
+            newUUid = payload.uuid
+        }
+        state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.push({
+            uuid: newUUid,
+            path: payload.path,
+            top: payload.top,
+            left: payload.left,
+            zindex: payload.zindex,
+            name: payload.name,
+            category: payload.category,
+            minisize: payload.minisize,
+            redundancy: payload.redundancy,
+            updateS: payload.updateS,
+            encoding: payload.encoding,
+            proxy: payload.proxy,
+            maxfiles: payload.maxfiles
 
+        })
+        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileProxyInterf_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        if (!payload.input) {
+            state.activeUUID = newUUid
+        }
+        EventBus.$emit('new-element', newUUid)
+    },
+    editPERFileProxy(state, payload) {
+        var idxElement = state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.findIndex(data => data.uuid === payload.uuid)
+
+        if (payload.compo == "Name") {
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileProxyInterf_index].children[idxElement].name = payload.name
+        } else if (payload.compo == "drag") {
+            Vue.set(state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[idxElement].top, payload.location, payload.top)
+            Vue.set(state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[idxElement].left, payload.location, payload.left)
+        } else if (payload.compo == "z") {
+            state.SAHLProject[state.openProjectIndex].Per.PERFileProxy[idxElement].zindex = payload.zindex
+        }
+    },
     addElementPERKeyValueD(state, payload) {
         var newUUid
         if (!payload.input) {
@@ -6563,6 +7391,12 @@ const mutations = {
             left: payload.left,
             zindex: payload.zindex,
             name: payload.name,
+            maxSize: payload.maxSize,
+            miniSize: payload.miniSize,
+            updateS: payload.updateS,
+            uri: payload.uri,
+            redundancy: payload.redundancy,
+            keyValue: payload.keyValue
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -6570,7 +7404,7 @@ const mutations = {
         }
         EventBus.$emit('new-element', newUUid)
     },
-    editPERPPKeyValueD(state, payload) {
+    editPERKeyValueD(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
@@ -6580,6 +7414,44 @@ const mutations = {
             Vue.set(state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].left, payload.location, payload.left)
         } else if (payload.compo == "z") {
             state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].zindex = payload.zindex
+        }
+    },
+    addElementPERKeyValueDI(state, payload) {
+        var newUUid
+        if (!payload.input) {
+            newUUid = uuid.v1()
+        } else {
+            newUUid = payload.uuid
+        }
+        state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.push({
+            uuid: newUUid,
+            path: payload.path,
+            top: payload.top,
+            left: payload.left,
+            zindex: payload.zindex,
+            name: payload.name,
+            minisize: payload.minisize,
+            redundancy: payload.redundancy,
+            updateS: payload.updateS,
+            data: payload.data,
+            serialization: payload.serialization
+        })
+        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        if (!payload.input) {
+            state.activeUUID = newUUid
+        }
+        EventBus.$emit('new-element', newUUid)
+    },
+    editPERKeyValueDI(state, payload) {
+        var idxElement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === payload.uuid)
+
+        if (payload.compo == "Name") {
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].children[idxElement].name = payload.name
+        } else if (payload.compo == "drag") {
+            Vue.set(state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxElement].top, payload.location, payload.top)
+            Vue.set(state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxElement].left, payload.location, payload.left)
+        } else if (payload.compo == "z") {
+            state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxElement].zindex = payload.zindex
         }
     },
     addElementPERPPtoFileArray(state, payload) {
@@ -6701,6 +7573,8 @@ const mutations = {
             left: payload.left,
             zindex: payload.zindex,
             name: payload.name,
+            machine: payload.machine,
+            contri: payload.contri
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -6734,6 +7608,7 @@ const mutations = {
             left: payload.left,
             zindex: payload.zindex,
             name: payload.name,
+            status: payload.status
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.HealthChannel_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -6802,6 +7677,7 @@ const mutations = {
             left: payload.left,
             zindex: payload.zindex,
             name: payload.name,
+            checkpoint: payload.checkpoint
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.PHMSupervised_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -7071,8 +7947,116 @@ const mutations = {
             state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxElement].zindex = payload.zindex
         }
     },
+    addElementSoftWareCluster(state, payload) {
+        var newUUid
+        if (!payload.input) {
+            newUUid = uuid.v1()
+        } else {
+            newUUid = payload.uuid
+        }
+        state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.push({
+            uuid: newUUid,
+            path: payload.path,
+            top: payload.top,
+            left: payload.left,
+            zindex: payload.zindex,
+            name: payload.name,
+        })
+        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        if (!payload.input) {
+            state.activeUUID = newUUid
+        }
+        EventBus.$emit('new-element', newUUid)
+    },
+    editSoftWareCluster(state, payload) {
+        var idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === payload.uuid)
 
+        if (payload.compo == "Name") {
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxElement].name = payload.name
+        } else if (payload.compo == "drag") {
+            Vue.set(state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].top, payload.location, payload.top)
+            Vue.set(state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].left, payload.location, payload.left)
+        } else if (payload.compo == "z") {
+            state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].zindex = payload.zindex
+        }
+    },
+    addElementSoftWarePackage(state, payload) {
+        var newUUid
+        if (!payload.input) {
+            newUUid = uuid.v1()
+        } else {
+            newUUid = payload.uuid
+        }
+        state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.push({
+            uuid: newUUid,
+            path: payload.path,
+            top: payload.top,
+            left: payload.left,
+            zindex: payload.zindex,
+            name: payload.name,
+            action: payload.action,
+            activation: payload.activation,
+            compSWPsize: payload.compSWPsize,
+            deltaPakage: payload.deltaPakage,
+            maximunVer: payload.maximunVer,
+            minimunVer: payload.minimunVer,
+            id: payload.id,
+            postReboot: payload.postReboot,
+            preReboot: payload.preReboot,
+            swcluster: payload.swcluster,
+            uncompSWCsize: payload.uncompSWCsize
+        })
+        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        if (!payload.input) {
+            state.activeUUID = newUUid
+        }
+        EventBus.$emit('new-element', newUUid)
+    },
+    editSoftWarePackage(state, payload) {
+        var idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === payload.uuid)
 
+        if (payload.compo == "Name") {
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].children[idxElement].name = payload.name
+        } else if (payload.compo == "drag") {
+            Vue.set(state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxElement].top, payload.location, payload.top)
+            Vue.set(state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxElement].left, payload.location, payload.left)
+        } else if (payload.compo == "z") {
+            state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxElement].zindex = payload.zindex
+        }
+    },
+    addElementVehiclePackage(state, payload) {
+        var newUUid
+        if (!payload.input) {
+            newUUid = uuid.v1()
+        } else {
+            newUUid = payload.uuid
+        }
+        state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.push({
+            uuid: newUUid,
+            path: payload.path,
+            top: payload.top,
+            left: payload.left,
+            zindex: payload.zindex,
+            name: payload.name,
+        })
+        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        if (!payload.input) {
+            state.activeUUID = newUUid
+        }
+        EventBus.$emit('new-element', newUUid)
+    },
+    editVehiclePackage(state, payload) {
+        var idxElement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === payload.uuid)
+
+        if (payload.compo == "Name") {
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children[idxElement].name = payload.name
+        } else if (payload.compo == "drag") {
+            Vue.set(state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].top, payload.location, payload.top)
+            Vue.set(state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].left, payload.location, payload.left)
+        } else if (payload.compo == "z") {
+            state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].zindex = payload.zindex
+        }
+    },
 
     renameElement(state, payload) {
         var idxEle, ele, editmethod
@@ -7216,6 +8200,30 @@ const mutations = {
             idxEle = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxEle]
             editmethod = 'editPERPPtoKeyValue'
+        } else if (payload.parent == constant.PlatformHealthManagC_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMContribution.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].Phm.PHMContribution[idxEle]
+            editmethod = 'editPHMContribution'
+        } else if (payload.parent == constant.ContritoMachine_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxEle]
+            editmethod = 'editPHMtoMachine'
+        } else if (payload.parent == constant.HealthChannel_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].Phm.PHMHealth[idxEle]
+            editmethod = 'editPHMHealth'
+        } else if (payload.parent == constant.RecoveryVA_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery[idxEle]
+            editmethod = 'editPHMRecovery'
+        } else if (payload.parent == constant.PHMSupervised_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised[idxEle]
+            editmethod = 'editPHMSupervised'
+        } else if (payload.parent == constant.RecoveryActionInterf_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxEle]
+            editmethod = 'editPHMRecoveryVia'
         } else if (payload.parent == constant.ComFieldGrant_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].IamG.FieldG.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxEle]
@@ -7240,6 +8248,18 @@ const mutations = {
             idxEle = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxEle]
             editmethod = 'editMethodGD'
+        } else if (payload.parent == constant.SWCluster_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxEle]
+            editmethod = 'editSoftWareCluster'
+        } else if (payload.parent == constant.SWPackage_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxEle]
+            editmethod = 'editSoftWarePackage'
+        } else if (payload.parent == constant.VehiclePackage_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxEle]
+            editmethod = 'editVehiclePackage'
         }
 
         ele.name = payload.name
@@ -7277,6 +8297,16 @@ const mutations = {
             } else if (tableLine[0] == 'argtable') { //implementation 변경시 =>   ServiceInterface 에서 Implementation ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].methods[tableLine[2]].argument[tableLine[1]].type = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'PERKeyV') { //ImplementationDataType 변경시 => PERKeyValueD 에서 ImplementationDataType ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === startUUID[0])
+                intablename = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].keyValue[tableLine[1]].datatype.split('/')
+                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].keyValue[tableLine[1]].datatype = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+            } else if (tableLine[0] == 'PERData') { //ImplementationDataType 변경시 => PERKeyValueDI 에서 ImplementationDataType ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxElement].data[tableLine[1]].type = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'PERSerial') { //ImplementationDataType 변경시 =>  PERKeyValueDI 에서 ImplementationDataType ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxElement].serialization[tableLine[1]].serial = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'machinefromptmm') { // Machine 변경시 => Process to Machine Mapping set 에서 Machine ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].ptmmMachine = payload.path + '/' + payload.name
@@ -7296,6 +8326,9 @@ const mutations = {
                     intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].contextMode.split('/')
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].contextMode = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
                 }
+            } else if (tableLine[0] == 'PHMtoMachine') { // Machine 변경시 => PHMtoMachine 에서 Machine ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxElement].machine = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'machinedesign') { //MachineDesign 변경시 =>  machin에서 machinDesign ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].machinedesign = payload.path + '/' + payload.name
@@ -7348,6 +8381,22 @@ const mutations = {
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype.split('/')
                     state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'PERArraySDG') { //SW Component 변경시 =>  PERFileArray 에서 SW Component ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === startUUID[0])
+                if (payload.changeName == 'prPort') {
+                    state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxElement].sdgs[tableLine[1]].port = payload.path + '/' + payload.name + '/' + payload.listname
+                } else if (payload.changeName == undefined) {
+                    intablename = state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxElement].sdgs[tableLine[1]].port.split('/')
+                    state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxElement].sdgs[tableLine[1]].port = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'PERKeyDSDG') { //SW Component 변경시 =>  PERKeyValueD 에서 SW Component ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === startUUID[0])
+                if (payload.changeName == 'prPort') {
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].sdgs[tableLine[1]].port = payload.path + '/' + payload.name + '/' + payload.listname
+                } else if (payload.changeName == undefined) {
+                    intablename = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].sdgs[tableLine[1]].port.split('/')
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].sdgs[tableLine[1]].port = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
                 }
             } else if (tableLine[0] == 'PPPtoFilePRPort') { //SW Component 변경시 =>  PPP to File Array 에서 SW Component ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === startUUID[0])
@@ -7415,7 +8464,7 @@ const mutations = {
             } else if (tableLine[0] == 'processdetermin') { //Deterministric  변경시 =>  Process 에서 Deterministric ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].determin = payload.path + '/' + payload.name
-            } else if (tableLine[0] == 'event') { //Service Deployment 변경시 =>  ServiceInterface Deploymant에서에서 serviceinterface Deploymant Event Deployment ref할때
+            } else if (tableLine[0] == 'event') { //Service Deployment 변경시 =>  ServiceInterface Deploymant에서 serviceinterface Deploymant Event Deployment ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'EventD') {
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event = payload.path + '/' + payload.name + '/' + payload.listname
@@ -7578,6 +8627,9 @@ const mutations = {
             } else if (tableLine[0] == 'PPPtoKeyValue') { //per Key Value Data 변경시 =>  PPP to Key Value 에서 per Key Value Data ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxElement].keyValue = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'PHMContri') { //PHMContribution 변경시 =>  PHMtoMachine 에서 PHMContribution ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxElement].contri = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'PHMViaRecovery') { //PHMRecovery 변경시 =>  PHMRecoveryVia 에서 PHMRecovery ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].phmRecovery = payload.path + '/' + payload.name
@@ -7590,6 +8642,9 @@ const mutations = {
             } else if (tableLine[0] == 'MethodGD') { //Method Grant Design 변경시 =>  Method Grant 에서 Method Grant Design ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxElement].methodD = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'UCMSWPSWC') { //SoftWareCluster 변경시 =>  SoftWarePackage 에서 SoftWareCluster ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxElement].swcluster = payload.path + '/' + payload.name
             }
         })
     },
@@ -7887,7 +8942,47 @@ const mutations = {
                         })
                     }
                     if (payload.deleteName == 'prPort') {
-                        //SWComponemt 변경 시 =>  PERPPtoFileArray에서 SWComponemt PR port ref할때
+                        //SWComponemt 변경 시 =>  PERFileArray 에서 SWComponemt의  pr port ref할때
+                        state.SAHLProject[state.openProjectIndex].Per.PERFileArray.forEach((ele, i) => {
+                                if (ele.sdgs.length > 0) {
+                                    ele.sdgs.forEach((item, n) => {
+                                        if (item.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/PERArraySDG-' + n)
+                                            item.port = null
+                                            if (idx != -1) {
+                                                EventBus.$emit('delete-line', idx)
+                                                this.commit('deletConnectionline', { startnum: idx })
+                                            }
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
+                                        }
+                                    })
+                                }
+                            })
+                            //SWComponemt 변경 시 =>  PERKeyValueD 에서 SWComponemt의  pr port ref할때
+                        state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.forEach((ele, i) => {
+                                if (ele.sdgs.length > 0) {
+                                    ele.sdgs.forEach((item, n) => {
+                                        if (item.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/PERKeyDSDG-' + n)
+                                            item.port = null
+                                            if (idx != -1) {
+                                                EventBus.$emit('delete-line', idx)
+                                                this.commit('deletConnectionline', { startnum: idx })
+                                            }
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
+                                        }
+                                    })
+                                }
+                            })
+                            //SWComponemt 변경 시 =>  PERPPtoFileArray에서 SWComponemt PR port ref할때
                         state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.forEach((ele, i) => {
                                 if (ele.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                     var idx = this.getters.getconnectLineNum(ele.uuid + '/PPPtoFilePRPort')
@@ -8511,7 +9606,47 @@ const mutations = {
                 state.navigatorList[state.openProjectIndex].validation = true
             }
             /////////
-            else if (tableLine[0] == 'PPPtoFileArray') { // PPP to File Array에서 PERSISTENCY-FILE-ARRAY ref할때
+            else if (tableLine[0] == 'PERArraySDG') { // PERFileArray에서 SWComponent ref할때
+                var idxPerAsdg = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxPerAsdg].sdgs[tableLine[1]].port = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].children[idxPerAsdg].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'PERKeyDSDG') { // PERKeyValueD에서 SWComponent ref할때
+                var idxPerKsdg = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxPerKsdg].sdgs[tableLine[1]].port = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children[idxPerKsdg].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'PERKeyV') { // PERKeyValueD에서 ImplementationDataType ref할때
+                var idxPerKeyV = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxPerKeyV].keyValue[tableLine[1]].datatype = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children[idxPerKeyV].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'PERData') { // PERKeyValueDI에서 ImplementationDataType ref할때
+                var idxPerData = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxPerData].data[tableLine[1]].type = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].children[idxPerData].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'PERSerial') { // PERKeyValueDI에서 ImplementationDataType ref할때
+                var idxPERSerial = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxPERSerial].serialization[tableLine[1]].serial = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].children[idxPERSerial].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'PPPtoFileArray') { // PPP to File Array에서 PERSISTENCY-FILE-ARRAY ref할때
                 var idxPPPtoFileArray = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxPPPtoFileArray].fileArray = null
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children[idxPPPtoFileArray].validation = true
@@ -8557,6 +9692,22 @@ const mutations = {
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children[idxPPPtoKeyProce].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'PHMtoMachine') { // PHMtoMachine 에서 Machine ref할때
+                var idxPHMtoMachine = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxPHMtoMachine].machine = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].children[idxPHMtoMachine].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'PHMContri') { // PHMtoMachine 에서 PHMContribution ref할때
+                var idxPHMContri = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxPHMContri].contri[tableLine[1]].con = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].children[idxPHMContri].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PHMViaPro') { // PHMRecovertVia에서 Process ref할때
@@ -8685,6 +9836,14 @@ const mutations = {
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGrant_index].children[idxMGProvide].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGrant_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'UCMSWPSWC') { //SoftWarePackage 에서 SoftWareCluster ref할때
+                var idxUCMSWP = state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxUCMSWP].provide = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].children[idxUCMSWP].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             }
@@ -8910,6 +10069,18 @@ const mutations = {
             idxElement = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].IamG.MethodGD.splice(idxElement, 1)
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].children.splice(idxElement, 1)
+        } else if (payload.parent == constant.SWCluster_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === payload.uuid)
+            state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children.splice(idxElement, 1)
+        } else if (payload.parent == constant.SWPackage_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === payload.uuid)
+            state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].children.splice(idxElement, 1)
+        } else if (payload.parent == constant.VehiclePackage_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === payload.uuid)
+            state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children.splice(idxElement, 1)
         }
         state.detailViewerList.forEach((data, i) => {
             if (data.uuid == payload.uuid) {
@@ -9090,32 +10261,32 @@ const mutations = {
             idxService = constant.PER_index
             idxParent = constant.Platform_index
         } else if (payload.parent == constant.PlatformHealthManagC_str) {
-            idxElement = state.SAHLProject[state.openProjectIndex].Per.PHMContribution.findIndex(data => data.uuid === payload.uuid)
+            idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMContribution.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.PlatformHealthManagC_index
             idxService = constant.PHM_index
             idxParent = constant.Platform_index
         } else if (payload.parent == constant.ContritoMachine_str) {
-            idxElement = state.SAHLProject[state.openProjectIndex].Per.PHMtoMachine.findIndex(data => data.uuid === payload.uuid)
+            idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.ContritoMachine_index
             idxService = constant.PHM_index
             idxParent = constant.Platform_index
         } else if (payload.parent == constant.HealthChannel_str) {
-            idxElement = state.SAHLProject[state.openProjectIndex].Per.PHMHealth.findIndex(data => data.uuid === payload.uuid)
+            idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.HealthChannel_index
             idxService = constant.PHM_index
             idxParent = constant.Platform_index
         } else if (payload.parent == constant.RecoveryVA_str) {
-            idxElement = state.SAHLProject[state.openProjectIndex].Per.PHMRecovery.findIndex(data => data.uuid === payload.uuid)
+            idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.RecoveryVA_index
             idxService = constant.PHM_index
             idxParent = constant.Platform_index
         } else if (payload.parent == constant.PHMSupervised_str) {
-            idxElement = state.SAHLProject[state.openProjectIndex].Per.PHMSupervised.findIndex(data => data.uuid === payload.uuid)
+            idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.PHMSupervised_index
             idxService = constant.PHM_index
             idxParent = constant.Platform_index
         } else if (payload.parent == constant.RecoveryActionInterf_str) {
-            idxElement = state.SAHLProject[state.openProjectIndex].Per.RecoveryVia.findIndex(data => data.uuid === payload.uuid)
+            idxElement = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.RecoveryActionInterf_index
             idxService = constant.PHM_index
             idxParent = constant.Platform_index
@@ -9148,6 +10319,21 @@ const mutations = {
             idxElement = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.ComMethodGDesign_index
             idxService = constant.IAM_index
+            idxParent = constant.Platform_index
+        } else if (payload.parent == constant.SWCluster_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === payload.uuid)
+            idxchildchild = constant.SWCluster_index
+            idxService = constant.UCM_index
+            idxParent = constant.Platform_index
+        } else if (payload.parent == constant.SWPackage_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === payload.uuid)
+            idxchildchild = constant.SWPackage_index
+            idxService = constant.UCM_index
+            idxParent = constant.Platform_index
+        } else if (payload.parent == constant.VehiclePackage_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === payload.uuid)
+            idxchildchild = constant.VehiclePackage_index
+            idxService = constant.UCM_index
             idxParent = constant.Platform_index
         }
 
