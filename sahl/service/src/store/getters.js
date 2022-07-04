@@ -555,6 +555,18 @@ const getters = {
         }
         return name
     },
+    getNameModuleInstant(state) {
+        let name = null,
+            res = true,
+            n = 0
+
+        while (res) {
+            name = constant.ModuleInstantiation_str + '_' + n++;
+            res = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.some(ele => ele.name === name)
+        }
+        return name
+    },
+
 
 
     getImplementationDataType(state) {
@@ -938,6 +950,15 @@ const getters = {
         })
         return datatype
     },
+    getSomeIPToMachineMapping(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
     getRequiredSomeIP(state) {
         var datatype = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.map(ele => {
             var returnObj = {}
@@ -1055,6 +1076,15 @@ const getters = {
         })
         return datatype
     },
+    getModuleInstant(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
 
 
     gettreeviewitems(state) {
@@ -1147,6 +1177,9 @@ const getters = {
     getDataSomeIPServer: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.find(data => data.uuid === uuid)
     },
+    getDataSomeIPToMachine: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.find(data => data.uuid === uuid)
+    },
     getDataRequiredSomeIP: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.find(data => data.uuid === uuid)
     },
@@ -1179,6 +1212,9 @@ const getters = {
     },
     getDataMethodGrantDesign: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].IamG.MethodGD.find(data => data.uuid === uuid)
+    },
+    getDataModuleInstant: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.find(data => data.uuid === uuid)
     },
     getchangenamelist: (state) => (uuid) => {
         var idx = state.connectionLine[state.openProjectIndex].end.indexOf(uuid)
@@ -1671,6 +1707,16 @@ const getters = {
         })
         return uuidRef
     },
+    getModuleInstantPath: (state) => (methodD) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.forEach(data => {
+            var strPath = data.path + '/' + data.name
+            if (strPath === methodD) {
+                uuidRef = data.uuid
+            }
+        })
+        return uuidRef
+    },
 
     sortSaveList: (state) => (savelist) => {
         var pathList = [],
@@ -2122,6 +2168,15 @@ const getters = {
             } else if (data.parent == constant.VehiclePackage_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(item => item.uuid === data.uuid)
                 path = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxelement].path.substr(1)
+                pathList.push({
+                    path: path,
+                    pathLength: path.split('/').length,
+                    idx: idxelement,
+                    parent: data.parent
+                })
+            } else if (data.parent == constant.ModuleInstantiation_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(item => item.uuid === data.uuid)
+                path = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxelement].path.substr(1)
                 pathList.push({
                     path: path,
                     pathLength: path.split('/').length,
@@ -2612,9 +2667,9 @@ const getters = {
                                     saveStr += getters.getEndterStr(elementTab + 4)
                                     saveStr += "<SHORT-NAME>" + core.name + "</SHORT-NAME>"
                                 }
-                                if (core.id != '') {
+                                if (core.idCore != '') {
                                     saveStr += getters.getEndterStr(elementTab + 4)
-                                    saveStr += "<CORE-ID>" + core.id + "</CORE-ID>"
+                                    saveStr += "<CORE-ID>" + core.idCore + "</CORE-ID>"
                                 }
                                 saveStr += getters.getEndterStr(elementTab + 3)
                                 saveStr += "</PROCESSOR-CORE>"
@@ -3375,9 +3430,9 @@ const getters = {
                             saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                         }
-                        if (ele.id != '') {
+                        if (ele.idG != '') {
                             saveStr += getters.getEndterStr(elementTab + 2)
-                            saveStr += "<EVENT-GROUP-ID>" + ele.id + "</EVENT-GROUP-ID>"
+                            saveStr += "<EVENT-GROUP-ID>" + ele.idG + "</EVENT-GROUP-ID>"
                         }
                         if (ele.event != null) {
                             saveStr += getters.getEndterStr(elementTab + 2)
@@ -3409,9 +3464,9 @@ const getters = {
                             saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += '<EVENT-REF DEST="VARIABLE-DATA-PROTOTYPE">' + ele.event + "</EVENT-REF>"
                         }
-                        if (ele.id != '') {
+                        if (ele.idE != '') {
                             saveStr += getters.getEndterStr(elementTab + 2)
-                            saveStr += "<EVENT-ID>" + ele.id + "</EVENT-ID>"
+                            saveStr += "<EVENT-ID>" + ele.idE + "</EVENT-ID>"
                         }
                         if (ele.maxlength != '') {
                             saveStr += getters.getEndterStr(elementTab + 2)
@@ -3449,9 +3504,9 @@ const getters = {
                             saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += '<METHOD-REF DEST="CLIENT-SERVER-OPERATION">' + ele.method + "</METHOD-REF>"
                         }
-                        if (ele.id != '') {
+                        if (ele.idM != '') {
                             saveStr += getters.getEndterStr(elementTab + 2)
-                            saveStr += "<METHOD-ID>" + ele.id + "</METHOD-ID>"
+                            saveStr += "<METHOD-ID>" + ele.idM + "</METHOD-ID>"
                         }
                         if (ele.maxrequest != '') {
                             saveStr += getters.getEndterStr(elementTab + 2)
@@ -4460,7 +4515,7 @@ const getters = {
                         saveStr += "<PERSISTENCY-REDUNDANCY-M-OUT-OF-N>"
                         if (item.scope != null) {
                             saveStr += getters.getEndterStr(elementTab + 2)
-                            saveStr += '<SHORT-NAME>' + item.scope + "</SHORT-NAME>"
+                            saveStr += '<SCOPE>' + item.scope + "</SCOPE>"
                         }
                         if (item.m != '') {
                             saveStr += getters.getEndterStr(elementTab + 2)
@@ -4517,7 +4572,7 @@ const getters = {
                                     saveStr += "</NUMERICAL-VALUE-SPECIFICATION>"
                                 })
                                 saveStr += getters.getEndterStr(elementTab + 4)
-                                saveStr += "<ELEMENTS>"
+                                saveStr += "</ELEMENTS>"
                                 saveStr += getters.getEndterStr(elementTab + 3)
                                 saveStr += "</ARRAY-VALUE-SPECIFICATION>"
                             }
@@ -4702,9 +4757,9 @@ const getters = {
                             saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += '<SHORT-NAME>' + item.name + "</SHORT-NAME>"
                         }
-                        if (item.id != '') {
+                        if (item.status != '') {
                             saveStr += getters.getEndterStr(elementTab + 2)
-                            saveStr += '<STATUS-ID>' + item.id + "</STATUS-ID>"
+                            saveStr += '<STATUS-ID>' + item.status + "</STATUS-ID>"
                         }
                         saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += "</PHM-HEALTH-CHANNEL-STATUS>"
@@ -4757,9 +4812,9 @@ const getters = {
                             saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += '<SHORT-NAME>' + item.name + "</SHORT-NAME>"
                         }
-                        if (item.id != '') {
+                        if (item.check != '') {
                             saveStr += getters.getEndterStr(elementTab + 2)
-                            saveStr += '<CHECKPOINT-ID>' + item.id + "</CHECKPOINT-ID>"
+                            saveStr += '<CHECKPOINT-ID>' + item.check + "</CHECKPOINT-ID>"
                         }
                         saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += "</PHM-CHECKPOINT>"
@@ -4985,7 +5040,120 @@ const getters = {
                 }
                 saveStr += getters.getEndterStr(enterLine)
                 saveStr += "</SOFTWARE-PACKAGE>"
+            } else if (data.parent == constant.VehiclePackage_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<VEHICLE-PACKAGE UUID="' + state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].sdgs.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<ADMIN-DATA>"
+                    saveStr += getters.getEndterStr(elementTab + 1)
+                    saveStr += "<SDGS>"
+                    state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].sdgs.forEach(item => {
+                        saveStr += getters.getEndterStr(elementTab + 2)
+                        saveStr += '<SDG GID="VEHICLE-DESCRIPTION">'
+                        if (item.sd != null) {
+                            saveStr += getters.getEndterStr(elementTab + 3)
+                            saveStr += '<SD GID="VEHICLE-DESCRIPTION">' + item.sd + "</SD>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 2)
+                        saveStr += '</SDG>'
+                    })
+                    saveStr += getters.getEndterStr(elementTab + 1)
+                    saveStr += "</SDGS>"
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</ADMIN-DATA>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].driver.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<DRIVER-NOTIFICATIONS>"
+                    state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].driver.forEach(item => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += '<VEHICLE-DRIVER-NOTIFICATION>'
+                        if (item.appro != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<APPROVAL-REQUIRED>' + item.appro + "</APPROVAL-REQUIRED>"
+                        }
+                        if (item.notify != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<NOTIFICATION-STATE>' + item.notify + "</NOTIFICATION-STATE>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += '</VEHICLE-DRIVER-NOTIFICATION>'
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</DRIVER-NOTIFICATIONS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].reposi != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<REPOSITORY>" + state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].reposi + "</REPOSITORY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].rollout.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<ROLLOUT-QUALIFICATIONS>"
+                    state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].rollout.forEach(item => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += '<VEHICLE-ROLLOUT-STEP>'
+                        if (item.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SHORT-NAME>' + item.name + "</SHORT-NAME>"
+                        }
+                        if (item.policy != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SAFETY-POLICY>' + item.policy + "</SAFETY-POLICY>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += '</VEHICLE-ROLLOUT-STEP>'
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</ROLLOUT-QUALIFICATIONS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].ucms.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<UCMS>"
+                    state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[data.idx].ucms.forEach(item => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += '<UCM-DESCRIPTION>'
+                        if (item.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SHORT-NAME>' + item.name + "</SHORT-NAME>"
+                        }
+                        if (item.ident != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<IDENTIFIER>' + item.ident + "</IDENTIFIER>"
+                        }
+                        if (item.module != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<UCM-MODULE-INSTANTIATION-REF DEST="UCM-MODULE-INSTANTIATION">' + item.module + "</UCM-MODULE-INSTANTIATION-REF>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += '</UCM-DESCRIPTION>'
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</UCMS>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</VEHICLE-PACKAGE>"
+            } else if (data.parent == constant.ModuleInstantiation_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<UCM-MODULE-INSTANTIATION UUID="' + state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[data.idx].ident != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<IDENTIFIER>" + state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[data.idx].ident + "</IDENTIFIER>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</UCM-MODULE-INSTANTIATION>"
             }
+
             console.log(saveStr)
         })
         var repeat = savelist[savelist.length - 1].path.split('/').length

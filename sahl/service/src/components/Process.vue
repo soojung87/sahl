@@ -160,7 +160,7 @@
                                             </div>
                                             <v-card-text v-show="isFunctionGOpenClose">
                                                 <v-data-table v-model="selectDelectFunctionGItem" :headers="headerFunctionG" :items="tab.functionItem" :items-per-page='20'
-                                                        :show-select="isdeleteFunctionG" item-key="contextMode" height="100px" dense hide-default-footer >
+                                                        :show-select="isdeleteFunctionG" item-key="id" height="100px" dense hide-default-footer >
                                                     <template v-slot:item.data-table-select="{ isSelected, select }">
                                                         <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                     </template>
@@ -324,8 +324,8 @@ export default {
             ],
             isEditingContextMode: true,
             isEditingTargetMode: true,
-            defaultFunctionGItem: { contextMode: null, targetMode: null },
-            editFunctionGItem: { contextMode: null, targetMode: null },
+            defaultFunctionGItem: { contextMode: null, targetMode: null, id: '' },
+            editFunctionGItem: { contextMode: null, targetMode: null, id: '' },
             selContextMode: this.$store.getters.getModeDeclarationGP,
             selTargetMode: this.$store.getters.getModeDeclaration,
             changeLineFunc: [],
@@ -680,30 +680,23 @@ export default {
                         this.deleteLine(this.element.uuid+'/fgtarget-'+i+'-'+this.dependentStartupTab)
                     }
                     if(endLineCon != undefined || endLinetarg != undefined) {
-                        this.changeLineFunc.push({contextMode:this.element.dependent[this.dependentStartupTab].functionItem[i].contextMode, targetMode:this.element.dependent[this.dependentStartupTab].functionItem[i].targetMode, endLineCon:endLineCon, endLineTarg:endLinetarg})
+                        this.changeLineFunc.push({id:this.element.dependent[this.dependentStartupTab].functionItem[i].id, endLineCon:endLineCon, endLineTarg:endLinetarg})
                     }
                 }
 
                 this.element.dependent[this.dependentStartupTab].functionItem = this.element.dependent[this.dependentStartupTab].functionItem.filter(item => {
                          return this.selectDelectFunctionGItem.indexOf(item) < 0 })
 
-                let idx = 0 
                 for(let n=0; n<this.element.dependent[this.dependentStartupTab].functionItem.length; n++) {
-                    let rigth= true
-                    while (rigth) {
-                        if (this.element.dependent[this.dependentStartupTab].functionItem[n].contextMode == this.changeLineFunc[idx].contextMode &&
-                            this.element.dependent[this.dependentStartupTab].functionItem[n].targetMode == this.changeLineFunc[idx].targetMode) {
-                                rigth = false
-                                idx--
+                    for(let idx=0; idx<this.changeLineFunc.length; idx++) {
+                        if (this.element.dependent[this.dependentStartupTab].functionItem[n].id == this.changeLineFunc[idx].id) {
+                            if (this.element.dependent[this.dependentStartupTab].functionItem[n].contextMode != null) {
+                                this.newLine(this.element.uuid+'/fgcontext-'+n+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.changeLineFunc[idx].endLineCon)
+                            }
+                            if (this.element.dependent[this.dependentStartupTab].functionItem[n].targetMode != null) {
+                                this.newLine(this.element.uuid+'/fgtarget-'+n+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.changeLineFunc[idx].endLineTarg)
+                            }
                         }
-                        idx++
-                    }
-                    console.log('escape')
-                    if (this.element.dependent[this.dependentStartupTab].functionItem[n].contextMode != null) {
-                        this.newLine(this.element.uuid+'/fgcontext-'+n+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.changeLineFunc[idx].endLineCon)
-                    }
-                    if (this.element.dependent[this.dependentStartupTab].functionItem[n].targetMode != null) {
-                        this.newLine(this.element.uuid+'/fgtarget-'+n+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.changeLineFunc[idx].endLineTarg)
                     }
                 }
 
@@ -767,6 +760,13 @@ export default {
             this.setactiveUUID()
         },
         addFunctionG() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.dependent[this.dependentStartupTab].functionItem.some(item => item.id === n)
+            }
+            this.editFunctionGItem.id = n
+
             var datacount
             if(this.element.dependent[this.dependentStartupTab].functionItem == undefined) {
                 datacount = 0

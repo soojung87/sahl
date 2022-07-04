@@ -85,7 +85,7 @@
                         </div>
                         <v-card-text v-show="isMethodRefOpenClose">
                             <v-data-table v-model="selectMethodRef" :headers="headerMethodRef" :items="element.method" :items-per-page='20'
-                                    :show-select="isdeleteMethodRef" item-key="method" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteMethodRef" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -155,7 +155,7 @@
                                             <v-col cols="2">
                                                 <v-menu>
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn color="deep-purple accent-4" :id="element.uuid+'/requiredEventG'+tab.name" icon v-bind="attrs" v-on="on" @click="setEventGList()">
+                                                        <v-btn color="deep-purple accent-4" :id="element.uuid+'/requiredEventG'+tab.id" icon v-bind="attrs" v-on="on" @click="setEventGList()">
                                                             <v-icon>mdi-menu-down-outline</v-icon>
                                                         </v-btn>
                                                     </template>
@@ -177,7 +177,7 @@
                                             <v-col cols="2">
                                                 <v-menu>
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn color="deep-purple accent-4" :id="element.uuid+'/requiredClient'+tab.name" icon v-bind="attrs" v-on="on" @click="setClientList()">
+                                                        <v-btn color="deep-purple accent-4" :id="element.uuid+'/requiredClient'+tab.id" icon v-bind="attrs" v-on="on" @click="setClientList()">
                                                             <v-icon>mdi-menu-down-outline</v-icon>
                                                         </v-btn>
                                                     </template>
@@ -253,7 +253,7 @@ export default {
             headerMethodRef: [
                 { text: 'SomeIP Method Props', align: 'start', sortable: false, value: 'method' },
             ],
-            editMethodItem: { method : null},
+            editMethodItem: { method : null, id: ''},
             isdeleteMethodRef: false,
             selMethodref: this.$store.getters.getDeploymentMethod,
             isEditingMethod: true,
@@ -296,7 +296,7 @@ export default {
                 if(this.iselementOpenClose) {
                     if(this.element.requiredevent.length > 0 && this.location == 1) {
                         if (this.isRequiredEventOpenClose) {
-                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].name)
+                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].id)
                         } else {
                             EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
                         }
@@ -315,7 +315,7 @@ export default {
             if(this.element.requiredevent.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isRequiredEventOpenClose) {
-                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].name)
+                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].id)
                     } else {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
                     }
@@ -444,7 +444,7 @@ export default {
                 for(let i=0; i<this.element.method.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredMethod-'+i)
                     if(endLine != undefined) {
-                        this.deleteMethodLine.push({name:this.element.method[i].method, endLine:endLine})
+                        this.deleteMethodLine.push({id:this.element.method[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/requiredMethod-'+i)
                     }
                 }
@@ -454,7 +454,7 @@ export default {
 
                 for(let n=0; n<this.element.method.length; n++) {
                     for(let idx=0; idx<this.deleteMethodLine.length; idx++) {
-                        if (this.element.method[n].method == this.deleteMethodLine[idx].name) {
+                        if (this.element.method[n].id == this.deleteMethodLine[idx].id) {
                             this.newLine(this.element.uuid+'/requiredMethod-'+n, this.element.uuid+'/requiredMethod', this.deleteMethodLine[idx].endLine)
                         }
                     }
@@ -498,6 +498,13 @@ export default {
             this.setactiveUUID()
         },
         addMethodRef() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.method.some(item => item.id === n)
+            }
+            this.editMethodItem.id = n
+
             if( this.editMethodItem.method != null) {
                 var datacount = this.element.method.length
                 this.newLine(this.element.uuid+'/requiredMethod-'+datacount, this.element.uuid+'/requiredMethod', this.editMethodItem.method.uuid)
@@ -529,7 +536,7 @@ export default {
         },
 
         addRequiredEvent() {
-            const editItem = { name: '', eventG: null, client: null}
+            const editItem = { name: '', eventG: null, client: null, id: ''}
             const addObj = new Object(editItem)
             let res = true, n = 0
 
@@ -537,6 +544,8 @@ export default {
                 addObj.name = 'Event Group_' + n++;
                 res = this.element.requiredevent.some(ele => ele.name === addObj.name)
             }
+            addObj.id = n
+
             this.element.requiredevent.push(addObj)
             this.eventGroupTab = this.element.requiredevent.length-1
             if (this.location == 1) {
@@ -546,7 +555,7 @@ export default {
         clickEeventGroupTab() {},
         changeEeventGroupTab() {
             if(this.element.requiredevent.length > 0 && this.location == 1) {
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].name)}, 300);
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].id)}, 300);
             }
         },
         deleteEventGroup(idx) {
@@ -609,7 +618,7 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/requiredEventG-'+this.eventGroupTab, this.element.uuid+'/requiredEventG'+this.element.requiredevent[this.eventGroupTab].name, item.uuid)
+                    this.newLine(this.element.uuid+'/requiredEventG-'+this.eventGroupTab, this.element.uuid+'/requiredEventG'+this.element.requiredevent[this.eventGroupTab].id, item.uuid)
                 }
                 tab.eventG = item.name
             }
@@ -644,7 +653,7 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/requiredClient-'+this.eventGroupTab, this.element.uuid+'/requiredClient'+this.element.requiredevent[this.eventGroupTab].name, item.uuid)
+                    this.newLine(this.element.uuid+'/requiredClient-'+this.eventGroupTab, this.element.uuid+'/requiredClient'+this.element.requiredevent[this.eventGroupTab].id, item.uuid)
                 }
                 tab.client = item.name
             }

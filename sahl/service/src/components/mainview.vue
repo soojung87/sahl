@@ -623,6 +623,19 @@
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].UCM.SoftWareCluster"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SoftWare Cluster')"
+                @resizing="changeElementSize()">
+                <SoftwareCluster :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].UCM.SoftWarePackage"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
@@ -633,6 +646,33 @@
                 @resizing="changeElementSize()">
                 <SoftwarePackage :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].UCM.VehiclePackage"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Vehicle Package')"
+                @resizing="changeElementSize()">
+                <VehiclePackage :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].UCM.ModuleInstant"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'UCM Module Instantiation')"
+                @resizing="changeElementSize()">
+                <ModuleInstant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+
         </v-main>
     </div>
 </template>
@@ -686,7 +726,10 @@ import FieldGrantD from '../components/FieldGrantDesign.vue'
 import MethodGrant from '../components/MethodGrant.vue'
 import EventGrant from '../components/EventGrant.vue'
 import FieldGrant from '../components/FieldGrant.vue'
+import SoftwareCluster from '../components/UCMSoftwareCluster.vue'
 import SoftwarePackage from '../components/UCMSoftWarePackage.vue'
+import VehiclePackage from '../components/UCMVehiclePackage.vue'
+import ModuleInstant from '../components/UCMModuleIns.vue'
 
 import { EventBus } from '../main'
 import LeaderLine from 'leader-line-vue'
@@ -703,7 +746,7 @@ export default{
                 PerFileArray, PerFileProxy, PerKeyValueDB, PerKeyValueDI, PPPtoKeyValue, PPPtoFileArray,
                 PHMContribution, PHMtoMachine, PHMHealthChannel, PHMRecovery, PHMSupervised, PHMRecoveryVia,
                 MethodGrantD, EventGrantD, FieldGrantD, MethodGrant, EventGrant, FieldGrant,
-                SoftwarePackage,},
+                SoftwareCluster, SoftwarePackage, VehiclePackage, ModuleInstant},
     computed: {
         SAHLProject() {
             return this.$store.state.SAHLProject
@@ -826,7 +869,7 @@ export default{
             })
         });
         EventBus.$on('delete-line', (numLine) => {
-            console.log('delete-line'+ numLine)
+            //console.log('delete-line'+ numLine)
             if(this.minimaptoolbar && this.location == '1') {
                 if (numLine == 'all') {
                     this.connections.forEach( item => {
@@ -838,7 +881,7 @@ export default{
                     this.connections[numLine].remove()
                     this.connections.splice(numLine, 1)
                     this.appendLine.splice(numLine, 1)
-                    console.log(this.appendLine)
+                    //console.log(this.appendLine)
                 }
             }
         });
@@ -884,9 +927,9 @@ export default{
             })
         })
         /*tab있는 element들은 화면 분할할때 선이 이상한 곳으로 가기때문에 location을 넘겨줘야한다 */
-        EventBus.$on('changeLine-someipService', (item,uuid, idx,tabname, str1, str2) => {  //하나의 element에 tab이 2개가 있을 경우 item으로 구분해줘야한다.
+        EventBus.$on('changeLine-someipService', (item,uuid, idx, tabID, str1, str2) => {  //하나의 element에 tab이 2개가 있을 경우 item으로 구분해줘야한다.
             this.$nextTick(() => { 
-                this.drawLinTabMoveSomeIPServeice(item,uuid, idx,tabname, str1, str2) //ethernet Cluster에서 conditional name와 channel name이 필요해 str1 str2로 나뉨
+                this.drawLinTabMoveSomeIPServeice(item,uuid, idx, tabID, str1, str2) //ethernet Cluster에서 conditional name와 channel name이 필요해 str1 str2로 나뉨
             })
         })
         EventBus.$off('goElement'); //중복호출되어 같이 정의해줘야 한번 들어온다. 
@@ -1017,6 +1060,8 @@ export default{
                 editStr = 'editSoftWarePackage'
             } else if (ele == constant.VehiclePackage_str) {
                 editStr = 'editVehiclePackage'
+            } else if (ele == constant.ModuleInstantiation_str) {
+                editStr = 'editModuleInstant'
             }
             document.getElementById(uuid+this.location).scrollIntoView(true)
             this.$store.commit(editStr, {compo:"drag", uuid: uuid, top: top, left: left, location: this.location} )
@@ -1223,7 +1268,7 @@ export default{
                 }
             }
         },
-        drawLinTabMoveSomeIPServeice(item, uuid, idx, tabname, str1, str2) {
+        drawLinTabMoveSomeIPServeice(item, uuid, idx, tabID, str1, str2) {
             console.log('drawLinTabMoveSomeIPServeice')
             if(this.minimaptoolbar && this.location == '1') {
                 var activeLine = this.$store.getters.getactiveLine(uuid)
@@ -1232,12 +1277,14 @@ export default{
                     startLine = this.$store.getters.getStartLineInfo(activeLine[i]) 
                     var startUUID = startLine.split('/')
                     var tableLine = startUUID[1].split('-')
+                    console.log(tableLine[0]+' / '+ item + ' / '+tableLine[2]+' / '+ tableLine[3])
+                    console.log(str1+' / '+ str2)
                     if (tableLine[0] == 'field' && item == 'field') {
                         //console.log('/field')
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]){
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/fieldtab'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/fieldtab'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/field')
                         }
@@ -1247,7 +1294,7 @@ export default{
                         this.connections[activeLine[i]].remove()
                         //console.log('/event')
                         if(idx == tableLine[2]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/eventtab'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/eventtab'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/event')
                         }
@@ -1257,7 +1304,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/argtable'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/argtable'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/methods')
                         }
@@ -1267,7 +1314,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/methoderrors'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/methoderrors'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/methods')
                         }
@@ -1277,7 +1324,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/methoderror'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/methoderror'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/methods')
                         }
@@ -1286,7 +1333,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredEventG'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredEventG'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredE')
                         }
@@ -1295,7 +1342,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredClient'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredClient'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredE')
                         }
@@ -1304,7 +1351,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providEventG'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providEventG'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/providE')
                         }
@@ -1313,7 +1360,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providServer'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providServer'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/providE')
                         }
@@ -1322,7 +1369,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/fgtable'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/fgtable'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/processStarupC')
                         }
@@ -1331,7 +1378,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[2]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/fgtable'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/fgtable'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/processStarupC')
                         }
@@ -1340,7 +1387,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processresorce'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processresorce'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/processStarupC')
                         }
@@ -1350,7 +1397,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processstartup'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processstartup'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/processStarupC')
                         }
@@ -1358,10 +1405,10 @@ export default{
                     } else if (tableLine[0] == 'comconet' && item == 'connector') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
-                        if(idx == tableLine[2] && tabname == tableLine[3]) {
+                        if(idx == tableLine[2] && tabID == tableLine[3]) {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/comconet-'+str1+'-'+str2)
-                        } else if (idx != tableLine[2] && tabname == tableLine[3]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/channel'+str2)
+                        } else if (idx != tableLine[2] && tabID == tableLine[3]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/channel-'+str2)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/conditional')
                         }
@@ -1369,8 +1416,8 @@ export default{
                     } else if (tableLine[0] == 'comconet' && item == 'channel') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
-                        if(tabname == tableLine[3]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/channel'+str1)
+                        if(tabID == tableLine[3]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/channel-'+str1)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/conditional')
                         }
@@ -1384,7 +1431,7 @@ export default{
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]){
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/PERDBImple'+tabname)
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/PERDBImple'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/PERKeyV')
                         }

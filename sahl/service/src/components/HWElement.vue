@@ -57,7 +57,7 @@
                         </div>
                         <v-card-text v-if="isAttributeOpenClose">  
                             <v-data-table v-model="selectdeleteAttribut" :headers="headersAttribut" :items="element.attribute" :items-per-page='20'
-                                    :show-select="isdeleteAttributeItem" item-key="attr" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteAttributeItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -153,8 +153,8 @@ export default {
             ],
             attributeType: [ 'EEPROM', 'FLASH', 'RAM','ROM',],
             selectdeleteAttribut: [],
-            editAttributeItem: { attr: null, vt:'', v:''},
-            defaultAttributeItem: { attr: null, vt:'', v:''}
+            editAttributeItem: { attr: null, vt:'', v:'', id: ''},
+            defaultAttributeItem: { attr: null, vt:'', v:'', id: ''}
 
         }
     },
@@ -254,6 +254,12 @@ export default {
             this.editAttributeItem.v = this.element.attribute[idx].v
         },
         addAttribute() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.attribute.some(item => item.id === n)
+            }
+            this.editAttributeItem.id = n
             this.editAttributeItem.attr = this.editAttributeItem.attr.name
             const addObj = Object.assign({}, this.editAttributeItem);
             this.element.attribute.push(addObj);

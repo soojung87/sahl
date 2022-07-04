@@ -21,6 +21,72 @@
                 <v-card-text v-if="iselementOpenClose">
                     <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                 @input='inputPERKeyValueDName' outlined dense  @click="setactiveUUID"></v-text-field>
+                    <v-card outlined class="mx-auto">
+                        <div class="subtitle-2" :id="element.uuid+'/PERKeyDSDG'" style="height:20px">
+                            <v-hover v-slot="{ hover }">
+                                <v-btn text @click="showSDGS" x-small color="indigo">
+                                    <v-icon>{{ isSDGSOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                </v-btn>
+                            </v-hover>
+                            Admin Data
+                            <v-btn @click="isCheckSDGS" text x-small color="indigo" v-if="isSDGSOpenClose">
+                                <v-icon>mdi-check</v-icon>
+                            </v-btn>
+                            <v-btn v-if="isSDGSOpenClose && isdeleteSDGSItem" @click="deletSDGS" text x-small color="indigo">
+                                <v-icon>mdi-minus</v-icon>
+                            </v-btn>
+                        </div>
+                        <v-card-text v-if="isSDGSOpenClose">
+                            <v-data-table v-model="selectDelectSDGS" :headers="headerSDGS" :items="element.sdgs" :items-per-page='20'
+                                    :show-select="isdeleteSDGSItem" item-key="id" height="100px" dense hide-default-footer >
+                                <template v-slot:item.data-table-select="{ isSelected, select }">
+                                    <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                </template>
+                                <template v-if="!isdeleteSDGSItem" v-slot:body="{ items, headers }">
+                                    <tbody>
+                                        <tr v-for="(item,idx) in items" :key="idx">
+                                            <td v-for="(header,key) in headers" :key="key">
+                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openSDGS(idx)" @cancel="editSDGS(idx)" @save="cancelSDGS" large >
+                                                    {{item[header.value]}}
+                                                    <template v-slot:input>
+                                                        <br>
+                                                        <v-autocomplete v-model='editSDGSItem.sdg' label='SDG' :items='selSDG' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                   return-object @click:clear='clearSDGS' clearable>
+                                                        </v-autocomplete>
+                                                        <v-select v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 1" v-model="editSDGSItem.sd" :items="enumSD" label="SD" @click="setactiveUUID()" outlined dense style="height: 45px;"></v-select>
+                                                        <v-autocomplete v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 2" v-model='editSDGSItem.port' label='SDX Reference' :items='selPort' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                    return-object :readonly="!isEditingPort" clearable @click="setPortSelect()" 
+                                                                    @click:clear='clearPort' @blur="isEditingPort=true" outlined dense style="height: 45px;">
+                                                        </v-autocomplete>
+                                                    </template>
+                                                </v-edit-dialog>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="3">
+                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addSDGS()" @save="cancelSDGS"> 
+                                                    <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                        <v-icon >mdi-plus</v-icon>New Item
+                                                    </v-btn>
+                                                    <template v-slot:input>
+                                                        <br>
+                                                        <v-autocomplete v-model='editSDGSItem.sdg' label='SDG' :items='selSDG' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                   return-object @click:clear='clearSDGS' clearable>
+                                                        </v-autocomplete>
+                                                        <v-select v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 1" v-model="editSDGSItem.sd" :items="enumSD" label="SD" @click="setactiveUUID()" outlined dense style="height: 45px;"></v-select>
+                                                        <v-autocomplete v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 2" v-model='editSDGSItem.port' label='SDX Reference' :items='selPort' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                    return-object :readonly="!isEditingPort" clearable @click="setPortSelect()" 
+                                                                    @click:clear='clearPort' @blur="isEditingPort=true" outlined dense style="height: 45px;">
+                                                        </v-autocomplete>
+                                                    </template>
+                                                </v-edit-dialog>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </template>
+                            </v-data-table>
+                        </v-card-text>
+                    </v-card>
                     <v-text-field v-model="element.maxSize" label="Max Allowed Size" placeholder="Integer" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                     <v-text-field v-model="element.miniSize" label="Minimun Sustained Size" placeholder="Integer" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                     <v-select v-model="element.updateS" :items="strategy" clearable label="Update Strategy" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
@@ -42,7 +108,7 @@
                         </div>
                         <v-card-text v-if="isRedundancyOpenClose">
                             <v-data-table v-model="selectDelectRedundancy" :headers="headerRedundancy" :items="element.redundancy" :items-per-page='20'
-                                    :show-select="isdeleteRedundancyItem" item-key="name" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteRedundancyItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -50,7 +116,7 @@
                                     <tbody>
                                         <tr v-for="(item,idx) in items" :key="idx">
                                             <td v-for="(header,key) in headers" :key="key">
-                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editRedundancy(idx)" @save="cancelRedundancy" large >
+                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openRedundancy(idx)" @cancel="editRedundancy(idx)" @save="cancelRedundancy" large >
                                                     {{item[header.value]}}
                                                     <template v-slot:input>
                                                         <br>
@@ -144,7 +210,7 @@
                                             </div>
                                             <v-card-text v-show="isArrayOpenClose">
                                                 <v-data-table v-model="selDeleteArray" :headers="headerArray" :items="tab.array" :items-per-page='20'
-                                                        :show-select="isdeleteArray" item-key="value" height="100px" dense hide-default-footer >
+                                                        :show-select="isdeleteArray" item-key="id" height="100px" dense hide-default-footer >
                                                     <template v-slot:item.data-table-select="{ isSelected, select }">
                                                         <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                     </template>
@@ -196,7 +262,7 @@
                                             </div>
                                             <v-card-text v-show="isNumericalOpenClose">
                                                 <v-data-table v-model="selDeleteNumerical" :headers="headerNumeri" :items="tab.numerical" :items-per-page='20'
-                                                        :show-select="isdeleteNumerical" item-key="value" height="100px" dense hide-default-footer >
+                                                        :show-select="isdeleteNumerical" item-key="id" height="100px" dense hide-default-footer >
                                                     <template v-slot:item.data-table-select="{ isSelected, select }">
                                                         <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                     </template>
@@ -288,13 +354,29 @@ export default {
             isdeleteRedundancyItem: false,
             enumScope: ['PERSISTENCY-REDUNDANCY-HANDLING-SCOPE-DATABASE', 'PERSISTENCY-REDUNDANCY-HANDLING-SCOPE-ELEMENT','PERSISTENCY-REDUNDANCY-HANDLING-SCOPE-STORAGE'],
             strategy: ['DELETE', 'KEEPEXISTING', 'OVERWRITE'],
+
+            isSDGSOpenClose: true,
+            isdeleteSDGSItem: false,
+            selectDelectSDGS: [],
+            headerSDGS: [
+                { text: 'SDG', align: 'start', sortable: false, value: 'sdg' },
+                { text: 'SD', align: 'start', sortable: false, value: 'sd' },
+                { text: 'SDX Ref', align: 'start', sortable: false, value: 'port' },
+            ],
+            editSDGSItem: { sdg: null, sd : null, port: null, id: ''},
+            selSDG: [{name:"DATA-ENCRYPTION", uuid:1},{name:"PERSISTENCY-DEPLOYMENT-EXTENSION", uuid:2},],
+            enumSD: ['Yes', 'No'],
+            selPort: this.$store.getters.getPRPortPrototype,
+            isEditingPort: true,
+            deleteChangeLine: [],
+
             selectDelectRedundancy: [],
             headerRedundancy: [
                 { text: 'Scope', align: 'start', sortable: false, value: 'scope' },
                 { text: 'M', align: 'start', sortable: false, value: 'm' },
                 { text: 'N', align: 'start', sortable: false, value: 'n' },
             ],
-            editItem: { scope : null, m: '', n: ''},
+            editItem: { scope : null, m: '', n: '', id:''},
 
             keyValueTab: 0,
             isArrayOpenClose: true,
@@ -309,8 +391,8 @@ export default {
             headerNumeri: [
                 { text: 'Value', align: 'start', sortable: false, value: 'value' },
             ],
-            editArrayItem: { value: null},
-            editNumeriItem: { value: null},
+            editArrayItem: { value: null, id:''},
+            editNumeriItem: { value: null, id:''},
             selImplementation: this.$store.getters.getImplementationDataType,
         }
     },
@@ -353,6 +435,10 @@ export default {
             })
 
         },
+        showSDGS() {
+            this.isSDGSOpenClose = this.isSDGSOpenClose ? false : true
+            EventBus.$emit('drawLine')
+        },
         showRedundancy() {
             this.isRedundancyOpenClose = this.isRedundancyOpenClose ? false : true
             EventBus.$emit('drawLine')
@@ -376,6 +462,137 @@ export default {
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
+        },
+
+        isCheckSDGS() {
+            if (this.isdeleteSDGSItem == true) {
+                this.isdeleteSDGSItem = false
+                this.selectDelectSDGS = []
+            } else {
+                this.isdeleteSDGSItem = true
+            }
+        },
+        deletSDGS() {
+            if (this.isdeleteSDGSItem == true) {
+                for(let i=0; i<this.element.sdgs.length; i++){
+                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PERKeyDSDG-'+i)
+                    if(endLine != undefined) {
+                        this.deleteChangeLine.push({id:this.element.sdgs[i].id, endLine:endLine})
+                        this.deleteLine(this.element.uuid+'/PERKeyDSDG-'+i)
+                    }
+                }
+
+                this.element.sdgs = this.element.sdgs.filter(item => {
+                        return this.selectDelectSDGS.indexOf(item) < 0 })
+
+                for(let n=0; n<this.element.sdgs.length; n++) {
+                    for(let idx=0; idx<this.deleteChangeLine.length; idx++) {
+                        if (this.element.sdgs[n].id == this.deleteChangeLine[idx].id) {
+                            this.newLine(this.element.uuid+'/PERKeyDSDG-'+n, this.element.uuid+'/PERKeyDSDG', this.deleteChangeLine[idx].endLine)
+                        }
+                    }
+                }
+
+                this.isdeleteSDGSItem = false
+                this.selectDelectSDGS = []
+                this.deleteChangeLine = []
+            } 
+        },
+        editSDGS(idx) {
+            var endLine
+            this.element.sdgs[idx].sdg = this.editSDGSItem.sdg.name
+            if (this.element.sdgs[idx].sdg == "DATA-ENCRYPTION") {
+                this.element.sdgs[idx].sd = this.editSDGSItem.sd
+                if (this.editSDGSItem.port != null) {
+                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PERKeyDSDG-'+idx)
+                    if (endLine != undefined) {
+                        this.deleteLine(this.element.uuid+'/PERKeyDSDG-'+idx)
+                        this.element.sdgs[idx].port = null
+                    } 
+                }
+            } else if (this.element.sdgs[idx].sdg == "PERSISTENCY-DEPLOYMENT-EXTENSION"){
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PERKeyDSDG-'+idx)
+                if (endLine != undefined && this.editSDGSItem.port == null) {
+                    this.deleteLine(this.element.uuid+'/PERKeyDSDG-'+idx)
+                    this.element.sdgs[idx].port = null
+                } else if (endLine != undefined && endLine != this.editSDGSItem.port.uuid) {
+                    //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
+                    this.deleteLine(this.element.uuid+'/PERKeyDSDG-'+idx)
+                    this.newLine(this.element.uuid+'/PERKeyDSDG-'+idx, this.element.uuid+'/PERKeyDSDG', this.editSDGSItem.port.uuid)
+                    this.element.sdgs[idx].port = this.editSDGSItem.port.name
+                } else if (endLine == undefined && this.editSDGSItem.port != null) {
+                    this.newLine(this.element.uuid+'/PERKeyDSDG-'+idx, this.element.uuid+'/PERKeyDSDG', this.editSDGSItem.port.uuid)
+                    this.element.sdgs[idx].port = this.editSDGSItem.port.name
+                }
+                this.element.sdgs[idx].sd = null
+            }
+
+            this.cancelSDGS()
+        },
+        cancelSDGS() {
+            this.editSDGSItem.sdg = null
+            this.editSDGSItem.sd = null
+            this.editSDGSItem.port = null
+            this.editSDGSItem.id = ''
+            this.setactiveUUID()
+        },
+        openSDGS(idx) {
+            var id = null
+            if (this.element.sdgs[idx].sdg == "DATA-ENCRYPTION") {
+                id = 1
+                this.editSDGSItem.sd = this.element.sdgs[idx].sd
+            } else if (this.element.sdgs[idx].sdg == "PERSISTENCY-DEPLOYMENT-EXTENSION"){
+                id = 2
+                this.selPort = this.$store.getters.getPRPortPrototype
+                if ( this.element.sdgs[idx].port != null) {
+                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PERKeyDSDG-'+idx)
+                    if (endLine == undefined) {
+                        endLine = this.$store.getters.getSWComponentPath(this.element.sdgs[idx].port, 3)
+                    }
+                    this.editSDGSItem.port = { name: this.element.sdgs[idx].port, uuid: endLine }
+                }
+            }
+            this.editSDGSItem.sdg = { name: this.element.sdgs[idx].sdg, uuid: id}
+        },
+        addSDGS() {
+            let res = true, n = 0
+            var datacount = this.element.sdgs.length
+            while (res) {
+                n++
+                res = this.element.sdgs.some(item => item.id === n)
+            }
+            this.editSDGSItem.id = n
+            this.editSDGSItem.sdg = this.editSDGSItem.sdg.name
+            if( this.editSDGSItem.port != null) {
+                this.newLine(this.element.uuid+'/PERKeyDSDG-'+datacount, this.element.uuid+'/PERKeyDSDG', this.editSDGSItem.port.uuid)
+                this.editSDGSItem.port = this.editSDGSItem.port.name
+            }
+
+            const addObj = Object.assign({}, this.editSDGSItem)
+            this.element.sdgs.push(addObj)
+            this.cancelSDGS()
+        },
+        clearSDGS() {
+            this.editSDGSItem.sdg = null
+        },
+        setPortSelect() {            
+            if (this.isEditingPort == true) {
+                if (this.editSDGSItem.port != null && this.editSDGSItem.port.uuid != null) {
+                    this.$store.commit('setDetailView', {uuid: this.editSDGSItem.port.uuid, element: constant.SWComponents_str} )
+                }
+                this.setPortList()
+                this.isEditingPort = false
+            } else {
+                this.isEditingPort = true
+            }
+        },
+        setPortList() {
+            this.selPort = this.$store.getters.getPRPortPrototype
+            this.setactiveUUID()
+        },
+        clearPort() {
+            this.isEditingPort = true
+            this.editSDGSItem.port = null
         },
 
         isCheckRedundancy() {
@@ -407,7 +624,19 @@ export default {
             this.editItem.n = ''
             this.setactiveUUID()
         },
+        openRedundancy(idx) {
+            this.editItem.scope = this.element.redundancy[idx].scope
+            this.editItem.m = this.element.redundancy[idx].m
+            this.editItem.n = this.element.redundancy[idx].n
+        },
         addRedundancy() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.redundancy.some(item => item.id === n)
+            }
+            this.editItem.id = n
+
             const addObj = Object.assign({}, this.editItem)
             this.element.redundancy.push(addObj)
             this.cancelRedundancy()
@@ -498,6 +727,13 @@ export default {
             this.setactiveUUID()
         },
         addArray() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.keyValue[this.keyValueTab].array.some(item => item.id === n)
+            }
+            this.editArrayItem.id = n
+
             const addObj = Object.assign({}, this.editArrayItem)
             this.element.keyValue[this.keyValueTab].array.push(addObj)
             this.cancelArray()
@@ -532,6 +768,13 @@ export default {
             this.setactiveUUID()
         },
         addNumerical() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.keyValue[this.keyValueTab].numerical.some(item => item.id === n)
+            }
+            this.editNumeriItem.id = n
+
             const addObj = Object.assign({}, this.editNumeriItem)
             this.element.keyValue[this.keyValueTab].numerical.push(addObj)
             this.cancelNumerical()

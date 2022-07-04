@@ -60,7 +60,7 @@
                         </div>
                         <v-card-text v-if="isContriOpenClose">
                             <v-data-table v-model="selectDelectContri" :headers="headerContri" :items="element.contri" :items-per-page='20'
-                                    :show-select="isdeleteContriItem" item-key="con" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteContriItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -165,7 +165,7 @@ export default {
             headerContri: [
                 { text: 'PHM Contribution ref', align: 'start', sortable: false, value: 'con' },
             ],
-            editItem: { con : null},
+            editItem: { con : null, id: ''},
             deleteChangeLine : [],
         }
     },
@@ -269,7 +269,7 @@ export default {
                 for(let i=0; i<this.element.contri.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PHMContri-'+i)
                     if(endLine != undefined) {
-                        this.deleteChangeLine.push({name:this.element.contri[i].con, endLine:endLine})
+                        this.deleteChangeLine.push({id:this.element.contri[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/PHMContri-'+i)
                     }
                 }
@@ -279,7 +279,7 @@ export default {
 
                 for(let n=0; n<this.element.contri.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLine.length; idx++) {
-                        if (this.element.contri[n].con == this.deleteChangeLine[idx].name) {
+                        if (this.element.contri[n].id == this.deleteChangeLine[idx].id) {
                             this.newLine(this.element.uuid+'/PHMContri-'+n, this.element.uuid+'/PHMContri', this.deleteChangeLine[idx].endLine)
                         }
                     }
@@ -322,6 +322,13 @@ export default {
             this.setactiveUUID()
         },
         addContri() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.contri.some(item => item.id === n)
+            }
+            this.editItem.id = n
+
             if( this.editItem.con != null) {
                 var datacount = this.element.contri.length
                 this.newLine(this.element.uuid+'/PHMContri-'+datacount, this.element.uuid+'/PHMContri', this.editItem.con.uuid)

@@ -44,7 +44,7 @@
                         </div>
                         <v-card-text v-if="isFileProxyOpenClose">
                             <v-data-table v-model="selectDelectFileProxy" :headers="headerFileProxy" :items="element.proxy" :items-per-page='20'
-                                    :show-select="isdeleteFileProxyItem" item-key="name" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteFileProxyItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -52,7 +52,7 @@
                                     <tbody>
                                         <tr v-for="(item,idx) in items" :key="idx">
                                             <td v-for="(header,key) in headers" :key="key">
-                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editFileProxy(idx)" @save="cancelFileProxy" large >
+                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openFileProxy(idx)" @cancel="editFileProxy(idx)" @save="cancelFileProxy" large >
                                                     {{item[header.value]}}
                                                     <template v-slot:input>
                                                         <br>
@@ -140,7 +140,7 @@ export default {
                 { text: 'File Name', align: 'start', sortable: false, value: 'filename' },
                 { text: 'Update Strategy', align: 'start', sortable: false, value: 'strategy' },
             ],
-            editItem: { name : '', url: '', filename: '', strategy: null},
+            editItem: { name : '', url: '', filename: '', strategy: null, id: ''},
 
         }
     },
@@ -216,7 +216,20 @@ export default {
             this.editItem.strategy = null
             this.setactiveUUID()
         },
+        openFileProxy(idx) {
+            this.editItem.name = this.element.proxy[idx].name
+            this.editItem.url = this.element.proxy[idx].url
+            this.editItem.filename = this.element.proxy[idx].filename
+            this.editItem.strategy = this.element.proxy[idx].strategy
+        },
         addFileProxy() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.proxy.some(item => item.id === n)
+            }
+            this.editItem.id = n
+
             const addObj = Object.assign({}, this.editItem)
             this.element.proxy.push(addObj)
             this.cancelFileProxy()

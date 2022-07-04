@@ -41,7 +41,7 @@
                         </div>
                         <v-card-text v-if="isDataOpenClose">
                             <v-data-table v-model="selectDelectData" :headers="headerPersistency" :items="element.data" :items-per-page='20'
-                                    :show-select="isdeleteDataItem" item-key="name" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteDataItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -113,7 +113,7 @@
                         </div>
                         <v-card-text v-if="isSerializationOpenClose">
                             <v-data-table v-model="selectDelectSerialization" :headers="headerSerialization" :items="element.serialization" :items-per-page='20'
-                                    :show-select="isdeleteSerializationItem" item-key="serial" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteSerializationItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -221,7 +221,7 @@ export default {
                 { text: 'Type Tref', align: 'start', sortable: false, value: 'type' },
                 { text: 'Update Strategy', align: 'start', sortable: false, value: 'strategy' },
             ],
-            editItem: { name: '', type : null, strategy: null},
+            editItem: { name: '', type : null, strategy: null, id:''},
             deleteChangeLine : [],
 
             isSerializationOpenClose: true,
@@ -231,7 +231,7 @@ export default {
             headerSerialization: [
                 { text: 'Data Type For Serialization Ref', align: 'start', sortable: false, value: 'serial' },
             ],
-            editSerialItem: { serial : null},
+            editSerialItem: { serial : null, id:''},
             deleteChangeLineSerial : [],
         }
     },
@@ -295,7 +295,7 @@ export default {
                 for(let i=0; i<this.element.data.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PERData-'+i)
                     if(endLine != undefined) {
-                        this.deleteChangeLine.push({name:this.element.data[i].type, endLine:endLine})
+                        this.deleteChangeLine.push({id:this.element.data[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/PERData-'+i)
                     }
                 }
@@ -305,7 +305,7 @@ export default {
 
                 for(let n=0; n<this.element.data.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLine.length; idx++) {
-                        if (this.element.data[n].type == this.deleteChangeLine[idx].name) {
+                        if (this.element.data[n].id == this.deleteChangeLine[idx].id) {
                             this.newLine(this.element.uuid+'/PERData-'+n, this.element.uuid+'/PERData', this.deleteChangeLine[idx].endLine)
                         }
                     }
@@ -359,6 +359,13 @@ export default {
             this.setactiveUUID()
         },
         addData() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.data.some(item => item.id === n)
+            }
+            this.editItem.id = n
+
             if( this.editItem.type != null) {
                 var datacount = this.element.data.length
                 this.newLine(this.element.uuid+'/PERData-'+datacount, this.element.uuid+'/PERData', this.editItem.type.uuid)
@@ -398,7 +405,7 @@ export default {
                 for(let i=0; i<this.element.serialization.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PERSerial-'+i)
                     if(endLine != undefined) {
-                        this.deleteChangeLineSerial.push({name:this.element.serialization[i].serial, endLine:endLine})
+                        this.deleteChangeLineSerial.push({id:this.element.serialization[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/PERSerial-'+i)
                     }
                 }
@@ -408,7 +415,7 @@ export default {
 
                 for(let n=0; n<this.element.serialization.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLineSerial.length; idx++) {
-                        if (this.element.serialization[n].serial == this.deleteChangeLineSerial[idx].name) {
+                        if (this.element.serialization[n].id == this.deleteChangeLineSerial[idx].id) {
                             this.newLine(this.element.uuid+'/PERSerial-'+n, this.element.uuid+'/PERSerial', this.deleteChangeLineSerial[idx].endLine)
                         }
                     }
@@ -451,6 +458,13 @@ export default {
             this.setactiveUUID()
         },
         addSerialization() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.serialization.some(item => item.id === n)
+            }
+            this.editSerialItem.id = n
+
             if( this.editSerialItem.serial != null) {
                 var datacount = this.element.serialization.length
                 this.newLine(this.element.uuid+'/PERSerial-'+datacount, this.element.uuid+'/PERSerial', this.editSerialItem.serial.uuid)
@@ -471,7 +485,7 @@ export default {
                     this.$store.commit('setDetailView', {uuid: this.editSerialItem.serial.uuid, element: constant.Implementation_str} )
                 }
                 this.setImplementList()
-                this.isEditinisEditingImplementgCon = false
+                this.isEditingImplement = false
             } else {
                 this.isEditingImplement = true
             }

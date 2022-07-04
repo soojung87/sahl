@@ -99,8 +99,8 @@ export default {
             dialogPath : false,
             colorToolbar: "#6A5ACD",
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
-            actiontype: ['UPDATE',],
-            activationAction: ['RESTART-APPLICATION'],
+            actiontype: ['UPDATE', 'INSTALL', 'REMOVE'],
+            activationAction: ['REBOOT', 'RESTART-APPLICATION', 'WAIT-FOR-REBOOT'],
             selSWCluster: this.$store.getters.getSWCluster
         }
     },

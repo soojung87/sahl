@@ -48,7 +48,7 @@
                                 </div>
                                 <v-card-text v-if="isPPortOpenClose">  
                                     <v-data-table v-model="selectDelectPPort" :headers="headerPPort" :items="element.pport" :items-per-page='20'
-                                            :show-select="isdeletePPort" item-key="name" height="100px" dense hide-default-footer >
+                                            :show-select="isdeletePPort" item-key="id" height="100px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -118,7 +118,7 @@
                                 </div>
                                 <v-card-text v-if="isPRPortOpenClose">  
                                     <v-data-table v-model="selectDelectPRPort" :headers="headerPRPort" :items="element.prport" :items-per-page='20'
-                                            :show-select="isdeletePRPort" item-key="name" height="100px" dense hide-default-footer >
+                                            :show-select="isdeletePRPort" item-key="id" height="100px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -188,7 +188,7 @@
                                 </div>
                                 <v-card-text v-if="isRPortOpenClose">  
                                     <v-data-table v-model="selectDelectRPort" :headers="headerRPort" :items="element.rport" :items-per-page='20'
-                                            :show-select="isdeleteRPort" item-key="name" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteRPort" item-key="id" height="100px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -314,10 +314,10 @@ export default {
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
                 { text: 'Required Interface', sortable: false, value: 'interface' },
             ],
-            editPPortItem: { name: '', interface: null},
-            editPRPortItem: { name: '', interface: null},
-            editRPortItem: { name: '', interface: null},
-            defaultItem: { name:'', interface: null},
+            editPPortItem: { name: '', interface: null, id: ''},
+            editPRPortItem: { name: '', interface: null, id: ''},
+            editRPortItem: { name: '', interface: null, id: ''},
+            defaultItem: { name:'', interface: null, id: ''},
             changeLinePPort : [],
             changeLinePRPort : [],
             changeLineRPort : [],
@@ -395,7 +395,7 @@ export default {
                 for(let i=0; i<this.element.pport.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/pporttable-'+i)
                     if(endLine != undefined) {
-                        this.changeLinePPort.push({name:this.element.pport[i].name, endLine:endLine})
+                        this.changeLinePPort.push({id:this.element.pport[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/pporttable-'+i)
                     }
                 }
@@ -406,7 +406,7 @@ export default {
 
                 for(let n=0; n<this.element.pport.length; n++) {
                     for(let idx=0; idx<this.changeLinePPort.length; idx++) {
-                        if (this.element.pport[n].name == this.changeLinePPort[idx].name) {
+                        if (this.element.pport[n].id == this.changeLinePPort[idx].id) {
                             this.newLine(this.element.uuid+'/pporttable-'+n, this.element.uuid+'/pporttable', this.changeLinePPort[idx].endLine)
                         }
                     }
@@ -452,6 +452,13 @@ export default {
             this.setactiveUUID()
         },
         addPPort() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.pport.some(item => item.id === n)
+            }
+            this.editPPortItem.id = n
+
             if (this.editPPortItem.interface != null) {
                 var datacount = this.element.pport.length
                 this.newLine(this.element.uuid+'/pporttable-'+datacount, this.element.uuid+'/pporttable', this.editPPortItem.interface.uuid)
@@ -491,7 +498,7 @@ export default {
                 for(let i=0; i<this.element.prport.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/prporttable-'+i)
                     if(endLine != undefined) {
-                        this.changeLinePRPort.push({name:this.element.prport[i].name, endLine:endLine})
+                        this.changeLinePRPort.push({id:this.element.prport[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/prporttable-'+i)
                     }
                 }
@@ -502,7 +509,7 @@ export default {
 
                 for(let n=0; n<this.element.prport.length; n++) {
                     for(let idx=0; idx<this.changeLinePRPort.length; idx++) {
-                        if (this.element.prport[n].name == this.changeLinePRPort[idx].name) {
+                        if (this.element.prport[n].id == this.changeLinePRPort[idx].id) {
                             this.newLine(this.element.uuid+'/prporttable-'+n, this.element.uuid+'/prporttable', this.changeLinePRPort[idx].endLine)
                         }
                     }
@@ -548,6 +555,13 @@ export default {
             this.setactiveUUID()
         },
         addPRPort() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.prport.some(item => item.id === n)
+            }
+            this.editPRPortItem.id = n
+
             if (this.editPRPortItem.interface != null) {
                 var datacount = this.element.prport.length
                 this.newLine(this.element.uuid+'/prporttable-'+datacount, this.element.uuid+'/prporttable', this.editPRPortItem.interface.uuid)
@@ -586,7 +600,7 @@ export default {
                 for(let i=0; i<this.element.rport.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/rporttable-'+i)
                     if(endLine != undefined) {
-                        this.changeLineRPort.push({name:this.element.rport[i].name, endLine:endLine})
+                        this.changeLineRPort.push({id:this.element.rport[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/rporttable-'+i)
                     }
                 }
@@ -597,7 +611,7 @@ export default {
 
                 for(let n=0; n<this.element.rport.length; n++) {
                     for(let idx=0; idx<this.changeLineRPort.length; idx++) {
-                        if (this.element.rport[n].name == this.changeLineRPort[idx].name) {
+                        if (this.element.rport[n].id == this.changeLineRPort[idx].id) {
                             this.newLine(this.element.uuid+'/rporttable-'+n, this.element.uuid+'/rporttable', this.changeLineRPort[idx].endLine)
                         }
                     }
@@ -643,6 +657,13 @@ export default {
             this.setactiveUUID()
         },
         addRPort() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.rport.some(item => item.id === n)
+            }
+            this.editRPortItem.id = n
+
             if( this.editRPortItem.interface != null) {
                 var datacount = this.element.rport.length
                 this.newLine(this.element.uuid+'/rporttable-'+datacount, this.element.uuid+'/rporttable', this.editRPortItem.interface.uuid)

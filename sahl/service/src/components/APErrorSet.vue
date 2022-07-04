@@ -38,7 +38,7 @@
                         </div>
                         <v-card-text v-if="isErrorRefOpenClose">
                             <v-data-table v-model="selectDelectErrorRef" :headers="headerErrorRef" :items="element.errorref" :items-per-page='20'
-                                    :show-select="isdeleteErrorRefItem" item-key="error" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteErrorRefItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -143,7 +143,7 @@ export default {
                 { text: 'AP Application Error Ref', align: 'start', sortable: false, value: 'error' },
             ],
             errorItem: [],
-            editItem: { error : null},
+            editItem: { error : null, id: ''},
             deleteChangeLine : [],
         }
     },
@@ -255,6 +255,13 @@ export default {
             this.setactiveUUID()
         },
         addErrorRef() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.errorref.some(item => item.id === n)
+            }
+            this.editItem.id = n
+
             if( this.editItem.error != null) {
                 var datacount = this.element.errorref.length
                 this.newLine(this.element.uuid+'/error-'+datacount, this.element.uuid+'/error', this.editItem.error.uuid)

@@ -70,6 +70,7 @@ export default {
     SWCluster_index: 0,
     SWPackage_index: 1,
     VehiclePackage_index: 2,
+    ModuleInstantiation_index: 3,
     //IAM and Grant
     ComFieldGrant_index: 0,
     ComEventGrant_index: 1,
@@ -162,6 +163,7 @@ export default {
     SWCluster_str: 'SoftWare Cluster',
     SWPackage_str: 'SoftWare Package',
     VehiclePackage_str: 'Vehicle Package',
+    ModuleInstantiation_str: 'UCM Module Instantiation',
     //IAM and Grant
     ComFieldGrant_str: 'Com Field Grant',
     ComEventGrant_str: 'Com Event Grant',

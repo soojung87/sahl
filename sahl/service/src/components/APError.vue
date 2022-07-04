@@ -92,7 +92,6 @@ export default {
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             selErrorDomain: this.$store.getters.getErrorDomain,
             dialogPath: false,
-            path:'aaaaaaaaa',
         }
     },
     mounted () {

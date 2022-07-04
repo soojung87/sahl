@@ -75,9 +75,9 @@
                                     <v-card flat>
                                         <v-card-text>
                                             <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputEventGName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                            <v-text-field v-model="tab.id" label="Group Id" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                            <v-text-field v-model="tab.idG" label="Group Id" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                             <v-card outlined class="mx-auto">
-                                                <div class="subtitle-2" style="height:20px" :id="element.uuid+'/eventtab'+tab.name">
+                                                <div class="subtitle-2" style="height:20px" :id="element.uuid+'/eventtab'+tab.id">
                                                     <v-hover v-slot="{ hover }">
                                                         <v-btn text @click="showEvent" x-small color="indigo">
                                                             <v-icon>{{ isEventOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -93,7 +93,7 @@
                                                 </div>
                                                 <v-card-text v-show="isEventOpenClose">
                                                     <v-data-table v-model="selectDelectEvent" :headers="headerEvent" :items="tab.event" :items-per-page='20'
-                                                            :show-select="isdeleteEvent" item-key="event" height="100px" dense hide-default-footer >
+                                                            :show-select="isdeleteEvent" item-key="id" height="100px" dense hide-default-footer >
                                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                         </template>
@@ -157,7 +157,7 @@
                         </div>
                         <v-card-text v-show="isEventDOpenClose">
                             <v-data-table v-model="selectDelectEventD" :headers="headerEventD" :items="element.eventD" :items-per-page='20'
-                                    :show-select="isdeleteEventD" item-key="name" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteEventD" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -174,7 +174,7 @@
                                                                     return-object :readonly="!isEditingVariableData" clearable @click="setVariableDataSelect()" 
                                                                     @click:clear='clearVariableData' @blur="isEditingVariableData=true" outlined dense style="height: 45px;">
                                                         </v-autocomplete>
-                                                        <v-text-field v-model="editEventD.id" label="Event ID" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="editEventD.idE" label="Event ID" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-text-field v-model="editEventD.maxlength" label="Maximum Segment Length" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-text-field v-model="editEventD.time" label="Separation Time" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-select v-model="editEventD.serializer" clearable :items="selectSerializer" label="Serializer" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
@@ -196,7 +196,7 @@
                                                                     return-object :readonly="!isEditingVariableData" clearable @click="setVariableDataSelect()" 
                                                                     @click:clear='clearVariableData' @blur="isEditingVariableData=true" outlined dense style="height: 45px;">
                                                         </v-autocomplete>
-                                                        <v-text-field v-model="editEventD.id" label="Event ID" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="editEventD.idE" label="Event ID" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-text-field v-model="editEventD.maxlength" label="Maximum Segment Length" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-text-field v-model="editEventD.time" label="Separation Time" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-select v-model="editEventD.serializer" clearable :items="selectSerializer" label="Serializer" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
@@ -227,7 +227,7 @@
                         </div>
                         <v-card-text v-show="isMethodDOpenClose">
                             <v-data-table v-model="selectDelectMethodD" :headers="headerMethodD" :items="element.methodD" :items-per-page='20'
-                                    :show-select="isdeleteMethodD" item-key="name" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteMethodD" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -244,7 +244,7 @@
                                                                     return-object :readonly="!isEditingClientServer" clearable @click="setClientServerSelect()" 
                                                                     @click:clear='clearClientServer' @blur="isEditingClientServer=true" outlined dense style="height: 45px;">
                                                         </v-autocomplete>
-                                                        <v-text-field v-model="editMethodD.id" label="Method ID" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="editMethodD.idM" label="Method ID" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-text-field v-model="editMethodD.maxrequest" label="Maximum Segment Length Request" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-text-field v-model="editMethodD.maxresponse" label="Maximum Segment Length Response" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-text-field v-model="editMethodD.timerequest" label="Separation Time Request" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -267,7 +267,7 @@
                                                                     return-object :readonly="!isEditingClientServer" clearable @click="setClientServerSelect()" 
                                                                     @click:clear='clearClientServer' @blur="isEditingClientServer=true" outlined dense style="height: 45px;">
                                                         </v-autocomplete>
-                                                        <v-text-field v-model="editMethodD.id" label="Method ID" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="editMethodD.idM" label="Method ID" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-text-field v-model="editMethodD.maxrequest" label="Maximum Segment Length Request" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-text-field v-model="editMethodD.maxresponse" label="Maximum Segment Length Response" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         <v-text-field v-model="editMethodD.timerequest" label="Separation Time Request" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -312,7 +312,7 @@
                                                 <v-col cols="2">
                                                     <v-menu>
                                                         <template v-slot:activator="{ on, attrs }">
-                                                            <v-btn color="deep-purple accent-4" :id="element.uuid+'/fieldtab'+tab.name" icon v-bind="attrs" v-on="on" @click="setFieldList()">
+                                                            <v-btn color="deep-purple accent-4" :id="element.uuid+'/fieldtab'+tab.id" icon v-bind="attrs" v-on="on" @click="setFieldList()">
                                                                 <v-icon>mdi-menu-down-outline</v-icon>
                                                             </v-btn>
                                                         </template>
@@ -449,7 +449,7 @@ export default {
             headerEvent: [
                 { text: 'Event Ref', sortable: false, value: 'event' },
             ],
-            editEvent: { event: null},
+            editEvent: { event: null, id: ''},
             isEditingEvent: true,
             selEvent: this.$store.getters.getEventDeployment,
 
@@ -459,14 +459,14 @@ export default {
             headerEventD: [
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
                 { text: 'Event Ref', sortable: false, value: 'event' },
-                { text: 'Event ID', sortable: false, value: 'id' },
+                { text: 'Event ID', sortable: false, value: 'idE' },
                 { text: 'Maximum Segment Length', sortable: false, width: '180px', value: 'maxlength' },
                 { text: 'Separation Time', sortable: false, width: '130px', value: 'time' },
                 { text: 'Serializer', sortable: false, value: 'serializer' },
                 { text: 'Transport Protocal', sortable: false, width: '140px', value: 'protocal' },
             ],
-            editEventD: { name:'', event: null, id:'', maxlength:'', time:'', serializer:null, protocal:null },
-            defaultEventD: { name:'', event: null, id:'', maxlength:'', time:'', serializer:null, protocal:null },
+            editEventD: { name:'', event: null, idE:'', maxlength:'', time:'', serializer:null, protocal:null, id: ''},
+            defaultEventD: { name:'', event: null, idE:'', maxlength:'', time:'', serializer:null, protocal:null, id: '' },
             deleteEventDLine : [],
             isEditingVariableData: true,
             selectSerializer: ['SOMEIP',],
@@ -478,15 +478,15 @@ export default {
             headerMethodD: [
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
                 { text: 'Method Ref', sortable: false, value: 'method' },
-                { text: 'Method ID', sortable: false, value: 'id' },
+                { text: 'Method ID', sortable: false, value: 'idM' },
                 { text: 'Maximum Segment Length Request', sortable: false, width: '230px', value: 'maxrequest' },
                 { text: 'Maximum Segment Length Response', sortable: false, width: '240px', value: 'maxresponse' },
                 { text: 'Separation Time Request', sortable: false, width: '180px', value: 'timerequest' },
                 { text: 'Separation Time Response', sortable: false, width: '180px', value: 'timeresponse' },
                 { text: 'Transport Protocal', sortable: false, width: '140px', value: 'protocal' },
             ],
-            editMethodD: { name:'', method: null, id:'', maxrequest:'', maxresponse:'', timerequest:'', timeresponse:'', protocal:null },
-            defaultMethodD: {name:'', method: null, id:'', maxrequest:'', maxresponse:'', timerequest:'', timeresponse:'', protocal:null },
+            editMethodD: { name:'', method: null, idM:'', maxrequest:'', maxresponse:'', timerequest:'', timeresponse:'', protocal:null, id: '' },
+            defaultMethodD: {name:'', method: null, idM:'', maxrequest:'', maxresponse:'', timerequest:'', timeresponse:'', protocal:null, id: '' },
             deleteMethodDLine: [],
             isEditingClientServer: true,
 
@@ -529,14 +529,14 @@ export default {
                 if(this.iselementOpenClose && this.location == 1) {
                     if(this.element.fieldD.length > 0) {
                         if (this.isFieldDOpenClose) {
-                            EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].name)
+                            EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].id)
                         } else {
                             EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, null)
                         }
                     }
                     if(this.element.eventG.length > 0) {
                         if (this.isEventGOpenClose) {
-                            EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGTab, this.element.eventG[this.eventGTab].name)
+                            EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGTab, this.element.eventG[this.eventGTab].id)
                         } else {
                             EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, null)
                         }
@@ -549,7 +549,7 @@ export default {
             if(this.element.eventG.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isEventGOpenClose) {
-                        EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGTab, this.element.eventG[this.eventGTab].name)
+                        EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGTab, this.element.eventG[this.eventGTab].id)
                     } else {
                         EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, null)
                     }
@@ -578,7 +578,7 @@ export default {
             if(this.element.fieldD.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isFieldDOpenClose ) {
-                        EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].name)
+                        EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].id)
                     } else {
                         EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, null)
                     }
@@ -609,7 +609,7 @@ export default {
         },
 
         addEventG() {
-            const editItem = {name: '', id: '', event: []}
+            const editItem = {name: '', idG: '', event: [], id: ''}
             const addObj = new Object(editItem)
             let res = true, n = 0
 
@@ -617,6 +617,7 @@ export default {
                 addObj.name = 'Event Group_' + n++;
                 res = this.element.eventG.some(ele => ele.name === addObj.name)
             }
+            addObj.id = n
             this.element.eventG.push(addObj)
             this.eventGTab = this.element.eventG.length-1
             if(this.location == 1) {
@@ -629,15 +630,29 @@ export default {
         },
         changeEventGTab() {
             if(this.element.eventG.length > 0 && this.location == 1) {
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGTab, this.element.eventG[this.eventGTab].name)}, 300);
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGTab, this.element.eventG[this.eventGTab].id)}, 300);
             }
         },
         deleteEventG(idx) {
             this.$store.commit('deleteRefTable', {deleteName:'eventG', deleteTab: true, tabName: this.element.eventG[idx].name, path: this.element.path, name: this.element.name})
-            this.selectDelectEvent = this.element.eventG[idx].event.slice()
-            this.isdeleteEvent = true
-            this.deleteEvent()
+            for(let i=0; i<this.element.eventG[idx].event.length; i++){
+                var endLineCon = this.$store.getters.getChangeEndLine(this.element.uuid+'/event-'+i+'-'+idx)
+                if(endLineCon != undefined) {
+                    this.deleteLine(this.element.uuid+'/event-'+i+'-'+idx)
+                }
+            }
+            for(let i=idx+1; i<this.element.eventG.length; i++){
+                for(let n=0; n<this.element.eventG[i].event.length; n++){
+                    var endC = this.$store.getters.getChangeEndLine(this.element.uuid+'/event-'+n+'-'+i)
+                    if(endC != undefined) {
+                        this.deleteLine(this.element.uuid+'/event-'+n+'-'+i)
+                        this.newLine(this.element.uuid+'/event-'+n+'-'+(i-1), this.element.uuid+'/event', endC)
+                    }
+                }
+            }
+
             this.element.eventG.splice(idx, 1)
+            this.changeEventGTab()
         },
         isCheckEvent() {
             if (this.isdeleteEvent == true) {
@@ -653,7 +668,7 @@ export default {
                 for(let i=0; i<this.element.eventG[this.eventGTab].event.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/event-'+i+'-'+this.eventGTab)
                     if(endLine != undefined) {
-                        this.deleteEventLine.push({name: this.element.eventG[this.eventGTab].event[i].event, endLine:endLine})
+                        this.deleteEventLine.push({id: this.element.eventG[this.eventGTab].event[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/event-'+i+'-'+this.eventGTab)
                     }
                 }
@@ -663,8 +678,8 @@ export default {
 
                 for(let n=0; n<this.element.eventG[this.eventGTab].event.length; n++) {
                     for(let idx=0; idx<this.deleteEventLine.length; idx++) {
-                        if (this.element.eventG[this.eventGTab].event[n].event == this.deleteEventLine[idx].name) {
-                            this.newLine(this.element.uuid+'/event-'+n+'-'+this.eventGTab, this.element.uuid+'/eventtab'+this.element.eventG[this.eventGTab].name, this.deleteEventLine[idx].endLine)
+                        if (this.element.eventG[this.eventGTab].event[n].id == this.deleteEventLine[idx].id) {
+                            this.newLine(this.element.uuid+'/event-'+n+'-'+this.eventGTab, this.element.uuid+'/eventtab'+this.element.eventG[this.eventGTab].id, this.deleteEventLine[idx].endLine)
                         }
                     }
                 }
@@ -693,10 +708,10 @@ export default {
             } else if (endLine != undefined && endLine != this.editEvent.event.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/event-'+idx+'-'+this.eventGTab)
-                this.newLine(this.element.uuid+'/event-'+idx+'-'+this.eventGTab, this.element.uuid+'/eventtab'+this.element.eventG[this.eventGTab].name, this.editEvent.event.uuid)
+                this.newLine(this.element.uuid+'/event-'+idx+'-'+this.eventGTab, this.element.uuid+'/eventtab'+this.element.eventG[this.eventGTab].id, this.editEvent.event.uuid)
                 this.element.eventG[this.eventGTab].event[idx].event = this.editEvent.event.name
             } else if (endLine == undefined && this.editEvent.event != null) {
-                this.newLine(this.element.uuid+'/event-'+idx+'-'+this.eventGTab, this.element.uuid+'/eventtab'+this.element.eventG[this.eventGTab].name, this.editEvent.event.uuid)
+                this.newLine(this.element.uuid+'/event-'+idx+'-'+this.eventGTab, this.element.uuid+'/eventtab'+this.element.eventG[this.eventGTab].id, this.editEvent.event.uuid)
                 this.element.eventG[this.eventGTab].event[idx].event = this.editEvent.event.name
             }
 
@@ -708,9 +723,16 @@ export default {
             this.setactiveUUID()
         },
         addEvent() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.eventG[this.eventGTab].event.some(item => item.id === n)
+            }
+            this.editEvent.id = n
+
             if( this.editEvent.event != null) {
                 var datacount =  this.element.eventG[this.eventGTab].event.length
-                this.newLine(this.element.uuid+'/event-'+datacount+'-'+this.eventGTab, this.element.uuid+'/eventtab'+this.element.eventG[this.eventGTab].name, this.editEvent.event.uuid)
+                this.newLine(this.element.uuid+'/event-'+datacount+'-'+this.eventGTab, this.element.uuid+'/eventtab'+this.element.eventG[this.eventGTab].id, this.editEvent.event.uuid)
                 this.editEvent.event = this.editEvent.event.name
             }
 
@@ -800,7 +822,7 @@ export default {
                 for(let i=0; i<this.element.eventD.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/serviceEventD-'+i)
                     if(endLine != undefined) {
-                        this.deleteEventDLine.push({name:this.element.eventD[i].name, endLine:endLine})
+                        this.deleteEventDLine.push({id:this.element.eventD[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/serviceEventD-'+i)
                     }
                 }
@@ -811,7 +833,7 @@ export default {
 
                 for(let n=0; n<this.element.eventD.length; n++) {
                     for(let idx=0; idx<this.deleteEventDLine.length; idx++) {
-                        if (this.element.eventD[n].name == this.deleteEventDLine[idx].name) {
+                        if (this.element.eventD[n].id == this.deleteEventDLine[idx].id) {
                             this.newLine(this.element.uuid+'/serviceEventD-'+n, this.element.uuid+'/serviceEventD', this.deleteEventDLine[idx].endLine)
                         }
                     }
@@ -832,7 +854,7 @@ export default {
                 }
                 this.editEventD.event = { name: this.element.eventD[idx].event, uuid: endLine }
             }
-            this.editEventD.id = this.element.eventD[idx].id
+            this.editEventD.idE = this.element.eventD[idx].idE
             this.editEventD.maxlength = this.element.eventD[idx].maxlength
             this.editEventD.time = this.element.eventD[idx].time
             this.editEventD.serializer = this.element.eventD[idx].serializer
@@ -859,7 +881,7 @@ export default {
             }
 
             this.element.eventD[idx].name = this.editEventD.name
-            this.element.eventD[idx].id = this.editEventD.id
+            this.element.eventD[idx].idE = this.editEventD.idE
             this.element.eventD[idx].maxlength = this.editEventD.maxlength
             this.element.eventD[idx].time = this.editEventD.time
             this.element.eventD[idx].serializer = this.editEventD.serializer
@@ -872,6 +894,13 @@ export default {
             this.setactiveUUID()
         },
         addEventD() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.eventD.some(item => item.id === n)
+            }
+            this.editEventD.id = n
+
             if( this.editEventD.event != null) {
                 var datacount = this.element.eventD.length
                 this.newLine(this.element.uuid+'/serviceEventD-'+datacount, this.element.uuid+'/serviceEventD', this.editEventD.event.uuid)
@@ -915,7 +944,7 @@ export default {
                 for(let i=0; i<this.element.methodD.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/serviceMethodD-'+i)
                     if(endLine != undefined) {
-                        this.deleteMethodDLine.push({name:this.element.methodD[i].name, endLine:endLine})
+                        this.deleteMethodDLine.push({id:this.element.methodD[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/serviceMethodD-'+i)
                     }
                 }
@@ -926,7 +955,7 @@ export default {
 
                 for(let n=0; n<this.element.methodD.length; n++) {
                     for(let idx=0; idx<this.deleteMethodDLine.length; idx++) {
-                        if (this.element.methodD[n].name == this.deleteMethodDLine[idx].name) {
+                        if (this.element.methodD[n].id == this.deleteMethodDLine[idx].id) {
                             this.newLine(this.element.uuid+'/serviceMethodD-'+n, this.element.uuid+'/serviceMethodD', this.deleteMethodDLine[idx].endLine)
                         }
                     }
@@ -948,7 +977,7 @@ export default {
                 }
                 this.editMethodD.method = { name: this.element.methodD[idx].method, uuid: endLine}
             }
-            this.editMethodD.id = this.element.methodD[idx].id
+            this.editMethodD.idM = this.element.methodD[idx].idM
             this.editMethodD.maxrequest = this.element.methodD[idx].maxrequest
             this.editMethodD.maxresponse = this.element.methodD[idx].maxresponse
             this.editMethodD.timerequest = this.element.methodD[idx].timerequest
@@ -976,7 +1005,7 @@ export default {
             }
 
             this.element.methodD[idx].name = this.editMethodD.name
-            this.element.methodD[idx].id = this.editMethodD.id
+            this.element.methodD[idx].idM = this.editMethodD.idM
             this.element.methodD[idx].maxrequest = this.editMethodD.maxrequest
             this.element.methodD[idx].maxresponse = this.editMethodD.maxresponse
             this.element.methodD[idx].timerequest = this.editMethodD.timerequest
@@ -990,6 +1019,13 @@ export default {
             this.setactiveUUID()
         },
         addMethodD() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.methodD.some(item => item.id === n)
+            }
+            this.editMethodD.id = n
+
             if( this.editMethodD.method != null) {
                 var datacount = this.element.methodD.length
                 this.newLine(this.element.uuid+'/serviceMethodD-'+datacount, this.element.uuid+'/serviceMethodD', this.editMethodD.method.uuid)
@@ -1024,7 +1060,7 @@ export default {
             const editItem = {name: '', field:null,
                               getname: '',getid: '',getmaxreq: '',getmaxres: '',gettimereq: '',gettimeres: '',getproto: null,
                               setname: '',setid: '',setmaxreq: '',setmaxres: '',settimereq: '',settimeres: '',setproto: null,
-                              notname: '',notid: '',notmax: '',nottime: '',notserial: null,notproto: null,}
+                              notname: '',notid: '',notmax: '',nottime: '',notserial: null,notproto: null, id: ''}
             const addObj = new Object(editItem)
             let res = true, n = 0
 
@@ -1032,6 +1068,7 @@ export default {
                 addObj.name = 'Field_Deployment_' + n++;
                 res = this.element.fieldD.some(ele => ele.name === addObj.name)
             }
+            addObj.id = n
             this.element.fieldD.push(addObj)
             this.fieldTab = this.element.fieldD.length-1
             if(this.location == 1) {
@@ -1048,7 +1085,7 @@ export default {
             //console.log('change'+' / ')
             //이렇게 해줘야지 tab에 있는것을 다 그린다음에 선을 다시 그려줄수있다.
             if(this.element.fieldD.length > 0 && this.location == 1){
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].name)}, 300);
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].id)}, 300);
             }
         },
         deleteField(idx) {
@@ -1085,7 +1122,7 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/field-'+this.fieldTab, this.element.uuid+'/fieldtab'+this.element.fieldD[this.fieldTab].name, item.uuid)
+                    this.newLine(this.element.uuid+'/field-'+this.fieldTab, this.element.uuid+'/fieldtab'+this.element.fieldD[this.fieldTab].id, item.uuid)
                 }
                 this.element.fieldD[this.fieldTab].field = item.name
             }

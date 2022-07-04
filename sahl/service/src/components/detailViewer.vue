@@ -88,6 +88,9 @@
             <div v-else-if="detailViewer.element == 'SomeIP Server'">
                 <SomeIPServer :element= this.$store.getters.getDataSomeIPServer(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
+            <div v-else-if="detailViewer.element == 'SomeIP To Machine Mapping'">
+                <SomeIPtoMachine :element= this.$store.getters.getDataSomeIPToMachine(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
             <div v-else-if="detailViewer.element == 'Required SomeIP'">
                 <Required :element= this.$store.getters.getDataRequiredSomeIP(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
@@ -112,6 +115,9 @@
             </div>
             <div v-else-if="detailViewer.element == 'Com Field Grant Design'">
                 <FieldGrantD :element= this.$store.getters.getDataFieldGrantDesign(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+            <div v-else-if="detailViewer.element == 'UCM Module Instantiation'">
+                <UCMModuleIns :element= this.$store.getters.getDataModuleInstant(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
 
         </v-card>
@@ -144,6 +150,7 @@ import Client from '../components/ClientEventG.vue'
 import Server from '../components/Server.vue'
 import SomeIPClient from '../components/SomeIPClient.vue'
 import SomeIPServer from '../components/SomeIPServer.vue'
+import SomeIPtoMachine from '../components/SomeIPtoMachineMapping.vue'
 import Required from '../components/RequiredSomeIP.vue'
 import Provided from '../components/ProvidedSomeIP.vue'
 
@@ -154,19 +161,20 @@ import PHMRecovery from '../components/PHMRecoveryAction.vue'
 import MethodGrantD from '../components/MethodGrantDesign.vue'
 import EventGrantD from '../components/EventGrantDesign.vue'
 import FieldGrantD from '../components/FieldGrantDesign.vue'
+import UCMModuleIns from '../components/UCMModuleIns.vue'
 
 //SWCluster_str
 
 export default {
     components:{CompuMethod, DataConstr, ApplicationArrayDate, ImplementationDataType,
                 SomeIPService, ServiceInterface, Client, Server,
-                SomeIPClient, SomeIPServer, Required, Provided,
+                SomeIPClient, SomeIPServer, SomeIPtoMachine, Required, Provided,
                 APError, APErrorDomain, APErrorSet,
                 SWComponents, ProcessDesign, Executable, StartupConfig, DeterministicClient,
                 Machine, MachineDesign, EthernetCluster, ModeDeclarationGroup, HWElement,
                 PerFileArray, PerKeyValueDB,
                 PHMRecovery,
-                MethodGrantD, EventGrantD, FieldGrantD },
+                MethodGrantD, EventGrantD, FieldGrantD, UCMModuleIns },
     computed: {
         detailViewer() {
             return this.$store.state.detailViewer

@@ -83,7 +83,7 @@
                         </div>
                         <v-card-text v-show="isEventPOpenClose">
                             <v-data-table v-model="selectEventP" :headers="headerEventP" :items="element.eventP" :items-per-page='20'
-                                    :show-select="isdeleteEventP" item-key="event" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteEventP" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -141,7 +141,7 @@
                         </div>
                         <v-card-text v-show="isMethodRefOpenClose">
                             <v-data-table v-model="selectMethodRef" :headers="headerMethodRef" :items="element.method" :items-per-page='20'
-                                    :show-select="isdeleteMethodRef" item-key="method" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteMethodRef" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -212,7 +212,7 @@
                                             <v-col cols="2">
                                                 <v-menu>
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn color="deep-purple accent-4" :id="element.uuid+'/providEventG'+tab.name" icon v-bind="attrs" v-on="on" @click="setEventGList()">
+                                                        <v-btn color="deep-purple accent-4" :id="element.uuid+'/providEventG'+tab.id" icon v-bind="attrs" v-on="on" @click="setEventGList()">
                                                             <v-icon>mdi-menu-down-outline</v-icon>
                                                         </v-btn>
                                                     </template>
@@ -238,7 +238,7 @@
                                             <v-col cols="2">
                                                 <v-menu>
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn color="deep-purple accent-4" :id="element.uuid+'/providServer'+tab.name" dark icon v-bind="attrs" v-on="on" @click="setServerList()">
+                                                        <v-btn color="deep-purple accent-4" :id="element.uuid+'/providServer'+tab.id" dark icon v-bind="attrs" v-on="on" @click="setServerList()">
                                                             <v-icon>mdi-menu-down-outline</v-icon>
                                                         </v-btn>
                                                     </template>
@@ -314,7 +314,7 @@ export default {
             headerMethodRef: [
                 { text: 'SomeIP Method Props', align: 'start', sortable: false, value: 'method' },
             ],
-            editMethodItem: { method : null},
+            editMethodItem: { method : null, id: ''},
             isdeleteMethodRef: false,
             selMethodref: this.$store.getters.getDeploymentMethod,
             isEditingMethod: true,
@@ -324,7 +324,7 @@ export default {
             headerEventP: [
                 { text: 'SomeIP Event Props', align: 'start', sortable: false, value: 'event' },
             ],
-            editEventItem: { event : null},
+            editEventItem: { event : null, id: ''},
             isdeleteEventP: false,
             selEventProp: this.$store.getters.getEventDeployment,
             isEditingEventP: true,
@@ -367,7 +367,7 @@ export default {
                 if(this.iselementOpenClose) {
                     if(this.element.eventG.length > 0 && this.location == 1) {
                         if (this.isProvidEventOpenClose) {
-                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].name)
+                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].id)
                         } else {
                             EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
                         }
@@ -393,7 +393,7 @@ export default {
             if(this.element.eventG.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isProvidEventOpenClose) {
-                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].name)
+                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].id)
                     } else {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
                     }
@@ -523,7 +523,7 @@ export default {
                 for(let i=0; i<this.element.eventP.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedEventP-'+i)
                     if(endLine != undefined) {
-                        this.deleteEventLine.push({name:this.element.eventP[i].event, endLine:endLine})
+                        this.deleteEventLine.push({id:this.element.eventP[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/proviedEventP-'+i)
                     }
                 }
@@ -533,7 +533,7 @@ export default {
 
                 for(let n=0; n<this.element.eventP.length; n++) {
                     for(let idx=0; idx<this.deleteEventLine.length; idx++) {
-                        if (this.element.eventP[n].event == this.deleteEventLine[idx].name) {
+                        if (this.element.eventP[n].id == this.deleteEventLine[idx].id) {
                             this.newLine(this.element.uuid+'/proviedEventP-'+n, this.element.uuid+'/proviedEventP', this.deleteEventLine[idx].endLine)
                         }
                     }
@@ -576,6 +576,13 @@ export default {
             this.setactiveUUID()
         },
         addEventP() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.eventP.some(item => item.id === n)
+            }
+            this.editEventItem.id = n
+
             if( this.editEventItem.event != null) {
                 var datacount = this.element.eventP.length
                 this.newLine(this.element.uuid+'/proviedEventP-'+datacount, this.element.uuid+'/proviedEventP', this.editEventItem.event.uuid)
@@ -619,7 +626,7 @@ export default {
                 for(let i=0; i<this.element.method.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedMethod-'+i)
                     if(endLine != undefined) {
-                        this.deleteMethodLine.push({name:this.element.method[i].method, endLine:endLine})
+                        this.deleteMethodLine.push({id:this.element.method[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/proviedMethod-'+i)
                     }
                 }
@@ -629,7 +636,7 @@ export default {
 
                 for(let n=0; n<this.element.method.length; n++) {
                     for(let idx=0; idx<this.deleteMethodLine.length; idx++) {
-                        if (this.element.method[n].method == this.deleteMethodLine[idx].name) {
+                        if (this.element.method[n].id == this.deleteMethodLine[idx].id) {
                             this.newLine(this.element.uuid+'/proviedMethod-'+n, this.element.uuid+'/proviedMethod', this.deleteMethodLine[idx].endLine)
                         }
                     }
@@ -672,6 +679,13 @@ export default {
             this.setactiveUUID()
         },
         addMethodRef() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.method.some(item => item.id === n)
+            }
+            this.editMethodItem.id = n
+
             if( this.editMethodItem.method != null) {
                 var datacount = this.element.method.length
                 this.newLine(this.element.uuid+'/proviedMethod-'+datacount, this.element.uuid+'/proviedMethod', this.editMethodItem.method.uuid)
@@ -703,7 +717,7 @@ export default {
         },
 
         addProvidEvent() {
-            const editItem = { name: '', eventG: null, udp: '', ipv4: '', ipv6: '', threshold: '', server: null}
+            const editItem = { name: '', eventG: null, udp: '', ipv4: '', ipv6: '', threshold: '', server: null, id: ''}
             const addObj = new Object(editItem)
             let res = true, n = 0
 
@@ -711,6 +725,7 @@ export default {
                 addObj.name = 'Event Group_' + n++;
                 res = this.element.eventG.some(ele => ele.name === addObj.name)
             }
+            addObj.id = n
             this.element.eventG.push(addObj)
             this.eventGroupTab = this.element.eventG.length-1
             if (this.location == 1) {
@@ -722,7 +737,7 @@ export default {
         changeEeventGroupTab() {
             console.log('changeEeventGroupTab')
             if(this.element.eventG.length > 0 && this.location == 1) {
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].name)}, 300);
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].id)}, 300);
             }
         },
         deleteEventGroup(idx) {
@@ -785,7 +800,7 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/providEventG-'+this.eventGroupTab, this.element.uuid+'/providEventG'+this.element.eventG[this.eventGroupTab].name, item.uuid)
+                    this.newLine(this.element.uuid+'/providEventG-'+this.eventGroupTab, this.element.uuid+'/providEventG'+this.element.eventG[this.eventGroupTab].id, item.uuid)
                 }
                 tab.eventG = item.name
             }
@@ -820,7 +835,7 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/providServer-'+this.eventGroupTab, this.element.uuid+'/providServer'+this.element.eventG[this.eventGroupTab].name, item.uuid)
+                    this.newLine(this.element.uuid+'/providServer-'+this.eventGroupTab, this.element.uuid+'/providServer'+this.element.eventG[this.eventGroupTab].id, item.uuid)
                 }
                 tab.server = item.name
             }

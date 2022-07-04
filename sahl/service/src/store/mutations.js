@@ -43,7 +43,7 @@ const mutations = {
             Per: { PERFileArray: [], PERFileProxy: [], PERKeyValueD: [], PERKeyValueDI: [], PERPPtoFileArray: [], PERPPtoKeyValue: [] },
             Phm: { PHMContribution: [], PHMtoMachine: [], PHMHealth: [], PHMRecovery: [], PHMSupervised: [], RecoveryVia: [] },
             IamG: { FieldG: [], EventG: [], MethodG: [], FieldGD: [], EventGD: [], MethodGD: [] },
-            UCM: { SoftWareCluster: [], SoftWarePackage: [], VehiclePackage: [] }
+            UCM: { SoftWareCluster: [], SoftWarePackage: [], VehiclePackage: [], ModuleInstant: [], }
         })
         state.navigatorList.push({
             uuid: newUUid,
@@ -213,6 +213,7 @@ const mutations = {
                             children: [{ uuid: constant.SWCluster_str, name: constant.SWCluster_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                                 { uuid: constant.SWPackage_str, name: constant.SWPackage_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                                 { uuid: constant.VehiclePackage_str, name: constant.VehiclePackage_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                                { uuid: constant.ModuleInstantiation_str, name: constant.ModuleInstantiation_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                             ]
                         },
 
@@ -739,7 +740,7 @@ const mutations = {
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.push(copyEle)
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
-        } else if (payload.parent == constant.SWCluster_str) {
+        } else if (payload.parent == constant.VehiclePackage_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxEle]))
             state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxEle].zindex = 2
@@ -749,6 +750,16 @@ const mutations = {
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.push(copyEle)
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+        } else if (payload.parent == constant.ModuleInstantiation_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(item => item.uuid === payload.uuid)
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxEle]))
+            state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxEle].zindex = 2
+            copyEle.uuid = uuid.v1()
+            copyEle.name = this.getters.getNameModuleInstant
+            copyEle.left = elementX
+            copyEle.top = elementY
+            state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.push(copyEle)
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.ModuleInstantiation_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         }
         state.activeUUID = copyEle.uuid
         Vue.nextTick(() => { // 선 하나씩 그려주기 때문에 끝날때 active line 해줘야한다.
@@ -1166,6 +1177,10 @@ const mutations = {
             idxService = constant.UCM_index
             idxchild = constant.Platform_index
             idxchildchild = constant.VehiclePackage_index
+        } else if (payload.datatype == 'ModuleInstant') {
+            idxService = constant.UCM_index
+            idxchild = constant.Platform_index
+            idxchildchild = constant.ModuleInstantiation_index
         }
 
         if (idxchild == constant.Service_index) {
@@ -1295,6 +1310,8 @@ const mutations = {
             this.commit('editSoftWarePackage', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.VehiclePackage_str) {
             this.commit('editVehiclePackage', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
+        } else if (payload.parent == constant.ModuleInstantiation_str) {
+            this.commit('editModuleInstant', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         }
     },
     saveInputfile(state, payload) {
@@ -1511,6 +1528,7 @@ const mutations = {
         var implement = payload.xmlDoc.getElementsByTagName('STD-CPP-IMPLEMENTATION-DATA-TYPE')
         implement.forEach(ele => {
                 var impName = '',
+                    id = 0,
                     path = '',
                     strPath = getEditPath(ele.parentNode.parentNode, path),
                     impcategory = '',
@@ -1561,9 +1579,10 @@ const mutations = {
                         impdesc = item.childNodes[1].childNodes[0].nodeValue
                     }
                     if (item.nodeName == "SW-DATA-DEF-PROPS") {
+                        id = 0
                         var swdata = item.childNodes[1].childNodes
                         swdata.forEach((condi, c) => {
-                            var editDDPCItem = { compumethod: null, dataconstr: null }
+                            var editDDPCItem = { compumethod: null, dataconstr: null, id: '' }
                             if (c % 2 != 0) {
                                 condi.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -1575,14 +1594,17 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editDDPCItem.id = id
                                 const addObj = Object.assign({}, editDDPCItem)
                                 DDPCItem.push(addObj)
+                                id++
                             }
                         })
                     }
                     if (item.nodeName == "SUB-ELEMENTS") {
+                        id = 0
                         item.childNodes.forEach((cppImp, c) => {
-                            var editIDTElementItem = { name: '', typeref: null, inplace: false, desc: '' }
+                            var editIDTElementItem = { name: '', typeref: null, inplace: false, desc: '', id: '' }
                             if (c % 2 != 0) {
                                 cppImp.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -1606,8 +1628,10 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editIDTElementItem.id = id
                                 const addObj = Object.assign({}, editIDTElementItem)
                                 IDTElementItem.push(addObj)
+                                id++
                             }
                         })
                     }
@@ -1648,6 +1672,7 @@ const mutations = {
         var machine = payload.xmlDoc.getElementsByTagName('MACHINE')
         machine.forEach(ele => {
                 var name = '',
+                    id = 0,
                     path = '',
                     strPath = getEditPath(ele.parentNode.parentNode, path),
                     machineDesign = null,
@@ -1676,20 +1701,24 @@ const mutations = {
                         admin = item.childNodes[1].childNodes[1].childNodes[1].childNodes[0].nodeValue
                     }
                     if (item.nodeName == "HW-ELEMENT-REFS") {
+                        id = 0
                         item.childNodes.forEach((data, d) => {
-                            var editHWItem = { hwelement: null }
+                            var editHWItem = { hwelement: null, id: '' }
                             if (d % 2 != 0) {
                                 if (data.nodeName == "HW-ELEMENT-REF") {
                                     editHWItem.hwelement = data.childNodes[0].nodeValue
+                                    editHWItem.id = id
                                     const addObj = Object.assign({}, editHWItem)
                                     hwele.push(addObj)
+                                    id++
                                 }
                             }
                         })
                     }
                     if (item.nodeName == "FUNCTION-GROUPS") {
+                        id = 0
                         item.childNodes.forEach((mode, m) => {
-                            var editFunctionItem = { name: '', type: null, }
+                            var editFunctionItem = { name: '', type: null, id: '' }
                             if (m % 2 != 0) {
                                 mode.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -1701,12 +1730,15 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editFunctionItem.id = id
                                 const addObj = Object.assign({}, editFunctionItem)
                                 functionG.push(addObj)
+                                id++
                             }
                         })
                     }
                     if (item.nodeName == "PROCESSORS") {
+                        id = 0
                         item.childNodes.forEach((pros, p) => {
                             var editPro = { name: '', core: [] }
                             if (p % 2 != 0) {
@@ -1718,19 +1750,21 @@ const mutations = {
                                         if (pro.nodeName == "CORES") {
                                             pro.childNodes.forEach((procor, o) => {
                                                 if (o % 2 != 0) {
-                                                    var editCoreItem = { name: '', id: '' }
+                                                    var editCoreItem = { name: '', idCore: '', id: '' }
                                                     procor.childNodes.forEach((data, d) => {
                                                         if (d % 2 != 0) {
                                                             if (data.nodeName == "SHORT-NAME") {
                                                                 editCoreItem.name = data.childNodes[0].nodeValue
                                                             }
                                                             if (data.nodeName == "CORE-ID") {
-                                                                editCoreItem.id = data.childNodes[0].nodeValue
+                                                                editCoreItem.idCore = data.childNodes[0].nodeValue
                                                             }
                                                         }
                                                     })
+                                                    editCoreItem.id = id
                                                     const addObjRes = Object.assign({}, editCoreItem)
                                                     editPro.core.push(addObjRes)
+                                                    id++
                                                 }
                                             })
                                         }
@@ -1742,6 +1776,7 @@ const mutations = {
                         })
                     }
                     if (item.nodeName == "MODULE-INSTANTIATIONS") {
+                        id = 0
                         item.childNodes.forEach((os, o) => {
                             var editModule = { name: '', resource: [] }
                             if (o % 2 != 0) {
@@ -1752,7 +1787,7 @@ const mutations = {
                                         }
                                         if (osmodul.nodeName == "RESOURCE-GROUPS") {
                                             osmodul.childNodes.forEach((group, g) => {
-                                                var editModuleInsItem = { name: '', cpuUsage: '', memoryUsage: '' }
+                                                var editModuleInsItem = { name: '', cpuUsage: '', memoryUsage: '', id: '' }
                                                 if (g % 2 != 0) {
                                                     group.childNodes.forEach((data, d) => {
                                                         if (d % 2 != 0) {
@@ -1767,8 +1802,10 @@ const mutations = {
                                                             }
                                                         }
                                                     })
+                                                    editModuleInsItem.id = id
                                                     const addObjRes = Object.assign({}, editModuleInsItem)
                                                     editModule.resource.push(addObjRes)
+                                                    id++
                                                 }
                                             })
                                         }
@@ -1832,8 +1869,9 @@ const mutations = {
                         pntimer = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "COMMUNICATION-CONNECTORS") {
+                        var id = 0
                         item.childNodes.forEach((ethernet, e) => {
-                            var editedItemCC = { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: '' }
+                            var editedItemCC = { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: '', id: '' }
                             if (e % 2 != 0) {
                                 ethernet.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -1857,14 +1895,17 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editedItemCC.id = id
                                 const addObj = Object.assign({}, editedItemCC)
                                 communi.push(addObj)
+                                id++
                             }
                         })
                     }
                     if (item.nodeName == "SERVICE-DISCOVER-CONFIGS") {
+                        var idS = 0
                         item.childNodes.forEach((someIP, s) => {
-                            var editedItemSDC = { msia: null, ssdp: '' }
+                            var editedItemSDC = { msia: null, ssdp: '', id: '' }
                             if (s % 2 != 0) {
                                 someIP.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -1876,8 +1917,10 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editedItemSDC.id = idS
                                 const addObj = Object.assign({}, editedItemSDC)
                                 service.push(addObj)
+                                idS++
                             }
                         })
                     }
@@ -1913,6 +1956,8 @@ const mutations = {
         var ethernetCluster = payload.xmlDoc.getElementsByTagName('ETHERNET-CLUSTER')
         ethernetCluster.forEach(ele => {
                 var Name = '',
+                    idC = 0,
+                    idP = 0,
                     path = '',
                     strPath = getEditPath(ele.parentNode.parentNode, path),
                     condition = []
@@ -1923,7 +1968,7 @@ const mutations = {
                     if (item.nodeName == "ETHERNET-CLUSTER-VARIANTS") {
                         item.childNodes.forEach((ethernet, e) => {
                             if (e % 2 != 0) {
-                                var editedEthernet = { name: '', version: '', channel: [] }
+                                var editedEthernet = { name: '', version: '', channel: [], id: '' }
                                 ethernet.childNodes.forEach((protocol, p) => {
                                     if (p % 2 != 0) {
                                         if (protocol.nodeName == "PROTOCOL-NAME") {
@@ -1935,23 +1980,26 @@ const mutations = {
                                         if (protocol.nodeName == "PHYSICAL-CHANNELS") {
                                             protocol.childNodes.forEach((channels, c) => {
                                                 if (c % 2 != 0) {
-                                                    var editChannel = { name: '', comconnect: [], endpoint: [] }
+                                                    var editChannel = { name: '', comconnect: [], endpoint: [], id: '' }
                                                     channels.childNodes.forEach((channel, h) => {
                                                         if (h % 2 != 0) {
                                                             if (channel.nodeName == "SHORT-NAME") {
                                                                 editChannel.name = channel.childNodes[0].nodeValue
                                                             }
                                                             if (channel.nodeName == "COMM-CONNECTORS") {
+                                                                var id = 0
                                                                 channel.childNodes.forEach((comm, o) => {
                                                                     if (o % 2 != 0) {
-                                                                        var editCCItem = { connector: null }
+                                                                        var editCCItem = { connector: null, id: '' }
                                                                         comm.childNodes.forEach(data => {
                                                                             if (data.nodeName == "COMMUNICATION-CONNECTOR-REF") {
                                                                                 editCCItem.connector = data.childNodes[0].nodeValue
                                                                             }
                                                                         })
+                                                                        editCCItem.id = id
                                                                         const addObj = Object.assign({}, editCCItem)
                                                                         editChannel.comconnect.push(addObj)
+                                                                        id++
                                                                     }
                                                                 })
                                                             }
@@ -1971,10 +2019,12 @@ const mutations = {
                                                                                     editNetwork.priority = endpoint.childNodes[0].nodeValue
                                                                                 }
                                                                                 if (endpoint.nodeName == "NETWORK-ENDPOINT-ADDRESSES") {
+                                                                                    var id4 = 0,
+                                                                                        id6 = 0
                                                                                     endpoint.childNodes.forEach((config, f) => {
                                                                                         if (f % 2 != 0) {
-                                                                                            var editIP4Item = { gateway: '', behavior: null, address: '', addresssorce: null, mask: '', }
-                                                                                            var editIP6Item = { priority: '', behavior: null, prelength: '', address: '', addresssource: null, }
+                                                                                            var editIP4Item = { gateway: '', behavior: null, address: '', addresssorce: null, mask: '', id: '' }
+                                                                                            var editIP6Item = { priority: '', behavior: null, prelength: '', address: '', addresssource: null, id: '' }
                                                                                             if (config.nodeName == "IPV-4-CONFIGURATION") {
                                                                                                 config.childNodes.forEach((data, a) => {
                                                                                                     if (a % 2 != 0) {
@@ -1995,8 +2045,10 @@ const mutations = {
                                                                                                         }
                                                                                                     }
                                                                                                 })
+                                                                                                editIP4Item.id = id4
                                                                                                 const addObj = Object.assign({}, editIP4Item)
                                                                                                 editNetwork.ip4address.push(addObj)
+                                                                                                id4++
                                                                                             }
                                                                                             if (config.nodeName == "IPV-6-CONFIGURATION") {
                                                                                                 config.childNodes.forEach((data, t) => {
@@ -2018,8 +2070,10 @@ const mutations = {
                                                                                                         }
                                                                                                     }
                                                                                                 })
+                                                                                                editIP6Item.id = id6
                                                                                                 const addObj = Object.assign({}, editIP6Item)
                                                                                                 editNetwork.ip6address.push(addObj)
+                                                                                                id6++
                                                                                             }
                                                                                         }
                                                                                     })
@@ -2033,15 +2087,19 @@ const mutations = {
                                                             }
                                                         }
                                                     })
+                                                    editChannel.id = idP
                                                     const addObjRes = Object.assign({}, editChannel)
                                                     editedEthernet.channel.push(addObjRes)
+                                                    idP++
                                                 }
                                             })
                                         }
                                     }
                                 })
+                                editedEthernet.id = idC
                                 const addObj = Object.assign({}, editedEthernet)
                                 condition.push(addObj)
+                                idC++
                             }
                         })
                     }
@@ -2128,6 +2186,7 @@ const mutations = {
         var HWElement = payload.xmlDoc.getElementsByTagName('HW-ELEMENT')
         HWElement.forEach(ele => {
             var Name = '',
+                id = 0,
                 path = '',
                 strPath = getEditPath(ele.parentNode.parentNode, path),
                 category = null,
@@ -2142,7 +2201,7 @@ const mutations = {
                 if (item.nodeName == "HW-ATTRIBUTE-VALUES") {
                     item.childNodes.forEach((value, v) => {
                         if (v % 2 != 0) {
-                            var editAttributeItem = { attr: null, vt: '', v: '' }
+                            var editAttributeItem = { attr: null, vt: '', v: '', id: '' }
                             value.childNodes.forEach((data, d) => {
                                 if (d % 2 != 0) {
                                     if (data.nodeName == "HW-ATTRIBUTE-DEF-REF") {
@@ -2156,8 +2215,10 @@ const mutations = {
                                     }
                                 }
                             })
+                            editAttributeItem.id = id
                             const addObj = Object.assign({}, editAttributeItem)
                             attri.push(addObj)
+                            id++
                         }
                     })
                 }
@@ -2261,10 +2322,13 @@ const mutations = {
                         Name = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "PORTS") {
+                        var idP = 0,
+                            idR = 0,
+                            idPR = 0
                         item.childNodes.forEach((port, p) => {
                             if (p % 2 != 0) {
                                 if (port.nodeName == "P-PORT-PROTOTYPE") {
-                                    var editPPortItem = { name: '', interface: null }
+                                    var editPPortItem = { name: '', interface: null, id: '' }
                                     port.childNodes.forEach((data, d) => {
                                         if (d % 2 != 0) {
                                             if (data.nodeName == "SHORT-NAME") {
@@ -2275,11 +2339,13 @@ const mutations = {
                                             }
                                         }
                                     })
+                                    editPPortItem.id = idP
                                     const addObj = Object.assign({}, editPPortItem)
                                     pPort.push(addObj)
+                                    idP++
                                 }
                                 if (port.nodeName == "PR-PORT-PROTOTYPE") {
-                                    var editPRPortItem = { name: '', interface: null }
+                                    var editPRPortItem = { name: '', interface: null, id: '' }
                                     port.childNodes.forEach((data, d) => {
                                         if (d % 2 != 0) {
                                             if (data.nodeName == "SHORT-NAME") {
@@ -2290,11 +2356,13 @@ const mutations = {
                                             }
                                         }
                                     })
+                                    editPRPortItem.id = idPR
                                     const addObj = Object.assign({}, editPRPortItem)
                                     prPort.push(addObj)
+                                    idPR++
                                 }
                                 if (port.nodeName == "R-PORT-PROTOTYPE") {
-                                    var editRPortItem = { name: '', interface: null }
+                                    var editRPortItem = { name: '', interface: null, id: '' }
                                     port.childNodes.forEach((data, d) => {
                                         if (d % 2 != 0) {
                                             if (data.nodeName == "SHORT-NAME") {
@@ -2305,8 +2373,10 @@ const mutations = {
                                             }
                                         }
                                     })
+                                    editRPortItem.id = idR
                                     const addObj = Object.assign({}, editRPortItem)
                                     rPort.push(addObj)
+                                    idR++
                                 }
                             }
                         })
@@ -2374,6 +2444,7 @@ const mutations = {
                         })
                     }
                     if (item.nodeName == "STATE-DEPENDENT-STARTUP-CONFIGS") {
+                        var id = 0
                         item.childNodes.forEach((state, s) => {
                             var editItem = { functionItem: [], resourceRef: null, startupConfigRef: null }
                             if (s % 2 != 0) {
@@ -2387,7 +2458,7 @@ const mutations = {
                                         }
                                         if (con.nodeName == "FUNCTION-GROUP-STATE-IREFS") {
                                             con.childNodes.forEach((iref, i) => {
-                                                var editFunctionGItem = { contextMode: null, targetMode: null }
+                                                var editFunctionGItem = { contextMode: null, targetMode: null, id: '' }
                                                 if (i % 2 != 0) {
                                                     iref.childNodes.forEach((data, d) => {
                                                         if (d % 2 != 0) {
@@ -2399,8 +2470,10 @@ const mutations = {
                                                             }
                                                         }
                                                     })
+                                                    editFunctionGItem.id = id
                                                     const addObj = Object.assign({}, editFunctionGItem)
                                                     editItem.functionItem.push(addObj)
+                                                    id++
                                                 }
                                             })
                                         }
@@ -2761,8 +2834,9 @@ const mutations = {
                         Name = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "EVENT-DEPLOYMENTS") {
+                        var idE = 0
                         item.childNodes.forEach((eve, e) => {
-                            var editEventD = { name: '', event: null, id: '', maxlength: '', time: '', serializer: null, protocal: null }
+                            var editEventD = { name: '', event: null, idG: '', maxlength: '', time: '', serializer: null, protocal: null, id: '' }
                             if (e % 2 != 0) {
                                 eve.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -2773,7 +2847,7 @@ const mutations = {
                                             editEventD.event = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "EVENT-ID") {
-                                            editEventD.id = data.childNodes[0].nodeValue
+                                            editEventD.idG = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "MAXIMUM-SEGMENT-LENGTH") {
                                             editEventD.maxlength = data.childNodes[0].nodeValue
@@ -2789,8 +2863,10 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editEventD.id = idE
                                 const addObj = Object.assign({}, editEventD)
                                 eventD.push(addObj)
+                                idE++
                             }
                         })
                     }
@@ -2798,8 +2874,10 @@ const mutations = {
                         service = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "EVENT-GROUPS") {
+                        var idEG = 0,
+                            idTE = 0
                         item.childNodes.forEach((eve, e) => {
-                            var editItem = { name: '', id: '', event: [] }
+                            var editItem = { name: '', idG: '', event: [], id: '' }
                             if (e % 2 != 0) {
                                 eve.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -2807,24 +2885,28 @@ const mutations = {
                                             editItem.name = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "EVENT-GROUP-ID") {
-                                            editItem.id = data.childNodes[0].nodeValue
+                                            editItem.idG = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "EVENT-REFS") {
-                                            var editEvent = { event: null }
                                             data.childNodes.forEach((eventref, v) => {
+                                                var editEvent = { event: null, id: '' }
                                                 if (v % 2 != 0) {
                                                     if (eventref.nodeName == "EVENT-REF") {
                                                         editEvent.event = eventref.childNodes[0].nodeValue
+                                                        editEvent.id = idEG
+                                                        const addObjObj = Object.assign({}, editEvent)
+                                                        editItem.event.push(addObjObj)
+                                                        idEG++
                                                     }
                                                 }
                                             })
-                                            const addObjObj = Object.assign({}, editEvent)
-                                            editItem.event.push(addObjObj)
                                         }
                                     }
                                 })
+                                editItem.id = idTE
                                 const addObj = Object.assign({}, editItem)
                                 eventG.push(addObj)
+                                idTE++
                             }
                         })
                     }
@@ -2844,6 +2926,7 @@ const mutations = {
                         })
                     }
                     if (item.nodeName == "FIELD-DEPLOYMENTS") {
+                        var idF = 0
                         item.childNodes.forEach((fie, f) => {
                             var editItem = {
                                 name: '',
@@ -2867,7 +2950,8 @@ const mutations = {
                                 notmax: '',
                                 nottime: '',
                                 notserial: null,
-                                notproto: null
+                                notproto: null,
+                                id: ''
                             }
                             if (f % 2 != 0) {
                                 fie.childNodes.forEach((data, d) => {
@@ -2958,14 +3042,17 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editItem.id = idF
                                 const addObj = Object.assign({}, editItem)
                                 fieldD.push(addObj)
+                                idF++
                             }
                         })
                     }
                     if (item.nodeName == "METHOD-DEPLOYMENTS") {
+                        var idM = 0
                         item.childNodes.forEach((met, m) => {
-                            var editMethodD = { name: '', method: null, id: '', maxrequest: '', maxresponse: '', timerequest: '', timeresponse: '', protocal: null }
+                            var editMethodD = { name: '', method: null, idM: '', maxrequest: '', maxresponse: '', timerequest: '', timeresponse: '', protocal: null, id: '' }
                             if (m % 2 != 0) {
                                 met.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -2976,7 +3063,7 @@ const mutations = {
                                             editMethodD.method = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "METHOD-ID") {
-                                            editMethodD.id = data.childNodes[0].nodeValue
+                                            editMethodD.idM = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "MAXIMUM-SEGMENT-LENGTH-REQUEST") {
                                             editMethodD.maxrequest = data.childNodes[0].nodeValue
@@ -2995,8 +3082,10 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editMethodD.id = idM
                                 const addObj = Object.assign({}, editMethodD)
                                 methodD.push(addObj)
+                                idM++
                             }
                         })
                     }
@@ -3037,6 +3126,7 @@ const mutations = {
         var serviceInterface = payload.xmlDoc.getElementsByTagName('SERVICE-INTERFACE')
         serviceInterface.forEach(ele => {
                 var Name = '',
+                    id = 0,
                     max = '',
                     min = '',
                     namespace = '',
@@ -3074,8 +3164,9 @@ const mutations = {
                         min = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "EVENTS") {
+                        id = 0
                         item.childNodes.forEach((eve, e) => {
-                            var editEvent = { name: '', type: null }
+                            var editEvent = { name: '', type: null, id: '' }
                             if (e % 2 != 0) {
                                 eve.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -3087,14 +3178,17 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editEvent.id = id
                                 const addObj = Object.assign({}, editEvent)
                                 events.push(addObj)
+                                id++
                             }
                         })
                     }
                     if (item.nodeName == "FIELDS") {
+                        id = 0
                         item.childNodes.forEach((fie, f) => {
-                            var editField = { name: '', type: null, getter: null, setter: null, notifier: null }
+                            var editField = { name: '', type: null, getter: null, setter: null, notifier: null, id: '' }
                             if (f % 2 != 0) {
                                 fie.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -3115,14 +3209,20 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editField.id = id
                                 const addObj = Object.assign({}, editField)
                                 fields.push(addObj)
+                                id++
                             }
                         })
                     }
                     if (item.nodeName == "METHODS") {
+                        var idA = 0,
+                            idE = 0,
+                            idES = 0
+                        id = 0
                         item.childNodes.forEach((met, m) => {
-                            var editedItem = { name: '', fireforget: null, argument: [], errorSet: [], error: [], descrip: '' }
+                            var editedItem = { name: '', fireforget: null, argument: [], errorSet: [], error: [], descrip: '', id: '' }
                             if (m % 2 != 0) {
                                 met.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -3131,7 +3231,7 @@ const mutations = {
                                         }
                                         if (data.nodeName == "ARGUMENTS") {
                                             data.childNodes.forEach((arg, a) => {
-                                                var editArgItem = { name: '', type: null, dir: null, descrip: '' }
+                                                var editArgItem = { name: '', type: null, dir: null, descrip: '', id: '' }
                                                 if (a % 2 != 0) {
                                                     arg.childNodes.forEach(proto => {
                                                         if (proto.nodeName == "SHORT-NAME") {
@@ -3147,8 +3247,10 @@ const mutations = {
                                                             editArgItem.descrip = proto.childNodes[1].childNodes[0].nodeValue
                                                         }
                                                     })
+                                                    editArgItem.id = idA
                                                     const addObj = Object.assign({}, editArgItem)
                                                     editedItem.argument.push(addObj)
+                                                    idA++
                                                 }
                                             })
                                         }
@@ -3156,36 +3258,42 @@ const mutations = {
                                             editedItem.fireforget = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "POSSIBLE-AP-ERROR-SET-REFS") {
-                                            var editErrorSetItem = { error: null }
                                             data.childNodes.forEach((err, e) => {
+                                                var editErrorSetItem = { error: null, id: '' }
                                                 if (e % 2 != 0) {
                                                     if (err.nodeName == "POSSIBLE-AP-ERROR-SET-REF") {
                                                         editErrorSetItem.error = err.childNodes[0].nodeValue
+                                                        editErrorSetItem.id = idES
+                                                        const addObj = Object.assign({}, editErrorSetItem)
+                                                        editedItem.errorSet.push(addObj)
+                                                        idES++
                                                     }
                                                 }
                                             })
-                                            const addObj = Object.assign({}, editErrorSetItem)
-                                            editedItem.errorSet.push(addObj)
                                         }
                                         if (data.nodeName == "POSSIBLE-AP-ERROR-REFS") {
-                                            var editErrorItem = { error: null }
                                             data.childNodes.forEach((err, e) => {
+                                                var editErrorItem = { error: null, id: '' }
                                                 if (e % 2 != 0) {
                                                     if (err.nodeName == "POSSIBLE-AP-ERROR-REF") {
                                                         editErrorItem.error = err.childNodes[0].nodeValue
+                                                        editErrorItem.id = idE
+                                                        const addObj = Object.assign({}, editErrorItem)
+                                                        editedItem.error.push(addObj)
+                                                        idE++
                                                     }
                                                 }
                                             })
-                                            const addObj = Object.assign({}, editErrorItem)
-                                            editedItem.error.push(addObj)
                                         }
                                         if (data.nodeName == "DESC") {
                                             editedItem.descrip = data.childNodes[1].childNodes[0].nodeValue
                                         }
                                     }
                                 })
+                                editedItem.id = id
                                 const addObj = Object.assign({}, editedItem)
                                 methods.push(addObj)
+                                id++
                             }
                         })
                     }
@@ -3626,8 +3734,9 @@ const mutations = {
                         ver = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "METHOD-REQUEST-PROPSS") {
+                        var id = 0
                         item.childNodes.forEach((prop, p) => {
-                            var editMethodItem = { method: null }
+                            var editMethodItem = { method: null, id: '' }
                             if (p % 2 != 0) {
                                 prop.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -3636,14 +3745,17 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editMethodItem.id = id
                                 const addObj = Object.assign({}, editMethodItem)
                                 methodP.push(addObj)
+                                id++
                             }
                         })
                     }
                     if (item.nodeName == "REQUIRED-EVENT-GROUPS") {
+                        var idEG = 0
                         item.childNodes.forEach((group, g) => {
-                            var editItem = { name: '', eventG: null, client: null }
+                            var editItem = { name: '', eventG: null, client: null, id: '' }
                             if (g % 2 != 0) {
                                 group.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -3658,8 +3770,10 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editItem.id = idEG
                                 const addObj = Object.assign({}, editItem)
                                 requiredevent.push(addObj)
+                                idEG++
                             }
                         })
                     }
@@ -3722,8 +3836,9 @@ const mutations = {
                         id = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "EVENT-PROPSS") {
+                        var idE = 0
                         item.childNodes.forEach((prop, p) => {
-                            var editItem = { event: null }
+                            var editItem = { event: null, id: '' }
                             if (p % 2 != 0) {
                                 prop.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -3732,14 +3847,17 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editItem.id = idE
                                 const addObj = Object.assign({}, editItem)
                                 eventP.push(addObj)
+                                idE++
                             }
                         })
                     }
                     if (item.nodeName == "METHOD-RESPONSE-PROPSS") {
+                        var idM = 0
                         item.childNodes.forEach((prop, p) => {
-                            var editMethodItem = { method: null }
+                            var editMethodItem = { method: null, id: '' }
                             if (p % 2 != 0) {
                                 prop.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -3748,14 +3866,17 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editMethodItem.id = idM
                                 const addObj = Object.assign({}, editMethodItem)
                                 method.push(addObj)
+                                idM++
                             }
                         })
                     }
                     if (item.nodeName == "PROVIDED-EVENT-GROUPS") {
+                        var idEG = 0
                         item.childNodes.forEach((group, g) => {
-                            var editItem = { name: '', eventG: null, udp: '', ipv4: '', ipv6: '', threshold: '', server: null }
+                            var editItem = { name: '', eventG: null, udp: '', ipv4: '', ipv6: '', threshold: '', server: null, id: '' }
                             if (g % 2 != 0) {
                                 group.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -3782,8 +3903,10 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editItem.id = idEG
                                 const addObj = Object.assign({}, editItem)
                                 eventG.push(addObj)
+                                idEG++
                             }
                         })
                     }
@@ -3873,6 +3996,7 @@ const mutations = {
         var errorSet = payload.xmlDoc.getElementsByTagName('AP-APPLICATION-ERROR-SET')
         errorSet.forEach(ele => {
                 var Name = '',
+                    id = 0,
                     errorref = [],
                     path = '',
                     strPath = getEditPath(ele.parentNode.parentNode, path)
@@ -3882,11 +4006,13 @@ const mutations = {
                     }
                     if (item.nodeName == "AP-APPLICATION-ERROR-REFS") {
                         item.childNodes.forEach(data => {
-                            var editItem = { error: null }
+                            var editItem = { error: null, id: '' }
                             if (data.nodeName == "AP-APPLICATION-ERROR-REF") {
                                 editItem.error = data.childNodes[0].nodeValue
+                                editItem.id = id
                                 const addObj = Object.assign({}, editItem)
                                 errorref.push(addObj)
+                                id++
                             }
                         })
                     }
@@ -3976,6 +4102,8 @@ const mutations = {
         var perFileArray = payload.xmlDoc.getElementsByTagName('PERSISTENCY-FILE-ARRAY')
         perFileArray.forEach(ele => {
                 var Name = '',
+                    id = 0,
+                    sdgs = [],
                     maxsize = '',
                     minisize = '',
                     updateS = null,
@@ -3987,6 +4115,65 @@ const mutations = {
                 ele.childNodes.forEach(item => {
                     if (item.nodeName == "SHORT-NAME") {
                         Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "ADMIN-DATA") {
+                        id = 0
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { sdg: '', sd: '', port: null, id: '' }
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SDG" && data.getAttribute("GID") == "DATA-ENCRYPTION") {
+                                            if (data.childNodes.length == 1) {
+                                                editItem.sd = ''
+                                                editItem.sdg = "DATA-ENCRYPTION"
+                                                editItem.id = id
+                                                const addObj = Object.assign({}, editItem)
+                                                sdgs.push(addObj)
+                                                id++
+                                            } else {
+                                                data.childNodes.forEach((sdg, s) => {
+                                                    if (s % 2 != 0) {
+                                                        editItem = { sdg: '', sd: '', port: null, id: '' }
+                                                        if (sdg.nodeName == "SD" && sdg.getAttribute("GID") == "USE-DATA-ENCRYPTION") {
+                                                            editItem.sd = sdg.childNodes[0].nodeValue
+                                                            editItem.sdg = "DATA-ENCRYPTION"
+                                                            editItem.id = id
+                                                            const addObj = Object.assign({}, editItem)
+                                                            sdgs.push(addObj)
+                                                            id++
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                        }
+                                        if (data.nodeName == "SDG" && data.getAttribute("GID") == "PERSISTENCY-DEPLOYMENT-EXTENSION") {
+                                            console.log(data.childNodes.length)
+                                            if (data.childNodes.length == 1) {
+                                                editItem.port = null
+                                                editItem.sdg = "PERSISTENCY-DEPLOYMENT-EXTENSION"
+                                                editItem.id = id
+                                                const addObj = Object.assign({}, editItem)
+                                                sdgs.push(addObj)
+                                                id++
+                                            } else {
+                                                data.childNodes.forEach((sdg, s) => {
+                                                    if (s % 2 != 0) {
+                                                        editItem = { sdg: '', sd: '', port: null, id: '' }
+                                                        editItem.port = sdg.childNodes[0].nodeValue
+                                                        editItem.sdg = "PERSISTENCY-DEPLOYMENT-EXTENSION"
+                                                        editItem.id = id
+                                                        const addObj = Object.assign({}, editItem)
+                                                        sdgs.push(addObj)
+                                                        id++
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    }
+                                })
+                            }
+                        })
                     }
                     if (item.nodeName == "MAXIMUM-ALLOWED-SIZE") {
                         maxsize = item.childNodes[0].nodeValue
@@ -4001,8 +4188,9 @@ const mutations = {
                         uri = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "FILES") {
+                        id = 0
                         item.childNodes.forEach((stat, m) => {
-                            var editItem = { name: '', url: '', filename: '', strategy: null }
+                            var editItem = { name: '', url: '', filename: '', strategy: null, id: '' }
                             if (m % 2 != 0) {
                                 stat.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -4020,8 +4208,10 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editItem.id = id
                                 const addObj = Object.assign({}, editItem)
                                 files.push(addObj)
+                                id++
                             }
                         })
                     }
@@ -4044,6 +4234,7 @@ const mutations = {
                     zindex: 2,
                     icon: "mdi-clipboard-outline",
                     validation: false,
+                    sdgs: sdgs,
                     maxSize: maxsize,
                     miniSize: minisize,
                     updateS: updateS,
@@ -4089,8 +4280,9 @@ const mutations = {
                         encoding = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "FILE-PROXYS") {
+                        var id = 0
                         item.childNodes.forEach((stat, m) => {
-                            var editItem = { name: '', url: '', filename: '', strategy: null }
+                            var editItem = { name: '', url: '', filename: '', strategy: null, id: '' }
                             if (m % 2 != 0) {
                                 stat.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -4108,8 +4300,10 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editItem.id = id
                                 const addObj = Object.assign({}, editItem)
                                 proxy.push(addObj)
+                                id++
                             }
                         })
                     }
@@ -4152,6 +4346,7 @@ const mutations = {
         var perKeyValueD = payload.xmlDoc.getElementsByTagName('PERSISTENCY-KEY-VALUE-DATABASE')
         perKeyValueD.forEach(ele => {
                 var Name = '',
+                    sdgs = [],
                     maxsize = '',
                     minisize = '',
                     updateS = null,
@@ -4164,6 +4359,65 @@ const mutations = {
                 ele.childNodes.forEach(item => {
                     if (item.nodeName == "SHORT-NAME") {
                         Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "ADMIN-DATA") {
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { sdg: '', sd: '', port: null, id: '' },
+                                id = 0
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SDG" && data.getAttribute("GID") == "DATA-ENCRYPTION") {
+                                            if (data.childNodes.length == 1) {
+                                                editItem.sd = ''
+                                                editItem.sdg = "DATA-ENCRYPTION"
+                                                editItem.id = id
+                                                const addObj = Object.assign({}, editItem)
+                                                sdgs.push(addObj)
+                                                id++
+                                            } else {
+                                                data.childNodes.forEach((sdg, s) => {
+                                                    if (s % 2 != 0) {
+                                                        editItem = { sdg: '', sd: '', port: null, id: '' }
+                                                        if (sdg.nodeName == "SD" && sdg.getAttribute("GID") == "USE-DATA-ENCRYPTION") {
+                                                            editItem.sd = sdg.childNodes[0].nodeValue
+                                                            editItem.sdg = "DATA-ENCRYPTION"
+                                                            editItem.id = id
+                                                            const addObj = Object.assign({}, editItem)
+                                                            sdgs.push(addObj)
+                                                            id++
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                        }
+                                        if (data.nodeName == "SDG" && data.getAttribute("GID") == "PERSISTENCY-DEPLOYMENT-EXTENSION") {
+                                            console.log(data.childNodes.length)
+                                            if (data.childNodes.length == 1) {
+                                                editItem.port = null
+                                                editItem.sdg = "PERSISTENCY-DEPLOYMENT-EXTENSION"
+                                                editItem.id = id
+                                                const addObj = Object.assign({}, editItem)
+                                                sdgs.push(addObj)
+                                                id++
+                                            } else {
+                                                data.childNodes.forEach((sdg, s) => {
+                                                    if (s % 2 != 0) {
+                                                        editItem = { sdg: '', sd: '', port: null, id: '' }
+                                                        editItem.port = sdg.childNodes[0].nodeValue
+                                                        editItem.sdg = "PERSISTENCY-DEPLOYMENT-EXTENSION"
+                                                        editItem.id = id
+                                                        const addObj = Object.assign({}, editItem)
+                                                        sdgs.push(addObj)
+                                                        id++
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    }
+                                })
+                            }
+                        })
                     }
                     if (item.nodeName == "MAXIMUM-ALLOWED-SIZE") {
                         maxsize = item.childNodes[0].nodeValue
@@ -4178,8 +4432,9 @@ const mutations = {
                         uri = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "REDUNDANCY-HANDLINGS") {
+                        var idRed = 0
                         item.childNodes.forEach((stat, m) => {
-                            var editItem = { scope: null, m: '', n: '' }
+                            var editItem = { scope: null, m: '', n: '', id: '' }
                             if (m % 2 != 0) {
                                 stat.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -4194,8 +4449,10 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editItem.id = idRed
                                 const addObj = Object.assign({}, editItem)
                                 redundancy.push(addObj)
+                                idRed++
                             }
                         })
                     }
@@ -4221,33 +4478,44 @@ const mutations = {
                                             editItem.datatype = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "INIT-VALUE") {
+                                            var idArry = 0,
+                                                idNum = 0
                                             data.childNodes.forEach(init => {
                                                 if (init.nodeName == "NUMERICAL-VALUE-SPECIFICATION") {
-                                                    var editNumItem = { value: '' }
+                                                    var editNumItem = { value: '', id: '' }
                                                     init.childNodes.forEach(val => {
                                                         if (val.nodeName == 'VALUE') {
                                                             editNumItem.value = val.childNodes[0].nodeValue
+                                                            editNumItem.id = idNum
                                                             const addObj = Object.assign({}, editNumItem)
                                                             editItem.numerical.push(addObj)
+                                                            idNum++
                                                         }
                                                     })
                                                 }
                                                 if (init.nodeName == "ARRAY-VALUE-SPECIFICATION") {
-                                                    var editArrItem = { value: '' }
                                                     init.childNodes.forEach((arr, g) => {
                                                         if (g % 2 != 0) {
-                                                            if (arr.nodeName == "NUMERICAL-VALUE-SPECIFICATION") {
-                                                                arr.childNodes.forEach(val => {
-                                                                    if (val.nodeName == 'VALUE') {
-                                                                        editArrItem.value = val.childNodes[0].nodeValue
-                                                                        const addObj = Object.assign({}, editArrItem)
-                                                                        editItem.array.push(addObj)
+                                                            if (arr.nodeName == "ELEMENTS") {
+                                                                arr.childNodes.forEach((val, v) => {
+                                                                    if (v % 2 != 0) {
+                                                                        if (val.nodeName == "NUMERICAL-VALUE-SPECIFICATION") {
+                                                                            var editArrItem = { value: '', id: '' }
+                                                                            val.childNodes.forEach(ch => {
+                                                                                if (ch.nodeName == 'VALUE') {
+                                                                                    editArrItem.value = ch.childNodes[0].nodeValue
+                                                                                    editArrItem.id = idArry
+                                                                                    const addObj = Object.assign({}, editArrItem)
+                                                                                    editItem.array.push(addObj)
+                                                                                    idArry++
+                                                                                }
+                                                                            })
+                                                                        }
                                                                     }
                                                                 })
                                                             }
                                                         }
                                                     })
-
                                                 }
                                             })
                                         }
@@ -4277,6 +4545,7 @@ const mutations = {
                     zindex: 2,
                     icon: "mdi-clipboard-outline",
                     validation: false,
+                    sdgs: sdgs,
                     maxSize: maxsize,
                     miniSize: minisize,
                     updateS: updateS,
@@ -4293,6 +4562,7 @@ const mutations = {
         var perKeyValueDI = payload.xmlDoc.getElementsByTagName('PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE')
         perKeyValueDI.forEach(ele => {
                 var Name = '',
+                    id = 0,
                     minisize = '',
                     redundancy = null,
                     updateS = null,
@@ -4315,8 +4585,9 @@ const mutations = {
                         updateS = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "DATA-ELEMENTS") {
+                        id = 0
                         item.childNodes.forEach((stat, m) => {
-                            var editItem = { name: '', type: null, strategy: null }
+                            var editItem = { name: '', type: null, strategy: null, id: '' }
                             if (m % 2 != 0) {
                                 stat.childNodes.forEach((el, d) => {
                                     if (d % 2 != 0) {
@@ -4331,18 +4602,23 @@ const mutations = {
                                         }
                                     }
                                 })
+                                editItem.id = id
                                 const addObj = Object.assign({}, editItem)
                                 data.push(addObj)
+                                id++
                             }
                         })
                     }
                     if (item.nodeName == "DATA-TYPE-FOR-SERIALIZATION-REFS") {
+                        id = 0
                         item.childNodes.forEach(data => {
-                            var editItem = { serial: null }
+                            var editItem = { serial: null, id: '' }
                             if (data.nodeName == "DATA-TYPE-FOR-SERIALIZATION-REF") {
                                 editItem.serial = data.childNodes[0].nodeValue
+                                editItem.id = id
                                 const addObj = Object.assign({}, editItem)
                                 serialization.push(addObj)
+                                id++
                             }
                         })
                     }
@@ -4494,12 +4770,15 @@ const mutations = {
                         machine = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "PHM-CONTRIBUTION-REFS") {
+                        var id = 0
                         item.childNodes.forEach(data => {
-                            var editItem = { con: null }
+                            var editItem = { con: null, id: '' }
                             if (data.nodeName == "PHM-CONTRIBUTION-REF") {
                                 editItem.con = data.childNodes[0].nodeValue
+                                editItem.id = id
                                 const addObj = Object.assign({}, editItem)
                                 contri.push(addObj)
+                                id++
                             }
                         })
                     }
@@ -4543,8 +4822,9 @@ const mutations = {
                         Name = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "STATUSS") {
+                        var id = 0
                         item.childNodes.forEach((stat, m) => {
-                            var editItem = { name: '', id: '', }
+                            var editItem = { name: '', status: '', id: '' }
                             if (m % 2 != 0) {
                                 stat.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -4552,12 +4832,14 @@ const mutations = {
                                             editItem.name = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "STATUS-ID") {
-                                            editItem.id = data.childNodes[0].nodeValue
+                                            editItem.status = data.childNodes[0].nodeValue
                                         }
                                     }
                                 })
+                                editItem.id = id
                                 const addObj = Object.assign({}, editItem)
                                 status.push(addObj)
+                                id++
                             }
                         })
                     }
@@ -4651,8 +4933,9 @@ const mutations = {
                         Name = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "CHECKPOINTS") {
+                        var id = 0
                         item.childNodes.forEach((check, m) => {
-                            var editItem = { name: '', id: '', }
+                            var editItem = { name: '', check: '', id: '' }
                             if (m % 2 != 0) {
                                 check.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -4660,12 +4943,14 @@ const mutations = {
                                             editItem.name = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "CHECKPOINT-ID") {
-                                            editItem.id = data.childNodes[0].nodeValue
+                                            editItem.check = data.childNodes[0].nodeValue
                                         }
                                     }
                                 })
+                                editItem.id = id
                                 const addObj = Object.assign({}, editItem)
                                 checkpoint.push(addObj)
+                                id++
                             }
                         })
                     }
@@ -5045,18 +5330,244 @@ const mutations = {
             // SOFTWARE-PACKAGE
         var softwareP = payload.xmlDoc.getElementsByTagName('SOFTWARE-PACKAGE')
         softwareP.forEach(ele => {
+                var Name = '',
+                    action = null,
+                    activation = null,
+                    compSWPsize = '',
+                    deltaPakage = null,
+                    maximunVer = '',
+                    minimunVer = '',
+                    id = '',
+                    postReboot = null,
+                    preReboot = null,
+                    swcluster = null,
+                    uncompSWCsize = '',
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "ACTION-TYPE") {
+                        action = item.childNodes[1].childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "ACTIVATION-ACTION") {
+                        activation = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "COMPRESSED-SOFTWARE-PACKAGE-SIZE") {
+                        compSWPsize = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "IS-DELTA-PACKAGE") {
+                        deltaPakage = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "MAXIMUM-SUPPORTED-UCM-VERSION") {
+                        maximunVer = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "MINIMUM-SUPPORTED-UCM-VERSION") {
+                        minimunVer = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "PACKAGER-ID") {
+                        id = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "POST-VERIFICATION-REBOOT") {
+                        postReboot = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "PRE-ACTIVATION-REBOOT") {
+                        preReboot = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "SOFTWARE-CLUSTER-REF") {
+                        swcluster = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "UNCOMPRESSED-SOFTWARE-CLUSTER-SIZE") {
+                        uncompSWCsize = item.childNodes[0].nodeValue
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+                this.commit('addElementSoftWarePackage', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    action: action,
+                    activation: activation,
+                    compSWPsize: compSWPsize,
+                    deltaPakage: deltaPakage,
+                    maximunVer: maximunVer,
+                    minimunVer: minimunVer,
+                    id: id,
+                    postReboot: postReboot,
+                    preReboot: preReboot,
+                    swcluster: swcluster,
+                    uncompSWCsize: uncompSWCsize
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SWPackage_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.UCM_str)
+                EventBus.$emit('add-element', constant.SWPackage_str)
+            })
+            // VEHICLE-PACKAGE
+        var UCMVehicle = payload.xmlDoc.getElementsByTagName('VEHICLE-PACKAGE')
+        UCMVehicle.forEach(ele => {
+                var Name = '',
+                    id = 0,
+                    reposi = '',
+                    sdgs = [],
+                    driver = [],
+                    rollout = [],
+                    ucms = [],
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "REPOSITORY") {
+                        reposi = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "ADMIN-DATA") {
+                        id = 0
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { sd: '', id: '' }
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SDG") {
+                                            data.childNodes.forEach((sdg, s) => {
+                                                if (s % 2 != 0) {
+                                                    editItem = { sd: '', id: '' }
+                                                    if (sdg.nodeName == "SD") {
+                                                        editItem.sd = sdg.childNodes[0].nodeValue
+                                                        editItem.id = id
+                                                        const addObj = Object.assign({}, editItem)
+                                                        sdgs.push(addObj)
+                                                        id++
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                    if (item.nodeName == "DRIVER-NOTIFICATIONS") {
+                        id = 0
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { appro: null, notify: null, id: '' }
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "APPROVAL-REQUIRED") {
+                                            editItem.appro = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "NOTIFICATION-STATE") {
+                                            editItem.notify = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                driver.push(addObj)
+                                id++
+                            }
+                        })
+                    }
+                    if (item.nodeName == "ROLLOUT-QUALIFICATIONS") {
+                        id = 0
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { name: '', policy: '', id: '' }
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            editItem.name = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "SAFETY-POLICY") {
+                                            editItem.policy = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                rollout.push(addObj)
+                                id++
+                            }
+                        })
+                    }
+                    if (item.nodeName == "UCMS") {
+                        id = 0
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { name: '', ident: '', module: null, id: '' }
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            editItem.name = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "IDENTIFIER") {
+                                            editItem.ident = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "UCM-MODULE-INSTANTIATION-REF") {
+                                            editItem.module = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                ucms.push(addObj)
+                                id++
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+
+                this.commit('addElementVehiclePackage', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    reposi: reposi,
+                    sdgs: sdgs,
+                    driver: driver,
+                    rollout: rollout,
+                    ucms: ucms
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.VehiclePackage_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.UCM_str)
+                EventBus.$emit('add-element', constant.VehiclePackage_str)
+            })
+            // UCM-MODULE-INSTANTIATION
+        var UCMModule = payload.xmlDoc.getElementsByTagName('UCM-MODULE-INSTANTIATION')
+        UCMModule.forEach(ele => {
             var Name = '',
-                action = null,
-                activation = null,
-                compSWPsize = '',
-                deltaPakage = null,
-                maximunVer = '',
-                minimunVer = '',
-                id = '',
-                postReboot = null,
-                preReboot = null,
-                swcluster = null,
-                uncompSWCsize = '',
+                ident = '',
                 path = '',
                 strPath = getEditPath(ele.parentNode.parentNode, path)
 
@@ -5064,49 +5575,19 @@ const mutations = {
                 if (item.nodeName == "SHORT-NAME") {
                     Name = item.childNodes[0].nodeValue
                 }
-                if (item.nodeName == "ACTION-TYPE") {
-                    action = item.childNodes[1].childNodes[0].nodeValue
-                }
-                if (item.nodeName == "ACTIVATION-ACTION") {
-                    activation = item.childNodes[0].nodeValue
-                }
-                if (item.nodeName == "COMPRESSED-SOFTWARE-PACKAGE-SIZE") {
-                    compSWPsize = item.childNodes[0].nodeValue
-                }
-                if (item.nodeName == "IS-DELTA-PACKAGE") {
-                    deltaPakage = item.childNodes[0].nodeValue
-                }
-                if (item.nodeName == "MAXIMUM-SUPPORTED-UCM-VERSION") {
-                    maximunVer = item.childNodes[0].nodeValue
-                }
-                if (item.nodeName == "MINIMUM-SUPPORTED-UCM-VERSION") {
-                    minimunVer = item.childNodes[0].nodeValue
-                }
-                if (item.nodeName == "PACKAGER-ID") {
-                    id = item.childNodes[0].nodeValue
-                }
-                if (item.nodeName == "POST-VERIFICATION-REBOOT") {
-                    postReboot = item.childNodes[0].nodeValue
-                }
-                if (item.nodeName == "PRE-ACTIVATION-REBOOT") {
-                    preReboot = item.childNodes[0].nodeValue
-                }
-                if (item.nodeName == "SOFTWARE-CLUSTER-REF") {
-                    swcluster = item.childNodes[0].nodeValue
-                }
-                if (item.nodeName == "UNCOMPRESSED-SOFTWARE-CLUSTER-SIZE") {
-                    uncompSWCsize = item.childNodes[0].nodeValue
+                if (item.nodeName == "IDENTIFIER") {
+                    ident = item.childNodes[0].nodeValue
                 }
             })
             var UUID = ele.getAttribute("UUID")
-            var idxEle = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === UUID)
+            var idxEle = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(data => data.uuid === UUID)
             if (UUID == null || idxEle != -1) {
                 UUID = uuid.v1()
             }
             const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
             const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
-            this.commit('addElementSoftWarePackage', {
+            this.commit('addElementModuleInstant', {
                 name: Name,
                 input: true,
                 path: strPath,
@@ -5116,22 +5597,12 @@ const mutations = {
                 zindex: 2,
                 icon: "mdi-clipboard-outline",
                 validation: false,
-                action: action,
-                activation: activation,
-                compSWPsize: compSWPsize,
-                deltaPakage: deltaPakage,
-                maximunVer: maximunVer,
-                minimunVer: minimunVer,
-                id: id,
-                postReboot: postReboot,
-                preReboot: preReboot,
-                swcluster: swcluster,
-                uncompSWCsize: uncompSWCsize
+                ident: ident,
             })
-            state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SWPackage_str })
+            state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ModuleInstantiation_str })
             EventBus.$emit('add-element', constant.Platform_str)
             EventBus.$emit('add-element', constant.UCM_str)
-            EventBus.$emit('add-element', constant.SWPackage_str)
+            EventBus.$emit('add-element', constant.ModuleInstantiation_str)
         })
 
     },
@@ -5292,9 +5763,9 @@ const mutations = {
                                                     if (connect.connector == (data.path + '/' + data.name + '/' + con.name)) {
                                                         this.commit('setConnectionline', { start: ele.uuid + '/comconet-' + c + '-' + v + '-' + n, end: data.uuid })
                                                         if (n == 0 && v == 0) {
-                                                            EventBus.$emit('new-line', ele.uuid + '/comconet-' + channel.name + '-' + condi.name, data.uuid)
+                                                            EventBus.$emit('new-line', ele.uuid + '/comconet-' + channel.id + '-' + condi.id, data.uuid)
                                                         } else if (n == 0 && v != 0) {
-                                                            EventBus.$emit('new-line', ele.uuid + '/channel' + condi.name, data.uuid)
+                                                            EventBus.$emit('new-line', ele.uuid + '/channel' + condi.id, data.uuid)
                                                         } else {
                                                             EventBus.$emit('new-line', ele.uuid + '/conditional', data.uuid)
                                                         }
@@ -5497,7 +5968,7 @@ const mutations = {
                                     if (data.field == (item.path + '/' + item.name + '/' + service.name)) {
                                         this.commit('setConnectionline', { start: ele.uuid + '/field-' + i, end: item.uuid })
                                         if (i == 0) {
-                                            EventBus.$emit('new-line', ele.uuid + '/fieldtab' + data.name, item.uuid)
+                                            EventBus.$emit('new-line', ele.uuid + '/fieldtab' + data.id, item.uuid)
                                         } else {
                                             EventBus.$emit('new-line', ele.uuid + '/field', item.uuid)
                                         }
@@ -5518,7 +5989,7 @@ const mutations = {
                                                 if (group.event == (item.path + '/' + item.name + '/' + data.name)) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/event-' + g + '-' + i, end: item.uuid })
                                                     if (i == 0) {
-                                                        EventBus.$emit('new-line', ele.uuid + '/eventtab' + eve.name, item.uuid)
+                                                        EventBus.$emit('new-line', ele.uuid + '/eventtab' + eve.id, item.uuid)
                                                     } else {
                                                         EventBus.$emit('new-line', ele.uuid + '/event', item.uuid)
                                                     }
@@ -5598,7 +6069,7 @@ const mutations = {
                                         if (arg.type == (item.path + '/' + item.name)) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/argtable-' + a + '-' + i, end: item.uuid })
                                             if (i == 0) {
-                                                EventBus.$emit('new-line', ele.uuid + '/argtable' + data.name, item.uuid)
+                                                EventBus.$emit('new-line', ele.uuid + '/argtable' + data.id, item.uuid)
                                             } else {
                                                 EventBus.$emit('new-line', ele.uuid + '/methods', item.uuid)
                                             }
@@ -5614,7 +6085,7 @@ const mutations = {
                                         if (error.error == (item.path + '/' + item.name)) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/methoderrors-' + e + '-' + i, end: item.uuid })
                                             if (i == 0) {
-                                                EventBus.$emit('new-line', ele.uuid + '/methoderrors' + data.name, item.uuid)
+                                                EventBus.$emit('new-line', ele.uuid + '/methoderrors' + data.id, item.uuid)
                                             } else {
                                                 EventBus.$emit('new-line', ele.uuid + '/methods', item.uuid)
                                             }
@@ -5630,7 +6101,7 @@ const mutations = {
                                         if (err.error == (item.path + '/' + item.name)) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/methoderror-' + e + '-' + i, end: item.uuid })
                                             if (i == 0) {
-                                                EventBus.$emit('new-line', ele.uuid + '/methoderror' + data.name, item.uuid)
+                                                EventBus.$emit('new-line', ele.uuid + '/methoderror' + data.id, item.uuid)
                                             } else {
                                                 EventBus.$emit('new-line', ele.uuid + '/methods', item.uuid)
                                             }
@@ -5755,7 +6226,7 @@ const mutations = {
                                 if (data.eventG == (eve.path + '/' + eve.name + '/' + item.name)) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/requiredEventG-' + i, end: eve.uuid })
                                     if (i == 0) {
-                                        EventBus.$emit('new-line', ele.uuid + '/requiredEventG' + data.name, eve.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/requiredEventG' + data.id, eve.uuid)
                                     } else {
                                         EventBus.$emit('new-line', ele.uuid + '/requiredE', eve.uuid)
                                     }
@@ -5768,7 +6239,7 @@ const mutations = {
                             if (data.client == (item.path + '/' + item.name)) {
                                 this.commit('setConnectionline', { start: ele.uuid + '/requiredClient-' + i, end: item.uuid })
                                 if (i == 0) {
-                                    EventBus.$emit('new-line', ele.uuid + '/requiredClient' + data.name, item.uuid)
+                                    EventBus.$emit('new-line', ele.uuid + '/requiredClient' + data.id, item.uuid)
                                 } else {
                                     EventBus.$emit('new-line', ele.uuid + '/requiredE', item.uuid)
                                 }
@@ -5833,7 +6304,7 @@ const mutations = {
                                 if (data.eventG == (eve.path + '/' + eve.name + '/' + item.name)) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/providEventG-' + i, end: eve.uuid })
                                     if (i == 0) {
-                                        EventBus.$emit('new-line', ele.uuid + '/providEventG' + data.name, eve.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/providEventG' + data.id, eve.uuid)
                                     } else {
                                         EventBus.$emit('new-line', ele.uuid + '/providE', eve.uuid)
                                     }
@@ -5846,7 +6317,7 @@ const mutations = {
                             if (data.server == (item.path + '/' + item.name)) {
                                 this.commit('setConnectionline', { start: ele.uuid + '/providServer-' + i, end: item.uuid })
                                 if (i == 0) {
-                                    EventBus.$emit('new-line', ele.uuid + '/providServer' + data.name, item.uuid)
+                                    EventBus.$emit('new-line', ele.uuid + '/providServer' + data.id, item.uuid)
                                 } else {
                                     EventBus.$emit('new-line', ele.uuid + '/providE', item.uuid)
                                 }
@@ -5878,6 +6349,24 @@ const mutations = {
                         }
                     })
                 }
+            } else if (ele.parent == constant.FileArray_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(item => item.uuid === ele.uuid)
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxelement].sdgs.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxelement].sdgs.forEach((data, i) => {
+                        if (data.port != null) {
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(item => {
+                                if (item.prport.length > 0) {
+                                    item.prport.forEach(pr => {
+                                        if (data.port == (item.path + '/' + item.name + '/' + pr.name)) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/PERArraySDG-' + i, end: item.uuid })
+                                            EventBus.$emit('new-line', ele.uuid + '/PERArraySDG', item.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
             } else if (ele.parent == constant.KeyValueData_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxelement].keyValue.length > 0) {
@@ -5891,6 +6380,22 @@ const mutations = {
                                     } else {
                                         EventBus.$emit('new-line', ele.uuid + '/PERKeyV', item.uuid)
                                     }
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxelement].sdgs.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxelement].sdgs.forEach((data, i) => {
+                        if (data.port != null) {
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(item => {
+                                if (item.prport.length > 0) {
+                                    item.prport.forEach(pr => {
+                                        if (data.port == (item.path + '/' + item.name + '/' + pr.name)) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/PERKeyDSDG-' + i, end: item.uuid })
+                                            EventBus.$emit('new-line', ele.uuid + '/PERKeyDSDG', item.uuid)
+                                        }
+                                    })
                                 }
                             })
                         }
@@ -6170,6 +6675,20 @@ const mutations = {
                         if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxelement].swcluster == (swc.path + '/' + swc.name)) {
                             this.commit('setConnectionline', { start: ele.uuid + '/UCMSWPSWC', end: swc.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/UCMSWPSWC', swc.uuid)
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.VehiclePackage_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(item => item.uuid === ele.uuid)
+                if (state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxelement].ucms.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxelement].ucms.forEach((data, i) => {
+                        if (data.module != null) {
+                            state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.forEach(item => {
+                                if (data.module == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/UCMModule-' + i, end: item.uuid })
+                                    EventBus.$emit('new-line', ele.uuid + '/UCMModule', item.uuid)
+                                }
+                            })
                         }
                     })
                 }
@@ -7357,7 +7876,6 @@ const mutations = {
             encoding: payload.encoding,
             proxy: payload.proxy,
             maxfiles: payload.maxfiles
-
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileProxyInterf_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -7391,6 +7909,7 @@ const mutations = {
             left: payload.left,
             zindex: payload.zindex,
             name: payload.name,
+            sdgs: payload.sdgs,
             maxSize: payload.maxSize,
             miniSize: payload.miniSize,
             updateS: payload.updateS,
@@ -7961,6 +8480,13 @@ const mutations = {
             left: payload.left,
             zindex: payload.zindex,
             name: payload.name,
+            category: payload.category,
+            inVendor: payload.inVendor,
+            version: payload.version,
+            sdgs: payload.sdgs,
+            executable: payload.executable,
+            machineD: payload.machineD,
+
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -8038,6 +8564,11 @@ const mutations = {
             left: payload.left,
             zindex: payload.zindex,
             name: payload.name,
+            reposi: payload.reposi,
+            sdgs: payload.sdgs,
+            driver: payload.driver,
+            rollout: payload.rollout,
+            ucms: payload.ucms,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -8057,6 +8588,41 @@ const mutations = {
             state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].zindex = payload.zindex
         }
     },
+    addElementModuleInstant(state, payload) {
+        var newUUid
+        if (!payload.input) {
+            newUUid = uuid.v1()
+        } else {
+            newUUid = payload.uuid
+        }
+        state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.push({
+            uuid: newUUid,
+            path: payload.path,
+            top: payload.top,
+            left: payload.left,
+            zindex: payload.zindex,
+            name: payload.name,
+            ident: payload.ident
+        })
+        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.ModuleInstantiation_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        if (!payload.input) {
+            state.activeUUID = newUUid
+        }
+        EventBus.$emit('new-element', newUUid)
+    },
+    editModuleInstant(state, payload) {
+        var idxElement = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(data => data.uuid === payload.uuid)
+
+        if (payload.compo == "Name") {
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.ModuleInstantiation_index].children[idxElement].name = payload.name
+        } else if (payload.compo == "drag") {
+            Vue.set(state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxElement].top, payload.location, payload.top)
+            Vue.set(state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxElement].left, payload.location, payload.left)
+        } else if (payload.compo == "z") {
+            state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxElement].zindex = payload.zindex
+        }
+    },
+
 
     renameElement(state, payload) {
         var idxEle, ele, editmethod
@@ -8260,6 +8826,10 @@ const mutations = {
             idxEle = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxEle]
             editmethod = 'editVehiclePackage'
+        } else if (payload.parent == constant.ModuleInstantiation_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxEle]
+            editmethod = 'editModuleInstant'
         }
 
         ele.name = payload.name
@@ -8629,7 +9199,7 @@ const mutations = {
                 state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxElement].keyValue = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'PHMContri') { //PHMContribution 변경시 =>  PHMtoMachine 에서 PHMContribution ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxElement].contri = payload.path + '/' + payload.name
+                state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxElement].contri[tableLine[1]].con = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'PHMViaRecovery') { //PHMRecovery 변경시 =>  PHMRecoveryVia 에서 PHMRecovery ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].phmRecovery = payload.path + '/' + payload.name
@@ -8645,6 +9215,9 @@ const mutations = {
             } else if (tableLine[0] == 'UCMSWPSWC') { //SoftWareCluster 변경시 =>  SoftWarePackage 에서 SoftWareCluster ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxElement].swcluster = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'UCMModule') { //ModuleInstant 변경시 =>  VehiclePackage 에서 ModuleInstant ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].ucms[tableLine[1]].module = payload.path + '/' + payload.name
             }
         })
     },
@@ -8686,15 +9259,15 @@ const mutations = {
                         ele.dependent.forEach((data, n) => {
                             if (data.resourceRef == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
                                 var idx = this.getters.getconnectLineNum(ele.uuid + '/processresorce-' + n)
-                                data.resourceRef = null
                                 if (idx != -1) {
+                                    data.resourceRef = null
                                     EventBus.$emit('delete-line', idx)
                                     this.commit('deletConnectionline', { startnum: idx })
+                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].validation = true
                                 }
-                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
-                                state.navigatorList[state.openProjectIndex].validation = true
                             }
                         })
                     }
@@ -8707,15 +9280,15 @@ const mutations = {
                                 data.functionItem.forEach((item, f) => {
                                     if (item.targetMode == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
                                         var idx = this.getters.getconnectLineNum(ele.uuid + '/fgtarget-' + f + '-' + n)
-                                        item.targetMode = null
                                         if (idx != -1) {
+                                            item.targetMode = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
                                         }
-                                        state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].validation = true
                                     }
                                 })
                             }
@@ -8729,16 +9302,16 @@ const mutations = {
                             ele.methodD.forEach((item, n) => {
                                 if (item.method == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
                                     var idx = this.getters.getconnectLineNum(ele.uuid + '/serviceMethodD-' + n)
-                                    item.method = null
                                     if (idx != -1) {
+                                        item.method = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].validation = true
                                     }
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].validation = true
                                 }
                             })
                         }
@@ -8747,16 +9320,16 @@ const mutations = {
                 state.SAHLProject[state.openProjectIndex].IamG.MethodGD.forEach((ele, i) => {
                     if (ele.SIMethod == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
                         var idx = this.getters.getconnectLineNum(ele.uuid + '/MGDserviceI')
-                        ele.SIMethod = null
                         if (idx != -1) {
+                            ele.SIMethod = null
                             EventBus.$emit('delete-line', idx)
                             this.commit('deletConnectionline', { startnum: idx })
+                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].children[i].validation = true
+                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].validation = true
+                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
+                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                            state.navigatorList[state.openProjectIndex].validation = true
                         }
-                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].children[i].validation = true
-                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].validation = true
-                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
-                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                        state.navigatorList[state.openProjectIndex].validation = true
                     }
                 })
             } else if (payload.deleteName == 'eventG') {
@@ -8766,16 +9339,16 @@ const mutations = {
                             ele.requiredevent.forEach((item, n) => {
                                 if (item.eventG == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
                                     var idx = this.getters.getconnectLineNum(ele.uuid + '/requiredEventG-' + n)
-                                    item.eventG = null
                                     if (idx != -1) {
+                                        item.eventG = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].validation = true
                                     }
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].validation = true
                                 }
                             })
                         }
@@ -8786,16 +9359,16 @@ const mutations = {
                         ele.eventG.forEach((item, n) => {
                             if (item.eventG == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
                                 var idx = this.getters.getconnectLineNum(ele.uuid + '/providEventG-' + n)
-                                item.eventG = null
                                 if (idx != -1) {
+                                    item.eventG = null
                                     EventBus.$emit('delete-line', idx)
                                     this.commit('deletConnectionline', { startnum: idx })
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].validation = true
                                 }
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                                state.navigatorList[state.openProjectIndex].validation = true
                             }
                         })
                     }
@@ -8846,15 +9419,16 @@ const mutations = {
                                     data.functionItem.forEach((item, f) => {
                                         if (item.contextMode == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                             var idx = this.getters.getconnectLineNum(ele.uuid + '/fgcontext-' + f + '-' + n)
-                                            item.contextMode = null
                                             if (idx != -1) {
+                                                item.contextMode = null
                                                 EventBus.$emit('delete-line', idx)
                                                 this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
+
                                             }
-                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].validation = true
                                         }
                                     })
                                 }
@@ -8872,15 +9446,15 @@ const mutations = {
                                                 channel.comconnect.forEach((com, v) => {
                                                     if (com.connector == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                                         var idx = this.getters.getconnectLineNum(ele.uuid + '/comconet-' + v + '-' + n + '-' + c)
-                                                        com.connector = null
                                                         if (idx != -1) {
+                                                            com.connector = null
                                                             EventBus.$emit('delete-line', idx)
                                                             this.commit('deletConnectionline', { startnum: idx })
+                                                            state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.EthernetCluster_index].children[i].validation = true
+                                                            state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.EthernetCluster_index].validation = true
+                                                            state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
+                                                            state.navigatorList[state.openProjectIndex].validation = true
                                                         }
-                                                        state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.EthernetCluster_index].children[i].validation = true
-                                                        state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.EthernetCluster_index].validation = true
-                                                        state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
-                                                        state.navigatorList[state.openProjectIndex].validation = true
                                                     }
                                                 })
                                             }
@@ -8893,16 +9467,16 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.forEach((ele, i) => {
                             if (ele.ccref == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                 var idx = this.getters.getconnectLineNum(ele.uuid + '/tomachinCC')
-                                ele.ccref = null
                                 if (idx != -1) {
+                                    ele.ccref = null
                                     EventBus.$emit('delete-line', idx)
                                     this.commit('deletConnectionline', { startnum: idx })
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].validation = true
                                 }
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[i].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                                state.navigatorList[state.openProjectIndex].validation = true
                             }
                         }) //SW Component 변경시 =>   Service Instance to port prototype 에서 SWComponent port ref할때
                 } else if (payload.deleteName == 'pPort' || payload.deleteName == 'prPort' || payload.deleteName == 'rPort') {
@@ -8911,16 +9485,16 @@ const mutations = {
                             (ele.selectPort == 'R-PORT-PROTOTYPE' && payload.deleteName == 'rPort' && ele.porttype == (payload.path + '/' + payload.name + '/' + deleteList.name)) ||
                             (ele.selectPort == 'PR-PORT-PROTOTYPE' && payload.deleteName == 'prPort' && ele.porttype == (payload.path + '/' + payload.name + '/' + deleteList.name))) {
                             var idx = this.getters.getconnectLineNum(ele.uuid + '/toportport')
-                            ele.porttype = null
                             if (idx != -1) {
+                                ele.porttype = null
                                 EventBus.$emit('delete-line', idx)
                                 this.commit('deletConnectionline', { startnum: idx })
+                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[i].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                state.navigatorList[state.openProjectIndex].validation = true
                             }
-                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[i].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                            state.navigatorList[state.openProjectIndex].validation = true
                         }
                     })
                     if (payload.deleteName == 'pPort') {
@@ -8930,14 +9504,15 @@ const mutations = {
                                 var idx = this.getters.getconnectLineNum(ele.uuid + '/PHMViaPPort')
                                 ele.port = null
                                 if (idx != -1) {
+                                    ele.port = null
                                     EventBus.$emit('delete-line', idx)
                                     this.commit('deletConnectionline', { startnum: idx })
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].validation = true
                                 }
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[i].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                state.navigatorList[state.openProjectIndex].validation = true
                             }
                         })
                     }
@@ -8948,16 +9523,16 @@ const mutations = {
                                     ele.sdgs.forEach((item, n) => {
                                         if (item.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                             var idx = this.getters.getconnectLineNum(ele.uuid + '/PERArraySDG-' + n)
-                                            item.port = null
                                             if (idx != -1) {
+                                                item.port = null
                                                 EventBus.$emit('delete-line', idx)
                                                 this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
                                             }
-                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].validation = true
                                         }
                                     })
                                 }
@@ -8968,16 +9543,16 @@ const mutations = {
                                     ele.sdgs.forEach((item, n) => {
                                         if (item.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                             var idx = this.getters.getconnectLineNum(ele.uuid + '/PERKeyDSDG-' + n)
-                                            item.port = null
                                             if (idx != -1) {
+                                                item.port = null
                                                 EventBus.$emit('delete-line', idx)
                                                 this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
                                             }
-                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].validation = true
                                         }
                                     })
                                 }
@@ -8986,32 +9561,32 @@ const mutations = {
                         state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.forEach((ele, i) => {
                                 if (ele.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                     var idx = this.getters.getconnectLineNum(ele.uuid + '/PPPtoFilePRPort')
-                                    ele.port = null
                                     if (idx != -1) {
+                                        ele.port = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
+                                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].validation = true
                                     }
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children[i].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].validation = true
                                 }
                             })
                             //SWComponemt 변경 시 =>  PERPPtoKeyValue에서 SWComponemt PR port ref할때
                         state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.forEach((ele, i) => {
                             if (ele.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                 var idx = this.getters.getconnectLineNum(ele.uuid + '/PPPtoKeyPRPort')
-                                ele.port = null
                                 if (idx != -1) {
+                                    ele.port = null
                                     EventBus.$emit('delete-line', idx)
                                     this.commit('deletConnectionline', { startnum: idx })
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].validation = true
                                 }
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children[i].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                state.navigatorList[state.openProjectIndex].validation = true
                             }
                         })
                     }
@@ -9022,16 +9597,16 @@ const mutations = {
                                 ele.eventD.forEach((item, n) => {
                                     if (item.event == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                         var idx = this.getters.getconnectLineNum(ele.uuid + '/serviceEventD-' + n)
-                                        item.event = null
                                         if (idx != -1) {
+                                            item.event = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
                                         }
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].validation = true
                                     }
                                 })
                             }
@@ -9040,16 +9615,16 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].IamG.EventGD.forEach((ele, i) => {
                         if (ele.SIEvent == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                             var idx = this.getters.getconnectLineNum(ele.uuid + '/EGDserviceI')
-                            ele.SIEvent = null
                             if (idx != -1) {
+                                ele.SIEvent = null
                                 EventBus.$emit('delete-line', idx)
                                 this.commit('deletConnectionline', { startnum: idx })
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].children[i].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                state.navigatorList[state.openProjectIndex].validation = true
                             }
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].children[i].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                            state.navigatorList[state.openProjectIndex].validation = true
                         }
                     })
                 } else if (payload.deleteName == 'fieldSI') {
@@ -9059,16 +9634,16 @@ const mutations = {
                                 ele.fieldD.forEach((item, n) => {
                                     if (item.field == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                         var idx = this.getters.getconnectLineNum(ele.uuid + '/field-' + n)
-                                        item.field = null
                                         if (idx != -1) {
+                                            item.field = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
                                         }
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].validation = true
                                     }
                                 })
                             }
@@ -9077,16 +9652,16 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].IamG.FieldGD.forEach((ele, i) => {
                         if (ele.SIField == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                             var idx = this.getters.getconnectLineNum(ele.uuid + '/FGDserviceI')
-                            ele.SIField = null
                             if (idx != -1) {
+                                ele.SIField = null
                                 EventBus.$emit('delete-line', idx)
                                 this.commit('deletConnectionline', { startnum: idx })
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].children[i].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                state.navigatorList[state.openProjectIndex].validation = true
                             }
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].children[i].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                            state.navigatorList[state.openProjectIndex].validation = true
                         }
                     })
                 } else if (payload.deleteName == 'eventD') {
@@ -9098,16 +9673,16 @@ const mutations = {
                                         item.event.forEach((data, d) => {
                                             if (data.event == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                                 var idx = this.getters.getconnectLineNum(ele.uuid + '/event-' + d + '-' + n)
-                                                data.event = null
                                                 if (idx != -1) {
+                                                    data.event = null
                                                     EventBus.$emit('delete-line', idx)
                                                     this.commit('deletConnectionline', { startnum: idx })
+                                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
+                                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
+                                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                                    state.navigatorList[state.openProjectIndex].validation = true
                                                 }
-                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                                                state.navigatorList[state.openProjectIndex].validation = true
                                             }
                                         })
                                     }
@@ -9120,16 +9695,16 @@ const mutations = {
                             ele.eventP.forEach((item, n) => {
                                 if (item.event == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                     var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedEventP-' + n)
-                                    item.event = null
                                     if (idx != -1) {
+                                        item.event = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].validation = true
                                     }
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].validation = true
                                 }
                             })
                         }
@@ -9141,16 +9716,16 @@ const mutations = {
                                 ele.method.forEach((item, n) => {
                                     if (item.method == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                         var idx = this.getters.getconnectLineNum(ele.uuid + '/requiredMethod-' + n)
-                                        item.method = null
                                         if (idx != -1) {
+                                            item.method = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
                                         }
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].validation = true
                                     }
                                 })
                             }
@@ -9162,16 +9737,16 @@ const mutations = {
                             ele.method.forEach((item, n) => {
                                 if (item.method == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                     var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedMethod-' + n)
-                                    item.method = null
                                     if (idx != -1) {
+                                        item.method = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].validation = true
                                     }
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].validation = true
                                 }
                             })
                         }
@@ -9839,10 +10414,18 @@ const mutations = {
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'UCMSWPSWC') { //SoftWarePackage 에서 SoftWareCluster ref할때
-                var idxUCMSWP = state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxUCMSWP].provide = null
+                var idxUCMSWP = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxUCMSWP].provide = null
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].children[idxUCMSWP].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'UCMModule') { //VehiclePackage 에서 ModuleInstant ref할때
+                var idxUCMModule = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxUCMModule].ucms[tableLine[1]].module = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children[idxUCMModule].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
@@ -9995,9 +10578,7 @@ const mutations = {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.splice(idxElement, 1)
             state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.ErrorDomain_index].children.splice(idxElement, 1)
-        }
-        //////////////
-        else if (payload.parent == constant.FileArray_str) {
+        } else if (payload.parent == constant.FileArray_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Per.PERFileArray.splice(idxElement, 1)
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].children.splice(idxElement, 1)
@@ -10081,6 +10662,10 @@ const mutations = {
             idxElement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.splice(idxElement, 1)
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children.splice(idxElement, 1)
+        } else if (payload.parent == constant.ModuleInstantiation_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(data => data.uuid === payload.uuid)
+            state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.ModuleInstantiation_index].children.splice(idxElement, 1)
         }
         state.detailViewerList.forEach((data, i) => {
             if (data.uuid == payload.uuid) {
@@ -10333,6 +10918,11 @@ const mutations = {
         } else if (payload.parent == constant.VehiclePackage_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.VehiclePackage_index
+            idxService = constant.UCM_index
+            idxParent = constant.Platform_index
+        } else if (payload.parent == constant.ModuleInstantiation_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(data => data.uuid === payload.uuid)
+            idxchildchild = constant.ModuleInstantiation_index
             idxService = constant.UCM_index
             idxParent = constant.Platform_index
         }

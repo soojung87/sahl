@@ -403,7 +403,7 @@ export default({
                 this.$store.commit('addElementPERFileArray', {
                     name: this.$store.getters.getNamePERFileArray, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    sdgs: [], maxSize: '', miniSize: null, updateS: null, uri: '', files: [],
+                    sdgs: [], maxSize: '', miniSize: '', updateS: null, uri: '', files: [],
                 })
             } else if (this.activenode[0] == constant.FileProxyInterf_str) {
                 this.$store.commit('addElementPERFileProxy', {
@@ -415,7 +415,7 @@ export default({
                 this.$store.commit('addElementPERKeyValueD', {
                     name: this.$store.getters.getNamePERKeyValueD, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    maxSize: '', miniSize: null, updateS: null, uri: '', redundancy: [], keyValue: []
+                    sdgs: [], maxSize: '', miniSize: '', updateS: null, uri: '', redundancy: [], keyValue: []
                 })
             } else if (this.activenode[0] == constant.KeyValueDI_str) {
                 this.$store.commit('addElementPERKeyValueDI', {
@@ -506,12 +506,30 @@ export default({
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     fieldD: null, provide: null, role: null
                 })
+            } else if (this.activenode[0] == constant.SWCluster_str) {
+                this.$store.commit('addElementSoftWareCluster', {
+                    name: this.$store.getters.getNameSoftWareCluster, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    category: '', inVendor: '', version: '', sdgs: [], executable: [], machineD: [], toMachine: []
+                })
             } else if (this.activenode[0] == constant.SWPackage_str) {
                 this.$store.commit('addElementSoftWarePackage', {
                     name: this.$store.getters.getNameSoftWarePackage, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     action: null, activation: null, compSWPsize: '', deltaPakage: null, maximunVer: '', minimunVer: '',
                     id: '', postReboot: null, preReboot: null, swcluster: null, uncompSWCsize: ''
+                })
+            } else if (this.activenode[0] == constant.VehiclePackage_str) {
+                this.$store.commit('addElementVehiclePackage', {
+                    name: this.$store.getters.getNameVehiclePackage, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    reposi: '', sdgs: [], driver: [], rollout: [], ucms: [],
+                })
+            } else if (this.activenode[0] == constant.ModuleInstantiation_str) {
+                this.$store.commit('addElementModuleInstant', {
+                    name: this.$store.getters.getNameModuleInstant, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    ident: '',
                 })
             }
 
@@ -613,6 +631,15 @@ export default({
                         }
                     }
                     if(fir.name == constant.Service_str) {
+                        sec.children.forEach(thr => {
+                            if(thr.children.length > 0) {
+                                if(!this.openIds.some(item => item === thr.name)){
+                                    this.openIds.push(thr.name)
+                                }
+                            }
+                        })
+                    }
+                    if(fir.name == constant.Platform_str) {
                         sec.children.forEach(thr => {
                             if(thr.children.length > 0) {
                                 if(!this.openIds.some(item => item === thr.name)){

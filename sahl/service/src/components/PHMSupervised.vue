@@ -38,7 +38,7 @@
                         </div>
                         <v-card-text v-if="isCheckPOpenClose">
                             <v-data-table v-model="selectDelectCheckP" :headers="headerCheckP" :items="element.checkpoint" :items-per-page='20'
-                                    :show-select="isdeleteCheckPItem" item-key="name" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteCheckPItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -46,12 +46,12 @@
                                     <tbody>
                                         <tr v-for="(item,idx) in items" :key="idx">
                                             <td v-for="(header,key) in headers" :key="key">
-                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editCheckP(idx)" @save="cancelCheckP" large >
+                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openCheckP(idx)" @cancel="editCheckP(idx)" @save="cancelCheckP" large >
                                                     {{item[header.value]}}
                                                     <template v-slot:input>
                                                         <br>
                                                         <v-text-field v-model="editItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="editItem.id" label="Check Point ID" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="editItem.check" label="Check Point ID" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </template>
                                                 </v-edit-dialog>
                                             </td>
@@ -65,7 +65,7 @@
                                                     <template v-slot:input>
                                                         <br>
                                                         <v-text-field v-model="editItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="editItem.id" label="Check Point ID" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="editItem.check" label="Check Point ID" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </template>
                                                 </v-edit-dialog>
                                             </th>
@@ -124,10 +124,10 @@ export default {
             selectDelectCheckP: [],
             headerCheckP: [
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
-                { text: 'ID', align: 'start', sortable: false, value: 'id' },
+                { text: 'Check Point ID', align: 'start', sortable: false, value: 'check' },
             ],
             errorItem: [],
-            editItem: { name : '', id: ''},
+            editItem: { name : '', check: '', id: ''},
         }
     },
     mounted () {
@@ -193,15 +193,26 @@ export default {
             }
 
             this.element.checkpoint[idx].name = this.editItem.name
-            this.element.checkpoint[idx].id = this.editItem.id
+            this.element.checkpoint[idx].check = this.editItem.check
             this.cancelCheckP()
         },
         cancelCheckP() {
             this.editItem.name = ''
-            this.editItem.id = ''
+            this.editItem.check = ''
             this.setactiveUUID()
         },
+        openCheckP(idx) {
+            this.editItem.name = this.element.checkpoint[idx].name
+            this.editItem.check = this.element.checkpoint[idx].check
+        },
         addCheckP() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.checkpoint.some(item => item.id === n)
+            }
+            this.editItem.id = n
+
             const addObj = Object.assign({}, this.editItem)
             this.element.checkpoint.push(addObj);
             this.cancelCheckP()

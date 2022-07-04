@@ -40,7 +40,7 @@
                         </div>
                         <v-card-text v-if="isCCOpenClose">  
                             <v-data-table v-model="selectdeleteCCItem" :headers="headersCC" :items="element.connector" :items-per-page='20'
-                                    :show-select="isdeleteCCItem" item-key="name" height="100px" dense hide-default-footer id="commun-table">
+                                    :show-select="isdeleteCCItem" item-key="id" height="100px" dense hide-default-footer id="commun-table">
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -109,7 +109,7 @@
                         </div>
                         <v-card-text v-if="isSDCOpenClose"> 
                             <v-data-table v-model="selectdeleteSDCItem" :headers="headersSDC" :items="element.servicediscover" :items-per-page='20'
-                                    :show-select="isdeleteSDCItem" item-key="ssdp" style="width:100%" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteSDCItem" item-key="id" style="width:100%" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -221,8 +221,8 @@ export default {
                 { text: 'Unicast Network End Point', width:'180px', value: 'endpoint', sortable: false },
                 { text: 'Filter Data Mask', width:'120px', sortable: false, value: 'mask' },
             ],
-            editedItemCC: { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: ''},
-            defaultItemCC: { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: ''},
+            editedItemCC: { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: '', id:''},
+            defaultItemCC: { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: '', id:''},
             selectEndpointItem: [],
             headersEndpoint: [
                 { text: 'name', align: 'start', sortable: false, value: 'fullname' },
@@ -235,8 +235,8 @@ export default {
             isdeleteSDCItem: false,
             selectdeleteSDCItem: [],
             headersSDC: [
-                { text: 'Multicast-SD-Ip-Address', width:'170px', align: 'start', sortable: false, value: 'msia' },
-                { text: 'SomeIP-Service-discovery-port',width:'210px', sortable: false, value: 'ssdp' },
+                { text: 'Multicast-SD-Ip-Address', width:'170px', align: 'start', sortable: false, value: 'msia' , id:''},
+                { text: 'SomeIP-Service-discovery-port',width:'210px', sortable: false, value: 'ssdp' , id:''},
             ],
             editedItemSDC: { msia: null, ssdp: ''},
             defaultItemSDC: {  msia: null, ssdp: ''},
@@ -320,7 +320,7 @@ export default {
                 for(let i=0; i<this.element.connector.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+i)
                     if(endLine != undefined) {
-                        this.deleteChangeLineCC.push({endpoint:this.element.connector[i].endpoint, endLine:endLine})
+                        this.deleteChangeLineCC.push({id:this.element.connector[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/cctable-'+i)
                     }
                 }
@@ -331,7 +331,7 @@ export default {
 
                 for(let n=0; n<this.element.connector.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLineCC.length; idx++) {
-                        if (this.element.connector[n].endpoint == this.deleteChangeLineCC[idx].endpoint) {
+                        if (this.element.connector[n].id == this.deleteChangeLineCC[idx].id) {
                             this.newLine(this.element.uuid+'/cctable-'+n, this.element.uuid+'/cctable', this.deleteChangeLineCC[idx].endLine)
                         }
                     }
@@ -362,6 +362,13 @@ export default {
             this.setlistEthernetCluster()
         },
         addCC() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.connector.some(item => item.id === n)
+            }
+            this.editedItemCC.id = n
+
             if(this.editedItemCC.endpoint != null) {
                 var datacount = this.element.connector.length
                 this.newLine(this.element.uuid+'/cctable-'+datacount, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
@@ -438,7 +445,7 @@ export default {
                 for(let i=0; i<this.element.servicediscover.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+i)
                     if(endLine != undefined) {
-                        this.deleteChangeLineSDC.push({msia:this.element.servicediscover[i].msia, endLine:endLine})
+                        this.deleteChangeLineSDC.push({id:this.element.servicediscover[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/sdctable-'+i)
                     }
                 }
@@ -448,7 +455,7 @@ export default {
 
                 for(let n=0; n<this.element.servicediscover.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLineSDC.length; idx++) {
-                        if (this.element.servicediscover[n].msia == this.deleteChangeLineSDC[idx].msia) {
+                        if (this.element.servicediscover[n].id == this.deleteChangeLineSDC[idx].id) {
                             this.newLine(this.element.uuid+'/sdctable-'+n, this.element.uuid+'/sdctable', this.deleteChangeLineSDC[idx].endLine)
                         }
                     }
@@ -501,6 +508,13 @@ export default {
             this.setactiveUUID()
         },
         addSDC() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.servicediscover.some(item => item.id === n)
+            }
+            this.editedItemSDC.id = n
+
             if(this.editedItemSDC.msia != null) {
                 var datacount = this.element.servicediscover.length
                 this.newLine(this.element.uuid+'/sdctable-'+datacount, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)

@@ -108,7 +108,7 @@
                         </div>
                         <v-card-text v-if="isFileOpenClose">
                             <v-data-table v-model="selectDelectFile" :headers="headerFile" :items="element.files" :items-per-page='20'
-                                    :show-select="isdeleteFileItem" item-key="name" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteFileItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -116,7 +116,7 @@
                                     <tbody>
                                         <tr v-for="(item,idx) in items" :key="idx">
                                             <td v-for="(header,key) in headers" :key="key">
-                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editFile(idx)" @save="cancelFile" large >
+                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openFile(idx)" @cancel="editFile(idx)" @save="cancelFile" large >
                                                     {{item[header.value]}}
                                                     <template v-slot:input>
                                                         <br>
@@ -220,7 +220,7 @@ export default {
                 { text: 'File Name', align: 'start', sortable: false, value: 'filename' },
                 { text: 'Update Strategy', align: 'start', sortable: false, value: 'strategy' },
             ],
-            editItem: { name : '', url: '', filename: '', strategy: null},
+            editItem: { name : '', url: '', filename: '', strategy: null, id: ''},
         }
     },
     methods: {
@@ -279,7 +279,7 @@ export default {
                 for(let i=0; i<this.element.sdgs.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PERArraySDG-'+i)
                     if(endLine != undefined) {
-                        this.deleteChangeLine.push({name:this.element.sdgs[i].port, endLine:endLine})
+                        this.deleteChangeLine.push({id:this.element.sdgs[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/PERArraySDG-'+i)
                     }
                 }
@@ -289,7 +289,7 @@ export default {
 
                 for(let n=0; n<this.element.sdgs.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLine.length; idx++) {
-                        if (this.element.sdgs[n].port == this.deleteChangeLine[idx].name) {
+                        if (this.element.sdgs[n].id == this.deleteChangeLine[idx].id) {
                             this.newLine(this.element.uuid+'/PERArraySDG-'+n, this.element.uuid+'/PERArraySDG', this.deleteChangeLine[idx].endLine)
                         }
                     }
@@ -358,13 +358,18 @@ export default {
         },
         addSDGS() {
             let res = true, n = 0
-
+            var datacount = this.element.sdgs.length
             while (res) {
                 n++
                 res = this.element.sdgs.some(item => item.id === n)
             }
             this.editSDGSItem.id = n
             this.editSDGSItem.sdg = this.editSDGSItem.sdg.name
+            if( this.editSDGSItem.port != null) {
+                this.newLine(this.element.uuid+'/PERArraySDG-'+datacount, this.element.uuid+'/PERArraySDG', this.editSDGSItem.port.uuid)
+                this.editSDGSItem.port = this.editSDGSItem.port.name
+            }
+
             const addObj = Object.assign({}, this.editSDGSItem)
             this.element.sdgs.push(addObj)
             this.cancelSDGS()
@@ -427,7 +432,20 @@ export default {
             this.editItem.strategy = null
             this.setactiveUUID()
         },
+        openFile(idx) {
+            this.editItem.name = this.element.files[idx].name
+            this.editItem.url = this.element.files[idx].url
+            this.editItem.filename = this.element.files[idx].filename
+            this.editItem.strategy = this.element.files[idx].strategy
+        },
         addFile() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.files.some(item => item.id === n)
+            }
+            this.editItem.id = n
+
             const addObj = Object.assign({}, this.editItem)
             this.element.files.push(addObj)
             this.cancelFile()

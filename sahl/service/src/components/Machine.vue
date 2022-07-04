@@ -63,7 +63,7 @@
                         </div>
                         <v-card-text v-if="isHWElementOpenClose">
                             <v-data-table v-model="selectDelectHWElement" :headers="headerHWElement" :items="element.hwelement" :items-per-page='20'
-                                    :show-select="isdeleteHWElementItem" item-key="hwelement" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteHWElementItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -131,7 +131,7 @@
                         </div>
                         <v-card-text v-if="isFunctionGroupOpenClose">
                             <v-data-table v-model="selectDelectFunctionItem" :headers="headerFunctionGroup" :items="element.functiongroup" :items-per-page='20'
-                                    :show-select="isdeleteFunctionGroupItem" item-key="name" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteFunctionGroupItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -221,7 +221,7 @@
                                             </v-btn>
                                         </div>
                                         <v-data-table v-if="isCoreOpenClose" v-model="selectDelectCoreItem" :headers="headerCore" :items="tab.core" :id="element.uuid+'/processorCore-'"
-                                                :show-select="isdeleteCoreItem" item-key="name" height="100px" dense hide-default-footer :items-per-page='20'>
+                                                :show-select="isdeleteCoreItem" item-key="id" height="100px" dense hide-default-footer :items-per-page='20'>
                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                             </template>
@@ -234,7 +234,7 @@
                                                                 <template v-slot:input>
                                                                     <br>
                                                                     <v-text-field v-model="editCoreItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                    <v-text-field v-model="editCoreItem.id" label="Core ID" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                    <v-text-field v-model="editCoreItem.idCore" label="Core ID" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 </template>
                                                             </v-edit-dialog>
                                                         </td>
@@ -248,7 +248,7 @@
                                                                 <template v-slot:input>
                                                                     <br>
                                                                     <v-text-field v-model="editCoreItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                    <v-text-field v-model="editCoreItem.id" label="Core ID" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                    <v-text-field v-model="editCoreItem.idCore" label="Core ID" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 </template>
                                                             </v-edit-dialog>
                                                         </th>
@@ -298,7 +298,7 @@
                                             </v-btn>
                                         </div>
                                         <v-data-table v-if="isResourceGOpenClose" v-model="selectDelectModuleInsItem" :headers="headerModuleIns" :items="tab.resource" :id="element.uuid+'/moduleInsable'"
-                                                :show-select="isdeleteResourceGItem" item-key="name" height="100px" dense hide-default-footer :items-per-page='20'>
+                                                :show-select="isdeleteResourceGItem" item-key="id" height="100px" dense hide-default-footer :items-per-page='20'>
                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                 <v-simple-checkbox color="green" :value="isSelected" @input="select($event)" :ripple="false"></v-simple-checkbox>
                                             </template>
@@ -409,14 +409,8 @@ export default {
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
                 { text: 'Type', sortable: false, value: 'type' },
             ],
-            editFunctionItem: {
-                name: '',
-                type: null,
-            },
-            defaultfunctionItem: {
-                name: '',
-                type: null,
-            },
+            editFunctionItem: { name: '', type: null, id: '' },
+            defaultfunctionItem: { name: '', type: null, id: '' },
             deleteChangeLine : [],
 
             processortab: null,
@@ -426,16 +420,10 @@ export default {
             selectDelectCoreItem: [],
             headerCore: [
                 { text: 'Name', align: 'start', sortable: false, value: 'name'},
-                { text: 'Core ID', sortable: false, value: 'id'},
+                { text: 'Core ID', sortable: false, value: 'idCore'},
             ],
-            editCoreItem: {
-                name: '',
-                id: '',
-            },
-            defaultCoreItem: {
-                name: '',
-                id: '',
-            },
+            editCoreItem: { name: '', idCore: '', id: '' },
+            defaultCoreItem: { name: '', idCore: '', id: '' },
 
             ModuleInstab: null,
             isModuleInsOpenClose: true,
@@ -447,16 +435,8 @@ export default {
                 { text: 'CPU Usage', width:'100px', sortable: false, value: 'cpuUsage' },
                 { text: 'Memory Usage', width:'120px', sortable: false, value: 'memoryUsage' },
             ],
-            editModuleInsItem: {
-                name: '',
-                cpuUsage: '',
-                memoryUsage: ''
-            },
-            defaultModuleInsItem: {
-                name: '',
-                cpuUsage: '',
-                memoryUsage: ''
-            },
+            editModuleInsItem: { name: '',cpuUsage: '', memoryUsage: '', id: '' },
+            defaultModuleInsItem: { name: '', cpuUsage: '', memoryUsage: '', id: '' },
         }
     },
     mounted () {
@@ -633,7 +613,7 @@ export default {
                 for(let i=0; i<this.element.hwelement.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/hwelement-'+i)
                     if(endLine != undefined) {
-                        this.deleteHWLine.push({name:this.element.hwelement[i].hwelement, endLine:endLine})
+                        this.deleteHWLine.push({id:this.element.hwelement[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/hwelement-'+i)
                     }
                 }
@@ -643,7 +623,7 @@ export default {
 
                 for(let n=0; n<this.element.hwelement.length; n++) {
                     for(let idx=0; idx<this.deleteHWLine.length; idx++) {
-                        if (this.element.hwelement[n].hwelement == this.deleteHWLine[idx].name) {
+                        if (this.element.hwelement[n].id == this.deleteHWLine[idx].id) {
                             this.newLine(this.element.uuid+'/hwelement-'+n, this.element.uuid+'/hwelement', this.deleteHWLine[idx].endLine)
                         }
                     }
@@ -682,6 +662,13 @@ export default {
             this.setactiveUUID()
         },
         addHWElement() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.hwelement.some(item => item.id === n)
+            }
+            this.editHWItem.id = n
+
             if( this.editHWItem.hwelement != null) {
                 var datacount = this.element.hwelement.length
                 this.newLine(this.element.uuid+'/hwelement-'+datacount, this.element.uuid+'/hwelement', this.editHWItem.hwelement.uuid)
@@ -726,7 +713,7 @@ export default {
                 for(let i=0; i<this.element.functiongroup.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/functiontable-'+i)
                     if(endLine != undefined) {
-                        this.deleteChangeLine.push({name:this.element.functiongroup[i].name, endLine:endLine})
+                        this.deleteChangeLine.push({id:this.element.functiongroup[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/functiontable-'+i)
                     }
                 }
@@ -737,7 +724,7 @@ export default {
 
                 for(let n=0; n<this.element.functiongroup.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLine.length; idx++) {
-                        if (this.element.functiongroup[n].name == this.deleteChangeLine[idx].name) {
+                        if (this.element.functiongroup[n].id == this.deleteChangeLine[idx].id) {
                             this.newLine(this.element.uuid+'/functiontable-'+n, this.element.uuid+'/functiontable', this.deleteChangeLine[idx].endLine)
                         }
                     }
@@ -784,6 +771,13 @@ export default {
             this.setactiveUUID()
         },
         addFunctionGroup() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.functiongroup.some(item => item.id === n)
+            }
+            this.editFunctionItem.id = n
+
             if( this.editFunctionItem.type != null) {
                 var datacount = this.element.functiongroup.length
                 this.newLine(this.element.uuid+'/functiontable-'+datacount, this.element.uuid+'/functiontable', this.editFunctionItem.type.uuid)
@@ -830,11 +824,11 @@ export default {
         },
         openCore(idx, core) {
             this.editCoreItem.name = core[idx].name
-            this.editCoreItem.id = core[idx].id
+            this.editCoreItem.idCore = core[idx].idCore
         },
         editCore(idx,core) {
             core[idx].name = this.editCoreItem.name
-            core[idx].id = this.editCoreItem.id
+            core[idx].idCore = this.editCoreItem.idCore
             this.cancelCore()
         },
         cancelCore() {
@@ -842,8 +836,14 @@ export default {
             this.setactiveUUID()
         },
         addCore(idx) {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.processor[idx].core.some(item => item.id === n)
+            }
+            this.editCoreItem.id = n
+
             const addObj = Object.assign({}, this.editCoreItem)
-            console.log("addCore/// "+ idx+'//'+this.element.processor[idx].name)
             this.element.processor[idx].core.push(addObj)
             this.cancelCore()
         },
@@ -897,6 +897,13 @@ export default {
             this.setactiveUUID()
         },
         addResourceG(idx) {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.moduleinstant[idx].resource.some(item => item.id === n)
+            }
+            this.editModuleInsItem.id = n
+
             const addObj = Object.assign({}, this.editModuleInsItem)
             this.element.moduleinstant[idx].resource.push(addObj)
             this.cancelResourceG()

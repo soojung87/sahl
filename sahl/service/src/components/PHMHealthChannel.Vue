@@ -38,7 +38,7 @@
                         </div>
                         <v-card-text v-if="isStatussOpenClose">
                             <v-data-table v-model="selectDelectStatuss" :headers="headerStatus" :items="element.status" :items-per-page='20'
-                                    :show-select="isdeleteStatussItem" item-key="name" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteStatussItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -46,12 +46,12 @@
                                     <tbody>
                                         <tr v-for="(item,idx) in items" :key="idx">
                                             <td v-for="(header,key) in headers" :key="key">
-                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editStatuss(idx)" @save="cancelStatuss" large >
+                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openStatuss(idx)" @cancel="editStatuss(idx)" @save="cancelStatuss" large >
                                                     {{item[header.value]}}
                                                     <template v-slot:input>
                                                         <br>
                                                         <v-text-field v-model="editItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="editItem.id" label="Status ID" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="editItem.status" label="Status ID" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </template>
                                                 </v-edit-dialog>
                                             </td>
@@ -65,7 +65,7 @@
                                                     <template v-slot:input>
                                                         <br>
                                                         <v-text-field v-model="editItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="editItem.id" label="Status ID" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="editItem.status" label="Status ID" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </template>
                                                 </v-edit-dialog>
                                             </th>
@@ -123,9 +123,9 @@ export default {
             selectDelectStatuss: [],
             headerStatus: [
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
-                { text: 'ID', align: 'start', sortable: false, value: 'id' },
+                { text: 'Status ID', align: 'start', sortable: false, value: 'status' },
             ],
-            editItem: { name : '', id: ''},
+            editItem: { name : '', status: ''},
         }
     },
     mounted () {
@@ -190,15 +190,26 @@ export default {
                                                           changeName: 'PHMHealth', listname: this.editItem.name} )
             }
             this.element.status[idx].name = this.editItem.name
-            this.element.status[idx].id = this.editItem.id
+            this.element.status[idx].status = this.editItem.status
             this.cancelStatuss()
         },
         cancelStatuss() {
             this.editItem.name = ''
-            this.editItem.id = ''
+            this.editItem.status = ''
             this.setactiveUUID()
         },
+        openStatuss(idx) {
+            this.editItem.name = this.element.status[idx].name
+            this.editItem.status = this.element.status[idx].status
+        },
         addStatuss() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.status.some(item => item.id === n)
+            }
+            this.editItem.id = n
+
             const addObj = Object.assign({}, this.editItem)
             this.element.status.push(addObj);
             this.cancelStatuss()

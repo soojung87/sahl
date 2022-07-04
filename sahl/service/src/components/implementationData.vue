@@ -86,7 +86,7 @@
                         </div>
                         <v-card-text v-show="isDDPCOpenClose">  
                             <v-data-table v-model="selectDelectDDPCItem" :headers="headerDDPC" :items="element.ddpc" :items-per-page='20'
-                                    :show-select="isdeleteDDPCItem" item-key="compumethod" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteDDPCItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -173,7 +173,7 @@
                         </div>
                         <v-card-text v-show="isIDTElementOpenClose">  
                             <v-data-table v-model="selectDelectIDTElementItem" :headers="headerIDTElement" :items="element.idtelement" :items-per-page='20'
-                                    :show-select="isdeleteIDTElementItem" item-key="name" height="100px" dense hide-default-footer >
+                                    :show-select="isdeleteIDTElementItem" item-key="id" height="100px" dense hide-default-footer >
                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                 </template>
@@ -285,8 +285,8 @@ export default {
                 { text: 'Data Constr', sortable: false, value: 'dataconstr', width:'180px' },
             ],
             selectDelectDDPCItem: [],
-            defaultDDPCItem: { compumethod: null, dataconstr: null },
-            editDDPCItem: { compumethod: null, dataconstr: null },
+            defaultDDPCItem: { compumethod: null, dataconstr: null, id: '' },
+            editDDPCItem: { compumethod: null, dataconstr: null, id: '' },
             selCompuMethod: this.$store.getters.getCompuMethod,
             selDataConstr: this.$store.getters.getDataConstr,
             selTemplateType: this.$store.getters.getImplementationDataType,
@@ -301,8 +301,8 @@ export default {
                 { text: 'Desc', sortable: false, value: 'desc' }
             ],
             selectDelectIDTElementItem: [],
-            defaultIDTElementItem: { name: '', typeref: null, inplace: false, desc: '' },
-            editIDTElementItem: { name: '', typeref: null, inplace: false, desc: '' },
+            defaultIDTElementItem: { name: '', typeref: null, inplace: false, desc: '', id: '' },
+            editIDTElementItem: { name: '', typeref: null, inplace: false, desc: '', id: '' },
             changeLineImp: [],
             changeLineDDPC: [],
         }
@@ -393,32 +393,23 @@ export default {
                         this.deleteLine(this.element.uuid+'/ddpcdata-'+i)
                     }
                     if(endLineCom != undefined || endLineData != undefined) {
-                        this.changeLineDDPC.push({compumethod:this.element.ddpc[i].compumethod, dataconstr:this.element.ddpc[i].dataconstr, endLineCom:endLineCom, endLineData:endLineData})
+                        this.changeLineDDPC.push({endLineCom:endLineCom, endLineData:endLineData, id: this.element.ddpc[i].id})
                     }
                 }
 
                 this.element.ddpc = this.element.ddpc.filter(item => {
                          return this.selectDelectDDPCItem.indexOf(item) < 0 })
 
-                let idx = 0 
                 for(let n=0; n<this.element.ddpc.length; n++) {
-                    let rigth= true
-                    while (rigth) {
-                        //console.log('while'+ idx+'+'+this.changeLineDDPC[idx].compumethod +'+'+this.changeLineDDPC[idx].dataconstr)
-                        //console.log('while'+ idx+'+'+this.element.ddpc[n].compumethod +'+'+this.element.ddpc[n].dataconstr)
-                        if (this.element.ddpc[n].compumethod == this.changeLineDDPC[idx].compumethod &&
-                            this.element.ddpc[n].dataconstr == this.changeLineDDPC[idx].dataconstr) {
-                                rigth = false
-                                idx--
+                    for(let idx=0; idx<this.changeLineDDPC.length; idx++) {
+                        if (this.element.ddpc[n].id == this.changeLineDDPC[idx].id) {
+                            if (this.element.ddpc[n].compumethod != null) {
+                                this.newLine(this.element.uuid+'/ddpccompu-'+n, this.element.uuid+'/DDPC', this.changeLineDDPC[idx].endLineCom)
+                            }
+                            if (this.element.ddpc[n].dataconstr != null) {
+                                this.newLine(this.element.uuid+'/ddpcdata-'+n, this.element.uuid+'/DDPC', this.changeLineDDPC[idx].endLineData)
+                            }
                         }
-                        idx++
-                    }
-                    //console.log('escape')
-                    if (this.element.ddpc[n].compumethod != null) {
-                        this.newLine(this.element.uuid+'/ddpccompu-'+n, this.element.uuid+'/DDPC', this.changeLineDDPC[idx].endLineCom)
-                    }
-                    if (this.element.ddpc[n].dataconstr != null) {
-                        this.newLine(this.element.uuid+'/ddpcdata-'+n, this.element.uuid+'/DDPC', this.changeLineDDPC[idx].endLineData)
                     }
                 }
 
@@ -447,6 +438,13 @@ export default {
             }
         },
         addDDPC() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.ddpc.some(item => item.id === n)
+            }
+            this.editDDPCItem.id = n
+
             var datacount = this.element.ddpc.length
 
             if( this.editDDPCItem.compumethod != null) {
@@ -584,7 +582,7 @@ export default {
                 for(let i=0; i<this.element.idtelement.length; i++){
                     var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+i)
                     if(endLine != undefined) {
-                        this.changeLineImp.push({name:this.element.idtelement[i].name, endLine:endLine})
+                        this.changeLineImp.push({id:this.element.idtelement[i].id, endLine:endLine})
                         this.deleteLine(this.element.uuid+'/idtetable-'+i)
                     }
                 }
@@ -594,7 +592,7 @@ export default {
 
                 for(let n=0; n<this.element.idtelement.length; n++) {
                     for(let idx=0; idx<this.changeLineImp.length; idx++) {
-                        if (this.element.idtelement[n].name == this.changeLineImp[idx].name) {
+                        if (this.element.idtelement[n].id == this.changeLineImp[idx].id) {
                             this.newLine(this.element.uuid+'/idtetable-'+n, this.element.uuid+'/idtetable', this.changeLineImp[idx].endLine)
                         }
                     }
@@ -619,6 +617,13 @@ export default {
             this.editIDTElementItem.desc = this.element.idtelement[idx].desc
         },
         addIDTElement() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.idtelement.some(item => item.id === n)
+            }
+            this.editIDTElementItem.id = n
+
             if( this.editIDTElementItem.typeref != null) {
                 var datacount = this.element.idtelement.length
                 
