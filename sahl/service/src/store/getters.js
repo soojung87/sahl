@@ -341,7 +341,7 @@ const getters = {
             n = 0
 
         while (res) {
-            name = constant.FileArray_str + '_' + n++;
+            name = constant.FileProxyInterf_str + '_' + n++;
             res = state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.some(ele => ele.name === name)
         }
         return name
@@ -1013,12 +1013,44 @@ const getters = {
         })
         return datatype
     },
+    getPERFileProxy(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
     getPERKeyValueD(state) {
         var datatype = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.map(ele => {
             var returnObj = {}
             returnObj['name'] = ele.path + '/' + ele.name
             returnObj['uuid'] = ele.uuid
             return returnObj
+        })
+        return datatype
+    },
+    getPERKeyValueDI(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
+    getPERKeyValueDIData(state) { //PERKeyValueDI 안에 Data Elements
+        var datatype = []
+        state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.forEach(ele => {
+            if (ele.data.length > 0) {
+                ele.data.forEach(item => {
+                    datatype.push({
+                        name: ele.path + '/' + ele.name + '/' + item.name,
+                        uuid: ele.uuid
+                    })
+                })
+            }
         })
         return datatype
     },
@@ -1031,8 +1063,26 @@ const getters = {
         })
         return datatype
     },
+    getPHMHealth(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
     getPHMRecovery(state) {
         var datatype = state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
+    getPHMSupervised(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.map(ele => {
             var returnObj = {}
             returnObj['name'] = ele.path + '/' + ele.name
             returnObj['uuid'] = ele.uuid
@@ -1198,11 +1248,26 @@ const getters = {
     getDataPERFileArray: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].Per.PERFileArray.find(data => data.uuid === uuid)
     },
+    getDataPERFileProxy: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.find(data => data.uuid === uuid)
+    },
     getDataPERKeyValueD: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.find(data => data.uuid === uuid)
     },
+    getDataPERKeyValueDI: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.find(data => data.uuid === uuid)
+    },
+    getDataPHMContribution: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].Phm.PHMContribution.find(data => data.uuid === uuid)
+    },
+    getDataPHMHealth: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.find(data => data.uuid === uuid)
+    },
     getDataPHMRecovery: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.find(data => data.uuid === uuid)
+    },
+    getDataPHMSupervised: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.find(data => data.uuid === uuid)
     },
     getDataFieldGrantDesign: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].IamG.FieldGD.find(data => data.uuid === uuid)
@@ -1637,6 +1702,16 @@ const getters = {
         })
         return uuidRef
     },
+    getPERFileProxyPath: (state) => (keyvalue) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.forEach(data => {
+            var strPath = data.path + '/' + data.name
+            if (strPath === keyvalue) {
+                uuidRef = data.uuid
+            }
+        })
+        return uuidRef
+    },
     getPERKeyValueDPath: (state) => (keyvalue) => {
         var uuidRef = null
         state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.forEach(data => {
@@ -1644,6 +1719,18 @@ const getters = {
             if (strPath === keyvalue) {
                 uuidRef = data.uuid
             }
+        })
+        return uuidRef
+    },
+    getPERKeyValueDIPath: (state) => (keyvalue) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.forEach(data => {
+            data.data.forEach(item => {
+                var strEvent = data.path + '/' + data.name + '/' + item.name
+                if (keyvalue == strEvent) {
+                    uuidRef = data.uuid
+                }
+            })
         })
         return uuidRef
     },
@@ -1657,9 +1744,29 @@ const getters = {
         })
         return uuidRef
     },
+    getPHMHealthPath: (state) => (keyvalue) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.forEach(data => {
+            var strPath = data.path + '/' + data.name
+            if (strPath === keyvalue) {
+                uuidRef = data.uuid
+            }
+        })
+        return uuidRef
+    },
     getPHMRecoveryPath: (state) => (keyvalue) => {
         var uuidRef = null
         state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.forEach(data => {
+            var strPath = data.path + '/' + data.name
+            if (strPath === keyvalue) {
+                uuidRef = data.uuid
+            }
+        })
+        return uuidRef
+    },
+    getPHMSupervisedPath: (state) => (keyvalue) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.forEach(data => {
             var strPath = data.path + '/' + data.name
             if (strPath === keyvalue) {
                 uuidRef = data.uuid
@@ -2960,7 +3067,7 @@ const getters = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].initmode != null) {
                     saveStr += getters.getEndterStr(elementTab)
-                    saveStr += '<INITIAL-MODE-REF DEST="MODE-DECLARATION">' + state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].initmode + "</INITIAL-MODE-REF>"
+                    saveStr += '<INITIAL-MODE-REF DEST="MODE-DECLARATION">' + state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].path + '/' + state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].name + '/' + state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].initmode + "</INITIAL-MODE-REF>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[data.idx].modedeclaration.length > 0) {
                     saveStr += getters.getEndterStr(elementTab)
@@ -3077,7 +3184,49 @@ const getters = {
                             }
                             if (ele.interface != null) {
                                 saveStr += getters.getEndterStr(elementTab + 2)
-                                saveStr += '<PROVIDED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</PROVIDED-INTERFACE-TREF>"
+                                if (ele.selectI == 'SERVICE-INTERFACE') {
+                                    saveStr += '<PROVIDED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</PROVIDED-INTERFACE-TREF>"
+                                } else if (ele.selectI == 'PHM-RECOVERY-ACTION-INTERFACE') {
+                                    saveStr += '<PROVIDED-INTERFACE-TREF DEST="PHM-RECOVERY-ACTION-INTERFACE">' + ele.interface + "</PROVIDED-INTERFACE-TREF>"
+                                }
+                            }
+                            if (ele.queued.length > 0 || ele.field.length > 0) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
+                                saveStr += "<PROVIDED-COM-SPECS>"
+                                if (ele.queued.length > 0) {
+                                    ele.queued.forEach(que => {
+                                        saveStr += getters.getEndterStr(elementTab + 3)
+                                        saveStr += "<QUEUED-SENDER-COM-SPEC>"
+                                        if (que.dataE != null) {
+                                            saveStr += getters.getEndterStr(elementTab + 4)
+                                            saveStr += '<DATA-ELEMENT-REF DEST="VARIABLE-DATA-PROTOTYPE">' + que.dataE + "</DATA-ELEMENT-REF>"
+                                        }
+                                        if (que.senderCapa != null) {
+                                            saveStr += getters.getEndterStr(elementTab + 4)
+                                            saveStr += '<SENDER-CAPABILITY>' + que.senderCapa + "</SENDER-CAPABILITY>"
+                                        }
+                                        saveStr += getters.getEndterStr(elementTab + 3)
+                                        saveStr += "</QUEUED-SENDER-COM-SPEC>"
+                                    })
+                                }
+                                if (ele.field.length > 0) {
+                                    ele.field.forEach(fie => {
+                                        saveStr += getters.getEndterStr(elementTab + 3)
+                                        saveStr += "<FIELD-SENDER-COM-SPEC>"
+                                        if (fie.dataE != null) {
+                                            saveStr += getters.getEndterStr(elementTab + 4)
+                                            saveStr += '<DATA-ELEMENT-REF DEST="FIELD">' + fie.dataE + "</DATA-ELEMENT-REF>"
+                                        }
+                                        if (fie.senderCapa != null) {
+                                            saveStr += getters.getEndterStr(elementTab + 4)
+                                            saveStr += '<SENDER-CAPABILITY>' + fie.senderCapa + "</SENDER-CAPABILITY>"
+                                        }
+                                        saveStr += getters.getEndterStr(elementTab + 3)
+                                        saveStr += "</FIELD-SENDER-COM-SPEC>"
+                                    })
+                                }
+                                saveStr += getters.getEndterStr(elementTab + 2)
+                                saveStr += "</PROVIDED-COM-SPECS>"
                             }
                             saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</P-PORT-PROTOTYPE>"
@@ -3093,7 +3242,55 @@ const getters = {
                             }
                             if (ele.interface != null) {
                                 saveStr += getters.getEndterStr(elementTab + 2)
-                                saveStr += '<REQUIRED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</REQUIRED-INTERFACE-TREF>"
+                                if (ele.selectI == 'SERVICE-INTERFACE') {
+                                    saveStr += '<REQUIRED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</REQUIRED-INTERFACE-TREF>"
+                                } else if (ele.selectI == 'PHM-HEALTH-CHANNEL-INTERFACE') {
+                                    saveStr += '<REQUIRED-INTERFACE-TREF DEST="PHM-HEALTH-CHANNEL-INTERFACE">' + ele.interface + "</REQUIRED-INTERFACE-TREF>"
+                                } else if (ele.selectI == 'PHM-SUPERVISED-ENTITY-INTERFACE') {
+                                    saveStr += '<REQUIRED-INTERFACE-TREF DEST="PHM-SUPERVISED-ENTITY-INTERFACE">' + ele.interface + "</REQUIRED-INTERFACE-TREF>"
+                                }
+                            }
+                            if (ele.queued.length > 0 || ele.client.length > 0) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
+                                saveStr += "<REQUIRED-COM-SPECS>"
+                                if (ele.queued.length > 0) {
+                                    ele.queued.forEach(que => {
+                                        saveStr += getters.getEndterStr(elementTab + 3)
+                                        saveStr += "<QUEUED-RECEIVER-COM-SPEC>"
+                                        if (que.dataE != null) {
+                                            saveStr += getters.getEndterStr(elementTab + 4)
+                                            if (que.select == "VARIABLE-DATA-PROTOTYPE") {
+                                                saveStr += '<DATA-ELEMENT-REF DEST="VARIABLE-DATA-PROTOTYPE">' + que.dataE + "</DATA-ELEMENT-REF>"
+                                            } else if (que.select == "FIELD") {
+                                                saveStr += '<DATA-ELEMENT-REF DEST="FIELD">' + que.dataE + "</DATA-ELEMENT-REF>"
+                                            }
+                                        }
+                                        if (que.receiveCapa != null) {
+                                            saveStr += getters.getEndterStr(elementTab + 4)
+                                            saveStr += '<RECEIVER-CAPABILITY>' + que.receiveCapa + "</RECEIVER-CAPABILITY>"
+                                        }
+                                        saveStr += getters.getEndterStr(elementTab + 3)
+                                        saveStr += "</QUEUED-RECEIVER-COM-SPEC>"
+                                    })
+                                }
+                                if (ele.client.length > 0) {
+                                    ele.client.forEach(cl => {
+                                        saveStr += getters.getEndterStr(elementTab + 3)
+                                        saveStr += "<CLIENT-COM-SPEC>"
+                                        if (cl.operation != null) {
+                                            saveStr += getters.getEndterStr(elementTab + 4)
+                                            saveStr += '<OPERATION-REF DEST="CLIENT-SERVER-OPERATION">' + cl.operation + "</OPERATION-REF>"
+                                        }
+                                        if (cl.clientCapa != null) {
+                                            saveStr += getters.getEndterStr(elementTab + 4)
+                                            saveStr += '<CLIENT-CAPABILITY>' + cl.clientCapa + "</CLIENT-CAPABILITY>"
+                                        }
+                                        saveStr += getters.getEndterStr(elementTab + 3)
+                                        saveStr += "</CLIENT-COM-SPEC>"
+                                    })
+                                }
+                                saveStr += getters.getEndterStr(elementTab + 2)
+                                saveStr += "</REQUIRED-COM-SPECS>"
                             }
                             saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</R-PORT-PROTOTYPE>"
@@ -3109,7 +3306,29 @@ const getters = {
                             }
                             if (ele.interface != null) {
                                 saveStr += getters.getEndterStr(elementTab + 2)
-                                saveStr += '<PROVIDED-REQUIRED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</PROVIDED-REQUIRED-INTERFACE-TREF>"
+                                if (ele.selectI == 'SERVICE-INTERFACE') {
+                                    saveStr += '<PROVIDED-REQUIRED-INTERFACE-TREF DEST="SERVICE-INTERFACE">' + ele.interface + "</PROVIDED-REQUIRED-INTERFACE-TREF>"
+                                } else if (ele.selectI == 'PERSISTENCY-FILE-PROXY-INTERFACE') {
+                                    saveStr += '<PROVIDED-REQUIRED-INTERFACE-TREF DEST="PERSISTENCY-FILE-PROXY-INTERFACE">' + ele.interface + "</PROVIDED-REQUIRED-INTERFACE-TREF>"
+                                } else if (ele.selectI == 'PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE') {
+                                    saveStr += '<PROVIDED-REQUIRED-INTERFACE-TREF DEST="PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE">' + ele.interface + "</PROVIDED-REQUIRED-INTERFACE-TREF>"
+                                }
+                            }
+                            if (ele.provide.length > 0) {
+                                saveStr += getters.getEndterStr(elementTab + 2)
+                                saveStr += "<PROVIDED-COM-SPECS>"
+                                ele.provide.forEach(pro => {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "<PERSISTENCY-DATA-PROVIDED-COM-SPEC>"
+                                    if (pro.dataE != null) {
+                                        saveStr += getters.getEndterStr(elementTab + 4)
+                                        saveStr += '<DATA-ELEMENT-REF DEST="PERSISTENCY-DATA-ELEMENT">' + pro.dataE + "</DATA-ELEMENT-REF>"
+                                    }
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "</PERSISTENCY-DATA-PROVIDED-COM-SPEC>"
+                                })
+                                saveStr += getters.getEndterStr(elementTab + 2)
+                                saveStr += "</PROVIDED-COM-SPECS>"
                             }
                             saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</PR-PORT-PROTOTYPE>"
@@ -3161,6 +3380,30 @@ const getters = {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].dependent.forEach(ele => {
                         saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += "<STATE-DEPENDENT-STARTUP-CONFIG>"
+                        if (ele.exection.length > 0) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<EXECUTION-DEPENDENCYS>"
+                            ele.exection.forEach(fun => {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "<EXECUTION-DEPENDENCY>"
+                                saveStr += getters.getEndterStr(elementTab + 4)
+                                saveStr += "<PROCESS-STATE-IREF>"
+                                if (fun.contextMode != null) {
+                                    saveStr += getters.getEndterStr(elementTab + 5)
+                                    saveStr += '<CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF DEST="MODE-DECLARATION-GROUP-PROTOTYPE">' + fun.contextMode + "</CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF>"
+                                }
+                                if (fun.targetMode != null) {
+                                    saveStr += getters.getEndterStr(elementTab + 5)
+                                    saveStr += '<TARGET-MODE-DECLARATION-REF DEST="MODE-DECLARATION">' + fun.targetMode + "</TARGET-MODE-DECLARATION-REF>"
+                                }
+                                saveStr += getters.getEndterStr(elementTab + 4)
+                                saveStr += "</PROCESS-STATE-IREF>"
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "</EXECUTION-DEPENDENCY>"
+                            })
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "</EXECUTION-DEPENDENCYS>"
+                        }
                         if (ele.functionItem.length > 0) {
                             saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<FUNCTION-GROUP-STATE-IREFS>"
@@ -3328,44 +3571,61 @@ const getters = {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].name + "</SHORT-NAME>"
                 }
-                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].configname != '' ||
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].policy != null ||
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].priority != '' ||
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].entertimeout != '' ||
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].exittimeout != '') {
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].config.length > 0) {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<STARTUP-CONFIGS>"
-                    saveStr += getters.getEndterStr(elementTab + 1)
-                    saveStr += "<STARTUP-CONFIG>"
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].configname != '') {
-                        saveStr += getters.getEndterStr(elementTab + 2)
-                        saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].configname + "</SHORT-NAME>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].policy != null) {
-                        saveStr += getters.getEndterStr(elementTab + 2)
-                        saveStr += "<SCHEDULING-POLICY>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].policy + "</SCHEDULING-POLICY>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].priority != '') {
-                        saveStr += getters.getEndterStr(elementTab + 2)
-                        saveStr += "<SCHEDULING-PRIORITY>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].priority + "</SCHEDULING-PRIORITY>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].entertimeout != '' ||
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].exittimeout != '') {
-                        saveStr += getters.getEndterStr(elementTab + 2)
-                        saveStr += "<TIMEOUT>"
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].entertimeout != '') {
-                            saveStr += getters.getEndterStr(elementTab + 3)
-                            saveStr += "<ENTER-TIMEOUT-VALUE>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].entertimeout + "</ENTER-TIMEOUT-VALUE>"
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].config.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<STARTUP-CONFIG>"
+                        if (ele.configname != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SHORT-NAME>" + ele.configname + "</SHORT-NAME>"
                         }
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].exittimeout != '') {
-                            saveStr += getters.getEndterStr(elementTab + 3)
-                            saveStr += "<EXIT-TIMEOUT-VALUE>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig[data.idx].exittimeout + "</EXIT-TIMEOUT-VALUE>"
+                        if (ele.policy != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SCHEDULING-POLICY>" + ele.policy + "</SCHEDULING-POLICY>"
                         }
-                        saveStr += getters.getEndterStr(elementTab + 2)
-                        saveStr += "</TIMEOUT>"
-                    }
-                    saveStr += getters.getEndterStr(elementTab + 1)
-                    saveStr += "</STARTUP-CONFIG>"
+                        if (ele.priority != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SCHEDULING-PRIORITY>" + ele.priority + "</SCHEDULING-PRIORITY>"
+                        }
+                        if (ele.entertimeout != '' || ele.exittimeout != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<TIMEOUT>"
+                            if (ele.entertimeout != '') {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "<ENTER-TIMEOUT-VALUE>" + ele.entertimeout + "</ENTER-TIMEOUT-VALUE>"
+                            }
+                            if (ele.exittimeout != '') {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "<EXIT-TIMEOUT-VALUE>" + ele.exittimeout + "</EXIT-TIMEOUT-VALUE>"
+                            }
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "</TIMEOUT>"
+                        }
+                        if (ele.option.length > 0) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<STARTUP-OPTIONS>"
+                            ele.option.forEach(item => {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "<STARTUP-OPTION>"
+                                if (item.arg != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 4)
+                                    saveStr += "<OPTION-ARGUMENT>" + item.arg + "</OPTION-ARGUMENT>"
+                                }
+                                if (item.kind != null) {
+                                    saveStr += getters.getEndterStr(elementTab + 4)
+                                    saveStr += "<OPTION-KIND>" + item.kind + "</OPTION-KIND>"
+                                }
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "</STARTUP-OPTION>"
+                            })
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "</STARTUP-OPTIONS>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</STARTUP-CONFIG>"
+                    })
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</STARTUP-CONFIGS>"
                 }
@@ -4006,11 +4266,19 @@ const getters = {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += '<COMMUNICATION-CONNECTOR-REF DEST="ETHERNET-COMMUNICATION-CONNECTOR">' + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].ccref + "</COMMUNICATION-CONNECTOR-REF>"
                 }
-                if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].siref != null) {
+                if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].serviceI.length > 0) {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<SERVICE-INSTANCE-REFS>"
-                    saveStr += getters.getEndterStr(elementTab + 1)
-                    saveStr += '<SERVICE-INSTANCE-REF DEST="PROVIDED-SOMEIP-SERVICE-INSTANCE">' + state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].siref + "</SERVICE-INSTANCE-REF>"
+                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[data.idx].serviceI.forEach(item => {
+                        if (item.ref == 'PROVIDED-SOMEIP-SERVICE-INSTANCE' && item.service != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += '<SERVICE-INSTANCE-REF DEST="PROVIDED-SOMEIP-SERVICE-INSTANCE">' + item.service + "</SERVICE-INSTANCE-REF>"
+                        }
+                        if (item.ref == 'REQUIRED-SOMEIP-SERVICE-INSTANCE' && item.service != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += '<SERVICE-INSTANCE-REF DEST="REQUIRED-SOMEIP-SERVICE-INSTANCE">' + item.service + "</SERVICE-INSTANCE-REF>"
+                        }
+                    })
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</SERVICE-INSTANCE-REFS>"
                 }
@@ -4986,6 +5254,119 @@ const getters = {
                 }
                 saveStr += getters.getEndterStr(enterLine)
                 saveStr += "</COM-METHOD-GRANT-DESIGN>"
+            } else if (data.parent == constant.SWCluster_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<SOFTWARE-CLUSTER UUID="' + state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].category != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<CATEGORY>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].category + "</CATEGORY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].sdgs.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<ADMIN-DATA>"
+                    saveStr += getters.getEndterStr(elementTab + 1)
+                    saveStr += "<SDGS>"
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].sdgs.forEach(item => {
+                        if (item.sdg == "R20-11-CATEGORY") {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SDG GID="R20-11-CATEGORY">'
+                            if (item.sd != null) {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += '<SD GID="R20-11-CATEGORY">' + item.sd + "</SD>"
+                            }
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '</SDG>'
+                        } else if (item.sdg == 'LICENSES') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SDG GID="LICENSES">'
+                            if (item.sd != null) {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += '<SD GID="LICENSES">' + item.sd + "</SD>"
+                            }
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '</SDG>'
+                        }
+                    })
+                    saveStr += getters.getEndterStr(elementTab + 1)
+                    saveStr += "</SDGS>"
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</ADMIN-DATA>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].executable.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<CONTAINED-AR-ELEMENT-REFS>"
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].executable.forEach(item => {
+                        if (item.execut != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += '<CONTAINED-AR-ELEMENT-REF DEST="EXECUTABLE">' + item.execut + "</CONTAINED-AR-ELEMENT-REF>"
+                        }
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</CONTAINED-AR-ELEMENT-REFS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].machineD.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<CONTAINED-FIBEX-ELEMENT-REFS>"
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].machineD.forEach(item => {
+                        if (item.machine != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += '<CONTAINED-FIBEX-ELEMENT-REF DEST="MACHINE-DESIGN">' + item.machine + "</CONTAINED-FIBEX-ELEMENT-REF>"
+                        }
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</CONTAINED-FIBEX-ELEMENT-REFS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].toMachine.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<CONTAINED-PACKAGE-ELEMENT-REFS>"
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].toMachine.forEach(item => {
+                        if (item.mapping != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += '<CONTAINED-PACKAGE-ELEMENT-REF DEST="SOMEIP-SERVICE-INSTANCE-TO-MACHINE-MAPPING">' + item.mapping + "</CONTAINED-PACKAGE-ELEMENT-REF>"
+                        }
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</CONTAINED-PACKAGE-ELEMENT-REFS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].process.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<CONTAINED-PROCESS-REFS>"
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].process.forEach(item => {
+                        if (item.pro != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += '<CONTAINED-PROCESS-REF DEST="PROCESS">' + item.pro + "</CONTAINED-PROCESS-REF>"
+                        }
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</CONTAINED-PROCESS-REFS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].sswc.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SUB-SOFTWARE-CLUSTER-REFS>"
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].sswc.forEach(item => {
+                        if (item.swc != null) {
+                            saveStr += getters.getEndterStr(elementTab + 1)
+                            saveStr += '<SUB-SOFTWARE-CLUSTER-REF DEST="SOFTWARE-CLUSTER">' + item.swc + "</SUB-SOFTWARE-CLUSTER-REF>"
+                        }
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</SUB-SOFTWARE-CLUSTER-REFS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].idVendor != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<VENDOR-ID>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].idVendor + "</VENDOR-ID>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].version != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<VERSION>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[data.idx].version + "</VERSION>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</SOFTWARE-CLUSTER>"
             } else if (data.parent == constant.SWPackage_str) {
                 saveStr += getters.getEndterStr(++enterLine)
                 elementTab = enterLine + 1
@@ -5178,6 +5559,23 @@ const getters = {
     getSamePathList: (state) => (editPath) => {
         return state.strSavePath.indexOf(editPath)
     },
+    getTableNum: () => (table, id) => {
+        var idx = 0
+        table.forEach((item, i) => {
+            if (item.id == id) {
+                idx = i
+            }
+        })
+        return idx
+    },
+    getelementX() {
+        var eleX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+        return eleX
+    },
+    getelementY() {
+        var eleY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+        return eleY
+    }
 }
 
 export default getters

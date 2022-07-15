@@ -1,314 +1,322 @@
 <template>
     <div :id="element.uuid">
         <v-container>
-            <v-card outlined :color="minimaptoolbar ? null : colorToolbar">
-                <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
-                    <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
-                        <v-btn icon @click="showPERKeyValueD">
-                            <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                        </v-btn>
-                    </v-hover>
-                    <v-btn v-if="minimaptoolbar" icon @click.stop="dialogPath=true">
-                        <v-icon> mdi-routes</v-icon>
-                    </v-btn>
-                    <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
-                    <v-toolbar-title>Persistency Key Value DataBase</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                </v-toolbar>
-                <v-toolbar v-else hide-on-scroll dense flat>
-                    <v-toolbar-title>Persistency Key Value DataBase</v-toolbar-title>
-                </v-toolbar>
-                <v-card-text v-if="iselementOpenClose">
-                    <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                @input='inputPERKeyValueDName' outlined dense  @click="setactiveUUID"></v-text-field>
-                    <v-card outlined class="mx-auto">
-                        <div class="subtitle-2" :id="element.uuid+'/PERKeyDSDG'" style="height:20px">
-                            <v-hover v-slot="{ hover }">
-                                <v-btn text @click="showSDGS" x-small color="indigo">
-                                    <v-icon>{{ isSDGSOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+            <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
+                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                            <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
+                                <v-btn icon @click="showPERKeyValueD">
+                                    <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
                                 </v-btn>
                             </v-hover>
-                            Admin Data
-                            <v-btn @click="isCheckSDGS" text x-small color="indigo" v-if="isSDGSOpenClose">
-                                <v-icon>mdi-check</v-icon>
+                            <v-btn v-if="minimaptoolbar" icon @click.stop="dialogPath=true">
+                                <v-icon> mdi-routes</v-icon>
                             </v-btn>
-                            <v-btn v-if="isSDGSOpenClose && isdeleteSDGSItem" @click="deletSDGS" text x-small color="indigo">
-                                <v-icon>mdi-minus</v-icon>
-                            </v-btn>
-                        </div>
-                        <v-card-text v-if="isSDGSOpenClose">
-                            <v-data-table v-model="selectDelectSDGS" :headers="headerSDGS" :items="element.sdgs" :items-per-page='20'
-                                    :show-select="isdeleteSDGSItem" item-key="id" height="100px" dense hide-default-footer >
-                                <template v-slot:item.data-table-select="{ isSelected, select }">
-                                    <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
-                                </template>
-                                <template v-if="!isdeleteSDGSItem" v-slot:body="{ items, headers }">
-                                    <tbody>
-                                        <tr v-for="(item,idx) in items" :key="idx">
-                                            <td v-for="(header,key) in headers" :key="key">
-                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openSDGS(idx)" @cancel="editSDGS(idx)" @save="cancelSDGS" large >
-                                                    {{item[header.value]}}
-                                                    <template v-slot:input>
-                                                        <br>
-                                                        <v-autocomplete v-model='editSDGSItem.sdg' label='SDG' :items='selSDG' item-text='name' item-value="name" class="lable-placeholer-color"
-                                                                   return-object @click:clear='clearSDGS' clearable>
-                                                        </v-autocomplete>
-                                                        <v-select v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 1" v-model="editSDGSItem.sd" :items="enumSD" label="SD" @click="setactiveUUID()" outlined dense style="height: 45px;"></v-select>
-                                                        <v-autocomplete v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 2" v-model='editSDGSItem.port' label='SDX Reference' :items='selPort' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                    return-object :readonly="!isEditingPort" clearable @click="setPortSelect()" 
-                                                                    @click:clear='clearPort' @blur="isEditingPort=true" outlined dense style="height: 45px;">
-                                                        </v-autocomplete>
-                                                    </template>
-                                                </v-edit-dialog>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="3">
-                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addSDGS()" @save="cancelSDGS"> 
-                                                    <v-btn outlined color="indigo" dense text small block width="270px" >
-                                                        <v-icon >mdi-plus</v-icon>New Item
-                                                    </v-btn>
-                                                    <template v-slot:input>
-                                                        <br>
-                                                        <v-autocomplete v-model='editSDGSItem.sdg' label='SDG' :items='selSDG' item-text='name' item-value="name" class="lable-placeholer-color"
-                                                                   return-object @click:clear='clearSDGS' clearable>
-                                                        </v-autocomplete>
-                                                        <v-select v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 1" v-model="editSDGSItem.sd" :items="enumSD" label="SD" @click="setactiveUUID()" outlined dense style="height: 45px;"></v-select>
-                                                        <v-autocomplete v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 2" v-model='editSDGSItem.port' label='SDX Reference' :items='selPort' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                    return-object :readonly="!isEditingPort" clearable @click="setPortSelect()" 
-                                                                    @click:clear='clearPort' @blur="isEditingPort=true" outlined dense style="height: 45px;">
-                                                        </v-autocomplete>
-                                                    </template>
-                                                </v-edit-dialog>
-                                            </th>
-                                        </tr>
-                                    </tbody>
-                                </template>
-                            </v-data-table>
-                        </v-card-text>
-                    </v-card>
-                    <v-text-field v-model="element.maxSize" label="Max Allowed Size" placeholder="Integer" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                    <v-text-field v-model="element.miniSize" label="Minimun Sustained Size" placeholder="Integer" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                    <v-select v-model="element.updateS" :items="strategy" clearable label="Update Strategy" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
-                    <v-text-field v-model="element.uri" label="URI" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                    <v-card outlined class="mx-auto">
-                        <div class="subtitle-2" style="height:20px">
-                            <v-hover v-slot="{ hover }">
-                                <v-btn text @click="showRedundancy" x-small color="indigo">
-                                    <v-icon>{{ isRedundancyOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                                </v-btn>
-                            </v-hover>
-                            Redundancy Handlings
-                            <v-btn @click="isCheckRedundancy" text x-small color="indigo" v-if="isRedundancyOpenClose">
-                                <v-icon>mdi-check</v-icon>
-                            </v-btn>
-                            <v-btn v-if="isRedundancyOpenClose && isdeleteRedundancyItem" @click="deletRedundancy" text x-small color="indigo">
-                                <v-icon>mdi-minus</v-icon>
-                            </v-btn>
-                        </div>
-                        <v-card-text v-if="isRedundancyOpenClose">
-                            <v-data-table v-model="selectDelectRedundancy" :headers="headerRedundancy" :items="element.redundancy" :items-per-page='20'
-                                    :show-select="isdeleteRedundancyItem" item-key="id" height="100px" dense hide-default-footer >
-                                <template v-slot:item.data-table-select="{ isSelected, select }">
-                                    <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
-                                </template>
-                                <template v-if="!isdeleteRedundancyItem" v-slot:body="{ items, headers }">
-                                    <tbody>
-                                        <tr v-for="(item,idx) in items" :key="idx">
-                                            <td v-for="(header,key) in headers" :key="key">
-                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openRedundancy(idx)" @cancel="editRedundancy(idx)" @save="cancelRedundancy" large >
-                                                    {{item[header.value]}}
-                                                    <template v-slot:input>
-                                                        <br>
-                                                        <v-select v-model="editItem.scope" :items="enumScope" clearable label="Scope" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
-                                                        <v-text-field v-model="editItem.m" label="M" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="editItem.n" label="N" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                    </template>
-                                                </v-edit-dialog>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="3">
-                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addRedundancy()" @save="cancelRedundancy"> 
-                                                    <v-btn outlined color="indigo" dense text small block width="270px" >
-                                                        <v-icon >mdi-plus</v-icon>New Item
-                                                    </v-btn>
-                                                    <template v-slot:input>
-                                                        <br>
-                                                        <v-select v-model="editItem.scope" :items="enumScope" clearable label="Scope" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
-                                                        <v-text-field v-model="editItem.m" label="M" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="editItem.n" label="N" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                    </template>
-                                                </v-edit-dialog>
-                                            </th>
-                                        </tr>
-                                    </tbody>
-                                </template>
-                            </v-data-table>
-                        </v-card-text>
-                    </v-card>
-                    <v-card outlined class="mx-auto">
-                        <div class="subtitle-2" :id="element.uuid+'/PERKeyV'" style="height:20px">
-                            <v-hover v-slot="{ hover }">
-                                <v-btn text @click="showKeyValue" x-small color="indigo">
-                                    <v-icon>{{ isKeyValueOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                                </v-btn>
-                            </v-hover>
-                            Key Value Pairs
-                            <v-btn v-if="isKeyValueOpenClose" @click="addKeyValue" text x-small color="indigo">
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>
-                        </div>
-                        <v-card-text v-show="isKeyValueOpenClose">
-                        <v-tabs v-model='keyValueTab' show-arrows @change="changeKeyValueTab()">
-                            <v-tab v-for="(tab, idx) in element.keyValue" :key="idx" @click="clickKeyValuetab()"> 
-                                {{tab.name}}
-                                <v-btn text x-small @click="deleteKeyValue(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
-                        </v-tabs>
-                        <v-tabs-items v-model="keyValueTab">
-                            <v-tab-item v-for="(tab, idx) in element.keyValue" :key="idx">
-                                <v-card flat>
-                                    <v-card-text>
-                                        <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputKeyValueName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                        <v-select v-model="tab.update" :items="strategy" clearable label="Update Strategy" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
-                                        <v-row style="height: 70px">
-                                            <v-col cols="10">
-                                                <v-text-field v-model="tab.datatype" readonly @click="setDataTypeSelect()" clearable @click:clear='clearDataType()' label="Value Data Type Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="2">
-                                                <v-menu>
-                                                    <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn color="deep-purple accent-4" :id="element.uuid+'/PERDBImple'+tab.name" icon v-bind="attrs" v-on="on" @click="setDataTypeList()">
-                                                            <v-icon>mdi-menu-down-outline</v-icon>
+                            <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
+                            <v-toolbar-title>Persistency Key Value DataBase</v-toolbar-title>
+                            <v-spacer></v-spacer>
+                        </v-toolbar>
+                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
+                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
+                        </v-toolbar>
+                        <v-toolbar v-else hide-on-scroll dense flat>
+                            <v-toolbar-title>Persistency Key Value DataBase</v-toolbar-title>
+                        </v-toolbar>
+                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                            <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
+                                        @input='inputPERKeyValueDName' outlined dense  @click="setactiveUUID"></v-text-field>
+                            <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" :id="element.uuid+'/PERKeyDSDG'" style="height:20px">
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showSDGS" x-small color="indigo">
+                                            <v-icon>{{ isSDGSOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    Admin Data
+                                    <v-btn @click="isCheckSDGS" text x-small color="indigo" v-if="isSDGSOpenClose">
+                                        <v-icon>mdi-check</v-icon>
+                                    </v-btn>
+                                    <v-btn v-if="isSDGSOpenClose && isdeleteSDGSItem" @click="deletSDGS" text x-small color="indigo">
+                                        <v-icon>mdi-minus</v-icon>
+                                    </v-btn>
+                                </div>
+                                <v-card-text v-if="isSDGSOpenClose">
+                                    <v-data-table v-model="selectDelectSDGS" :headers="headerSDGS" :items="element.sdgs" :items-per-page='20'
+                                            :show-select="isdeleteSDGSItem" item-key="id" height="100px" dense hide-default-footer >
+                                        <template v-slot:item.data-table-select="{ isSelected, select }">
+                                            <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                        </template>
+                                        <template v-if="!isdeleteSDGSItem" v-slot:body="{ items, headers }">
+                                            <tbody>
+                                                <tr v-for="(item,idx) in items" :key="idx">
+                                                    <td v-for="(header,key) in headers" :key="key">
+                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openSDGS(idx)" @cancel="editSDGS(idx)" @save="cancelSDGS" large >
+                                                            {{item[header.value]}}
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-autocomplete v-model='editSDGSItem.sdg' label='SDG' :items='selSDG' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                        return-object @click:clear='clearSDGS' clearable>
+                                                                </v-autocomplete>
+                                                                <v-select v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 1" v-model="editSDGSItem.sd" :items="enumSD" label="SD" @click="setactiveUUID()" outlined dense style="height: 45px;"></v-select>
+                                                                <v-autocomplete v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 2" v-model='editSDGSItem.port' label='SDX Reference' :items='selPort' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                            return-object :readonly="!isEditingPort" clearable @click="setPortSelect()" 
+                                                                            @click:clear='clearPort' @blur="isEditingPort=true" outlined dense style="height: 45px;">
+                                                                </v-autocomplete>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="3">
+                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addSDGS()" @save="cancelSDGS"> 
+                                                            <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                            </v-btn>
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-autocomplete v-model='editSDGSItem.sdg' label='SDG' :items='selSDG' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                        return-object @click:clear='clearSDGS' clearable>
+                                                                </v-autocomplete>
+                                                                <v-select v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 1" v-model="editSDGSItem.sd" :items="enumSD" label="SD" @click="setactiveUUID()" outlined dense style="height: 45px;"></v-select>
+                                                                <v-autocomplete v-if="editSDGSItem.sdg !=null && editSDGSItem.sdg.uuid == 2" v-model='editSDGSItem.port' label='SDX Reference' :items='selPort' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                            return-object :readonly="!isEditingPort" clearable @click="setPortSelect()" 
+                                                                            @click:clear='clearPort' @blur="isEditingPort=true" outlined dense style="height: 45px;">
+                                                                </v-autocomplete>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </template>
+                                    </v-data-table>
+                                </v-card-text>
+                            </v-card>
+                            <v-text-field v-model="element.maxSize" label="Max Allowed Size" placeholder="Integer" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.miniSize" label="Minimun Sustained Size" placeholder="Integer" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-select v-model="element.updateS" :items="strategy" clearable label="Update Strategy" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                            <v-text-field v-model="element.uri" label="URI" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" style="height:20px">
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showRedundancy" x-small color="indigo">
+                                            <v-icon>{{ isRedundancyOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    Redundancy Handlings
+                                    <v-btn @click="isCheckRedundancy" text x-small color="indigo" v-if="isRedundancyOpenClose">
+                                        <v-icon>mdi-check</v-icon>
+                                    </v-btn>
+                                    <v-btn v-if="isRedundancyOpenClose && isdeleteRedundancyItem" @click="deletRedundancy" text x-small color="indigo">
+                                        <v-icon>mdi-minus</v-icon>
+                                    </v-btn>
+                                </div>
+                                <v-card-text v-if="isRedundancyOpenClose">
+                                    <v-data-table v-model="selectDelectRedundancy" :headers="headerRedundancy" :items="element.redundancy" :items-per-page='20'
+                                            :show-select="isdeleteRedundancyItem" item-key="id" height="100px" dense hide-default-footer >
+                                        <template v-slot:item.data-table-select="{ isSelected, select }">
+                                            <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                        </template>
+                                        <template v-if="!isdeleteRedundancyItem" v-slot:body="{ items, headers }">
+                                            <tbody>
+                                                <tr v-for="(item,idx) in items" :key="idx">
+                                                    <td v-for="(header,key) in headers" :key="key">
+                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openRedundancy(idx)" @cancel="editRedundancy(idx)" @save="cancelRedundancy" large >
+                                                            {{item[header.value]}}
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-select v-model="editItem.scope" :items="enumScope" clearable label="Scope" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                                <v-text-field v-model="editItem.m" label="M" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-text-field v-model="editItem.n" label="N" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="3">
+                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addRedundancy()" @save="cancelRedundancy"> 
+                                                            <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                            </v-btn>
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-select v-model="editItem.scope" :items="enumScope" clearable label="Scope" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                                <v-text-field v-model="editItem.m" label="M" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-text-field v-model="editItem.n" label="N" placeholder="Integer" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </template>
+                                    </v-data-table>
+                                </v-card-text>
+                            </v-card>
+                            <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" :id="element.uuid+'/PERKeyV'" style="height:20px">
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showKeyValue" x-small color="indigo">
+                                            <v-icon>{{ isKeyValueOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    Key Value Pairs
+                                    <v-btn v-if="isKeyValueOpenClose" @click="addKeyValue" text x-small color="indigo">
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                </div>
+                                <v-card-text v-show="isKeyValueOpenClose">
+                                <v-tabs v-model='keyValueTab' show-arrows @change="changeKeyValueTab()">
+                                    <v-tab v-for="(tab, idx) in element.keyValue" :key="idx" @click="clickKeyValuetab()"> 
+                                        {{tab.name}}
+                                        <v-btn text x-small @click="deleteKeyValue(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
+                                </v-tabs>
+                                <v-tabs-items v-model="keyValueTab">
+                                    <v-tab-item v-for="(tab, idx) in element.keyValue" :key="idx">
+                                        <v-card flat>
+                                            <v-card-text>
+                                                <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputKeyValueName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-select v-model="tab.update" :items="strategy" clearable label="Update Strategy" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                <v-row style="height: 70px">
+                                                    <v-col cols="10">
+                                                        <v-text-field v-model="tab.datatype" readonly @click="setDataTypeSelect()" clearable @click:clear='clearDataType()' label="Value Data Type Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="2">
+                                                        <v-menu>
+                                                            <template v-slot:activator="{ on, attrs }">
+                                                                <v-btn color="deep-purple accent-4" :id="element.uuid+'/PERDBImple'+tab.name" icon v-bind="attrs" v-on="on" @click="setDataTypeList()">
+                                                                    <v-icon>mdi-menu-down-outline</v-icon>
+                                                                </v-btn>
+                                                            </template>
+                                                            <v-list >
+                                                                <v-list-item v-for="(item, i) in selImplementation" :key="i" link @click="setDataType(item)">
+                                                                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                                                </v-list-item>
+                                                                <v-btn outlined color="indigo" dense text small block @click="newDataType()" >
+                                                                    <v-icon >mdi-plus</v-icon>New Item
+                                                                </v-btn>
+                                                            </v-list>
+                                                        </v-menu>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-card outlined class="mx-auto">
+                                                    <div class="subtitle-2" style="height:20px">
+                                                        <v-hover v-slot="{ hover }">
+                                                            <v-btn text @click="showArray" x-small color="indigo">
+                                                                <v-icon>{{ isArrayOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                                            </v-btn>
+                                                        </v-hover>
+                                                        Array Value Specification
+                                                        <v-btn v-if="isArrayOpenClose" @click="isCheckArray" text x-small color="indigo">
+                                                            <v-icon>mdi-check</v-icon>
                                                         </v-btn>
-                                                    </template>
-                                                    <v-list >
-                                                        <v-list-item v-for="(item, i) in selImplementation" :key="i" link @click="setDataType(item)">
-                                                            <v-list-item-title>{{ item.name }}</v-list-item-title>
-                                                        </v-list-item>
-                                                        <v-btn outlined color="indigo" dense text small block @click="newDataType()" >
-                                                            <v-icon >mdi-plus</v-icon>New Item
+                                                        <v-btn  v-if="isdeleteArray && isArrayOpenClose" @click="deleteArray" text x-small color="indigo">
+                                                            <v-icon>mdi-minus</v-icon>
                                                         </v-btn>
-                                                    </v-list>
-                                                </v-menu>
-                                            </v-col>
-                                        </v-row>
-                                        <v-card outlined class="mx-auto">
-                                            <div class="subtitle-2" style="height:20px">
-                                                <v-hover v-slot="{ hover }">
-                                                    <v-btn text @click="showArray" x-small color="indigo">
-                                                        <v-icon>{{ isArrayOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                                                    </v-btn>
-                                                </v-hover>
-                                                Array Value Specification
-                                                <v-btn v-if="isArrayOpenClose" @click="isCheckArray" text x-small color="indigo">
-                                                    <v-icon>mdi-check</v-icon>
-                                                </v-btn>
-                                                <v-btn  v-if="isdeleteArray && isArrayOpenClose" @click="deleteArray" text x-small color="indigo">
-                                                    <v-icon>mdi-minus</v-icon>
-                                                </v-btn>
-                                            </div>
-                                            <v-card-text v-show="isArrayOpenClose">
-                                                <v-data-table v-model="selDeleteArray" :headers="headerArray" :items="tab.array" :items-per-page='20'
-                                                        :show-select="isdeleteArray" item-key="id" height="100px" dense hide-default-footer >
-                                                    <template v-slot:item.data-table-select="{ isSelected, select }">
-                                                        <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
-                                                    </template>
-                                                    <template v-if="!isdeleteArray" v-slot:body="{ items, headers }">
-                                                        <tbody>
-                                                            <tr v-for="(item,idx) in items" :key="idx" >
-                                                                <td v-for="(header,key) in headers" :key="key">
-                                                                    <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openArray(idx)" @cancel="editArray(idx)" @save="cancelArray" large >
-                                                                        {{item[header.value]}}
-                                                                        <template v-slot:input>
-                                                                            <br> 
-                                                                            <v-text-field v-model="editArrayItem.value" label="Value" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="3">
-                                                                    <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addArray()" @save="cancelArray"> 
-                                                                        <v-btn outlined color="indigo" dense text small block width="270px" >
-                                                                            <v-icon >mdi-plus</v-icon>New Item
-                                                                        </v-btn>
-                                                                        <template v-slot:input>
-                                                                            <br>
-                                                                            <v-text-field v-model="editArrayItem.value" label="Value" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </th>
-                                                            </tr>
-                                                        </tbody>
-                                                    </template>
-                                                </v-data-table>
+                                                    </div>
+                                                    <v-card-text v-show="isArrayOpenClose">
+                                                        <v-data-table v-model="selDeleteArray" :headers="headerArray" :items="tab.array" :items-per-page='20'
+                                                                :show-select="isdeleteArray" item-key="id" height="100px" dense hide-default-footer >
+                                                            <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                                <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                                            </template>
+                                                            <template v-if="!isdeleteArray" v-slot:body="{ items, headers }">
+                                                                <tbody>
+                                                                    <tr v-for="(item,idx) in items" :key="idx" >
+                                                                        <td v-for="(header,key) in headers" :key="key">
+                                                                            <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openArray(idx)" @cancel="editArray(idx)" @save="cancelArray" large >
+                                                                                {{item[header.value]}}
+                                                                                <template v-slot:input>
+                                                                                    <br> 
+                                                                                    <v-text-field v-model="editArrayItem.value" label="Value" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th colspan="3">
+                                                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addArray()" @save="cancelArray"> 
+                                                                                <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                                    <v-icon >mdi-plus</v-icon>New Item
+                                                                                </v-btn>
+                                                                                <template v-slot:input>
+                                                                                    <br>
+                                                                                    <v-text-field v-model="editArrayItem.value" label="Value" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </th>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </template>
+                                                        </v-data-table>
+                                                    </v-card-text>
+                                                </v-card>
+                                                <v-card outlined class="mx-auto">
+                                                    <div class="subtitle-2" style="height:20px">
+                                                        <v-hover v-slot="{ hover }">
+                                                            <v-btn text @click="showNumerical" x-small color="indigo">
+                                                                <v-icon>{{ isNumericalOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                                            </v-btn>
+                                                        </v-hover>
+                                                        Numerical Value Specification
+                                                        <v-btn v-if="isNumericalOpenClose" @click="isCheckNumerical" text x-small color="indigo">
+                                                            <v-icon>mdi-check</v-icon>
+                                                        </v-btn>
+                                                        <v-btn  v-if="isdeleteNumerical && isNumericalOpenClose" @click="deleteNumerical" text x-small color="indigo">
+                                                            <v-icon>mdi-minus</v-icon>
+                                                        </v-btn>
+                                                    </div>
+                                                    <v-card-text v-show="isNumericalOpenClose">
+                                                        <v-data-table v-model="selDeleteNumerical" :headers="headerNumeri" :items="tab.numerical" :items-per-page='20'
+                                                                :show-select="isdeleteNumerical" item-key="id" height="100px" dense hide-default-footer >
+                                                            <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                                <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                                            </template>
+                                                            <template v-if="!isdeleteNumerical" v-slot:body="{ items, headers }">
+                                                                <tbody>
+                                                                    <tr v-for="(item,idx) in items" :key="idx" >
+                                                                        <td v-for="(header,key) in headers" :key="key">
+                                                                            <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openNumerical(idx)" @cancel="editNumerical(idx)" @save="cancelNumerical" large >
+                                                                                {{item[header.value]}}
+                                                                                <template v-slot:input>
+                                                                                    <br>
+                                                                                    <v-text-field v-model="editNumeriItem.value" label="Value" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th colspan="3">
+                                                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addNumerical()" @save="cancelNumerical"> 
+                                                                                <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                                    <v-icon >mdi-plus</v-icon>New Item
+                                                                                </v-btn>
+                                                                                <template v-slot:input>
+                                                                                    <br>
+                                                                                    <v-text-field v-model="editNumeriItem.value" label="Value" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </th>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </template>
+                                                        </v-data-table>
+                                                    </v-card-text>
+                                                </v-card>
                                             </v-card-text>
                                         </v-card>
-                                        <v-card outlined class="mx-auto">
-                                            <div class="subtitle-2" style="height:20px">
-                                                <v-hover v-slot="{ hover }">
-                                                    <v-btn text @click="showNumerical" x-small color="indigo">
-                                                        <v-icon>{{ isNumericalOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                                                    </v-btn>
-                                                </v-hover>
-                                                Numerical Value Specification
-                                                <v-btn v-if="isNumericalOpenClose" @click="isCheckNumerical" text x-small color="indigo">
-                                                    <v-icon>mdi-check</v-icon>
-                                                </v-btn>
-                                                <v-btn  v-if="isdeleteNumerical && isNumericalOpenClose" @click="deleteNumerical" text x-small color="indigo">
-                                                    <v-icon>mdi-minus</v-icon>
-                                                </v-btn>
-                                            </div>
-                                            <v-card-text v-show="isNumericalOpenClose">
-                                                <v-data-table v-model="selDeleteNumerical" :headers="headerNumeri" :items="tab.numerical" :items-per-page='20'
-                                                        :show-select="isdeleteNumerical" item-key="id" height="100px" dense hide-default-footer >
-                                                    <template v-slot:item.data-table-select="{ isSelected, select }">
-                                                        <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
-                                                    </template>
-                                                    <template v-if="!isdeleteNumerical" v-slot:body="{ items, headers }">
-                                                        <tbody>
-                                                            <tr v-for="(item,idx) in items" :key="idx" >
-                                                                <td v-for="(header,key) in headers" :key="key">
-                                                                    <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openNumerical(idx)" @cancel="editNumerical(idx)" @save="cancelNumerical" large >
-                                                                        {{item[header.value]}}
-                                                                        <template v-slot:input>
-                                                                            <br>
-                                                                            <v-text-field v-model="editNumeriItem.value" label="Value" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="3">
-                                                                    <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addNumerical()" @save="cancelNumerical"> 
-                                                                        <v-btn outlined color="indigo" dense text small block width="270px" >
-                                                                            <v-icon >mdi-plus</v-icon>New Item
-                                                                        </v-btn>
-                                                                        <template v-slot:input>
-                                                                            <br>
-                                                                            <v-text-field v-model="editNumeriItem.value" label="Value" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </th>
-                                                            </tr>
-                                                        </tbody>
-                                                    </template>
-                                                </v-data-table>
-                                            </v-card-text>
-                                        </v-card>
-                                    </v-card-text>
-                                </v-card>
-                            </v-tab-item>
-                        </v-tabs-items>
+                                    </v-tab-item>
+                                </v-tabs-items>
+                                </v-card-text>
+                            </v-card>
+                        </v-card-text>
+                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                            <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
+                                        readonly outlined dense></v-text-field>
                         </v-card-text>
                     </v-card>
-                </v-card-text>
-                <v-card-text v-else>
-                    <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                readonly outlined dense></v-text-field>
-                </v-card-text>
-            </v-card>
+                </template>
+                <span>{{ element.name }}</span>
+            </v-tooltip>
         </v-container>
     </div>
 </template>
@@ -327,7 +335,10 @@ export default {
         },
         detailViewUUID() {
             return this.$store.state.detailViewUUID
-        }
+        },
+        setting() {
+            return this.$store.state.setting
+        },
     },
     watch: {
         activeUUID(val) {
@@ -335,7 +346,15 @@ export default {
         },
         detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        }
+        },
+        setting(value) {
+            this.zoomvalue = value.zoomMain
+            if (this.zoomvalue < this.$setZoominTooltip) {
+                this.isTooltip = false
+            } else {
+                this.isTooltip = this.minimaptoolbar
+            }
+        },
     },
     created() {
         this.setToolbarColor(this.$store.state.activeUUID)
@@ -348,6 +367,8 @@ export default {
             },
             dialogPath : false,
             colorToolbar: "#6A5ACD",
+            zoomvalue: this.$store.state.setting.zoomMain,
+            isTooltip: this.minimaptoolbar,
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             isRedundancyOpenClose: true,
             isKeyValueOpenClose: true,
@@ -394,6 +415,11 @@ export default {
             editArrayItem: { value: null, id:''},
             editNumeriItem: { value: null, id:''},
             selImplementation: this.$store.getters.getImplementationDataType,
+        }
+    },
+    mounted () {
+        if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
+            this.isTooltip = false
         }
     },
     methods: {
@@ -579,6 +605,8 @@ export default {
             if (this.isEditingPort == true) {
                 if (this.editSDGSItem.port != null && this.editSDGSItem.port.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editSDGSItem.port.uuid, element: constant.SWComponents_str} )
+                    document.getElementById(this.editSDGSItem.port.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editSDGSItem.port.uuid)
                 }
                 this.setPortList()
                 this.isEditingPort = false
@@ -649,11 +677,13 @@ export default {
             }
             if (endLine != null) {
                 this.$store.commit('setDetailView', {uuid: endLine, element: constant.Implementation_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
             }
         },
         newDataType() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementImplementation', {
                     name: this.$store.getters.getNameImplementation, input: false, path: '',

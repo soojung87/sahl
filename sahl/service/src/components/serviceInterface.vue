@@ -1,445 +1,453 @@
 <template>
     <div :id="element.uuid">
         <v-container>
-            <v-card outlined :color="minimaptoolbar ? null : colorToolbar">
-                <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
-                    <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
-                    <v-btn icon @click="showServiceInterface">
-                        <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                    </v-btn>
-                    </v-hover>
-                    <v-btn v-if="minimaptoolbar" icon @click.stop="dialogPath=true">
-                        <v-icon> mdi-routes</v-icon>
-                    </v-btn>
-                    <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
-                    <v-toolbar-title>Service Interface</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                </v-toolbar>
-                <v-toolbar v-else hide-on-scroll dense flat>
-                    <v-toolbar-title>Service Interface</v-toolbar-title>
-                </v-toolbar>
-                <v-card-text v-show="iselementOpenClose"> <!-- edit -->
-                    <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                @input='inputServiceInfName' outlined dense></v-text-field>
-                    <v-text-field v-model="element.namespace" label="Name Spaces" @input='inputNameSpace' placeholder="String/String/..." style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                    <v-row>
-                        <v-col col="6">
-                            <v-text-field v-model="element.majversion" label="Major Version" placeholder="number.number" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                        </v-col>
-                        <v-col col="6">
-                            <v-text-field v-model="element.minversion" label="Minor Version" placeholder="number.number" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-checkbox v-model="element.isservice" label="Is Service" style="height: 33px;"></v-checkbox>
-                    <v-card outlined class="mx-auto">
-                        <div class="subtitle-2" :id="element.uuid+'/Eventtable'" style="height:20px">
-                            <v-hover v-slot="{ hover }">
-                                <v-btn text @click="showEventItem" x-small color="indigo">
-                                    <v-icon>{{ isEventsOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                                </v-btn>
+            <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
+                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                            <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
+                            <v-btn icon @click="showServiceInterface">
+                                <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                            </v-btn>
                             </v-hover>
-                            Event
-                            <v-btn @click="isEventCheckbox" text x-small color="indigo" v-if="isEventsOpenClose">
-                                <v-icon>mdi-check</v-icon>
+                            <v-btn v-if="minimaptoolbar" icon @click.stop="dialogPath=true">
+                                <v-icon> mdi-routes</v-icon>
                             </v-btn>
-                            <v-btn v-if="isEventsOpenClose && isdeleteEventItem" @click="deleteEventItem" text x-small color="indigo">
-                                <v-icon>mdi-minus</v-icon>
-                            </v-btn>
-                        </div>
-                        <v-card-text v-show="isEventsOpenClose">  
-                            <v-data-table v-model="selectDelectEventItem" :headers="headerEvents" :items="element.events" :items-per-page='20'
-                                    :show-select="isdeleteEventItem" item-key="id" height="100px" dense hide-default-footer >
-                                <template v-slot:item.data-table-select="{ isSelected, select }">
-                                    <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
-                                </template>
-                                <template v-if="!isdeleteEventItem" v-slot:body="{ items, headers }">
-                                    <tbody>
-                                        <tr v-for="(item,idx) in items" :key="idx">
-                                            <td v-for="(header,key) in headers" :key="key">
-                                                <v-edit-dialog v-if="header.value != 'sort'" persistent cancel-text='Ok' save-text="Cancel" @open="openEventItem(idx)" @cancel="editEventItem(idx)" @save="cancelEventItem" large >
-                                                    {{item[header.value]}}
-                                                    <template v-slot:input>
-                                                        <br>
-                                                        <v-text-field v-model="editEventsItem.name" label="name" :rules="rules.name" @click="setactiveUUID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-autocomplete v-model='editEventsItem.type' label='Date Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                   return-object :readonly="!isEditingEventDataType"  @click="setEventDataTypeSelect()" @blur="isEditingEventDataType=true"
-                                                                   @click:clear='clearEventDataType' clearable>
-                                                             <template v-slot:append-item>
-                                                                <v-btn outlined color="indigo" dense text small block @click="newDataType">
-                                                                    <v-icon >mdi-plus</v-icon>New Item
-                                                                </v-btn>
+                            <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
+                            <v-toolbar-title>Service Interface</v-toolbar-title>
+                            <v-spacer></v-spacer>
+                        </v-toolbar>
+                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
+                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
+                        </v-toolbar>
+                        <v-toolbar v-else hide-on-scroll dense flat>
+                            <v-toolbar-title>Service Interface</v-toolbar-title>
+                        </v-toolbar>
+                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement"> <!-- edit -->
+                            <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
+                                        @input='inputServiceInfName' outlined dense></v-text-field>
+                            <v-text-field v-model="element.namespace" label="Name Spaces" @input='inputNameSpace' placeholder="String/String/..." style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-row>
+                                <v-col col="6">
+                                    <v-text-field v-model="element.majversion" label="Major Version" placeholder="number.number" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                </v-col>
+                                <v-col col="6">
+                                    <v-text-field v-model="element.minversion" label="Minor Version" placeholder="number.number" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-checkbox v-model="element.isservice" label="Is Service" style="height: 33px;"></v-checkbox>
+                            <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" :id="element.uuid+'/Eventtable'" style="height:20px">
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showEventItem" x-small color="indigo">
+                                            <v-icon>{{ isEventsOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    Event
+                                    <v-btn @click="isEventCheckbox" text x-small color="indigo" v-if="isEventsOpenClose">
+                                        <v-icon>mdi-check</v-icon>
+                                    </v-btn>
+                                    <v-btn v-if="isEventsOpenClose && isdeleteEventItem" @click="deleteEventItem" text x-small color="indigo">
+                                        <v-icon>mdi-minus</v-icon>
+                                    </v-btn>
+                                </div>
+                                <v-card-text v-show="isEventsOpenClose">  
+                                    <v-data-table v-model="selectDelectEventItem" :headers="headerEvents" :items="element.events" :items-per-page='20'
+                                            :show-select="isdeleteEventItem" item-key="id" height="100px" dense hide-default-footer >
+                                        <template v-slot:item.data-table-select="{ isSelected, select }">
+                                            <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
+                                        </template>
+                                        <template v-if="!isdeleteEventItem" v-slot:body="{ items, headers }">
+                                            <tbody>
+                                                <tr v-for="(item,idx) in items" :key="idx">
+                                                    <td v-for="(header,key) in headers" :key="key">
+                                                        <v-edit-dialog v-if="header.value != 'sort'" persistent cancel-text='Ok' save-text="Cancel" @open="openEventItem(idx)" @cancel="editEventItem(idx)" @save="cancelEventItem" large >
+                                                            {{item[header.value]}}
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-text-field v-model="editEventsItem.name" label="name" :rules="rules.name" @click="setactiveUUID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-autocomplete v-model='editEventsItem.type' label='Date Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                        return-object :readonly="!isEditingEventDataType"  @click="setEventDataTypeSelect()" @blur="isEditingEventDataType=true"
+                                                                        @click:clear='clearEventDataType' clearable>
+                                                                    <template v-slot:append-item>
+                                                                        <v-btn outlined color="indigo" dense text small block @click="newDataType">
+                                                                            <v-icon >mdi-plus</v-icon>New Item
+                                                                        </v-btn>
+                                                                    </template>
+                                                                </v-autocomplete>
                                                             </template>
-                                                        </v-autocomplete>
-                                                    </template>
-                                                </v-edit-dialog>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="3">
-                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addEventItem()" @save="cancelEventItem"> 
-                                                    <v-btn outlined color="indigo" dense text small block width="270px" >
-                                                        <v-icon >mdi-plus</v-icon>New Item
-                                                    </v-btn>
-                                                    <template v-slot:input>
-                                                        <br>
-                                                        <v-text-field v-model="editEventsItem.name" label="name" :rules="rules.name" @click="setactiveUUID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-autocomplete v-model='editEventsItem.type' label='Date Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                   return-object :readonly="!isEditingEventDataType"  @click="setEventDataTypeSelect()" @blur="isEditingEventDataType=true"
-                                                                   @click:clear='clearEventDataType' clearable>
-                                                             <template v-slot:append-item>
-                                                                <v-btn outlined color="indigo" dense text small block @click="newDataType">
-                                                                    <v-icon >mdi-plus</v-icon>New Item
-                                                                </v-btn>
+                                                        </v-edit-dialog>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="3">
+                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addEventItem()" @save="cancelEventItem"> 
+                                                            <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                            </v-btn>
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-text-field v-model="editEventsItem.name" label="name" :rules="rules.name" @click="setactiveUUID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-autocomplete v-model='editEventsItem.type' label='Date Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                        return-object :readonly="!isEditingEventDataType"  @click="setEventDataTypeSelect()" @blur="isEditingEventDataType=true"
+                                                                        @click:clear='clearEventDataType' clearable>
+                                                                    <template v-slot:append-item>
+                                                                        <v-btn outlined color="indigo" dense text small block @click="newDataType">
+                                                                            <v-icon >mdi-plus</v-icon>New Item
+                                                                        </v-btn>
+                                                                    </template>
+                                                                </v-autocomplete>
                                                             </template>
-                                                        </v-autocomplete>
-                                                    </template>
-                                                </v-edit-dialog>
-                                            </th>
-                                        </tr>
-                                    </tbody>
-                                </template>
-                            </v-data-table>
+                                                        </v-edit-dialog>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </template>
+                                    </v-data-table>
+                                </v-card-text>
+                            </v-card>
+                            <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" :id="element.uuid+'/Fieldtable'" style="height:20px">
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showFieldItem" x-small color="indigo">
+                                            <v-icon>{{ isFieldOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    Field
+                                    <v-btn @click="isFieldCheckbox" text x-small color="indigo" v-if="isFieldOpenClose">
+                                        <v-icon>mdi-check</v-icon>
+                                    </v-btn>
+                                    <v-btn v-if="isFieldOpenClose && isdeleteFieldItem" @click="deleteFieldItem" text x-small color="indigo">
+                                        <v-icon>mdi-minus</v-icon>
+                                    </v-btn>
+                                </div>
+                                <v-card-text v-show="isFieldOpenClose">                            
+                                    <v-data-table v-model="selectDelectFieldItem" :headers="headerField" :items="element.fields" :items-per-page='20'
+                                                :show-select="isdeleteFieldItem" item-key="id" height="100px" dense hide-default-footer>
+                                        <template v-slot:item.data-table-select="{ isSelected, select }">
+                                            <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
+                                        </template>
+                                        <template v-if="!isdeleteFieldItem" v-slot:body="{ items, headers }">
+                                            <tbody>
+                                                <tr v-for="(item,idx) in items" :key="idx">
+                                                    <td v-for="(header,key) in headers" :key="key">
+                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openFieldItem(idx)" @cancel="editFieldItem(idx)" @save="cancelFieldItem" large >
+                                                            {{item[header.value]}}
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-text-field v-model="editFieldsItem.name" label="name" :rules="rules.name" @click="setactiveUUID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-autocomplete v-model='editFieldsItem.type' label='Date Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                        return-object :readonly="!isEditingFieldDataType"  @click="setFieldDataTypeSelect()" @blur="isEditingFieldDataType=true"
+                                                                        @click:clear='clearFieldDataType' clearable>
+                                                                    <template v-slot:append-item>
+                                                                        <v-btn outlined color="indigo" dense text small block @click="newDataType">
+                                                                            <v-icon >mdi-plus</v-icon>New Item
+                                                                        </v-btn>
+                                                                    </template>
+                                                                </v-autocomplete>
+                                                                <v-row>
+                                                                    <v-col cols="4">
+                                                                        <v-checkbox v-model="editFieldsItem.getter" label="getter" @click="setactiveUUID"></v-checkbox>
+                                                                    </v-col>
+                                                                    <v-col cols="4">
+                                                                        <v-checkbox v-model="editFieldsItem.setter" label="setter" @click="setactiveUUID"></v-checkbox>
+                                                                    </v-col>
+                                                                    <v-col cols="4">
+                                                                        <v-checkbox v-model="editFieldsItem.notifier" label="notifier" @click="setactiveUUID"></v-checkbox>
+                                                                    </v-col>
+                                                                </v-row>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="5">
+                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addFieldItem()" @save="cancelFieldItem"> <!--lager 빼면 cancel save없어진다 근데 없으면 select하고나서 엔터 안치면 값이 안바뀜 -->
+                                                            <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                            </v-btn>
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-text-field v-model="editFieldsItem.name" label="name" :rules="rules.name" @click="setactiveUUID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-autocomplete v-model='editFieldsItem.type' label='Date Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                        return-object :readonly="!isEditingFieldDataType"  @click="setFieldDataTypeSelect()" @blur="isEditingFieldDataType=true"
+                                                                        @click:clear='clearFieldDataType' clearable>
+                                                                    <template v-slot:append-item>
+                                                                        <v-btn outlined color="indigo" dense text small block @click="newDataType">
+                                                                            <v-icon >mdi-plus</v-icon>New Item
+                                                                        </v-btn>
+                                                                    </template>
+                                                                </v-autocomplete>
+                                                                <v-row>
+                                                                    <v-col cols="4">
+                                                                        <v-checkbox v-model="editFieldsItem.getter" label="getter" @click="setactiveUUID"></v-checkbox>
+                                                                    </v-col>
+                                                                    <v-col cols="4">
+                                                                        <v-checkbox v-model="editFieldsItem.setter" label="setter" @click="setactiveUUID"></v-checkbox>
+                                                                    </v-col>
+                                                                    <v-col cols="4">
+                                                                        <v-checkbox v-model="editFieldsItem.notifier" label="notifier" @click="setactiveUUID"></v-checkbox>
+                                                                    </v-col>
+                                                                </v-row>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </template>
+                                    
+                                    </v-data-table>
+                                </v-card-text>
+                            </v-card>
+                            <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" :id="element.uuid+'/methods'" style="height:20px">
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showMethodItem" x-small color="indigo">
+                                            <v-icon>{{ isMethodsOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    Method
+                                    <v-btn v-if="isMethodsOpenClose" @click="addMethod" text x-small color="indigo">
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                </div>
+                                <v-tabs v-model='methodTab' v-show="isMethodsOpenClose" show-arrows @change="changeMethodTab()">
+                                    <v-tab v-for="(tab, idx) in element.methods" :key="idx" @click="clickMethodtab()"> 
+                                        {{tab.name}}
+                                        <v-btn text x-small @click="deleteMethod(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
+                                </v-tabs>
+                                <v-tabs-items v-model="methodTab" v-show="isMethodsOpenClose">
+                                    <v-tab-item v-for="(tab, idx) in element.methods" :key="idx">
+                                        <v-card flat>
+                                            <v-card-text>
+                                                <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputMethodName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-checkbox v-model="tab.fireforget" label='Fire & Forget'></v-checkbox>
+                                                <v-card outlined class="mx-auto">
+                                                    <div class="subtitle-2" style="height:20px" :id="element.uuid+'/argtable'+tab.id">
+                                                        <v-hover v-slot="{ hover }">
+                                                            <v-btn text @click="showArgument" x-small color="indigo">
+                                                                <v-icon>{{ isArgumentOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                                            </v-btn>
+                                                        </v-hover>
+                                                        Argument Data Prototype
+                                                        <v-btn v-if="isArgumentOpenClose" @click="isCheckArg" text x-small color="indigo">
+                                                            <v-icon>mdi-check</v-icon>
+                                                        </v-btn>
+                                                        <v-btn  v-if="isdeleteArg && isArgumentOpenClose" @click="deleteArg" text x-small color="indigo">
+                                                            <v-icon>mdi-minus</v-icon>
+                                                        </v-btn>
+                                                    </div>
+                                                    <v-card-text v-show="isArgumentOpenClose">
+                                                        <v-data-table v-model="selDeleteArgItem" :headers="headerArg" :items="tab.argument" :items-per-page='20'
+                                                                :show-select="isdeleteArg" item-key="id" height="100px" dense hide-default-footer >
+                                                            <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                                <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                                            </template>
+                                                            <template v-if="!isdeleteArg" v-slot:body="{ items, headers }">
+                                                                <tbody>
+                                                                    <tr v-for="(item,idx) in items" :key="idx" >
+                                                                        <td v-for="(header,key) in headers" :key="key">
+                                                                            <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openArg(idx)" @cancel="editArg(idx)" @save="cancelArg" large >
+                                                                                {{item[header.value]}}
+                                                                                <template v-slot:input>
+                                                                                    <br> 
+                                                                                    <v-text-field v-model="editArgItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                    <v-autocomplete v-model='editArgItem.type' label='Data Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                                        return-object :readonly="!isEditingArgType" clearable @click:clear='clearArgType()' 
+                                                                                        @click="setArgTypeSelect()" @blur="isEditingArgType=true" outlined dense style="height: 45px;">
+                                                                                        <template v-slot:append-item>
+                                                                                            <v-btn outlined color="indigo" dense text small block @click="newDataType" >
+                                                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                                                            </v-btn>
+                                                                                        </template>
+                                                                                    </v-autocomplete>
+                                                                                    <v-select v-model="editArgItem.dir" clearable :items="argDirection" label="Direction" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                                                    <v-text-field v-model="editArgItem.descrip" label="Description" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th colspan="3">
+                                                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addArg()" @save="cancelArg"> 
+                                                                                <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                                    <v-icon >mdi-plus</v-icon>New Item
+                                                                                </v-btn>
+                                                                                <template v-slot:input>
+                                                                                    <br>
+                                                                                    <v-text-field v-model="editArgItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                    <v-autocomplete v-model='editArgItem.type' label='Data Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                                        return-object :readonly="!isEditingArgType" clearable @click:clear='clearArgType(tab)' 
+                                                                                        @click="setArgTypeSelect(tab)" @blur="isEditingArgType=true" outlined dense style="height: 45px;">
+                                                                                        <template v-slot:append-item>
+                                                                                            <v-btn outlined color="indigo" dense text small block @click="newDataType" >
+                                                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                                                            </v-btn>
+                                                                                        </template>
+                                                                                    </v-autocomplete>
+                                                                                    <v-select v-model="editArgItem.dir" clearable :items="argDirection" label="Direction" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                                                    <v-text-field v-model="editArgItem.descrip" label="Description" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </th>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </template>
+                                                        </v-data-table>
+                                                    </v-card-text>
+                                                </v-card>
+                                                <v-card outlined class="mx-auto">
+                                                    <div class="subtitle-2" style="height:20px" :id="element.uuid+'/methoderrors'+tab.id">
+                                                        <v-hover v-slot="{ hover }">
+                                                            <v-btn text @click="showErrorSet" x-small color="indigo">
+                                                                <v-icon>{{ isErrorSetOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                                            </v-btn>
+                                                        </v-hover>
+                                                        Possible Error Sets
+                                                        <v-btn v-if="isErrorSetOpenClose" @click="isCheckErrorSet" text x-small color="indigo">
+                                                            <v-icon>mdi-check</v-icon>
+                                                        </v-btn>
+                                                        <v-btn  v-if="isdeleteErrorSet && isErrorSetOpenClose" @click="deleteErrorSet" text x-small color="indigo">
+                                                            <v-icon>mdi-minus</v-icon>
+                                                        </v-btn>
+                                                    </div>
+                                                    <v-card-text v-show="isErrorSetOpenClose">
+                                                        <v-data-table v-model="selDeleteErrorSet" :headers="headerErrorSet" :items="tab.errorSet" :items-per-page='20'
+                                                                :show-select="isdeleteErrorSet" item-key="id" height="100px" dense hide-default-footer >
+                                                            <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                                <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                                            </template>
+                                                            <template v-if="!isdeleteErrorSet" v-slot:body="{ items, headers }">
+                                                                <tbody>
+                                                                    <tr v-for="(item,idx) in items" :key="idx" >
+                                                                        <td v-for="(header,key) in headers" :key="key">
+                                                                            <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openErrorSet(idx)" @cancel="editErrorSet(idx)" @save="cancelErrorSet" large >
+                                                                                {{item[header.value]}}
+                                                                                <template v-slot:input>
+                                                                                    <br> 
+                                                                                    <v-autocomplete v-model='editErrorSetItem.error' label='Error Reference' :items='selErrorSet' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                                        return-object :readonly="!isEditingErrorSet" clearable @click:clear='clearErrorSet()' 
+                                                                                        @click="setErrorSetSelect()" @blur="isEditingErrorSet=true" outlined dense style="height: 45px;">
+                                                                                        <template v-slot:append-item>
+                                                                                            <v-btn outlined color="indigo" dense text small block @click="newErrorSet" >
+                                                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                                                            </v-btn>
+                                                                                        </template>
+                                                                                    </v-autocomplete>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th colspan="3">
+                                                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addErrorSet()" @save="cancelErrorSet"> 
+                                                                                <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                                    <v-icon >mdi-plus</v-icon>New Item
+                                                                                </v-btn>
+                                                                                <template v-slot:input>
+                                                                                    <br>
+                                                                                    <v-autocomplete v-model='editErrorSetItem.error' label='Error Reference' :items='selErrorSet' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                                        return-object :readonly="!isEditingErrorSet" clearable @click:clear='clearErrorSet()' 
+                                                                                        @click="setErrorSetSelect()" @blur="isEditingErrorSet=true" outlined dense style="height: 45px;">
+                                                                                        <template v-slot:append-item>
+                                                                                            <v-btn outlined color="indigo" dense text small block @click="newErrorSet" >
+                                                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                                                            </v-btn>
+                                                                                        </template>
+                                                                                    </v-autocomplete> 
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </th>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </template>
+                                                        </v-data-table>
+                                                    </v-card-text>
+                                                </v-card>
+                                                <v-card outlined class="mx-auto">
+                                                    <div class="subtitle-2" style="height:20px" :id="element.uuid+'/methoderror'+tab.id">
+                                                        <v-hover v-slot="{ hover }">
+                                                            <v-btn text @click="showError" x-small color="indigo">
+                                                                <v-icon>{{ isErrorOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                                            </v-btn>
+                                                        </v-hover>
+                                                        Possible Errors
+                                                        <v-btn v-if="isErrorOpenClose" @click="isCheckError" text x-small color="indigo">
+                                                            <v-icon>mdi-check</v-icon>
+                                                        </v-btn>
+                                                        <v-btn  v-if="isdeleteError && isErrorOpenClose" @click="deleteError" text x-small color="indigo">
+                                                            <v-icon>mdi-minus</v-icon>
+                                                        </v-btn>
+                                                    </div>
+                                                    <v-card-text v-show="isErrorOpenClose">
+                                                        <v-data-table v-model="selDeleteError" :headers="headerError" :items="tab.error" :items-per-page='20'
+                                                                :show-select="isdeleteError" item-key="id" height="100px" dense hide-default-footer >
+                                                            <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                                <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                                            </template>
+                                                            <template v-if="!isdeleteError" v-slot:body="{ items, headers }">
+                                                                <tbody>
+                                                                    <tr v-for="(item,idx) in items" :key="idx" >
+                                                                        <td v-for="(header,key) in headers" :key="key">
+                                                                            <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openError(idx)" @cancel="editError(idx)" @save="cancelError" large >
+                                                                                {{item[header.value]}}
+                                                                                <template v-slot:input>
+                                                                                    <br>
+                                                                                    <v-autocomplete v-model='editErrorItem.error' label='Error Reference' :items='selError' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                                                return-object :readonly="!isEditingError" clearable @click="setErrorSelect()" 
+                                                                                                @click:clear='clearErrorRef' @blur="isEditingError=true" outlined dense style="height: 45px;">
+                                                                                        <template v-slot:append-item>
+                                                                                            <v-btn outlined color="indigo" dense text small block @click="newError">
+                                                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                                                            </v-btn>
+                                                                                        </template>
+                                                                                    </v-autocomplete>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th colspan="3">
+                                                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addError()" @save="cancelError"> 
+                                                                                <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                                    <v-icon >mdi-plus</v-icon>New Item
+                                                                                </v-btn>
+                                                                                <template v-slot:input>
+                                                                                    <br>
+                                                                                    <v-autocomplete v-model='editErrorItem.error' label='Error Reference' :items='selError' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                                                return-object :readonly="!isEditingError" clearable @click="setErrorSelect()" 
+                                                                                                @click:clear='clearErrorRef' @blur="isEditingError=true" outlined dense style="height: 45px;">
+                                                                                        <template v-slot:append-item>
+                                                                                            <v-btn outlined color="indigo" dense text small block @click="newError">
+                                                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                                                            </v-btn>
+                                                                                        </template>
+                                                                                    </v-autocomplete>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </th>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </template>
+                                                        </v-data-table>
+                                                    </v-card-text>
+                                                </v-card>
+                                                <br>
+                                                <v-text-field v-model="tab.descrip" label="Description" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                            </v-card-text>
+                                        </v-card>
+                                    </v-tab-item>
+                                </v-tabs-items>
+                            </v-card>
+                        </v-card-text>
+                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
+                            <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
+                                    outlined dense readonly></v-text-field>
                         </v-card-text>
                     </v-card>
-                    <v-card outlined class="mx-auto">
-                        <div class="subtitle-2" :id="element.uuid+'/Fieldtable'" style="height:20px">
-                            <v-hover v-slot="{ hover }">
-                                <v-btn text @click="showFieldItem" x-small color="indigo">
-                                    <v-icon>{{ isFieldOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                                </v-btn>
-                            </v-hover>
-                            Field
-                            <v-btn @click="isFieldCheckbox" text x-small color="indigo" v-if="isFieldOpenClose">
-                                <v-icon>mdi-check</v-icon>
-                            </v-btn>
-                            <v-btn v-if="isFieldOpenClose && isdeleteFieldItem" @click="deleteFieldItem" text x-small color="indigo">
-                                <v-icon>mdi-minus</v-icon>
-                            </v-btn>
-                        </div>
-                        <v-card-text v-show="isFieldOpenClose">                            
-                            <v-data-table v-model="selectDelectFieldItem" :headers="headerField" :items="element.fields" :items-per-page='20'
-                                        :show-select="isdeleteFieldItem" item-key="id" height="100px" dense hide-default-footer>
-                                <template v-slot:item.data-table-select="{ isSelected, select }">
-                                    <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
-                                </template>
-                                <template v-if="!isdeleteFieldItem" v-slot:body="{ items, headers }">
-                                    <tbody>
-                                        <tr v-for="(item,idx) in items" :key="idx">
-                                            <td v-for="(header,key) in headers" :key="key">
-                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openFieldItem(idx)" @cancel="editFieldItem(idx)" @save="cancelFieldItem" large >
-                                                    {{item[header.value]}}
-                                                    <template v-slot:input>
-                                                        <br>
-                                                        <v-text-field v-model="editFieldsItem.name" label="name" :rules="rules.name" @click="setactiveUUID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-autocomplete v-model='editFieldsItem.type' label='Date Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                   return-object :readonly="!isEditingFieldDataType"  @click="setFieldDataTypeSelect()" @blur="isEditingFieldDataType=true"
-                                                                   @click:clear='clearFieldDataType' clearable>
-                                                             <template v-slot:append-item>
-                                                                <v-btn outlined color="indigo" dense text small block @click="newDataType">
-                                                                    <v-icon >mdi-plus</v-icon>New Item
-                                                                </v-btn>
-                                                            </template>
-                                                        </v-autocomplete>
-                                                        <v-row>
-                                                            <v-col cols="4">
-                                                                <v-checkbox v-model="editFieldsItem.getter" label="getter" @click="setactiveUUID"></v-checkbox>
-                                                            </v-col>
-                                                            <v-col cols="4">
-                                                                <v-checkbox v-model="editFieldsItem.setter" label="setter" @click="setactiveUUID"></v-checkbox>
-                                                            </v-col>
-                                                            <v-col cols="4">
-                                                                <v-checkbox v-model="editFieldsItem.notifier" label="notifier" @click="setactiveUUID"></v-checkbox>
-                                                            </v-col>
-                                                        </v-row>
-                                                    </template>
-                                                </v-edit-dialog>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="5">
-                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addFieldItem()" @save="cancelFieldItem"> <!--lager 빼면 cancel save없어진다 근데 없으면 select하고나서 엔터 안치면 값이 안바뀜 -->
-                                                    <v-btn outlined color="indigo" dense text small block width="270px" >
-                                                        <v-icon >mdi-plus</v-icon>New Item
-                                                    </v-btn>
-                                                    <template v-slot:input>
-                                                        <br>
-                                                        <v-text-field v-model="editFieldsItem.name" label="name" :rules="rules.name" @click="setactiveUUID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-autocomplete v-model='editFieldsItem.type' label='Date Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                   return-object :readonly="!isEditingFieldDataType"  @click="setFieldDataTypeSelect()" @blur="isEditingFieldDataType=true"
-                                                                   @click:clear='clearFieldDataType' clearable>
-                                                             <template v-slot:append-item>
-                                                                <v-btn outlined color="indigo" dense text small block @click="newDataType">
-                                                                    <v-icon >mdi-plus</v-icon>New Item
-                                                                </v-btn>
-                                                            </template>
-                                                        </v-autocomplete>
-                                                        <v-row>
-                                                            <v-col cols="4">
-                                                                <v-checkbox v-model="editFieldsItem.getter" label="getter" @click="setactiveUUID"></v-checkbox>
-                                                            </v-col>
-                                                            <v-col cols="4">
-                                                                <v-checkbox v-model="editFieldsItem.setter" label="setter" @click="setactiveUUID"></v-checkbox>
-                                                            </v-col>
-                                                            <v-col cols="4">
-                                                                <v-checkbox v-model="editFieldsItem.notifier" label="notifier" @click="setactiveUUID"></v-checkbox>
-                                                            </v-col>
-                                                        </v-row>
-                                                    </template>
-                                                </v-edit-dialog>
-                                            </th>
-                                        </tr>
-                                    </tbody>
-                                </template>
-                               
-                            </v-data-table>
-                        </v-card-text>
-                    </v-card>
-                    <v-card outlined class="mx-auto">
-                        <div class="subtitle-2" :id="element.uuid+'/methods'" style="height:20px">
-                            <v-hover v-slot="{ hover }">
-                                <v-btn text @click="showMethodItem" x-small color="indigo">
-                                    <v-icon>{{ isMethodsOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                                </v-btn>
-                            </v-hover>
-                            Method
-                            <v-btn v-if="isMethodsOpenClose" @click="addMethod" text x-small color="indigo">
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>
-                        </div>
-                        <v-tabs v-model='methodTab' v-show="isMethodsOpenClose" show-arrows @change="changeMethodTab()">
-                            <v-tab v-for="(tab, idx) in element.methods" :key="idx" @click="clickMethodtab()"> 
-                                {{tab.name}}
-                                <v-btn text x-small @click="deleteMethod(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
-                        </v-tabs>
-                        <v-tabs-items v-model="methodTab" v-show="isMethodsOpenClose">
-                            <v-tab-item v-for="(tab, idx) in element.methods" :key="idx">
-                                <v-card flat>
-                                    <v-card-text>
-                                        <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputMethodName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                        <v-checkbox v-model="tab.fireforget" label='Fire & Forget'></v-checkbox>
-                                        <v-card outlined class="mx-auto">
-                                            <div class="subtitle-2" style="height:20px" :id="element.uuid+'/argtable'+tab.id">
-                                                <v-hover v-slot="{ hover }">
-                                                    <v-btn text @click="showArgument" x-small color="indigo">
-                                                        <v-icon>{{ isArgumentOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                                                    </v-btn>
-                                                </v-hover>
-                                                Argument Data Prototype
-                                                <v-btn v-if="isArgumentOpenClose" @click="isCheckArg" text x-small color="indigo">
-                                                    <v-icon>mdi-check</v-icon>
-                                                </v-btn>
-                                                <v-btn  v-if="isdeleteArg && isArgumentOpenClose" @click="deleteArg" text x-small color="indigo">
-                                                    <v-icon>mdi-minus</v-icon>
-                                                </v-btn>
-                                            </div>
-                                            <v-card-text v-show="isArgumentOpenClose">
-                                                <v-data-table v-model="selDeleteArgItem" :headers="headerArg" :items="tab.argument" :items-per-page='20'
-                                                        :show-select="isdeleteArg" item-key="id" height="100px" dense hide-default-footer >
-                                                    <template v-slot:item.data-table-select="{ isSelected, select }">
-                                                        <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
-                                                    </template>
-                                                    <template v-if="!isdeleteArg" v-slot:body="{ items, headers }">
-                                                        <tbody>
-                                                            <tr v-for="(item,idx) in items" :key="idx" >
-                                                                <td v-for="(header,key) in headers" :key="key">
-                                                                    <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openArg(idx)" @cancel="editArg(idx)" @save="cancelArg" large >
-                                                                        {{item[header.value]}}
-                                                                        <template v-slot:input>
-                                                                            <br> 
-                                                                            <v-text-field v-model="editArgItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                            <v-autocomplete v-model='editArgItem.type' label='Data Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                                return-object :readonly="!isEditingArgType" clearable @click:clear='clearArgType()' 
-                                                                                @click="setArgTypeSelect()" @blur="isEditingArgType=true" outlined dense style="height: 45px;">
-                                                                                <template v-slot:append-item>
-                                                                                    <v-btn outlined color="indigo" dense text small block @click="newDataType" >
-                                                                                        <v-icon >mdi-plus</v-icon>New Item
-                                                                                    </v-btn>
-                                                                                </template>
-                                                                            </v-autocomplete>
-                                                                            <v-select v-model="editArgItem.dir" clearable :items="argDirection" label="Direction" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
-                                                                            <v-text-field v-model="editArgItem.descrip" label="Description" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="3">
-                                                                    <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addArg()" @save="cancelArg"> 
-                                                                        <v-btn outlined color="indigo" dense text small block width="270px" >
-                                                                            <v-icon >mdi-plus</v-icon>New Item
-                                                                        </v-btn>
-                                                                        <template v-slot:input>
-                                                                            <br>
-                                                                            <v-text-field v-model="editArgItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                            <v-autocomplete v-model='editArgItem.type' label='Data Type' :items='seltype' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                                return-object :readonly="!isEditingArgType" clearable @click:clear='clearArgType(tab)' 
-                                                                                @click="setArgTypeSelect(tab)" @blur="isEditingArgType=true" outlined dense style="height: 45px;">
-                                                                                <template v-slot:append-item>
-                                                                                    <v-btn outlined color="indigo" dense text small block @click="newDataType" >
-                                                                                        <v-icon >mdi-plus</v-icon>New Item
-                                                                                    </v-btn>
-                                                                                </template>
-                                                                            </v-autocomplete>
-                                                                            <v-select v-model="editArgItem.dir" clearable :items="argDirection" label="Direction" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
-                                                                            <v-text-field v-model="editArgItem.descrip" label="Description" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </th>
-                                                            </tr>
-                                                        </tbody>
-                                                    </template>
-                                                </v-data-table>
-                                            </v-card-text>
-                                        </v-card>
-                                        <v-card outlined class="mx-auto">
-                                            <div class="subtitle-2" style="height:20px" :id="element.uuid+'/methoderrors'+tab.id">
-                                                <v-hover v-slot="{ hover }">
-                                                    <v-btn text @click="showErrorSet" x-small color="indigo">
-                                                        <v-icon>{{ isErrorSetOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                                                    </v-btn>
-                                                </v-hover>
-                                                Possible Error Sets
-                                                <v-btn v-if="isErrorSetOpenClose" @click="isCheckErrorSet" text x-small color="indigo">
-                                                    <v-icon>mdi-check</v-icon>
-                                                </v-btn>
-                                                <v-btn  v-if="isdeleteErrorSet && isErrorSetOpenClose" @click="deleteErrorSet" text x-small color="indigo">
-                                                    <v-icon>mdi-minus</v-icon>
-                                                </v-btn>
-                                            </div>
-                                            <v-card-text v-show="isErrorSetOpenClose">
-                                                <v-data-table v-model="selDeleteErrorSet" :headers="headerErrorSet" :items="tab.errorSet" :items-per-page='20'
-                                                        :show-select="isdeleteErrorSet" item-key="id" height="100px" dense hide-default-footer >
-                                                    <template v-slot:item.data-table-select="{ isSelected, select }">
-                                                        <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
-                                                    </template>
-                                                    <template v-if="!isdeleteErrorSet" v-slot:body="{ items, headers }">
-                                                        <tbody>
-                                                            <tr v-for="(item,idx) in items" :key="idx" >
-                                                                <td v-for="(header,key) in headers" :key="key">
-                                                                    <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openErrorSet(idx)" @cancel="editErrorSet(idx)" @save="cancelErrorSet" large >
-                                                                        {{item[header.value]}}
-                                                                        <template v-slot:input>
-                                                                            <br> 
-                                                                            <v-autocomplete v-model='editErrorSetItem.error' label='Error Reference' :items='selErrorSet' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                                return-object :readonly="!isEditingErrorSet" clearable @click:clear='clearErrorSet()' 
-                                                                                @click="setErrorSetSelect()" @blur="isEditingErrorSet=true" outlined dense style="height: 45px;">
-                                                                                <template v-slot:append-item>
-                                                                                    <v-btn outlined color="indigo" dense text small block @click="newErrorSet" >
-                                                                                        <v-icon >mdi-plus</v-icon>New Item
-                                                                                    </v-btn>
-                                                                                </template>
-                                                                            </v-autocomplete>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="3">
-                                                                    <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addErrorSet()" @save="cancelErrorSet"> 
-                                                                        <v-btn outlined color="indigo" dense text small block width="270px" >
-                                                                            <v-icon >mdi-plus</v-icon>New Item
-                                                                        </v-btn>
-                                                                        <template v-slot:input>
-                                                                            <br>
-                                                                            <v-autocomplete v-model='editErrorSetItem.error' label='Error Reference' :items='selErrorSet' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                                return-object :readonly="!isEditingErrorSet" clearable @click:clear='clearErrorSet()' 
-                                                                                @click="setErrorSetSelect()" @blur="isEditingErrorSet=true" outlined dense style="height: 45px;">
-                                                                                <template v-slot:append-item>
-                                                                                    <v-btn outlined color="indigo" dense text small block @click="newErrorSet" >
-                                                                                        <v-icon >mdi-plus</v-icon>New Item
-                                                                                    </v-btn>
-                                                                                </template>
-                                                                            </v-autocomplete> 
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </th>
-                                                            </tr>
-                                                        </tbody>
-                                                    </template>
-                                                </v-data-table>
-                                            </v-card-text>
-                                        </v-card>
-                                        <v-card outlined class="mx-auto">
-                                            <div class="subtitle-2" style="height:20px" :id="element.uuid+'/methoderror'+tab.id">
-                                                <v-hover v-slot="{ hover }">
-                                                    <v-btn text @click="showError" x-small color="indigo">
-                                                        <v-icon>{{ isErrorOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                                                    </v-btn>
-                                                </v-hover>
-                                                Possible Errors
-                                                <v-btn v-if="isErrorOpenClose" @click="isCheckError" text x-small color="indigo">
-                                                    <v-icon>mdi-check</v-icon>
-                                                </v-btn>
-                                                <v-btn  v-if="isdeleteError && isErrorOpenClose" @click="deleteError" text x-small color="indigo">
-                                                    <v-icon>mdi-minus</v-icon>
-                                                </v-btn>
-                                            </div>
-                                            <v-card-text v-show="isErrorOpenClose">
-                                                <v-data-table v-model="selDeleteError" :headers="headerError" :items="tab.error" :items-per-page='20'
-                                                        :show-select="isdeleteError" item-key="id" height="100px" dense hide-default-footer >
-                                                    <template v-slot:item.data-table-select="{ isSelected, select }">
-                                                        <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
-                                                    </template>
-                                                    <template v-if="!isdeleteError" v-slot:body="{ items, headers }">
-                                                        <tbody>
-                                                            <tr v-for="(item,idx) in items" :key="idx" >
-                                                                <td v-for="(header,key) in headers" :key="key">
-                                                                    <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openError(idx)" @cancel="editError(idx)" @save="cancelError" large >
-                                                                        {{item[header.value]}}
-                                                                        <template v-slot:input>
-                                                                            <br>
-                                                                            <v-autocomplete v-model='editErrorItem.error' label='Error Reference' :items='selError' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                                        return-object :readonly="!isEditingError" clearable @click="setErrorSelect()" 
-                                                                                        @click:clear='clearErrorRef' @blur="isEditingError=true" outlined dense style="height: 45px;">
-                                                                                <template v-slot:append-item>
-                                                                                    <v-btn outlined color="indigo" dense text small block @click="newError">
-                                                                                        <v-icon >mdi-plus</v-icon>New Item
-                                                                                    </v-btn>
-                                                                                </template>
-                                                                            </v-autocomplete>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="3">
-                                                                    <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addError()" @save="cancelError"> 
-                                                                        <v-btn outlined color="indigo" dense text small block width="270px" >
-                                                                            <v-icon >mdi-plus</v-icon>New Item
-                                                                        </v-btn>
-                                                                        <template v-slot:input>
-                                                                            <br>
-                                                                            <v-autocomplete v-model='editErrorItem.error' label='Error Reference' :items='selError' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                                        return-object :readonly="!isEditingError" clearable @click="setErrorSelect()" 
-                                                                                        @click:clear='clearErrorRef' @blur="isEditingError=true" outlined dense style="height: 45px;">
-                                                                                <template v-slot:append-item>
-                                                                                    <v-btn outlined color="indigo" dense text small block @click="newError">
-                                                                                        <v-icon >mdi-plus</v-icon>New Item
-                                                                                    </v-btn>
-                                                                                </template>
-                                                                            </v-autocomplete>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </th>
-                                                            </tr>
-                                                        </tbody>
-                                                    </template>
-                                                </v-data-table>
-                                            </v-card-text>
-                                        </v-card>
-                                        <br>
-                                        <v-text-field v-model="tab.descrip" label="Description" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                    </v-card-text>
-                                </v-card>
-                            </v-tab-item>
-                        </v-tabs-items>
-                    </v-card>
-                </v-card-text>
-                <v-card-text v-show="!iselementOpenClose">
-                    <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                            outlined dense readonly></v-text-field>
-                </v-card-text>
-            </v-card>
+                </template>
+                <span>{{ element.name }}</span>
+            </v-tooltip>
         </v-container>
     </div>
 </template>
@@ -464,7 +472,10 @@ export default {
         },
         detailViewUUID() {
             return this.$store.state.detailViewUUID
-        }
+        },
+        setting() {
+            return this.$store.state.setting
+        },
     },
     watch: {
         activeUUID(val) {
@@ -472,7 +483,15 @@ export default {
         },
         detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        }
+        },
+        setting(value) {
+            this.zoomvalue = value.zoomMain
+            if (this.zoomvalue < this.$setZoominTooltip) {
+                this.isTooltip = false
+            } else {
+                this.isTooltip = this.minimaptoolbar
+            }
+        },
     },
     created() {
         this.setToolbarColor(this.$store.state.activeUUID)
@@ -484,6 +503,8 @@ export default {
             },
             dialogPath : false,
             colorToolbar: "#6A5ACD",
+            zoomvalue: this.$store.state.setting.zoomMain,
+            isTooltip: this.minimaptoolbar,
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             isEventsOpenClose: true,
             isFieldOpenClose: true,
@@ -553,6 +574,9 @@ export default {
         }
     },
     mounted() {
+        if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
+            this.isTooltip = false
+        }
     },
     methods: {
         submitDialog(element) {
@@ -818,8 +842,8 @@ export default {
             this.$store.commit('isintoErrorList', {uuid:this.element.uuid, namespace:this.element.namespace, path:this.element.path})
         },
         newDataType() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementImplementation', {
                     name: this.$store.getters.getNameImplementation, input: false, path: '',
@@ -836,6 +860,8 @@ export default {
             if (this.isEditingEventDataType == true) {
                 if (this.editEventsItem.type != null && this.editEventsItem.type.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editEventsItem.type.uuid, element: constant.Implementation_str} )
+                    document.getElementById(this.editEventsItem.type.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editEventsItem.type.uuid)
                 }
                 this.setDataTypeList()
                 this.isEditingEventDataType = false
@@ -856,6 +882,8 @@ export default {
             if (this.isEditingFieldDataType == true) {
                 if (this.editFieldsItem.type != null && this.editFieldsItem.type.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editFieldsItem.type.uuid, element: constant.Implementation_str} )
+                    document.getElementById(this.editFieldsItem.type.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editFieldsItem.type.uuid)
                 }
                 this.setDataTypeList()
                 this.isEditingFieldDataType = false
@@ -1059,6 +1087,8 @@ export default {
             if (this.isEditingArgType == true) { 
                 if (this.editArgItem.type != null && this.editArgItem.type.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editArgItem.type.uuid, element: constant.Implementation_str} )
+                    document.getElementById(this.editArgItem.type.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editArgItem.type.uuid)
                 }
                 this.setDataTypeList()
                 this.isEditingArgType = false
@@ -1109,6 +1139,8 @@ export default {
             if (this.isEditingErrorSet == true) {
                 if (this.editErrorSetItem.error != null && this.editErrorSetItem.error.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editErrorSetItem.error.uuid, element: constant.Errorset_str} )
+                    document.getElementById(this.editErrorSetItem.error.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editErrorSetItem.error.uuid)
                 }
                 this.setErrorSetList()
                 this.isEditingErrorSet = false
@@ -1170,8 +1202,8 @@ export default {
             this.cancelErrorSet()
         },
         newErrorSet() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementErrorSet', {
                 name: this.$store.getters.getNameErrorSet, input: false, path: '',
@@ -1226,6 +1258,8 @@ export default {
             if (this.isEditingError == true) {
                 if (this.editErrorItem.error != null && this.editErrorItem.error.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editErrorItem.error.uuid, element: constant.Error_str} )
+                    document.getElementById(this.editErrorItem.error.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editErrorItem.error.uuid)
                 }
                 this.setErrorList()
                 this.isEditingError = false
@@ -1288,8 +1322,8 @@ export default {
             this.cancelError()
         },
         newError() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementError', {
                 name: this.$store.getters.getNameError, input: false, path: '',

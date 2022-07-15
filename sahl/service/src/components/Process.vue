@@ -1,270 +1,345 @@
 <template>
     <div :id="element.uuid">
         <v-container>
-            <v-card outlined :color="minimaptoolbar ? null : colorToolbar">
-                <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
-                    <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
-                        <v-btn icon @click="showProcess">
-                            <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                        </v-btn>
-                    </v-hover>
-                    <v-btn v-if="minimaptoolbar" icon @click.stop="dialogPath=true">
-                        <v-icon> mdi-routes</v-icon>
-                    </v-btn>
-                    <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
-                    <v-toolbar-title>Process</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                </v-toolbar>
-                <v-toolbar v-else hide-on-scroll dense flat>
-                    <v-toolbar-title>Process</v-toolbar-title>
-                </v-toolbar>
-                <v-card-text v-show="iselementOpenClose">
-                    <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                @input='inputProcessName' outlined dense  @click="setactiveUUID"></v-text-field>
-                    <v-row style="height: 45px">
-                        <v-col cols="10">
-                            <v-text-field v-model="element.prodesign" readonly @click="setProcessDesignSelect()" clearable @click:clear='clearProcessDesign()' label="Design Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                        </v-col>
-                        <v-col cols="2">
-                            <v-menu>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn color="deep-purple accent-4" :id="element.uuid+'/processprodesign'" dark icon v-bind="attrs" v-on="on" @click="setProcessDesignList()">
-                                        <v-icon>mdi-menu-down-outline</v-icon>
-                                    </v-btn>
-                                </template>
-                                <v-list>
-                                    <v-list-item v-for="(item, i) in selProcessDesign" :key="i" link @click="setProcessDesign(item)">
-                                        <v-list-item-title>{{ item.name }}</v-list-item-title>
-                                    </v-list-item>
-                                    <v-btn outlined color="indigo" dense text small block @click="newProcessDesign" >
-                                        <v-icon >mdi-plus</v-icon>New Item
-                                    </v-btn>
-                                </v-list>
-                            </v-menu>
-                        </v-col>
-                    </v-row>
-                    <v-row style="height: 45px">
-                        <v-col cols="10">
-                            <v-text-field v-model="element.determin" readonly @click="setDeterminSelect()" clearable @click:clear='clearDetermin()' label="Deterministric Client Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                        </v-col>
-                        <v-col cols="2">
-                            <v-menu>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn color="deep-purple accent-4" :id="element.uuid+'/processdetermin'" dark icon v-bind="attrs" v-on="on" @click="setDeterminList()">
-                                        <v-icon>mdi-menu-down-outline</v-icon>
-                                    </v-btn>
-                                </template>
-                                <v-list>
-                                    <v-list-item v-for="(item, i) in selDeterministic" :key="i" link @click="setDeterministicClient(item)">
-                                        <v-list-item-title>{{ item.name }}</v-list-item-title>
-                                    </v-list-item>
-                                    <v-btn outlined color="indigo" dense text small block @click="newDeterministicClient" >
-                                        <v-icon >mdi-plus</v-icon>New Item
-                                    </v-btn>
-                                </v-list>
-                            </v-menu>
-                        </v-col>
-                    </v-row>
-                    <v-row style="height: 70px">
-                        <v-col cols="10">
-                            <v-text-field v-model="element.execut" readonly @click="setExecutableSelect()" clearable @click:clear='clearExecutable()' label="Executable Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                        </v-col>
-                        <v-col cols="2">
-                            <v-menu>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn color="deep-purple accent-4" :id="element.uuid+'/processexecut'" dark icon v-bind="attrs" v-on="on" @click="setExecutableList()">
-                                        <v-icon>mdi-menu-down-outline</v-icon>
-                                    </v-btn>
-                                </template>
-                                <v-list>
-                                    <v-list-item v-for="(item, i) in selExecutable" :key="i" link @click="setExecutable(item)">
-                                        <v-list-item-title>{{ item.name }}</v-list-item-title>
-                                    </v-list-item>
-                                    <v-btn outlined color="indigo" dense text small block @click="newExecutable" >
-                                        <v-icon >mdi-plus</v-icon>New Item
-                                    </v-btn>
-                                </v-list>
-                            </v-menu>
-                        </v-col>
-                    </v-row>
-                    <v-card outlined class="mx-auto">
-                        <div class="subtitle-2" :id="element.uuid+'/processmodedeclar'" style="height:20px">
-                            <v-hover v-slot="{ hover }">
-                                <v-btn text @click="showStateMachine" x-small color="indigo">
-                                    <v-icon>{{ isStateMachineOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+            <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
+                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                            <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
+                                <v-btn icon @click="showProcess">
+                                    <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
                                 </v-btn>
                             </v-hover>
-                            Process State Machine
-                        </div>
-                        <v-card-text v-show="isStateMachineOpenClose">
-                            <v-text-field v-model="element.machinname" label="name" :rules="rules.name" @click="setactiveUUID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                            <v-row style="height: 70px">
+                            <v-btn v-if="minimaptoolbar" icon @click.stop="dialogPath=true">
+                                <v-icon> mdi-routes</v-icon>
+                            </v-btn>
+                            <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
+                            <v-toolbar-title>Process</v-toolbar-title>
+                            <v-spacer></v-spacer>
+                        </v-toolbar>
+                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
+                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
+                        </v-toolbar>
+                        <v-toolbar v-else hide-on-scroll dense flat>
+                            <v-toolbar-title>Process</v-toolbar-title>
+                        </v-toolbar>
+                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
+                            <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
+                                        @input='inputProcessName' outlined dense  @click="setactiveUUID"></v-text-field>
+                            <v-row style="height: 45px">
                                 <v-col cols="10">
-                                    <v-text-field v-model="element.machinetype" readonly @click="setModeDeclarationSelect()" clearable @click:clear='clearModeDeclaration()' label="Type TReference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                    <v-text-field v-model="element.prodesign" readonly @click="setProcessDesignSelect()" clearable @click:clear='clearProcessDesign()' label="Design Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                 </v-col>
                                 <v-col cols="2">
                                     <v-menu>
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-btn color="deep-purple accent-4" dark icon v-bind="attrs" v-on="on" @click="setModeDeclarationList()">
+                                            <v-btn color="deep-purple accent-4" :id="element.uuid+'/processprodesign'" dark icon v-bind="attrs" v-on="on" @click="setProcessDesignList()">
                                                 <v-icon>mdi-menu-down-outline</v-icon>
                                             </v-btn>
                                         </template>
                                         <v-list>
-                                            <v-list-item v-for="(item, i) in selModeDeclaration" :key="i" link @click="setModeDeclaration(item)">
+                                            <v-list-item v-for="(item, i) in selProcessDesign" :key="i" link @click="setProcessDesign(item)">
                                                 <v-list-item-title>{{ item.name }}</v-list-item-title>
                                             </v-list-item>
-                                            <v-btn outlined color="indigo" dense text small block @click="newModeDeclarationGroup" >
+                                            <v-btn outlined color="indigo" dense text small block @click="newProcessDesign" >
                                                 <v-icon >mdi-plus</v-icon>New Item
                                             </v-btn>
                                         </v-list>
                                     </v-menu>
                                 </v-col>
                             </v-row>
-                        </v-card-text>
-                    </v-card>
-                    <v-card outlined class="mx-auto">
-                        <div class="subtitle-2" style="height:20px" :id="element.uuid+'/processStarupC'">
-                            <v-hover v-slot="{ hover }">
-                                <v-btn text @click="showDependentStartup" x-small color="indigo">
-                                    <v-icon>{{ isDependentStartupOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
-                                </v-btn>
-                            </v-hover>
-                            State Dependent Startup Config
-                            <v-btn v-if="isDependentStartupOpenClose" @click="addDependentStartup" text x-small color="indigo">
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>
-                        </div>
-                        <v-tabs v-model='dependentStartupTab' v-show="isDependentStartupOpenClose" show-arrows @change="changeDependentStartupTab()">
-                            <v-tab v-for="(tab, idx) in element.dependent" :key="idx" @click="clickDependentStartuptab()"> 
-                                {{idx}}
-                                <v-btn text x-small @click="deleteDependentStartup(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
-                        </v-tabs>
-                        <v-tabs-items v-model="dependentStartupTab" v-show="isDependentStartupOpenClose">
-                            <v-tab-item v-for="(tab, idx) in element.dependent" :key="idx">
-                                <v-card flat>
-                                    <v-card-text>
-                                        <v-card outlined class="mx-auto">
-                                            <div class="subtitle-2" style="height:20px" :id="element.uuid+'/fgtable'+idx">
-                                                <v-hover v-slot="{ hover }">
-                                                    <v-btn text @click="showFunctionG" x-small color="indigo">
-                                                        <v-icon>{{ isFunctionGOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                            <v-row style="height: 45px">
+                                <v-col cols="10">
+                                    <v-text-field v-model="element.determin" readonly @click="setDeterminSelect()" clearable @click:clear='clearDetermin()' label="Deterministric Client Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                </v-col>
+                                <v-col cols="2">
+                                    <v-menu>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn color="deep-purple accent-4" :id="element.uuid+'/processdetermin'" dark icon v-bind="attrs" v-on="on" @click="setDeterminList()">
+                                                <v-icon>mdi-menu-down-outline</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <v-list>
+                                            <v-list-item v-for="(item, i) in selDeterministic" :key="i" link @click="setDeterministicClient(item)">
+                                                <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                            </v-list-item>
+                                            <v-btn outlined color="indigo" dense text small block @click="newDeterministicClient" >
+                                                <v-icon >mdi-plus</v-icon>New Item
+                                            </v-btn>
+                                        </v-list>
+                                    </v-menu>
+                                </v-col>
+                            </v-row>
+                            <v-row style="height: 70px">
+                                <v-col cols="10">
+                                    <v-text-field v-model="element.execut" readonly @click="setExecutableSelect()" clearable @click:clear='clearExecutable()' label="Executable Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                </v-col>
+                                <v-col cols="2">
+                                    <v-menu>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn color="deep-purple accent-4" :id="element.uuid+'/processexecut'" dark icon v-bind="attrs" v-on="on" @click="setExecutableList()">
+                                                <v-icon>mdi-menu-down-outline</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <v-list>
+                                            <v-list-item v-for="(item, i) in selExecutable" :key="i" link @click="setExecutable(item)">
+                                                <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                            </v-list-item>
+                                            <v-btn outlined color="indigo" dense text small block @click="newExecutable" >
+                                                <v-icon >mdi-plus</v-icon>New Item
+                                            </v-btn>
+                                        </v-list>
+                                    </v-menu>
+                                </v-col>
+                            </v-row>
+                            <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" :id="element.uuid+'/processmodedeclar'" style="height:20px">
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showStateMachine" x-small color="indigo">
+                                            <v-icon>{{ isStateMachineOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    Process State Machine
+                                </div>
+                                <v-card-text v-show="isStateMachineOpenClose">
+                                    <v-text-field v-model="element.machinname" label="name" :rules="rules.name" @click="setactiveUUID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                    <v-row style="height: 70px">
+                                        <v-col cols="10">
+                                            <v-text-field v-model="element.machinetype" readonly @click="setModeDeclarationSelect()" clearable @click:clear='clearModeDeclaration()' label="Type TReference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="2">
+                                            <v-menu>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn color="deep-purple accent-4" dark icon v-bind="attrs" v-on="on" @click="setModeDeclarationList()">
+                                                        <v-icon>mdi-menu-down-outline</v-icon>
                                                     </v-btn>
-                                                </v-hover>
-                                                Function Group State
-                                                <v-btn  v-if="isFunctionGOpenClose" @click="isCheckFunctionG" text x-small color="indigo">
-                                                    <v-icon>mdi-check</v-icon>
-                                                </v-btn>
-                                                <v-btn  v-if="isdeleteFunctionG && isFunctionGOpenClose" @click="deleteFunctionG" text x-small color="indigo">
-                                                    <v-icon>mdi-minus</v-icon>
-                                                </v-btn>
-                                            </div>
-                                            <v-card-text v-show="isFunctionGOpenClose">
-                                                <v-data-table v-model="selectDelectFunctionGItem" :headers="headerFunctionG" :items="tab.functionItem" :items-per-page='20'
-                                                        :show-select="isdeleteFunctionG" item-key="id" height="100px" dense hide-default-footer >
-                                                    <template v-slot:item.data-table-select="{ isSelected, select }">
-                                                        <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
-                                                    </template>
-                                                    <template v-if="!isdeleteFunctionG" v-slot:body="{ items, headers }">
-                                                        <tbody>
-                                                            <tr v-for="(item,idx) in items" :key="idx" >
-                                                                <td v-for="(header,key) in headers" :key="key">
-                                                                    <!-- <v-icon v-if="header.value == 'sort'" small class="sortHandle" >mdi-arrow-all</v-icon> -->
-                                                                    <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openFunctionG(idx)" @cancel="editFunctionG(idx)" @save="cancelFunctionG" large >
-                                                                        {{item[header.value]}}
-                                                                        <template v-slot:input>
-                                                                            <br> <!--v-autocomplete 여기에서 item의 uuid가 같을경우 item-text='name' item-value="uuid"로 해주면 uuid값이 같기 때문에 item의 list가 다 나오지 않는다 name으로 바꿔야지만 list가 잘나옴 -->
-                                                                            <v-autocomplete v-model='editFunctionGItem.contextMode' label='Context Mode Declaration Group Prototype Ref' :items='selContextMode' item-text='name' item-value="name" class="lable-placeholer-color"
-                                                                                    return-object :readonly="!isEditingContextMode" @click="setContextModeSelect()" @blur="isEditingContextMode=true" 
-                                                                                    clearable @click:clear='clearContextModeRef'>
-                                                                            </v-autocomplete>
-                                                                            <v-autocomplete v-model='editFunctionGItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="name" class="lable-placeholer-color"
-                                                                                    return-object :readonly="!isEditingTargetMode"  @click="setTargetModeSelect()" @blur="isEditingTargetMode=true" 
-                                                                                    clearable @click:clear='clearTargetModeRef'>
-                                                                            </v-autocomplete>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="3">
-                                                                    <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addFunctionG()" @save="cancelFunctionG"> 
-                                                                        <v-btn outlined color="indigo" dense text small block width="270px" >
-                                                                            <v-icon >mdi-plus</v-icon>New Item
-                                                                        </v-btn>
-                                                                        <template v-slot:input>
-                                                                            <br>
-                                                                            <v-autocomplete v-model='editFunctionGItem.contextMode' label='Context Mode Declaration Group Prototype Ref' :items='selContextMode' item-text='name' item-value="name" class="lable-placeholer-color"
-                                                                                    return-object :readonly="!isEditingContextMode" @click="setContextModeSelect()" @blur="isEditingContextMode=true" 
-                                                                                    clearable @click:clear='clearContextModeRef'>
-                                                                            </v-autocomplete>
-                                                                            <v-autocomplete v-model='editFunctionGItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="name" class="lable-placeholer-color"
-                                                                                    return-object :readonly="!isEditingTargetMode"  @click="setTargetModeSelect()" @blur="isEditingTargetMode=true" 
-                                                                                    clearable @click:clear='clearTargetModeRef'>
-                                                                            </v-autocomplete>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </th>
-                                                            </tr>
-                                                        </tbody>
-                                                    </template>
-                                                </v-data-table>
+                                                </template>
+                                                <v-list>
+                                                    <v-list-item v-for="(item, i) in selModeDeclaration" :key="i" link @click="setModeDeclaration(item)">
+                                                        <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                                    </v-list-item>
+                                                    <v-btn outlined color="indigo" dense text small block @click="newModeDeclarationGroup" >
+                                                        <v-icon >mdi-plus</v-icon>New Item
+                                                    </v-btn>
+                                                </v-list>
+                                            </v-menu>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                            <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" style="height:20px" :id="element.uuid+'/processStarupC'">
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showDependentStartup" x-small color="indigo">
+                                            <v-icon>{{ isDependentStartupOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    State Dependent Startup Config
+                                    <v-btn v-if="isDependentStartupOpenClose" @click="addDependentStartup" text x-small color="indigo">
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                </div>
+                                <v-tabs v-model='dependentStartupTab' v-show="isDependentStartupOpenClose" show-arrows @change="changeDependentStartupTab()">
+                                    <v-tab v-for="(tab, idx) in element.dependent" :key="idx" @click="clickDependentStartuptab()"> 
+                                        {{idx}}
+                                        <v-btn text x-small @click="deleteDependentStartup(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
+                                </v-tabs>
+                                <v-tabs-items v-model="dependentStartupTab" v-show="isDependentStartupOpenClose">
+                                    <v-tab-item v-for="(tab, idx) in element.dependent" :key="idx">
+                                        <v-card flat>
+                                            <v-card-text>
+                                                <v-card outlined class="mx-auto">
+                                                    <div class="subtitle-2" style="height:20px" :id="element.uuid+'/edtable'+idx">
+                                                        <v-hover v-slot="{ hover }">
+                                                            <v-btn text @click="showExecutionD" x-small color="indigo">
+                                                                <v-icon>{{ isExecutionDOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                                            </v-btn>
+                                                        </v-hover>
+                                                        Execution Dependencys
+                                                        <v-btn  v-if="isExecutionDOpenClose" @click="isCheckExecutionD" text x-small color="indigo">
+                                                            <v-icon>mdi-check</v-icon>
+                                                        </v-btn>
+                                                        <v-btn  v-if="isdeleteExecutionD && isExecutionDOpenClose" @click="deleteExecutionD" text x-small color="indigo">
+                                                            <v-icon>mdi-minus</v-icon>
+                                                        </v-btn>
+                                                    </div>
+                                                    <v-card-text v-show="isExecutionDOpenClose">
+                                                        <v-data-table v-model="selectDelectExecutionDItem" :headers="headerFunctionG" :items="tab.exection" :items-per-page='20'
+                                                                :show-select="isdeleteExecutionD" item-key="id" height="100px" dense hide-default-footer >
+                                                            <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                                <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                                            </template>
+                                                            <template v-if="!isdeleteExecutionD" v-slot:body="{ items, headers }">
+                                                                <tbody>
+                                                                    <tr v-for="(item,idx) in items" :key="idx" >
+                                                                        <td v-for="(header,key) in headers" :key="key">
+                                                                            <!-- <v-icon v-if="header.value == 'sort'" small class="sortHandle" >mdi-arrow-all</v-icon> -->
+                                                                            <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openExecutionD(idx)" @cancel="editExecutionD(idx)" @save="cancelExecutionD" large >
+                                                                                {{item[header.value]}}
+                                                                                <template v-slot:input>
+                                                                                    <br> <!--v-autocomplete 여기에서 item의 uuid가 같을경우 item-text='name' item-value="uuid"로 해주면 uuid값이 같기 때문에 item의 list가 다 나오지 않는다 name으로 바꿔야지만 list가 잘나옴 -->
+                                                                                    <v-autocomplete v-model='editExecutionDItem.contextMode' label='Context Mode Declaration Group Prototype Ref' :items='selContextMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingCM" @click="setCMSelect()" @blur="isEditingCM=true" 
+                                                                                            clearable @click:clear='clearCMRef'>
+                                                                                    </v-autocomplete>
+                                                                                    <v-autocomplete v-model='editExecutionDItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingTM"  @click="setTMSelect()" @blur="isEditingTM=true" 
+                                                                                            clearable @click:clear='clearTMRef'>
+                                                                                    </v-autocomplete>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th colspan="3">
+                                                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addExecutionD()" @save="cancelExecutionD"> 
+                                                                                <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                                    <v-icon >mdi-plus</v-icon>New Item
+                                                                                </v-btn>
+                                                                                <template v-slot:input>
+                                                                                    <br>
+                                                                                    <v-autocomplete v-model='editExecutionDItem.contextMode' label='Context Mode Declaration Group Prototype Ref' :items='selContextMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingCM" @click="setCMSelect()" @blur="isEditingCM=true" 
+                                                                                            clearable @click:clear='clearCMRef'>
+                                                                                    </v-autocomplete>
+                                                                                    <v-autocomplete v-model='editExecutionDItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingTM"  @click="setTMSelect()" @blur="isEditingTM=true" 
+                                                                                            clearable @click:clear='clearTMRef'>
+                                                                                    </v-autocomplete>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </th>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </template>
+                                                        </v-data-table>
+                                                    </v-card-text>
+                                                </v-card>
+                                                <v-card outlined class="mx-auto">
+                                                    <div class="subtitle-2" style="height:20px" :id="element.uuid+'/fgtable'+idx">
+                                                        <v-hover v-slot="{ hover }">
+                                                            <v-btn text @click="showFunctionG" x-small color="indigo">
+                                                                <v-icon>{{ isFunctionGOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                                            </v-btn>
+                                                        </v-hover>
+                                                        Function Group State
+                                                        <v-btn  v-if="isFunctionGOpenClose" @click="isCheckFunctionG" text x-small color="indigo">
+                                                            <v-icon>mdi-check</v-icon>
+                                                        </v-btn>
+                                                        <v-btn  v-if="isdeleteFunctionG && isFunctionGOpenClose" @click="deleteFunctionG" text x-small color="indigo">
+                                                            <v-icon>mdi-minus</v-icon>
+                                                        </v-btn>
+                                                    </div>
+                                                    <v-card-text v-show="isFunctionGOpenClose">
+                                                        <v-data-table v-model="selectDelectFunctionGItem" :headers="headerFunctionG" :items="tab.functionItem" :items-per-page='20'
+                                                                :show-select="isdeleteFunctionG" item-key="id" height="100px" dense hide-default-footer >
+                                                            <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                                <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                                            </template>
+                                                            <template v-if="!isdeleteFunctionG" v-slot:body="{ items, headers }">
+                                                                <tbody>
+                                                                    <tr v-for="(item,idx) in items" :key="idx" >
+                                                                        <td v-for="(header,key) in headers" :key="key">
+                                                                            <!-- <v-icon v-if="header.value == 'sort'" small class="sortHandle" >mdi-arrow-all</v-icon> -->
+                                                                            <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openFunctionG(idx)" @cancel="editFunctionG(idx)" @save="cancelFunctionG" large >
+                                                                                {{item[header.value]}}
+                                                                                <template v-slot:input>
+                                                                                    <br> <!--v-autocomplete 여기에서 item의 uuid가 같을경우 item-text='name' item-value="uuid"로 해주면 uuid값이 같기 때문에 item의 list가 다 나오지 않는다 name으로 바꿔야지만 list가 잘나옴 -->
+                                                                                    <v-autocomplete v-model='editFunctionGItem.contextMode' label='Context Mode Declaration Group Prototype Ref' :items='selContextMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingContextMode" @click="setContextModeSelect()" @blur="isEditingContextMode=true" 
+                                                                                            clearable @click:clear='clearContextModeRef'>
+                                                                                    </v-autocomplete>
+                                                                                    <v-autocomplete v-model='editFunctionGItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingTargetMode"  @click="setTargetModeSelect()" @blur="isEditingTargetMode=true" 
+                                                                                            clearable @click:clear='clearTargetModeRef'>
+                                                                                    </v-autocomplete>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th colspan="3">
+                                                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addFunctionG()" @save="cancelFunctionG"> 
+                                                                                <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                                    <v-icon >mdi-plus</v-icon>New Item
+                                                                                </v-btn>
+                                                                                <template v-slot:input>
+                                                                                    <br>
+                                                                                    <v-autocomplete v-model='editFunctionGItem.contextMode' label='Context Mode Declaration Group Prototype Ref' :items='selContextMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingContextMode" @click="setContextModeSelect()" @blur="isEditingContextMode=true" 
+                                                                                            clearable @click:clear='clearContextModeRef'>
+                                                                                    </v-autocomplete>
+                                                                                    <v-autocomplete v-model='editFunctionGItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingTargetMode"  @click="setTargetModeSelect()" @blur="isEditingTargetMode=true" 
+                                                                                            clearable @click:clear='clearTargetModeRef'>
+                                                                                    </v-autocomplete>
+                                                                                </template>
+                                                                            </v-edit-dialog>
+                                                                        </th>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </template>
+                                                        </v-data-table>
+                                                    </v-card-text>
+                                                </v-card>
+                                                <v-row style="height: 45px">
+                                                    <v-col cols="10">
+                                                        <v-text-field v-model="tab.resourceRef" readonly @click="setResourceGSelect(tab)" clearable @click:clear='clearResourceG(tab)' label="Resource Group Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="2">
+                                                        <v-menu>
+                                                            <template v-slot:activator="{ on, attrs }">
+                                                                <v-btn color="deep-purple accent-4" :id="element.uuid+'/processresorce'+idx" icon v-bind="attrs" v-on="on" @click="setResourceGList()">
+                                                                    <v-icon>mdi-menu-down-outline</v-icon>
+                                                                </v-btn>
+                                                            </template>
+                                                            <v-list >
+                                                                <v-list-item v-for="(item, i) in selResourceG" :key="i" link @click="setResourceG(item, tab)">
+                                                                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                                                </v-list-item>
+                                                                <v-list-item v-if="selResourceG.length == 0">
+                                                                    <v-list-item-title>No Data Available</v-list-item-title>
+                                                                </v-list-item>
+                                                            </v-list>
+                                                        </v-menu>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row style="height: 70px">
+                                                    <v-col cols="10">
+                                                        <v-text-field v-model="tab.startupConfigRef" readonly @click="setStartupCSelect(tab)" clearable @click:clear='clearStartupC(tab)' label="Startup Config Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="2">
+                                                        <v-menu>
+                                                            <template v-slot:activator="{ on, attrs }">
+                                                                <v-btn color="deep-purple accent-4" :id="element.uuid+'/processstartup'+idx" dark icon v-bind="attrs" v-on="on" @click="setStartupCList()">
+                                                                    <v-icon>mdi-menu-down-outline</v-icon>
+                                                                </v-btn>
+                                                            </template>
+                                                            <v-list>
+                                                                <v-list-item v-for="(item, i) in selStartupC" :key="i" link @click="setStartupC(item, tab)">
+                                                                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                                                </v-list-item>
+                                                                <v-btn outlined color="indigo" dense text small block @click="newStartupC" >
+                                                                    <v-icon >mdi-plus</v-icon>New Item
+                                                                </v-btn>
+                                                            </v-list>
+                                                        </v-menu>
+                                                    </v-col>
+                                                </v-row>
                                             </v-card-text>
                                         </v-card>
-                                        <v-row style="height: 45px">
-                                            <v-col cols="10">
-                                                <v-text-field v-model="tab.resourceRef" readonly @click="setResourceGSelect(tab)" clearable @click:clear='clearResourceG(tab)' label="Resource Group Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="2">
-                                                <v-menu>
-                                                    <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn color="deep-purple accent-4" :id="element.uuid+'/processresorce'+idx" icon v-bind="attrs" v-on="on" @click="setResourceGList()">
-                                                            <v-icon>mdi-menu-down-outline</v-icon>
-                                                        </v-btn>
-                                                    </template>
-                                                    <v-list >
-                                                        <v-list-item v-for="(item, i) in selResourceG" :key="i" link @click="setResourceG(item, tab)">
-                                                            <v-list-item-title>{{ item.name }}</v-list-item-title>
-                                                        </v-list-item>
-                                                        <v-list-item v-if="selResourceG.length == 0">
-                                                            <v-list-item-title>No Data Available</v-list-item-title>
-                                                        </v-list-item>
-                                                    </v-list>
-                                                </v-menu>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row style="height: 70px">
-                                            <v-col cols="10">
-                                                <v-text-field v-model="tab.startupConfigRef" readonly @click="setStartupCSelect(tab)" clearable @click:clear='clearStartupC(tab)' label="Startup Config Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="2">
-                                                <v-menu>
-                                                    <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn color="deep-purple accent-4" :id="element.uuid+'/processstartup'+idx" dark icon v-bind="attrs" v-on="on" @click="setStartupCList()">
-                                                            <v-icon>mdi-menu-down-outline</v-icon>
-                                                        </v-btn>
-                                                    </template>
-                                                    <v-list>
-                                                        <v-list-item v-for="(item, i) in selStartupC" :key="i" link @click="setStartupC(item, tab)">
-                                                            <v-list-item-title>{{ item.name }}</v-list-item-title>
-                                                        </v-list-item>
-                                                        <v-btn outlined color="indigo" dense text small block @click="newStartupC" >
-                                                            <v-icon >mdi-plus</v-icon>New Item
-                                                        </v-btn>
-                                                    </v-list>
-                                                </v-menu>
-                                            </v-col>
-                                        </v-row>
-                                    </v-card-text>
-                                </v-card>
-                            </v-tab-item>
-                        </v-tabs-items>
+                                    </v-tab-item>
+                                </v-tabs-items>
+                            </v-card>
+                        </v-card-text>
+                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
+                            <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
+                                        readonly outlined dense></v-text-field>
+                        </v-card-text>
                     </v-card>
-                </v-card-text>
-                <v-card-text v-show="!iselementOpenClose">
-                    <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                readonly outlined dense></v-text-field>
-                </v-card-text>
-            </v-card>
+                </template>
+                <span>{{ element.name }}</span>
+            </v-tooltip>
         </v-container>
     </div>
 </template>
@@ -283,7 +358,10 @@ export default {
         },
         detailViewUUID() {
             return this.$store.state.detailViewUUID
-        }
+        },
+        setting() {
+            return this.$store.state.setting
+        },
     },
     watch: {
         activeUUID(val) {
@@ -291,7 +369,15 @@ export default {
         },
         detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        }
+        },
+        setting(value) {
+            this.zoomvalue = value.zoomMain
+            if (this.zoomvalue < this.$setZoominTooltip) {
+                this.isTooltip = false
+            } else {
+                this.isTooltip = this.minimaptoolbar
+            }
+        },
     },
     created() {
         this.setToolbarColor(this.$store.state.activeUUID)
@@ -304,10 +390,13 @@ export default {
             },
             dialogPath : false,
             colorToolbar: "#6A5ACD",
+            zoomvalue: this.$store.state.setting.zoomMain,
+            isTooltip: this.minimaptoolbar,
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             isStateMachineOpenClose: true,
             isDependentStartupOpenClose: true,
             isFunctionGOpenClose : true,
+            isExecutionDOpenClose : true,
             selProcessDesign: this.$store.getters.getProcessDesign,
             selDeterministic: this.$store.getters.getDeterministicClient,
             selExecutable: this.$store.getters.getExecutable,
@@ -324,15 +413,25 @@ export default {
             ],
             isEditingContextMode: true,
             isEditingTargetMode: true,
-            defaultFunctionGItem: { contextMode: null, targetMode: null, id: '' },
+            defaultItem: { contextMode: null, targetMode: null, id: '' },
             editFunctionGItem: { contextMode: null, targetMode: null, id: '' },
             selContextMode: this.$store.getters.getModeDeclarationGP,
             selTargetMode: this.$store.getters.getModeDeclaration,
             changeLineFunc: [],
 
+            isdeleteExecutionD: false,
+            selectDelectExecutionDItem: [],
+            isEditingCM: true,
+            isEditingTM: true,
+            editExecutionDItem: { contextMode: null, targetMode: null, id: '' },
+            changeLineExecut: [],
+
         }
     },
     mounted () {
+        if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
+            this.isTooltip = false
+        }
     },
     methods: {
         submitDialog(element) {
@@ -395,6 +494,11 @@ export default {
             // 선을 다시 그려줘야 하기 때문에
             EventBus.$emit('drawLine')
         },
+        showExecutionD() {
+            this.isExecutionDOpenClose = this.isExecutionDOpenClose ? false : true
+            // 선을 다시 그려줘야 하기 때문에
+            EventBus.$emit('drawLine')
+        },
         inputProcessName() {
             this.$store.commit('editProcess', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
@@ -417,6 +521,8 @@ export default {
             }
             if (endLine != null) {
                 this.$store.commit('setDetailView', {uuid: endLine, element: constant.ProcessDesign_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
             }
         },
         setProcessDesignList() {
@@ -437,9 +543,8 @@ export default {
             this.setactiveUUID()
         },
         newProcessDesign() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
-
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             this.$store.commit('addElementProcessDesign', { //executableref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                 name: this.$store.getters.getNameProcessDesign, input: false, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
@@ -464,6 +569,8 @@ export default {
             }
             if (endLine != null) {
                 this.$store.commit('setDetailView', {uuid: endLine, element: constant.DeterministicClient_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
             }
         },
         setDeterminList() {
@@ -484,8 +591,8 @@ export default {
             this.setactiveUUID()
         },
         newDeterministicClient() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementDeterministicClien', {
                 name: this.$store.getters.getNameDeterministicClient, input: false, path: '',
@@ -511,6 +618,8 @@ export default {
             }
             if (endLine != null) {
                 this.$store.commit('setDetailView', {uuid: endLine, element: constant.Executable_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
             }
         },
         setExecutableList() {
@@ -531,8 +640,8 @@ export default {
             this.setactiveUUID()
         },
         newExecutable() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementExecutable', { //applicationtyperef 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                 name: this.$store.getters.getNameExecutable, input: false, path: '',
@@ -558,6 +667,8 @@ export default {
             }
             if (endLine != null) {
                 this.$store.commit('setDetailView', {uuid: endLine, element: constant.ModeDeclarationGroup_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
             }
         },
         setModeDeclarationList() {
@@ -578,8 +689,8 @@ export default {
             this.setactiveUUID()
         },
         newModeDeclarationGroup() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementModeDeclarationGroup', {
                 name: this.$store.getters.getNameModeDeclarationGroup, input: false, path: '',
@@ -592,7 +703,7 @@ export default {
         },
 
         addDependentStartup() {
-            const editItem = { functionItem: [], resourceRef: null, startupConfigRef: null}
+            const editItem = { exection: [], functionItem: [], resourceRef: null, startupConfigRef: null}
             const addObj = new Object(editItem)
             this.element.dependent.push(addObj)
             this.dependentStartupTab = this.element.dependent.length-1
@@ -603,7 +714,9 @@ export default {
         clickDependentStartuptab() {
             //console.log('clickDependentStartuptab')
             this.isdeleteFunctionG = false
+            this.isdeleteExecutionD = false
             this.selectDelectFunctionGItem = []
+            this.selectDelectExecutionDItem = []
         },
         changeDependentStartupTab() {
             //console.log('changeDependentStartupTab' +this.dependentStartupTab)
@@ -621,6 +734,16 @@ export default {
                 var endLinetarg = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgtarget-'+i+'-'+idx)
                 if(endLinetarg != undefined) {
                     this.deleteLine(this.element.uuid+'/fgtarget-'+i+'-'+idx)
+                }
+            }
+            for(let i=0; i<this.element.dependent[idx].execution.length; i++){
+                var endLineC = this.$store.getters.getChangeEndLine(this.element.uuid+'/edcontext-'+i+'-'+idx)
+                if(endLineC != undefined) {
+                    this.deleteLine(this.element.uuid+'/edcontext-'+i+'-'+idx)
+                }
+                var endLinet = this.$store.getters.getChangeEndLine(this.element.uuid+'/edtarget-'+i+'-'+idx)
+                if(endLinet != undefined) {
+                    this.deleteLine(this.element.uuid+'/edtarget-'+i+'-'+idx)
                 }
             }
             var endLine, endR, endS
@@ -645,6 +768,18 @@ export default {
                     if(endT != undefined) {
                         this.deleteLine(this.element.uuid+'/fgtarget-'+n+'-'+i)
                         this.newLine(this.element.uuid+'/fgtarget-'+n+'-'+(i-1), this.element.uuid+'/processStarupC', endT)
+                    }
+                }
+                for(let n=0; n<this.element.dependent[i].execution.length; n++){
+                    var endEC = this.$store.getters.getChangeEndLine(this.element.uuid+'/edcontext-'+n+'-'+i)
+                    if(endEC != undefined) {
+                        this.deleteLine(this.element.uuid+'/edcontext-'+n+'-'+i)
+                        this.newLine(this.element.uuid+'/edcontext-'+n+'-'+(i-1), this.element.uuid+'/processStarupC', endC)
+                    }
+                    var endET = this.$store.getters.getChangeEndLine(this.element.uuid+'/edtarget-'+n+'-'+i)
+                    if(endET != undefined) {
+                        this.deleteLine(this.element.uuid+'/edtarget-'+n+'-'+i)
+                        this.newLine(this.element.uuid+'/edtarget-'+n+'-'+(i-1), this.element.uuid+'/processStarupC', endT)
                     }
                 }
                 if (endR != undefined) {
@@ -756,7 +891,7 @@ export default {
             this.cancelFunctionG()
         },
         cancelFunctionG() {
-            this.editFunctionGItem = Object.assign({}, this.defaultFunctionGItem)
+            this.editFunctionGItem = Object.assign({}, this.defaultItem)
             this.setactiveUUID()
         },
         addFunctionG() {
@@ -790,6 +925,8 @@ export default {
             if (this.isEditingContextMode == true) { 
                 if (this.editFunctionGItem.contextMode != null && this.editFunctionGItem.contextMode.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editFunctionGItem.contextMode.uuid, element: constant.Machine_str} )
+                    document.getElementById(this.editFunctionGItem.contextMode.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editFunctionGItem.contextMode.uuid)
                 }
                 this.setContextMList()
                 this.isEditingContextMode = false
@@ -799,7 +936,6 @@ export default {
         },
         setContextMList() {
             this.selContextMode =  this.$store.getters.getModeDeclarationGP
-            console.log('setTargetMList'+this.selContextMode.length)
             this.setactiveUUID()
         },
         clearContextModeRef() {
@@ -810,6 +946,8 @@ export default {
             if (this.isEditingTargetMode == true) { 
                 if (this.editFunctionGItem.targetMode != null && this.editFunctionGItem.targetMode.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editFunctionGItem.targetMode.uuid, element: constant.ModeDeclarationGroup_str} )
+                    document.getElementById(this.editFunctionGItem.targetMode.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editFunctionGItem.targetMode.uuid)
                 }
                 this.setTargetMList()
                 this.isEditingTargetMode = false
@@ -842,6 +980,8 @@ export default {
             }
             if (endLine != null) {
                 this.$store.commit('setDetailView', {uuid: endLine, element: constant.Machine_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
             }
         },
         setResourceGList() {
@@ -878,6 +1018,8 @@ export default {
             }
             if (endLine != null) {
                 this.$store.commit('setDetailView', {uuid: endLine, element: constant.StartupConfig_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
             }
         },
         setStartupCList() {
@@ -898,17 +1040,178 @@ export default {
             this.setactiveUUID()
         },
         newStartupC() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10)
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementStartupConfig', {
                 name: this.$store.getters.getNameStartupConfig, input: false, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                configname: '', policy:null, priority:'', entertimeout:'', exittimeout:''
+                config: []
             })
             EventBus.$emit('add-element', constant.StartupConfig_str)
             EventBus.$emit('add-element', constant.AdaptiveApplication_str)
             this.$store.commit('editProcess', {compo:"z", uuid:this.element.uuid, zindex:2} )
+        },
+
+        isCheckExecutionD() {
+            if (this.isdeleteExecutionD == true) {
+                this.isdeleteExecutionD = false
+                this.selectDelectExecutionDItem = []
+            } else {
+                this.isdeleteExecutionD = true
+            }
+        },
+        deleteExecutionD() {
+            if (this.isdeleteExecutionD == true) {
+                for(let i=0; i<this.element.dependent[this.dependentStartupTab].exection.length; i++){
+                    var endLineCon = this.$store.getters.getChangeEndLine(this.element.uuid+'/edcontext-'+i+'-'+this.dependentStartupTab)
+                    if(endLineCon != undefined) {
+                        this.deleteLine(this.element.uuid+'/edcontext-'+i+'-'+this.dependentStartupTab)
+                    }
+                    var endLinetarg = this.$store.getters.getChangeEndLine(this.element.uuid+'/edtarget-'+i+'-'+this.dependentStartupTab)
+                    if(endLinetarg != undefined) {
+                        this.deleteLine(this.element.uuid+'/edtarget-'+i+'-'+this.dependentStartupTab)
+                    }
+                    if(endLineCon != undefined || endLinetarg != undefined) {
+                        this.changeLineExecut.push({id:this.element.dependent[this.dependentStartupTab].exection[i].id, endLineCon:endLineCon, endLineTarg:endLinetarg})
+                    }
+                }
+
+                this.element.dependent[this.dependentStartupTab].exection = this.element.dependent[this.dependentStartupTab].exection.filter(item => {
+                         return this.selectDelectExecutionDItem.indexOf(item) < 0 })
+
+                for(let n=0; n<this.element.dependent[this.dependentStartupTab].exection.length; n++) {
+                    for(let idx=0; idx<this.changeLineExecut.length; idx++) {
+                        if (this.element.dependent[this.dependentStartupTab].exection[n].id == this.changeLineExecut[idx].id) {
+                            if (this.element.dependent[this.dependentStartupTab].exection[n].contextMode != null) {
+                                this.newLine(this.element.uuid+'/edcontext-'+n+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.changeLineExecut[idx].endLineCon)
+                            }
+                            if (this.element.dependent[this.dependentStartupTab].exection[n].targetMode != null) {
+                                this.newLine(this.element.uuid+'/edtarget-'+n+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.changeLineExecut[idx].endLineTarg)
+                            }
+                        }
+                    }
+                }
+
+                this.isdeleteExecutionD = false
+                this.selectDelectExecutionDItem = []
+                this.changeLineExecut = []
+            }
+        },
+        openExecutionD(idx) {
+            this.selContextMode = this.$store.getters.getModeDeclarationGP
+            this.selTargetMode = this.$store.getters.getModeDeclaration
+
+            if (this.element.dependent[this.dependentStartupTab].exection[idx].contextMode != null ) {
+                var endLineC = this.$store.getters.getChangeEndLine(this.element.uuid+'/edcontext-'+this.dependentStartupTab+'/'+idx)
+                if (endLineC == undefined) {
+                    endLineC = this.$store.getters.getMachinePath(this.element.dependent[this.dependentStartupTab].exection[idx].contextMode, 2)
+                }
+                this.editExecutionDItem.contextMode = { name :this.element.dependent[this.dependentStartupTab].exection[idx].contextMode, uuid: endLineC }
+            }
+            if (this.element.dependent[this.dependentStartupTab].exection[idx].targetMode != null) {
+                var endLineT = this.$store.getters.getChangeEndLine(this.element.uuid+'/edtarget-'+this.dependentStartupTab+'/'+idx)
+                if (endLineT == undefined) {
+                    endLineT = this.$store.getters.getModeDeclarationPath(this.element.dependent[this.dependentStartupTab].exection[idx].targetMode, 1)
+                }
+                this.editExecutionDItem.targetMode = { name :this.element.dependent[this.dependentStartupTab].exection[idx].targetMode, uuid: endLineT }
+            }
+        },
+        editExecutionD(idx) {
+            var endcontextMLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/edcontext-'+idx+'-'+this.dependentStartupTab)
+            if (endcontextMLine != undefined && this.editExecutionDItem.contextMode == null) {
+                this.deleteLine(this.element.uuid+'/edcontext-'+idx+'-'+this.dependentStartupTab)
+                this.element.dependent[this.dependentStartupTab].exection[idx].contextMode = null
+            } else if (endcontextMLine != undefined && endcontextMLine != this.editExecutionDItem.contextMode.uuid) {
+                //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
+                this.deleteLine(this.element.uuid+'/edcontext-'+idx+'-'+this.dependentStartupTab)
+                this.newLine(this.element.uuid+'/edcontext-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.contextMode.uuid)
+                this.element.dependent[this.dependentStartupTab].exection[idx].contextMode = this.editExecutionDItem.contextMode.name
+            } else if(endcontextMLine == undefined && this.editExecutionDItem.contextMode != null) {
+                this.newLine(this.element.uuid+'/edcontext-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.contextMode.uuid)
+                this.element.dependent[this.dependentStartupTab].exection[idx].contextMode = this.editExecutionDItem.contextMode.name
+            }
+
+            var endtargetMLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/edtarget-'+idx+'-'+this.dependentStartupTab)
+            if (endtargetMLine != undefined && this.editExecutionDItem.targetMode == null) {
+                this.deleteLine(this.element.uuid+'/edtarget-'+idx+'-'+this.dependentStartupTab)
+                this.element.dependent[this.dependentStartupTab].exection[idx].targetMode = null
+            } else if (endtargetMLine != undefined && endtargetMLine != this.editExecutionDItem.targetMode.uuid) {
+                //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
+                this.deleteLine(this.element.uuid+'/edtarget-'+idx+'-'+this.dependentStartupTab)
+                this.newLine(this.element.uuid+'/edtarget-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.targetMode.uuid)
+                this.element.dependent[this.dependentStartupTab].exection[idx].targetMode = this.editExecutionDItem.targetMode.name
+            } else if (endtargetMLine == undefined && this.editExecutionDItem.targetMode != undefined) {
+                this.newLine(this.element.uuid+'/edtarget-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.targetMode.uuid)
+                this.element.dependent[this.dependentStartupTab].exection[idx].targetMode = this.editExecutionDItem.targetMode.name
+            }
+            
+            this.cancelExecutionD()
+        },
+        cancelExecutionD() {
+            this.editExecutionDItem = Object.assign({}, this.defaultItem)
+            this.setactiveUUID()
+        },
+        addExecutionD() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.dependent[this.dependentStartupTab].exection.some(item => item.id === n)
+            }
+            this.editExecutionDItem.id = n
+
+            var datacount
+            if(this.element.dependent[this.dependentStartupTab].exection == undefined) {
+                datacount = 0
+            }else {
+                datacount = this.element.dependent[this.dependentStartupTab].exection.length
+            }
+
+            if( this.editExecutionDItem.contextMode != null) {
+                this.newLine(this.element.uuid+'/edcontext-'+datacount+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.contextMode.uuid)
+                this.editExecutionDItem.contextMode = this.editExecutionDItem.contextMode.name
+            }
+            if( this.editExecutionDItem.targetMode != null) {
+                this.newLine(this.element.uuid+'/edtarget-'+datacount+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.targetMode.uuid)
+                this.editExecutionDItem.targetMode = this.editExecutionDItem.targetMode.name
+            }
+            const addObj = Object.assign({}, this.editExecutionDItem)
+            this.element.dependent[this.dependentStartupTab].exection.push(addObj)
+            this.cancelExecutionD()
+        },
+        setCMSelect() {
+            if (this.isEditingCM == true) { 
+                if (this.editExecutionDItem.contextMode != null && this.editExecutionDItem.contextMode.uuid != null) {
+                    this.$store.commit('setDetailView', {uuid: this.editExecutionDItem.contextMode.uuid, element: constant.Machine_str} )
+                    document.getElementById(this.editExecutionDItem.contextMode.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editExecutionDItem.contextMode.uuid)
+                }
+                this.setContextMList()
+                this.isEditingCM = false
+            } else {
+                this.isEditingCM = true
+            }
+        },
+        clearCMRef() {
+            this.isEditingCM = true
+            this.editExecutionDItem.contextMode = null
+        },
+        setTMSelect() {
+            if (this.isEditingTM == true) { 
+                if (this.editExecutionDItem.targetMode != null && this.editExecutionDItem.targetMode.uuid != null) {
+                    this.$store.commit('setDetailView', {uuid: this.editExecutionDItem.targetMode.uuid, element: constant.ModeDeclarationGroup_str} )
+                    document.getElementById(this.editExecutionDItem.targetMode.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editExecutionDItem.targetMode.uuid)
+                }
+                this.setTargetMList()
+                this.isEditingTM = false
+            } else {
+                this.isEditingTM = true
+            }
+        },
+        clearTMRef() {
+            this.isEditingTM = true
+            this.editExecutionDItem.targetMode = null
         },
 
         setactiveUUID() {

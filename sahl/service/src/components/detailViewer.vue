@@ -38,7 +38,7 @@
             <div v-else-if="detailViewer.element == 'Executable'">
                 <Executable :element= this.$store.getters.getDataExecutable(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
-            <div v-else-if="detailViewer.element == 'Startup Config'">
+            <div v-else-if="detailViewer.element == 'Startup Config Set'">
                 <StartupConfig :element= this.$store.getters.getDataStartupConfig(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
             <div v-else-if="detailViewer.element == 'Deterministic Client'">
@@ -101,11 +101,26 @@
             <div v-else-if="detailViewer.element == 'File Array'">
                 <PerFileArray :element= this.$store.getters.getDataPERFileArray(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
+            <div v-else-if="detailViewer.element == 'File Proxy Interface'">
+                <PerFileProxy :element= this.$store.getters.getDataPERFileProxy(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
             <div v-else-if="detailViewer.element == 'KeyV Database'">
                 <PerKeyValueDB :element= this.$store.getters.getDataPERKeyValueD(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
-             <div v-else-if="detailViewer.element == 'Recovery Action Interface'">
+            <div v-else-if="detailViewer.element == 'KeyV Database Interface'">
+                <PerKeyValueDI :element= this.$store.getters.getDataPERKeyValueDI(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+            <div v-else-if="detailViewer.element == 'Platform Health Management Contribution'">
+                <PHMContribution :element= this.$store.getters.getDataPHMContribution(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+            <div v-else-if="detailViewer.element == 'Health Channel Interface'">
+                <PHMHealthChannel :element= this.$store.getters.getDataPHMHealth(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+            <div v-else-if="detailViewer.element == 'Recovery Action Interface'">
                 <PHMRecovery :element= this.$store.getters.getDataPHMRecovery(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+            <div v-else-if="detailViewer.element == 'Supervised Enity Interface'">
+                <PHMSupervised :element= this.$store.getters.getDataPHMSupervised(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
             <div v-else-if="detailViewer.element == 'Com MEthod Grant Design'">
                 <MethodGrantD :element= this.$store.getters.getDataMethodGrantDesign(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
@@ -155,9 +170,13 @@ import Required from '../components/RequiredSomeIP.vue'
 import Provided from '../components/ProvidedSomeIP.vue'
 
 import PerFileArray from './PerFileArray.vue'
+import PerFileProxy from './PerFileProxy.vue'
 import PerKeyValueDB from '../components/PerKeyValueDB.vue'
-//PHMContribution
+import PerKeyValueDI from '../components/PerKeyValueDI.vue'
+import PHMContribution from '../components/PHMContribution.vue'
+import PHMHealthChannel from '../components/PHMHealthChannel.vue'
 import PHMRecovery from '../components/PHMRecoveryAction.vue'
+import PHMSupervised from '../components/PHMSupervised.vue'
 import MethodGrantD from '../components/MethodGrantDesign.vue'
 import EventGrantD from '../components/EventGrantDesign.vue'
 import FieldGrantD from '../components/FieldGrantDesign.vue'
@@ -172,8 +191,8 @@ export default {
                 APError, APErrorDomain, APErrorSet,
                 SWComponents, ProcessDesign, Executable, StartupConfig, DeterministicClient,
                 Machine, MachineDesign, EthernetCluster, ModeDeclarationGroup, HWElement,
-                PerFileArray, PerKeyValueDB,
-                PHMRecovery,
+                PerFileArray, PerFileProxy, PerKeyValueDB, PerKeyValueDI,
+                PHMContribution, PHMHealthChannel, PHMRecovery, PHMSupervised,
                 MethodGrantD, EventGrantD, FieldGrantD, UCMModuleIns },
     computed: {
         detailViewer() {

@@ -149,13 +149,13 @@ import { EventBus } from '../main'
 
 document.onkeydown = function(e) { //단축키 만들기
   //console.log(e)
-  if(e.shiftKey && e.keyCode == 78) { // shift+n  => new file
+  if(e.altKey  && e.keyCode == 78) { // Alt+n  => new file
     EventBus.$emit('shortcut-keys', 'newfile')
   } 
-  if(e.shiftKey && e.keyCode == 79) { //shift+o => open file
+  if(e.altKey  && e.keyCode == 79) { //Alt+o => open file
     EventBus.$emit('shortcut-keys-appbar', 'openfile')
   }
-  if(e.shiftKey && e.keyCode == 83) { //shift+s => save
+  if(e.altKey  && e.keyCode == 83) { //Alt+s => save
     EventBus.$emit('shortcut-keys', 'save')
   }
   if(e.ctrlKey && e.keyCode == 86 && e.shiftKey) { //ctrl+shift+v => validation check
@@ -167,8 +167,11 @@ document.onkeydown = function(e) { //단축키 만들기
   if(e.ctrlKey && e.keyCode == 68 && e.shiftKey) { //ctrl+shift+d => delete file
     EventBus.$emit('shortcut-keys', 'deletefile')
   }
-  if(e.shiftKey && e.keyCode == 69) { //shift+e => setting
+  if(e.ctrlKey && e.shiftKey && e.keyCode == 69) { //ctrl+shift+e => setting
     EventBus.$emit('shortcut-keys', 'setting')
+  }
+  if(e.keyCode == 116) { //F5
+    EventBus.$emit('shortcut-keys', 'F5')
   }
 }
 
@@ -199,11 +202,11 @@ export default({
     data() {
         return {
             fileItem: [
-                { title: 'New File', Shortcut:'Shift+N', icon:'mdi-file-plus', menuAction: action => { this.newFile(action) }},
+                { title: 'New File', Shortcut:'Alt+N', icon:'mdi-file-plus', menuAction: action => { this.newFile(action) }},
                 { title: 'Delete File', Shortcut:'Ctrl+Shift+D', icon:'mdi-delete', menuAction: action => { this.deleteFile(action) }},
-                { title: 'Open File', Shortcut:'Shift+O', icon:'mdi-open-in-app', menuAction: action => { this.inputFile(action) }},
+                { title: 'Open File', Shortcut:'Alt+O', icon:'mdi-open-in-app', menuAction: action => { this.inputFile(action) }},
                 { divider: true, inset: true},
-                { title: 'Save', Shortcut:'Shift+S', icon:'mdi-content-save', menuAction: action => { this.save(action) }},
+                { title: 'Save', Shortcut:'Alt+S', icon:'mdi-content-save', menuAction: action => { this.save(action) }},
                 { divider: true, inset: true},
                 { title: 'Exit', icon:'mdi-exit-to-app', menuAction: action => { this.exit(action) }}
             ],
@@ -212,13 +215,13 @@ export default({
                 { title: 'Delete Project', icon:'mdi-delete', menuAction: action => { this.deleteProject(action) }},
                 { title: 'Close Project', icon:'mdi-window-close', menuAction: () => {  }},
                 { divider: true, inset: true},
-                { title: 'Save', Shortcut:'Shift+S', icon:'mdi-content-save', menuAction: action => { this.save(action) }}
+                { title: 'Save', Shortcut:'Alt+S', icon:'mdi-content-save', menuAction: action => { this.save(action) }}
             ],
             toolItem: [
                 { title: 'Search', Shortcut:'Ctrl+Shift+F', icon:'mdi-magnify', menuAction: action => { this.setSearch(action) }},
             ],
             settingItem: [
-                { title: 'Setting', Shortcut:'Shift+E', icon:'mdi-cog-outline', menuAction: action => { this.setSetting(action) }},
+                { title: 'Setting', Shortcut:'Ctrl+Shift+E', icon:'mdi-cog-outline', menuAction: action => { this.setSetting(action) }},
                 { title: 'Visible Line', icon:'mdi-vector-line', menuAction: action => { this.setVisibleLine(action) }},
             ],
             helpItem: [
@@ -249,6 +252,8 @@ export default({
                 this.deleteFile()
             } else if (str == 'setting') {
                 this.setSetting()
+            } else if (str == 'F5') {
+                this.$store.commit('setExit', )
             }
         })
     },
@@ -333,6 +338,7 @@ export default({
             this.$store.commit('setVisibleLine', {isvisible: isVisible})
         },
         exit() {
+            this.$store.commit('setExit', )
             window.open('about:blank','_self').self.close()
             window.close()
         },

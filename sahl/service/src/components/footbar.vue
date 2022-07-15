@@ -66,7 +66,6 @@ export default {
             //console.log(value)
             this.zoomvalue = value.zoomMain
         },
-
     },
     data() {
         return {

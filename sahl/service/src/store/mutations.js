@@ -247,8 +247,8 @@ const mutations = {
     copyElement(state, payload) {
         var idxEle = null,
             copyEle
-        const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-        const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+        const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+        const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
         if (payload.parent == constant.CompuMethod_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.findIndex(item => item.uuid === payload.uuid)
@@ -782,7 +782,10 @@ const mutations = {
                             if (tableLine[0] == 'field' || tableLine[0] == 'event' || tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror' ||
                                 tableLine[0] == 'providEventG' || tableLine[0] == 'providServer' || tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient' ||
                                 tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' || tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup' ||
-                                tableLine[0] == 'comconet' || tableLine[0] == 'PERKeyV') {
+                                tableLine[0] == 'edcontext' || tableLine[0] == 'edtarget' || tableLine[0] == 'comconet' || tableLine[0] == 'PERKeyV' ||
+                                tableLine[0] == 'PPortI' || tableLine[0] == 'pportQSC' || tableLine[0] == 'pportFSC' ||
+                                tableLine[0] == 'PRPortI' || tableLine[0] == 'prporttab' ||
+                                tableLine[0] == 'RPortI' || tableLine[0] == 'rportQRC' || tableLine[0] == 'rportCC') {
                                 changTab = true
                                 if (tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror') {
                                     tabId = 'methods'
@@ -790,10 +793,16 @@ const mutations = {
                                     tabId = 'providE'
                                 } else if (tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient') {
                                     tabId = 'requiredE'
-                                } else if (tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' || tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup') {
+                                } else if (tableLine[0] == 'edcontext' || tableLine[0] == 'edtarget' || tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' || tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup') {
                                     tabId = 'processStarupC'
                                 } else if (tableLine[0] == 'comconet') {
                                     tabId = 'conditional'
+                                } else if (tableLine[0] == 'PPortI' || tableLine[0] == 'pportQSC' || tableLine[0] == 'pportFSC') {
+                                    tabId = 'pport'
+                                } else if (tableLine[0] == 'PRPortI' || tableLine[0] == 'prporttab') {
+                                    tabId = 'prport'
+                                } else if (tableLine[0] == 'RPortI' || tableLine[0] == 'rportQRC' || tableLine[0] == 'rportCC') {
+                                    tabId = 'rport'
                                 } else {
                                     tabId = tableLine[0]
                                 }
@@ -1385,8 +1394,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementCompuMehtod', {
                     input: true,
@@ -1435,8 +1444,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementDataConstr', {
                     input: true,
@@ -1500,8 +1509,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementApplicationArray', {
                     input: true,
@@ -1641,8 +1650,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementImplementation', {
                     input: true,
@@ -1822,8 +1831,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementMachine', {
                     input: true,
@@ -1930,8 +1939,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementMachineDesign', {
                     name: Name,
@@ -2109,8 +2118,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementEthernetCluster', {
                     name: Name,
@@ -2141,7 +2150,9 @@ const mutations = {
                         Name = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "INITIAL-MODE-REF") {
-                        initmode = item.childNodes[0].nodeValue
+                        var init = item.childNodes[0].nodeValue
+                        var arrayMode = init.split('/')
+                        initmode = arrayMode[arrayMode.length - 1]
                     }
                     if (item.nodeName == "MODE-DECLARATIONS") {
                         item.childNodes.forEach((modede, m) => {
@@ -2162,8 +2173,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementModeDeclarationGroup', {
                     name: Name,
@@ -2228,8 +2239,8 @@ const mutations = {
             if (UUID == null || idxEle != -1) {
                 UUID = uuid.v1()
             }
-            const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-            const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+            const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
             this.commit('addElementHWElement', {
                 name: Name,
@@ -2287,8 +2298,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementProtoMachineMapping', {
                     name: Name,
@@ -2328,7 +2339,7 @@ const mutations = {
                         item.childNodes.forEach((port, p) => {
                             if (p % 2 != 0) {
                                 if (port.nodeName == "P-PORT-PROTOTYPE") {
-                                    var editPPortItem = { name: '', interface: null, id: '' }
+                                    var editPPortItem = { name: '', selectI: null, interface: null, queued: [], field: [], id: '' }
                                     port.childNodes.forEach((data, d) => {
                                         if (d % 2 != 0) {
                                             if (data.nodeName == "SHORT-NAME") {
@@ -2336,6 +2347,49 @@ const mutations = {
                                             }
                                             if (data.nodeName == "PROVIDED-INTERFACE-TREF") {
                                                 editPPortItem.interface = data.childNodes[0].nodeValue
+                                                editPPortItem.selectI = data.getAttribute("DEST")
+                                            }
+                                            if (data.nodeName == "PROVIDED-COM-SPECS") {
+                                                data.childNodes.forEach((pro, r) => {
+                                                    if (r % 2 != 0) {
+                                                        if (pro.nodeName == "QUEUED-SENDER-COM-SPEC") {
+                                                            var editPQSC = { dataE: null, senderCapa: null, id: '' },
+                                                                idPQ = 0
+                                                            pro.childNodes.forEach((que, q) => {
+                                                                if (q % 2 != 0) {
+                                                                    if (que.nodeName == "DATA-ELEMENT-REF") {
+                                                                        editPQSC.dataE = que.childNodes[0].nodeValue
+                                                                    }
+                                                                    if (que.nodeName == "SENDER-CAPABILITY") {
+                                                                        editPQSC.senderCapa = que.childNodes[0].nodeValue
+                                                                    }
+                                                                }
+                                                            })
+                                                            editPQSC.id = idPQ
+                                                            const addObj = Object.assign({}, editPQSC)
+                                                            editPPortItem.queued.push(addObj)
+                                                            idPQ++
+                                                        }
+                                                        if (pro.nodeName == "FIELD-SENDER-COM-SPEC") {
+                                                            var editPFSC = { dataE: null, senderCapa: null, id: '' },
+                                                                idPF = 0
+                                                            pro.childNodes.forEach((fie, q) => {
+                                                                if (q % 2 != 0) {
+                                                                    if (fie.nodeName == "DATA-ELEMENT-REF") {
+                                                                        editPFSC.dataE = fie.childNodes[0].nodeValue
+                                                                    }
+                                                                    if (fie.nodeName == "SENDER-CAPABILITY") {
+                                                                        editPFSC.senderCapa = fie.childNodes[0].nodeValue
+                                                                    }
+                                                                }
+                                                            })
+                                                            editPFSC.id = idPF
+                                                            const addObj = Object.assign({}, editPFSC)
+                                                            editPPortItem.field.push(addObj)
+                                                            idPF++
+                                                        }
+                                                    }
+                                                })
                                             }
                                         }
                                     })
@@ -2345,7 +2399,7 @@ const mutations = {
                                     idP++
                                 }
                                 if (port.nodeName == "PR-PORT-PROTOTYPE") {
-                                    var editPRPortItem = { name: '', interface: null, id: '' }
+                                    var editPRPortItem = { name: '', selectI: null, interface: null, provide: [], id: '' }
                                     port.childNodes.forEach((data, d) => {
                                         if (d % 2 != 0) {
                                             if (data.nodeName == "SHORT-NAME") {
@@ -2353,6 +2407,28 @@ const mutations = {
                                             }
                                             if (data.nodeName == "PROVIDED-REQUIRED-INTERFACE-TREF") {
                                                 editPRPortItem.interface = data.childNodes[0].nodeValue
+                                                editPRPortItem.selectI = data.getAttribute("DEST")
+                                            }
+                                            if (data.nodeName == "PROVIDED-COM-SPECS") {
+                                                data.childNodes.forEach((pro, r) => {
+                                                    if (r % 2 != 0) {
+                                                        if (pro.nodeName == "PERSISTENCY-DATA-PROVIDED-COM-SPEC") {
+                                                            var editProvide = { dataE: null, id: '' },
+                                                                idPRP = 0
+                                                            pro.childNodes.forEach((que, q) => {
+                                                                if (q % 2 != 0) {
+                                                                    if (que.nodeName == "DATA-ELEMENT-REF") {
+                                                                        editProvide.dataE = que.childNodes[0].nodeValue
+                                                                    }
+                                                                }
+                                                            })
+                                                            editProvide.id = idPRP
+                                                            const addObj = Object.assign({}, editProvide)
+                                                            editPRPortItem.provide.push(addObj)
+                                                            idPRP++
+                                                        }
+                                                    }
+                                                })
                                             }
                                         }
                                     })
@@ -2362,7 +2438,7 @@ const mutations = {
                                     idPR++
                                 }
                                 if (port.nodeName == "R-PORT-PROTOTYPE") {
-                                    var editRPortItem = { name: '', interface: null, id: '' }
+                                    var editRPortItem = { name: '', selectI: null, interface: null, queued: [], client: [], id: '' }
                                     port.childNodes.forEach((data, d) => {
                                         if (d % 2 != 0) {
                                             if (data.nodeName == "SHORT-NAME") {
@@ -2370,6 +2446,50 @@ const mutations = {
                                             }
                                             if (data.nodeName == "REQUIRED-INTERFACE-TREF") {
                                                 editRPortItem.interface = data.childNodes[0].nodeValue
+                                                editRPortItem.selectI = data.getAttribute("DEST")
+                                            }
+                                            if (data.nodeName == "REQUIRED-COM-SPECS") {
+                                                data.childNodes.forEach((pro, r) => {
+                                                    if (r % 2 != 0) {
+                                                        if (pro.nodeName == "QUEUED-RECEIVER-COM-SPEC") {
+                                                            var editRQRC = { select: null, dataE: null, receiveCapa: null, id: '' },
+                                                                idRQ = 0
+                                                            pro.childNodes.forEach((que, q) => {
+                                                                if (q % 2 != 0) {
+                                                                    if (que.nodeName == "DATA-ELEMENT-REF") {
+                                                                        editRQRC.dataE = que.childNodes[0].nodeValue
+                                                                        editRQRC.select = que.getAttribute("DEST")
+                                                                    }
+                                                                    if (que.nodeName == "SENDER-CAPABILITY") {
+                                                                        editRQRC.receiveCapa = que.childNodes[0].nodeValue
+                                                                    }
+                                                                }
+                                                            })
+                                                            editRQRC.id = idRQ
+                                                            const addObj = Object.assign({}, editRQRC)
+                                                            editRPortItem.queued.push(addObj)
+                                                            idRQ++
+                                                        }
+                                                        if (pro.nodeName == "CLIENT-COM-SPEC") {
+                                                            var editRCC = { operation: null, clientCapa: null, id: '' },
+                                                                idRC = 0
+                                                            pro.childNodes.forEach((cl, q) => {
+                                                                if (q % 2 != 0) {
+                                                                    if (cl.nodeName == "OPERATION-REF") {
+                                                                        editRCC.operation = cl.childNodes[0].nodeValue
+                                                                    }
+                                                                    if (cl.nodeName == "CLIENT-CAPABILITY") {
+                                                                        editRCC.clientCapa = cl.childNodes[0].nodeValue
+                                                                    }
+                                                                }
+                                                            })
+                                                            editRCC.id = idRC
+                                                            const addObj = Object.assign({}, editRCC)
+                                                            editRPortItem.client.push(addObj)
+                                                            idRC++
+                                                        }
+                                                    }
+                                                })
                                             }
                                         }
                                     })
@@ -2387,8 +2507,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementSWComponents', {
                     name: Name,
@@ -2444,9 +2564,11 @@ const mutations = {
                         })
                     }
                     if (item.nodeName == "STATE-DEPENDENT-STARTUP-CONFIGS") {
-                        var id = 0
+                        var idS = 0,
+                            idF = 0,
+                            idE = 0
                         item.childNodes.forEach((state, s) => {
-                            var editItem = { functionItem: [], resourceRef: null, startupConfigRef: null }
+                            var editItem = { exection: [], functionItem: [], resourceRef: null, startupConfigRef: null, id: '' }
                             if (s % 2 != 0) {
                                 state.childNodes.forEach((con, c) => {
                                     if (c % 2 != 0) {
@@ -2470,17 +2592,45 @@ const mutations = {
                                                             }
                                                         }
                                                     })
-                                                    editFunctionGItem.id = id
+                                                    editFunctionGItem.id = idF
                                                     const addObj = Object.assign({}, editFunctionGItem)
                                                     editItem.functionItem.push(addObj)
-                                                    id++
+                                                    idF++
                                                 }
                                             })
                                         }
+                                        if (con.nodeName == "EXECUTION-DEPENDENCYS") {
+                                            con.childNodes.forEach((eds, i) => {
+                                                if (i % 2 != 0) {
+                                                    eds.childNodes.forEach((ed, e) => {
+                                                        var editExecutionDItem = { contextMode: null, targetMode: null, id: '' }
+                                                        if (e % 2 != 0) {
+                                                            ed.childNodes.forEach((data, d) => {
+                                                                if (d % 2 != 0) {
+                                                                    if (data.nodeName == "CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF") {
+                                                                        editExecutionDItem.contextMode = data.childNodes[0].nodeValue
+                                                                    }
+                                                                    if (data.nodeName == "TARGET-MODE-DECLARATION-REF") {
+                                                                        editExecutionDItem.targetMode = data.childNodes[0].nodeValue
+                                                                    }
+                                                                }
+                                                            })
+                                                            editExecutionDItem.id = idE
+                                                            const addObj = Object.assign({}, editExecutionDItem)
+                                                            editItem.exection.push(addObj)
+                                                            idE++
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+
                                     }
                                 })
+                                editItem.id = idS
                                 const addObj = Object.assign({}, editItem)
                                 config.push(addObj)
+                                idS++
                             }
                         })
                     }
@@ -2490,8 +2640,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementProcess', {
                     name: Name,
@@ -2601,8 +2751,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
 
                 this.commit('addElementProcessDesign', {
@@ -2672,8 +2822,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementExecutable', {
                     name: Name,
@@ -2701,11 +2851,7 @@ const mutations = {
         var startup = payload.xmlDoc.getElementsByTagName('STARTUP-CONFIG-SET')
         startup.forEach(ele => {
                 var Name = '',
-                    configName = '',
-                    policy = null,
-                    priority = '',
-                    enter = '',
-                    exit = '',
+                    config = [],
                     path = '',
                     strPath = getEditPath(ele.parentNode.parentNode, path)
                 ele.childNodes.forEach(item => {
@@ -2713,31 +2859,57 @@ const mutations = {
                         Name = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "STARTUP-CONFIGS") {
-                        item.childNodes.forEach((configs, c) => {
-                            if (c % 2 != 0) {
-                                configs.childNodes.forEach((data, d) => {
+                        var idS = 0,
+                            idO = 0
+                        item.childNodes.forEach((eve, e) => {
+                            var editItem = { configname: '', policy: null, priority: '', entertimeout: '', exittimeout: '', option: [], id: '' }
+                            if (e % 2 != 0) {
+                                eve.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
                                         if (data.nodeName == "SHORT-NAME") {
-                                            configName = data.childNodes[0].nodeValue
+                                            editItem.configname = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "SCHEDULING-POLICY") {
-                                            policy = data.childNodes[0].nodeValue
+                                            editItem.policy = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "SCHEDULING-PRIORITY") {
-                                            priority = data.childNodes[0].nodeValue
+                                            editItem.priority = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "TIMEOUT") {
                                             data.childNodes.forEach(time => {
                                                 if (time.nodeName == "ENTER-TIMEOUT-VALUE") {
-                                                    enter = time.childNodes[0].nodeValue
+                                                    editItem.entertimeout = time.childNodes[0].nodeValue
                                                 }
                                                 if (time.nodeName == "EXIT-TIMEOUT-VALUE") {
-                                                    exit = time.childNodes[0].nodeValue
+                                                    editItem.exittimeout = time.childNodes[0].nodeValue
+                                                }
+                                            })
+                                        }
+                                        if (data.nodeName == "STARTUP-OPTIONS") {
+                                            data.childNodes.forEach((ops, v) => {
+                                                var editOption = { arg: '', kind: null, id: '' }
+                                                if (v % 2 != 0) {
+                                                    ops.childNodes.forEach(op => {
+                                                        if (op.nodeName == "OPTION-ARGUMENT") {
+                                                            editOption.arg = op.childNodes[0].nodeValue
+                                                        }
+                                                        if (op.nodeName == "OPTION-KIND") {
+                                                            editOption.kind = op.childNodes[0].nodeValue
+                                                        }
+                                                    })
+                                                    editOption.id = idO
+                                                    const addObjObj = Object.assign({}, editOption)
+                                                    editItem.option.push(addObjObj)
+                                                    idO++
                                                 }
                                             })
                                         }
                                     }
                                 })
+                                editItem.id = idS
+                                const addObj = Object.assign({}, editItem)
+                                config.push(addObj)
+                                idS++
                             }
                         })
                     }
@@ -2747,8 +2919,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementStartupConfig', {
                     name: Name,
@@ -2760,11 +2932,7 @@ const mutations = {
                     zindex: 2,
                     icon: "mdi-clipboard-outline",
                     validation: false,
-                    configname: configName,
-                    policy: policy,
-                    priority: priority,
-                    entertimeout: enter,
-                    exittimeout: exit
+                    config: config,
                 })
                 state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.StartupConfig_str })
                 EventBus.$emit('add-element', constant.AdaptiveApplication_str)
@@ -2794,8 +2962,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementDeterministicClien', {
                     name: Name,
@@ -3095,8 +3263,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementSomeIPService', {
                     name: Name,
@@ -3303,8 +3471,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementService', {
                     name: Name,
@@ -3369,8 +3537,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementClient', {
                     name: Name,
@@ -3421,8 +3589,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementServer', {
                     name: Name,
@@ -3482,8 +3650,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementSomeIPClient', {
                     name: Name,
@@ -3562,8 +3730,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementSomeIPServer', {
                     name: Name,
@@ -3594,7 +3762,7 @@ const mutations = {
         someIPtoMachine.forEach(ele => {
                 var Name = '',
                     connect = null,
-                    service = null,
+                    serviceI = [],
                     udp = '',
                     tcp = '',
                     path = '',
@@ -3607,7 +3775,18 @@ const mutations = {
                         connect = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "SERVICE-INSTANCE-REFS") {
-                        service = item.childNodes[1].childNodes[0].nodeValue
+                        var id = 0
+                        item.childNodes.forEach(data => {
+                            var editItem = { ref: '', service: null, id: '' }
+                            if (data.nodeName == "SERVICE-INSTANCE-REF") {
+                                editItem.ref = data.getAttribute("DEST")
+                                editItem.service = data.childNodes[0].nodeValue
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                serviceI.push(addObj)
+                                id++
+                            }
+                        })
                     }
                     if (item.nodeName == "UDP-PORT") {
                         udp = item.childNodes[0].nodeValue
@@ -3621,8 +3800,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementSomeIPtoMachine', {
                     name: Name,
@@ -3637,7 +3816,7 @@ const mutations = {
                     ccref: connect,
                     udp: udp,
                     tcp: tcp,
-                    siref: service,
+                    serviceI: serviceI,
                 })
                 state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPToMachineMapping_str })
                 EventBus.$emit('add-element', constant.Service_str)
@@ -3677,8 +3856,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementToPortPrototype', {
                     name: Name,
@@ -3783,8 +3962,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementRequiredSomeIP', {
                     name: Name,
@@ -3916,8 +4095,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementProvidedSomeIP', {
                     name: Name,
@@ -3970,8 +4149,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementError', {
                     name: Name,
@@ -4022,8 +4201,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementErrorSet', {
                     name: Name,
@@ -4077,8 +4256,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementErrorDomain', {
                     name: Name,
@@ -4221,8 +4400,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementPERFileArray', {
                     name: Name,
@@ -4316,8 +4495,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementPERFileProxy', {
                     name: Name,
@@ -4532,8 +4711,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementPERKeyValueD', {
                     name: Name,
@@ -4628,8 +4807,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementPERKeyValueDI', {
                     name: Name,
@@ -4681,8 +4860,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementPERPPtoFileArray', {
                     name: Name,
@@ -4732,8 +4911,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementPERPPtoKeyValue', {
                     name: Name,
@@ -4788,8 +4967,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementPHMtoMachine', {
                     name: Name,
@@ -4849,8 +5028,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementPHMHealth', {
                     name: Name,
@@ -4898,8 +5077,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementPHMRecovery', {
                     name: Name,
@@ -4960,8 +5139,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementPHMSupervised', {
                     name: Name,
@@ -5017,8 +5196,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementRecoveryVia', {
                     name: Name,
@@ -5070,8 +5249,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementFieldG', {
                     name: Name,
@@ -5117,9 +5296,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
-
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 this.commit('addElementEventG', {
                     name: Name,
                     input: true,
@@ -5163,8 +5341,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementMethodG', {
                     name: Name,
@@ -5213,8 +5391,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementFieldGD', {
                     name: Name,
@@ -5260,8 +5438,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementEventGD', {
                     name: Name,
@@ -5306,8 +5484,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementMethodGD', {
                     name: Name,
@@ -5326,6 +5504,171 @@ const mutations = {
                 EventBus.$emit('add-element', constant.Platform_str)
                 EventBus.$emit('add-element', constant.IAM_str)
                 EventBus.$emit('add-element', constant.ComMethodGDesign_str)
+            })
+            // SOFTWARE-CLUSTER
+        var softwareC = payload.xmlDoc.getElementsByTagName('SOFTWARE-CLUSTER')
+        softwareC.forEach(ele => {
+                var Name = '',
+                    id = '',
+                    category = '',
+                    idVendor = '',
+                    version = '',
+                    sdgs = [],
+                    executable = [],
+                    machineD = [],
+                    toMachine = [],
+                    process = [],
+                    sswc = [],
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "CATEGORY") {
+                        category = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "VENDOR-ID") {
+                        idVendor = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "VERSION") {
+                        version = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "ADMIN-DATA") {
+                        id = 0
+                        item.childNodes.forEach((stat, m) => {
+                            var editItem = { sdg: '', sd: '', id: '' }
+                            if (m % 2 != 0) {
+                                stat.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SDG") {
+                                            if (data.childNodes.length == 1) {
+                                                editItem.sd = ''
+                                                editItem.sdg = data.getAttribute("GID")
+                                                editItem.id = id
+                                                const addObj = Object.assign({}, editItem)
+                                                sdgs.push(addObj)
+                                                id++
+                                            } else {
+                                                data.childNodes.forEach((sdg, s) => {
+                                                    if (s % 2 != 0) {
+                                                        editItem = { sdg: '', sd: '', id: '' }
+                                                        if (sdg.nodeName == "SD") {
+                                                            editItem.sd = sdg.childNodes[0].nodeValue
+                                                            editItem.sdg = sdg.getAttribute("GID")
+                                                            editItem.id = id
+                                                            const addObj = Object.assign({}, editItem)
+                                                            sdgs.push(addObj)
+                                                            id++
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                    if (item.nodeName == "CONTAINED-AR-ELEMENT-REFS") {
+                        id = 0
+                        item.childNodes.forEach(data => {
+                            var editItem = { execut: null, id: '' }
+                            if (data.nodeName == "CONTAINED-AR-ELEMENT-REF") {
+                                editItem.execut = data.childNodes[0].nodeValue
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                executable.push(addObj)
+                                id++
+                            }
+                        })
+                    }
+                    if (item.nodeName == "CONTAINED-FIBEX-ELEMENT-REFS") {
+                        id = 0
+                        item.childNodes.forEach(data => {
+                            var editItem = { machine: null, id: '' }
+                            if (data.nodeName == "CONTAINED-FIBEX-ELEMENT-REF") {
+                                editItem.machine = data.childNodes[0].nodeValue
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                machineD.push(addObj)
+                                id++
+                            }
+                        })
+                    }
+                    if (item.nodeName == "CONTAINED-PACKAGE-ELEMENT-REFS") {
+                        id = 0
+                        item.childNodes.forEach(data => {
+                            var editItem = { mapping: null, id: '' }
+                            if (data.nodeName == "CONTAINED-PACKAGE-ELEMENT-REF") {
+                                editItem.mapping = data.childNodes[0].nodeValue
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                toMachine.push(addObj)
+                                id++
+                            }
+                        })
+                    }
+                    if (item.nodeName == "CONTAINED-PROCESS-REFS") {
+                        id = 0
+                        item.childNodes.forEach(data => {
+                            var editItem = { pro: null, id: '' }
+                            if (data.nodeName == "CONTAINED-PROCESS-REF") {
+                                editItem.pro = data.childNodes[0].nodeValue
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                process.push(addObj)
+                                id++
+                            }
+                        })
+                    }
+                    if (item.nodeName == "SUB-SOFTWARE-CLUSTER-REFS") {
+                        id = 0
+                        item.childNodes.forEach(data => {
+                            var editItem = { swc: null, id: '' }
+                            if (data.nodeName == "SUB-SOFTWARE-CLUSTER-REF") {
+                                editItem.swc = data.childNodes[0].nodeValue
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                sswc.push(addObj)
+                                id++
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+
+                this.commit('addElementSoftWareCluster', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    category: category,
+                    idVendor: idVendor,
+                    version: version,
+                    sdgs: sdgs,
+                    executable: executable,
+                    machineD: machineD,
+                    toMachine: toMachine,
+                    process: process,
+                    sswc: sswc,
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SWCluster_str })
+                EventBus.$emit('add-element', constant.Platform_str)
+                EventBus.$emit('add-element', constant.UCM_str)
+                EventBus.$emit('add-element', constant.SWCluster_str)
             })
             // SOFTWARE-PACKAGE
         var softwareP = payload.xmlDoc.getElementsByTagName('SOFTWARE-PACKAGE')
@@ -5388,8 +5731,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementSoftWarePackage', {
                     name: Name,
@@ -5539,8 +5882,8 @@ const mutations = {
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
                 this.commit('addElementVehiclePackage', {
                     name: Name,
@@ -5584,8 +5927,8 @@ const mutations = {
             if (UUID == null || idxEle != -1) {
                 UUID = uuid.v1()
             }
-            const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-            const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+            const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
             this.commit('addElementModuleInstant', {
                 name: Name,
@@ -5801,23 +6144,67 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].pport.length > 0) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].pport.forEach((data, i) => {
-                        if (data.interface != null) {
+                        console.log(data.selectI)
+                        if (data.selectI == "SERVICE-INTERFACE") {
                             state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                 if (data.interface == (item.path + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/pporttable-' + i, end: item.uuid })
-                                    EventBus.$emit('new-line', ele.uuid + '/pporttable', item.uuid)
+                                    this.commit('setConnectionline', { start: ele.uuid + '/PPortI-' + data.id, end: item.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/PPortI-' + data.id, item.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/pport', item.uuid)
+                                    }
+                                }
+                            })
+                        } else if (data.selectI == "PHM-RECOVERY-ACTION-INTERFACE") {
+                            state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.forEach(item => {
+                                if (data.interface == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/PPortI-' + data.id, end: item.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/PPortI-' + data.id, item.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/pport', item.uuid)
+                                    }
                                 }
                             })
                         }
-                    })
-                }
-                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].rport.length > 0) {
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].rport.forEach((data, i) => {
-                        if (data.interface != null) {
-                            state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
-                                if (data.interface == (item.path + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/rporttable-' + i, end: item.uuid })
-                                    EventBus.$emit('new-line', ele.uuid + '/rporttable', item.uuid)
+                        if (data.queued.length > 0) {
+                            data.queued.forEach(pro => {
+                                if (pro.dataE != null) {
+                                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
+                                        if (item.events.length > 0) {
+                                            item.events.forEach(el => {
+                                                if (pro.dataE == (item.path + '/' + item.name + '/' + el.name)) {
+                                                    this.commit('setConnectionline', { start: ele.uuid + '/pportQSC-' + pro.id + '-' + data.id, end: item.uuid })
+                                                    if (i == 0) {
+                                                        EventBus.$emit('new-line', ele.uuid + '/pportQSC-' + data.id, item.uuid)
+                                                    } else {
+                                                        EventBus.$emit('new-line', ele.uuid + '/pport', item.uuid)
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        if (data.field.length > 0) {
+                            data.field.forEach(pro => {
+                                if (pro.dataE != null) {
+                                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
+                                        if (item.fields.length > 0) {
+                                            item.fields.forEach(el => {
+                                                if (pro.dataE == (item.path + '/' + item.name + '/' + el.name)) {
+                                                    this.commit('setConnectionline', { start: ele.uuid + '/pportFSC-' + pro.id + '-' + data.id, end: item.uuid })
+                                                    if (i == 0) {
+                                                        EventBus.$emit('new-line', ele.uuid + '/pportFSC-' + data.id, item.uuid)
+                                                    } else {
+                                                        EventBus.$emit('new-line', ele.uuid + '/pport', item.uuid)
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    })
                                 }
                             })
                         }
@@ -5826,10 +6213,147 @@ const mutations = {
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.length > 0) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.forEach((data, i) => {
                         if (data.interface != null) {
+                            if (data.selectI == "SERVICE-INTERFACE") {
+                                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
+                                    if (data.interface == (item.path + '/' + item.name)) {
+                                        this.commit('setConnectionline', { start: ele.uuid + '/PRPortI-' + data.id, end: item.uuid })
+                                        if (i == 0) {
+                                            EventBus.$emit('new-line', ele.uuid + '/PRPortI-' + data.id, item.uuid)
+                                        } else {
+                                            EventBus.$emit('new-line', ele.uuid + '/prport', item.uuid)
+                                        }
+                                    }
+                                })
+                            } else if (data.selectI == "PERSISTENCY-FILE-PROXY-INTERFACE") {
+                                state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.forEach(item => {
+                                    if (data.interface == (item.path + '/' + item.name)) {
+                                        this.commit('setConnectionline', { start: ele.uuid + '/PRPortI-' + data.id, end: item.uuid })
+                                        if (i == 0) {
+                                            EventBus.$emit('new-line', ele.uuid + '/PRPortI-' + data.id, item.uuid)
+                                        } else {
+                                            EventBus.$emit('new-line', ele.uuid + '/prport', item.uuid)
+                                        }
+                                    }
+                                })
+                            } else if (data.selectI == "PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE") {
+                                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.forEach(item => {
+                                    if (data.interface == (item.path + '/' + item.name)) {
+                                        this.commit('setConnectionline', { start: ele.uuid + '/PRPortI-' + data.id, end: item.uuid })
+                                        if (i == 0) {
+                                            EventBus.$emit('new-line', ele.uuid + '/PRPortI-' + data.id, item.uuid)
+                                        } else {
+                                            EventBus.$emit('new-line', ele.uuid + '/prport', item.uuid)
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                        if (data.provide.length > 0) {
+                            data.provide.forEach(pro => {
+                                if (pro.dataE != null) {
+                                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.forEach(item => {
+                                        if (item.data.length > 0) {
+                                            item.data.forEach(el => {
+                                                if (pro.dataE == (item.path + '/' + item.name + '/' + el.name)) {
+                                                    this.commit('setConnectionline', { start: ele.uuid + '/prporttab-' + pro.id + '-' + data.id, end: item.uuid })
+                                                    if (i == 0) {
+                                                        EventBus.$emit('new-line', ele.uuid + '/prporttab-' + data.id, item.uuid)
+                                                    } else {
+                                                        EventBus.$emit('new-line', ele.uuid + '/prport', item.uuid)
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].rport.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].rport.forEach((data, i) => {
+                        if (data.selectI == "SERVICE-INTERFACE") {
                             state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                 if (data.interface == (item.path + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/prporttable-' + i, end: item.uuid })
-                                    EventBus.$emit('new-line', ele.uuid + '/prporttable', item.uuid)
+                                    this.commit('setConnectionline', { start: ele.uuid + '/RPortI-' + data.id, end: item.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/RPortI-' + data.id, item.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/rport', item.uuid)
+                                    }
+                                }
+                            })
+                        } else if (data.selectI == "PHM-HEALTH-CHANNEL-INTERFACE") {
+                            state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.forEach(item => {
+                                if (data.interface == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/RPortI-' + data.id, end: item.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/RPortI-' + data.id, item.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/rport', item.uuid)
+                                    }
+                                }
+                            })
+                        } else if (data.selectI == "PHM-SUPERVISED-ENTITY-INTERFACE") {
+                            state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.forEach(item => {
+                                if (data.interface == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/RPortI-' + data.id, end: item.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/RPortI-' + data.id, item.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/rport', item.uuid)
+                                    }
+                                }
+                            })
+                        }
+                        if (data.queued.length > 0) {
+                            data.queued.forEach(que => {
+                                if (que.dataE != null) {
+                                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
+                                        if (item.events.length > 0 && que.select == "VARIABLE-DATA-PROTOTYPE") {
+                                            item.events.forEach(el => {
+                                                if (que.dataE == (item.path + '/' + item.name + '/' + el.name)) {
+                                                    this.commit('setConnectionline', { start: ele.uuid + '/rportQRC-' + que.id + '-' + data.id, end: item.uuid })
+                                                    if (i == 0) {
+                                                        EventBus.$emit('new-line', ele.uuid + '/rportQRC-' + data.id, item.uuid)
+                                                    } else {
+                                                        EventBus.$emit('new-line', ele.uuid + '/rport', item.uuid)
+                                                    }
+                                                }
+                                            })
+                                        } else if (item.fields.length > 0 && que.select == "FIELD") {
+                                            item.fields.forEach(el => {
+                                                if (que.dataE == (item.path + '/' + item.name + '/' + el.name)) {
+                                                    this.commit('setConnectionline', { start: ele.uuid + '/rportQRC-' + que.id + '-' + data.id, end: item.uuid })
+                                                    if (i == 0) {
+                                                        EventBus.$emit('new-line', ele.uuid + '/rportQRC-' + data.id, item.uuid)
+                                                    } else {
+                                                        EventBus.$emit('new-line', ele.uuid + '/rport', item.uuid)
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        if (data.client.length > 0) {
+                            data.client.forEach(cl => {
+                                if (cl.operation != null) {
+                                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
+                                        if (item.methods.length > 0) {
+                                            item.methods.forEach(el => {
+                                                if (cl.operation == (item.path + '/' + item.name + '/' + el.name)) {
+                                                    this.commit('setConnectionline', { start: ele.uuid + '/rportCC-' + cl.id + '-' + data.id, end: item.uuid })
+                                                    if (i == 0) {
+                                                        EventBus.$emit('new-line', ele.uuid + '/rportCC-' + data.id, item.uuid)
+                                                    } else {
+                                                        EventBus.$emit('new-line', ele.uuid + '/rport', item.uuid)
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    })
                                 }
                             })
                         }
@@ -5894,6 +6418,38 @@ const mutations = {
                                 } else {
                                     EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
                                 }
+                            }
+                        })
+                    }
+                    if (data.exection != null) {
+                        data.exection.forEach((exec, f) => {
+                            if (exec.contextMode != null) {
+                                state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
+                                    item.functiongroup.forEach(group => {
+                                        if (exec.contextMode == (item.path + '/' + item.name + '/' + group.name)) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/edcontext-' + f + '-' + i, end: item.uuid })
+                                            if (i == 0) {
+                                                EventBus.$emit('new-line', ele.uuid + '/edtable' + i, item.uuid)
+                                            } else {
+                                                EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
+                                            }
+                                        }
+                                    })
+                                })
+                            }
+                            if (exec.targetMode != null) {
+                                state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.forEach(item => {
+                                    item.modedeclaration.forEach(mode => {
+                                        if (exec.targetMode == (item.path + '/' + item.name + '/' + mode)) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/edtarget-' + f + '-' + i, end: item.uuid })
+                                            if (i == 0) {
+                                                EventBus.$emit('new-line', ele.uuid + '/edtable' + i, item.uuid)
+                                            } else {
+                                                EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
+                                            }
+                                        }
+                                    })
+                                })
                             }
                         })
                     }
@@ -6124,11 +6680,23 @@ const mutations = {
                         })
                     })
                 }
-                if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].siref != null) {
-                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach(data => {
-                        if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].siref == data.path + '/' + data.name) {
-                            this.commit('setConnectionline', { start: ele.uuid + '/tomachinServiceIns', end: data.uuid })
-                            EventBus.$emit('new-line', ele.uuid + '/tomachinServiceIns', data.uuid)
+                if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].serviceI.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].serviceI.forEach((ser, i) => {
+                        console.log(ser.ref)
+                        if (ser.ref == 'PROVIDED-SOMEIP-SERVICE-INSTANCE') {
+                            state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach(data => {
+                                if (ser.service == data.path + '/' + data.name) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/toMachinServiceIns-' + i, end: data.uuid })
+                                    EventBus.$emit('new-line', ele.uuid + '/toMachinServiceIns', data.uuid)
+                                }
+                            })
+                        } else if (ser.ref == 'REQUIRED-SOMEIP-SERVICE-INSTANCE') {
+                            state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach(data => {
+                                if (ser.service == data.path + '/' + data.name) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/toMachinServiceIns-' + i, end: data.uuid })
+                                    EventBus.$emit('new-line', ele.uuid + '/toMachinServiceIns', data.uuid)
+                                }
+                            })
                         }
                     })
                 }
@@ -6338,11 +6906,11 @@ const mutations = {
             } else if (ele.parent == constant.Errorset_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxelement].errorref.length > 0) {
-                    state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxelement].errorref.forEach((data, i) => {
+                    state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxelement].errorref.forEach(data => {
                         if (data.error != null) {
                             state.SAHLProject[state.openProjectIndex].Service.Error.forEach(item => {
                                 if (data.error == (item.path + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/error-' + i, end: item.uuid })
+                                    this.commit('setConnectionline', { start: ele.uuid + '/error-' + data.id, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/error', item.uuid)
                                 }
                             })
@@ -6663,6 +7231,68 @@ const mutations = {
                                 if (state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxelement].SIMethod == (item.path + '/' + item.name + '/' + service.name)) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/MGDserviceI', end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/MGDserviceI', item.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.SWCluster_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(item => item.uuid === ele.uuid)
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].executable.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].executable.forEach((data, i) => {
+                        if (data.execut != null) {
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.forEach(item => {
+                                if (data.execut == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/SCExecutable-' + i, end: item.uuid })
+                                    EventBus.$emit('new-line', ele.uuid + '/SCExecutable', item.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].machineD.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].machineD.forEach((data, i) => {
+                        if (data.machine != null) {
+                            state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.forEach(item => {
+                                if (data.machine == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/SCMachineD-' + i, end: item.uuid })
+                                    EventBus.$emit('new-line', ele.uuid + '/SCMachineD', item.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].toMachine.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].toMachine.forEach((data, i) => {
+                        if (data.mapping != null) {
+                            state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.forEach(item => {
+                                if (data.mapping == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/SCtoMachine-' + i, end: item.uuid })
+                                    EventBus.$emit('new-line', ele.uuid + '/SCtoMachine', item.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].process.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].process.forEach((data, i) => {
+                        if (data.pro != null) {
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(item => {
+                                if (data.pro == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/SCProcess-' + i, end: item.uuid })
+                                    EventBus.$emit('new-line', ele.uuid + '/SCProcess', item.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].sswc.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].sswc.forEach((data, i) => {
+                        if (data.swc != null) {
+                            state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.forEach(item => {
+                                if (data.swc == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/SCswc-' + i, end: item.uuid })
+                                    EventBus.$emit('new-line', ele.uuid + '/SCswc', item.uuid)
                                 }
                             })
                         }
@@ -7261,12 +7891,7 @@ const mutations = {
             left: payload.left,
             zindex: payload.zindex,
             name: payload.name,
-            configname: payload.configname,
-            policy: payload.policy,
-            priority: payload.priority,
-            entertimeout: payload.entertimeout,
-            exittimeout: payload.exittimeout,
-
+            config: payload.config,
         })
         state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.StartupConfig_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -7572,7 +8197,7 @@ const mutations = {
             ccref: payload.ccref,
             udp: payload.udp,
             tcp: payload.tcp,
-            siref: payload.siref,
+            serviceI: payload.serviceI,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -8481,12 +9106,14 @@ const mutations = {
             zindex: payload.zindex,
             name: payload.name,
             category: payload.category,
-            inVendor: payload.inVendor,
+            idVendor: payload.idVendor,
             version: payload.version,
             sdgs: payload.sdgs,
             executable: payload.executable,
             machineD: payload.machineD,
-
+            toMachine: payload.toMachine,
+            process: payload.process,
+            sswc: payload.sswc
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -8842,7 +9469,9 @@ const mutations = {
             var startUUID = state.connectionLine[state.openProjectIndex].start[idx].split('/')
             var tableLine = startUUID[1].split('-')
             var idxElement = null,
-                intablename = null
+                intablename = null,
+                idxIDTab = null,
+                idxIDTable = null
             if (tableLine[0] == 'ddpccompu') { // compu method 변경시 => implementation 에서 compu method ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc[tableLine[1]].compumethod = payload.path + '/' + payload.name
@@ -8896,12 +9525,23 @@ const mutations = {
                     intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].contextMode.split('/')
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].contextMode = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
                 }
+            } else if (tableLine[0] == 'edcontext') { //Machine 변경시 =>  Process 에서 Machine -> Execution dependency ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                if (payload.changeName == 'functionG') {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].contextMode = payload.path + '/' + payload.name + '/' + payload.listname
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].contextMode.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].contextMode = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
             } else if (tableLine[0] == 'PHMtoMachine') { // Machine 변경시 => PHMtoMachine 에서 Machine ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxElement].machine = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'machinedesign') { //MachineDesign 변경시 =>  machin에서 machinDesign ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].machinedesign = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'SCMachineD') { //MachineDesign 변경시 =>  Software Cluster에서 machinDesign ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].machineD[tableLine[1]].machine = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'comconet') { //MachineDesign 변경시 =>   EthernetCluster에서 MachineDesign -> Communication Connector ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'CommunicationC') {
@@ -8934,6 +9574,10 @@ const mutations = {
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
                 intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].targetMode.split('/')
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].targetMode = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+            } else if (tableLine[0] == 'edtarget') { //Mode Declaration  변경시 =>  Process 에서  Module Declaration-> mode Declarations ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].targetMode.split('/')
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].targetMode = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
             } else if (tableLine[0] == 'hwelement') { //HW Element 변경시 =>  machin에서 HWElement ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].hwelement[tableLine[1]].hwelement = payload.path + '/' + payload.name
@@ -9007,6 +9651,9 @@ const mutations = {
             } else if (tableLine[0] == 'PHMViaPro') { //Process 변경시 =>  PHMRecoveryVia 에서 Process ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].process = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'SCProcess') { //Process 변경시 =>  Software Cluster에서 Process ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].process[tableLine[1]].pro = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'processprodesign') { //ProcessDesign 변경 시  =>   Process 에서 Process Design ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].prodesign = payload.path + '/' + payload.name
@@ -9028,6 +9675,9 @@ const mutations = {
             } else if (tableLine[0] == 'processexecut') { //Executable 변경시 =>  Process 에서 Executable ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].execut = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'SCExecutable') { //Executable 변경시 =>  Software Cluster에서 Executable ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].executable[tableLine[1]].execut = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'processstartup') { // Startup Config 변경시 =>  Process 에서 Startup Config ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[1]].startupConfigRef = payload.path + '/' + payload.name
@@ -9088,15 +9738,59 @@ const mutations = {
                     intablename = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].eventG.split('/')
                     state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].eventG = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
                 }
-            } else if (tableLine[0] == 'pporttable') { //ServiceInterface 변경 시 =>  SW Components 에서 ServiceInterface ref할때
+            } else if (tableLine[0] == 'pportQSC') { //ServiceInterface 변경 시 =>  SW Components의 Queued 에서 ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[tableLine[1]].interface = payload.path + '/' + payload.name
-            } else if (tableLine[0] == 'prporttable') { //ServiceInterface 변경 시 =>  SW Components 에서 ServiceInterface ref할때
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued, tableLine[1])
+                if (payload.changeName == 'serviceEventD') {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued[idxIDTable].dataE.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'pportFSC') { //ServiceInterface 변경 시 =>  SW Components의 field 에서 ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[tableLine[1]].interface = payload.path + '/' + payload.name
-            } else if (tableLine[0] == 'rporttable') { //ServiceInterface 변경 시 =>  SW Components 에서 ServiceInterface ref할때
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field, tableLine[1])
+                if (payload.changeName == 'field') {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field[idxIDTable].dataE.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'PPortI') { //ServiceInterface 변경 시 =>  SW Components 에서 ServiceInterface ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[tableLine[1]].interface = payload.path + '/' + payload.name
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].interface = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'PRPortI') { //ServiceInterface 변경 시 =>  SW Components 에서 ServiceInterface ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].interface = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'RPortI') { //ServiceInterface 변경 시 =>  SW Components 에서 ServiceInterface ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].interface = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'rportQRC') { //ServiceInterface 변경 시 =>  SW Components의 queued 에서 ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued, tableLine[1])
+                if ((payload.changeName == 'field' && state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].select == "FIELD") ||
+                    (payload.changeName == 'serviceEventD' && state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].select == "VARIABLE-DATA-PROTOTYPE")) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].dataE.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'rportCC') { //ServiceInterface 변경 시 =>  SW Components의 client 에서 ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client, tableLine[1])
+                if (payload.changeName == 'serviceMethodD') {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].operation = payload.path + '/' + payload.name + '/' + payload.listname
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].operation.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].operation = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
             } else if (tableLine[0] == 'service') { //ServiceInterface 변경 시 =>  ServiceInterface Deploymant에서 serviceInterface ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].service = payload.path + '/' + payload.name
@@ -9160,9 +9854,12 @@ const mutations = {
             } else if (tableLine[0] == 'providSomeIPS') { //SomeIP Server 변경시 =>  Provided SomeIP Service Instance 에서 SomIP Server ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].someipserver = payload.path + '/' + payload.name
-            } else if (tableLine[0] == 'tomachinServiceIns') { //Required SomeIP 변경시 =>  SomeIPtoMachineMapping 에서 Required SomeIP ref할때
+            } else if (tableLine[0] == 'SCtoMachine') { //SoomeIP To Machine Mapping 변경시 =>  Software Cluster에서 SoomeIP To Machine Mapping ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].toMachine[tableLine[1]].mapping = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'toMachinServiceIns') { //Required SomeIP 변경시 =>  SomeIPtoMachineMapping 에서 Required SomeIP ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].siref = payload.path + '/' + payload.name
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI[tableLine[1]].service = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'toportservice') { //Required Provided 변경시 => Service Instance to port prototype 에서 provided,required ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
                 if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].selectServiceIns == "PROVIDED-SOMEIP-SERVICE-INSTANCE" && payload.req == false) {
@@ -9170,6 +9867,9 @@ const mutations = {
                 } else if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].selectServiceIns == "REQUIRED-SOMEIP-SERVICE-INSTANCE" && payload.req == true) {
                     state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].serviceIns = payload.path + '/' + payload.name
                 }
+            } else if (tableLine[0] == 'toMachinServiceIns') { //Provided SomeIP 변경시 =>  SomeIPtoMachineMapping 에서 Provided SomeIP ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI[tableLine[1]].service = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'FGProvide') { //Provided 변경시 =>  Field Grant 에서 Provided ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].IamG.FieldG.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxElement].provide = payload.path + '/' + payload.name
@@ -9184,7 +9884,8 @@ const mutations = {
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].methods[tableLine[2]].errorSet[tableLine[1]].error = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'error') { //Error 변경시 =>  Error Set 에서 Error  ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].errorref[tableLine[1]].error = payload.path + '/' + payload.name
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].errorref, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].errorref[idxIDTable].error = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'methoderror') { // Error set 변경시 =>  ServiceInterface 에서 ErrorSet ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].methods[tableLine[2]].error[tableLine[1]].error = payload.path + '/' + payload.name
@@ -9197,6 +9898,16 @@ const mutations = {
             } else if (tableLine[0] == 'PPPtoKeyValue') { //per Key Value Data 변경시 =>  PPP to Key Value 에서 per Key Value Data ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxElement].keyValue = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'prporttab') { //per Key Value Data Interface 변경 시 =>  SW Components의 prport provide 에서 ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide, tableLine[1])
+                if (payload.changeName == 'PerDataInter') {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide[idxIDTable].dataE.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
             } else if (tableLine[0] == 'PHMContri') { //PHMContribution 변경시 =>  PHMtoMachine 에서 PHMContribution ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxElement].contri[tableLine[1]].con = payload.path + '/' + payload.name
@@ -9212,6 +9923,9 @@ const mutations = {
             } else if (tableLine[0] == 'MethodGD') { //Method Grant Design 변경시 =>  Method Grant 에서 Method Grant Design ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxElement].methodD = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'SCswc') { //SoftWareCluster 변경시 =>  Software Cluster에서 SoftWareCluster ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].sswc[tableLine[1]].swc = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'UCMSWPSWC') { //SoftWareCluster 변경시 =>  SoftWarePackage 에서 SoftWareCluster ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxElement].swcluster = payload.path + '/' + payload.name
@@ -9292,6 +10006,22 @@ const mutations = {
                                     }
                                 })
                             }
+                            if (data.exection != null) {
+                                data.exection.forEach((item, f) => {
+                                    if (item.targetMode == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/edtarget-' + f + '-' + n)
+                                        if (idx != -1) {
+                                            item.targetMode = null
+                                            EventBus.$emit('delete-line', idx)
+                                            this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
+                                        }
+                                    }
+                                })
+                            }
                         })
                     }
                 })
@@ -9318,18 +10048,41 @@ const mutations = {
                     })
                     //ServiceInterface 변경 시 =>  MethodGD에서에서 serviceinterface Event ref할때
                 state.SAHLProject[state.openProjectIndex].IamG.MethodGD.forEach((ele, i) => {
-                    if (ele.SIMethod == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
-                        var idx = this.getters.getconnectLineNum(ele.uuid + '/MGDserviceI')
-                        if (idx != -1) {
-                            ele.SIMethod = null
-                            EventBus.$emit('delete-line', idx)
-                            this.commit('deletConnectionline', { startnum: idx })
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].children[i].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                            state.navigatorList[state.openProjectIndex].validation = true
+                        if (ele.SIMethod == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                            var idx = this.getters.getconnectLineNum(ele.uuid + '/MGDserviceI')
+                            if (idx != -1) {
+                                ele.SIMethod = null
+                                EventBus.$emit('delete-line', idx)
+                                this.commit('deletConnectionline', { startnum: idx })
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].children[i].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                state.navigatorList[state.openProjectIndex].validation = true
+                            }
                         }
+                    })
+                    //ServiceInterface 변경 시 =>  SWConponent-> rport client에서  ref할때
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach((ele, i) => {
+                    if (ele.rport.length > 0) {
+                        ele.rport.forEach(port => {
+                            if (port.client.length > 0) {
+                                port.client.forEach(item => {
+                                    if (item.operation == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/rportCC-' + item.id + '-' + port.id)
+                                        if (idx != -1) {
+                                            item.operation = null
+                                            EventBus.$emit('delete-line', idx)
+                                            this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
+                                        }
+                                    }
+                                })
+                            }
+                        })
                     }
                 })
             } else if (payload.deleteName == 'eventG') {
@@ -9408,6 +10161,117 @@ const mutations = {
                         })
                     }
                 })
+            } else if (payload.deleteName == 'ptab' || payload.deleteName == 'rtab' || payload.deleteName == 'prtab') {
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.forEach((ele, i) => {
+                    if ((ele.selectPort == 'P-PORT-PROTOTYPE' && payload.deleteName == 'ptab' && ele.porttype == (payload.path + '/' + payload.name + '/' + payload.tabName)) ||
+                        (ele.selectPort == 'R-PORT-PROTOTYPE' && payload.deleteName == 'rtab' && ele.porttype == (payload.path + '/' + payload.name + '/' + payload.tabName)) ||
+                        (ele.selectPort == 'PR-PORT-PROTOTYPE' && payload.deleteName == 'prtab' && ele.porttype == (payload.path + '/' + payload.name + '/' + payload.tabName))) {
+                        var idx = this.getters.getconnectLineNum(ele.uuid + '/toportport')
+                        if (idx != -1) {
+                            ele.porttype = null
+                            EventBus.$emit('delete-line', idx)
+                            this.commit('deletConnectionline', { startnum: idx })
+                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[i].validation = true
+                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
+                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                            state.navigatorList[state.openProjectIndex].validation = true
+                        }
+                    }
+                })
+                if (payload.deleteName == 'pPort') {
+                    //SWComponemt 변경 시 =>  PHMRecoveryVia SWComponemt P port ref할때
+                    state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.forEach((ele, i) => {
+                        if (ele.port == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                            var idx = this.getters.getconnectLineNum(ele.uuid + '/PHMViaPPort')
+                            ele.port = null
+                            if (idx != -1) {
+                                ele.port = null
+                                EventBus.$emit('delete-line', idx)
+                                this.commit('deletConnectionline', { startnum: idx })
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[i].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                state.navigatorList[state.openProjectIndex].validation = true
+                            }
+                        }
+                    })
+                }
+                if (payload.deleteName == 'prPort') {
+                    //SWComponemt 변경 시 =>  PERFileArray 에서 SWComponemt의  pr port ref할때
+                    state.SAHLProject[state.openProjectIndex].Per.PERFileArray.forEach((ele, i) => {
+                            if (ele.sdgs.length > 0) {
+                                ele.sdgs.forEach((item, n) => {
+                                    if (item.port == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/PERArraySDG-' + n)
+                                        if (idx != -1) {
+                                            item.port = null
+                                            EventBus.$emit('delete-line', idx)
+                                            this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                        //SWComponemt 변경 시 =>  PERKeyValueD 에서 SWComponemt의  pr port ref할때
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.forEach((ele, i) => {
+                            if (ele.sdgs.length > 0) {
+                                ele.sdgs.forEach((item, n) => {
+                                    if (item.port == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/PERKeyDSDG-' + n)
+                                        if (idx != -1) {
+                                            item.port = null
+                                            EventBus.$emit('delete-line', idx)
+                                            this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                        //SWComponemt 변경 시 =>  PERPPtoFileArray에서 SWComponemt PR port ref할때
+                    state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.forEach((ele, i) => {
+                            if (ele.port == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                var idx = this.getters.getconnectLineNum(ele.uuid + '/PPPtoFilePRPort')
+                                if (idx != -1) {
+                                    ele.port = null
+                                    EventBus.$emit('delete-line', idx)
+                                    this.commit('deletConnectionline', { startnum: idx })
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].validation = true
+                                }
+                            }
+                        })
+                        //SWComponemt 변경 시 =>  PERPPtoKeyValue에서 SWComponemt PR port ref할때
+                    state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.forEach((ele, i) => {
+                        if (ele.port == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                            var idx = this.getters.getconnectLineNum(ele.uuid + '/PPPtoKeyPRPort')
+                            if (idx != -1) {
+                                ele.port = null
+                                EventBus.$emit('delete-line', idx)
+                                this.commit('deletConnectionline', { startnum: idx })
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children[i].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
+                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                state.navigatorList[state.openProjectIndex].validation = true
+                            }
+                        }
+                    })
+                }
             }
         } else {
             payload.deletItemList.forEach(deleteList => {
@@ -9419,6 +10283,23 @@ const mutations = {
                                     data.functionItem.forEach((item, f) => {
                                         if (item.contextMode == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                             var idx = this.getters.getconnectLineNum(ele.uuid + '/fgcontext-' + f + '-' + n)
+                                            if (idx != -1) {
+                                                item.contextMode = null
+                                                EventBus.$emit('delete-line', idx)
+                                                this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
+
+                                            }
+                                        }
+                                    })
+                                }
+                                if (data.exection != null) {
+                                    data.exection.forEach((item, f) => {
+                                        if (item.contextMode == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/edcontext-' + f + '-' + n)
                                             if (idx != -1) {
                                                 item.contextMode = null
                                                 EventBus.$emit('delete-line', idx)
@@ -9479,117 +10360,6 @@ const mutations = {
                                 }
                             }
                         }) //SW Component 변경시 =>   Service Instance to port prototype 에서 SWComponent port ref할때
-                } else if (payload.deleteName == 'pPort' || payload.deleteName == 'prPort' || payload.deleteName == 'rPort') {
-                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.forEach((ele, i) => {
-                        if ((ele.selectPort == 'P-PORT-PROTOTYPE' && payload.deleteName == 'pPort' && ele.porttype == (payload.path + '/' + payload.name + '/' + deleteList.name)) ||
-                            (ele.selectPort == 'R-PORT-PROTOTYPE' && payload.deleteName == 'rPort' && ele.porttype == (payload.path + '/' + payload.name + '/' + deleteList.name)) ||
-                            (ele.selectPort == 'PR-PORT-PROTOTYPE' && payload.deleteName == 'prPort' && ele.porttype == (payload.path + '/' + payload.name + '/' + deleteList.name))) {
-                            var idx = this.getters.getconnectLineNum(ele.uuid + '/toportport')
-                            if (idx != -1) {
-                                ele.porttype = null
-                                EventBus.$emit('delete-line', idx)
-                                this.commit('deletConnectionline', { startnum: idx })
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[i].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
-                                state.navigatorList[state.openProjectIndex].validation = true
-                            }
-                        }
-                    })
-                    if (payload.deleteName == 'pPort') {
-                        //SWComponemt 변경 시 =>  PHMRecoveryVia SWComponemt P port ref할때
-                        state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.forEach((ele, i) => {
-                            if (ele.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
-                                var idx = this.getters.getconnectLineNum(ele.uuid + '/PHMViaPPort')
-                                ele.port = null
-                                if (idx != -1) {
-                                    ele.port = null
-                                    EventBus.$emit('delete-line', idx)
-                                    this.commit('deletConnectionline', { startnum: idx })
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[i].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].validation = true
-                                }
-                            }
-                        })
-                    }
-                    if (payload.deleteName == 'prPort') {
-                        //SWComponemt 변경 시 =>  PERFileArray 에서 SWComponemt의  pr port ref할때
-                        state.SAHLProject[state.openProjectIndex].Per.PERFileArray.forEach((ele, i) => {
-                                if (ele.sdgs.length > 0) {
-                                    ele.sdgs.forEach((item, n) => {
-                                        if (item.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
-                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/PERArraySDG-' + n)
-                                            if (idx != -1) {
-                                                item.port = null
-                                                EventBus.$emit('delete-line', idx)
-                                                this.commit('deletConnectionline', { startnum: idx })
-                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].children[i].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                                state.navigatorList[state.openProjectIndex].validation = true
-                                            }
-                                        }
-                                    })
-                                }
-                            })
-                            //SWComponemt 변경 시 =>  PERKeyValueD 에서 SWComponemt의  pr port ref할때
-                        state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.forEach((ele, i) => {
-                                if (ele.sdgs.length > 0) {
-                                    ele.sdgs.forEach((item, n) => {
-                                        if (item.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
-                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/PERKeyDSDG-' + n)
-                                            if (idx != -1) {
-                                                item.port = null
-                                                EventBus.$emit('delete-line', idx)
-                                                this.commit('deletConnectionline', { startnum: idx })
-                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children[i].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                                state.navigatorList[state.openProjectIndex].validation = true
-                                            }
-                                        }
-                                    })
-                                }
-                            })
-                            //SWComponemt 변경 시 =>  PERPPtoFileArray에서 SWComponemt PR port ref할때
-                        state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.forEach((ele, i) => {
-                                if (ele.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
-                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/PPPtoFilePRPort')
-                                    if (idx != -1) {
-                                        ele.port = null
-                                        EventBus.$emit('delete-line', idx)
-                                        this.commit('deletConnectionline', { startnum: idx })
-                                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].validation = true
-                                    }
-                                }
-                            })
-                            //SWComponemt 변경 시 =>  PERPPtoKeyValue에서 SWComponemt PR port ref할때
-                        state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.forEach((ele, i) => {
-                            if (ele.port == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
-                                var idx = this.getters.getconnectLineNum(ele.uuid + '/PPPtoKeyPRPort')
-                                if (idx != -1) {
-                                    ele.port = null
-                                    EventBus.$emit('delete-line', idx)
-                                    this.commit('deletConnectionline', { startnum: idx })
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children[i].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].validation = true
-                                }
-                            }
-                        })
-                    }
                 } else if (payload.deleteName == 'eventSI') {
                     //ServiceInterface 변경 시 =>  ServiceInterface Deploymant에서에서 serviceinterface Event ref할때
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach((ele, i) => {
@@ -9613,18 +10383,64 @@ const mutations = {
                         })
                         //ServiceInterface 변경 시 =>  EventGD에서에서 serviceinterface Event ref할때
                     state.SAHLProject[state.openProjectIndex].IamG.EventGD.forEach((ele, i) => {
-                        if (ele.SIEvent == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
-                            var idx = this.getters.getconnectLineNum(ele.uuid + '/EGDserviceI')
-                            if (idx != -1) {
-                                ele.SIEvent = null
-                                EventBus.$emit('delete-line', idx)
-                                this.commit('deletConnectionline', { startnum: idx })
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].children[i].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                state.navigatorList[state.openProjectIndex].validation = true
+                            if (ele.SIEvent == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                var idx = this.getters.getconnectLineNum(ele.uuid + '/EGDserviceI')
+                                if (idx != -1) {
+                                    ele.SIEvent = null
+                                    EventBus.$emit('delete-line', idx)
+                                    this.commit('deletConnectionline', { startnum: idx })
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].validation = true
+                                }
                             }
+                        })
+                        //ServiceInterface 변경 시 =>  SWConponent에서 serviceinterface event ref할때
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach((ele, i) => {
+                            if (ele.pport.length > 0) {
+                                ele.pport.forEach(port => {
+                                    if (port.queued.length > 0) {
+                                        port.queued.forEach(item => {
+                                            if (item.dataE == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                                var idx = this.getters.getconnectLineNum(ele.uuid + '/pportQSC-' + item.id + '-' + port.id)
+                                                if (idx != -1) {
+                                                    item.dataE = null
+                                                    EventBus.$emit('delete-line', idx)
+                                                    this.commit('deletConnectionline', { startnum: idx })
+                                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[i].validation = true
+                                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                    state.navigatorList[state.openProjectIndex].validation = true
+                                                }
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                        //ServiceInterface 변경 시 =>  SWConponent-> serviceinterface rport queued에서  ref할때
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach((ele, i) => {
+                        if (ele.rport.length > 0) {
+                            ele.rport.forEach(port => {
+                                if (port.queued.length > 0) {
+                                    port.queued.forEach(item => {
+                                        if (item.select == "VARIABLE-DATA-PROTOTYPE" && (item.dataE == (payload.path + '/' + payload.name + '/' + deleteList.name))) {
+                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/rportQRC-' + item.id + '-' + port.id)
+                                            if (idx != -1) {
+                                                item.dataE = null
+                                                EventBus.$emit('delete-line', idx)
+                                                this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
+                                            }
+                                        }
+                                    })
+                                }
+                            })
                         }
                     })
                 } else if (payload.deleteName == 'fieldSI') {
@@ -9650,18 +10466,64 @@ const mutations = {
                         })
                         //ServiceInterface 변경 시 =>  FieldGD에서에서 serviceinterface Field ref할때
                     state.SAHLProject[state.openProjectIndex].IamG.FieldGD.forEach((ele, i) => {
-                        if (ele.SIField == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
-                            var idx = this.getters.getconnectLineNum(ele.uuid + '/FGDserviceI')
-                            if (idx != -1) {
-                                ele.SIField = null
-                                EventBus.$emit('delete-line', idx)
-                                this.commit('deletConnectionline', { startnum: idx })
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].children[i].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
-                                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
-                                state.navigatorList[state.openProjectIndex].validation = true
+                            if (ele.SIField == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                var idx = this.getters.getconnectLineNum(ele.uuid + '/FGDserviceI')
+                                if (idx != -1) {
+                                    ele.SIField = null
+                                    EventBus.$emit('delete-line', idx)
+                                    this.commit('deletConnectionline', { startnum: idx })
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].validation = true
+                                }
                             }
+                        })
+                        //ServiceInterface 변경 시 =>  SWConponent에서 serviceinterface Field ref할때
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach((ele, i) => {
+                            if (ele.pport.length > 0) {
+                                ele.pport.forEach(port => {
+                                    if (port.field.length > 0) {
+                                        port.field.forEach(item => {
+                                            if (item.dataE == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                                var idx = this.getters.getconnectLineNum(ele.uuid + '/pportFSC-' + item.id + '-' + port.id)
+                                                if (idx != -1) {
+                                                    item.dataE = null
+                                                    EventBus.$emit('delete-line', idx)
+                                                    this.commit('deletConnectionline', { startnum: idx })
+                                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[i].validation = true
+                                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                    state.navigatorList[state.openProjectIndex].validation = true
+                                                }
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                        //ServiceInterface 변경 시 =>  SWConponent-> serviceinterface rport queued에서  ref할때
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach((ele, i) => {
+                        if (ele.rport.length > 0) {
+                            ele.rport.forEach(port => {
+                                if (port.queued.length > 0) {
+                                    port.queued.forEach(item => {
+                                        if (item.select == "FIELD" && (item.dataE == (payload.path + '/' + payload.name + '/' + deleteList.name))) {
+                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/rportQRC-' + item.id + '-' + port.id)
+                                            if (idx != -1) {
+                                                item.dataE = null
+                                                EventBus.$emit('delete-line', idx)
+                                                this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
+                                            }
+                                        }
+                                    })
+                                }
+                            })
                         }
                     })
                 } else if (payload.deleteName == 'eventD') {
@@ -9751,17 +10613,43 @@ const mutations = {
                             })
                         }
                     })
+                } else if (payload.deleteName == 'perKVDIdata') {
+                    //PERKeyValueDI 변경 시 =>  SWConponent에서 PERKeyValueDI data ref할때
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach((ele, i) => {
+                        if (ele.prport.length > 0) {
+                            ele.prport.forEach(port => {
+                                if (port.provide.length > 0) {
+                                    port.provide.forEach(item => {
+                                        if (item.dataE == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/prporttab-' + item.id + '-' + port.id)
+                                            if (idx != -1) {
+                                                item.dataE = null
+                                                EventBus.$emit('delete-line', idx)
+                                                this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
                 }
             })
         }
     },
     deleteRefElement(state, payload) { // 지울 element를  ref하는곳 찾기 => 화살표의 끝
         var indices = this.getters.getchangenamelist(payload.uuid)
-            //console.log('==deleteRefElement==' + indices)
+        console.log('==deleteRefElement==' + indices)
 
         for (let i = 0; i < indices.length; i++) {
             var startUUID = state.connectionLine[state.openProjectIndex].start[indices[i]].split('/')
             var tableLine = startUUID[1].split('-')
+            var idxIDTab = 0,
+                idxIDTable = 0
 
             if (tableLine[0] == 'ddpccompu') { // implementation 에서 compu method ref할때
                 var idxImpleCom = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
@@ -9860,24 +10748,71 @@ const mutations = {
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
-            } else if (tableLine[0] == 'pporttable') { // SW Components 에서 ServiceInterface ref할때
+            } else if (tableLine[0] == 'PPortI') { // SW Components 에서 ServiceInterface ref할때
                 var idxpport = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxpport].pport[tableLine[1]].interface = ''
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxpport].pport, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxpport].pport[idxIDTab].interface = ''
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxpport].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
-            } else if (tableLine[0] == 'prporttable') { // SW Components 에서 ServiceInterface ref할때
+            } else if (tableLine[0] == 'pportQSC') { // SW Components 에서 Service Interface -> events ref할때
+                var idxSWPQSC = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPQSC].pport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPQSC].pport[idxIDTab].queued, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPQSC].pport[idxIDTab].queued[idxIDTable].dataE = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxSWPQSC].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'pportFSC') { // SW Components 에서 Service Interface-> Fields ref할때
+                var idxSWPFSC = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPFSC].pport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPFSC].pport[idxIDTab].field, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPFSC].pport[idxIDTab].field[idxIDTable].dataE = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxSWPFSC].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'PRPortI') { // SW Components 에서 ServiceInterface ref할때
                 var idxprport = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxprport].prport[tableLine[1]].interface = ''
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxprport].pport, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxprport].prport[idxIDTab].interface = ''
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxprport].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
-            } else if (tableLine[0] == 'rporttable') { // SW Components 에서 ServiceInterface ref할때
+            } else if (tableLine[0] == 'prporttab') { // SW Components 에서 Service Interface-> Fields ref할때
+                var idxPRPro = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxPRPro].prport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxPRPro].prport[idxIDTab].provide, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxPRPro].prport[idxIDTab].provide[idxIDTable].dataE = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxPRPro].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'RPortI') { // SW Components 에서 ServiceInterface ref할때
                 var idxrport = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxrport].rport[tableLine[1]].interface = ''
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxrport].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'rportQRC') { // SW Components 에서 Service Interface -> events ref할때
+                var idxSWRQRC = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRQRC].rport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRQRC].rport[idxIDTab].queued, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRQRC].rport[idxIDTab].queued[idxIDTable].dataE = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxSWRQRC].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'rportCC') { // SW Components 에서 Service Interface-> method ref할때
+                var idxSWRCC = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRCC].rport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRCC].rport[idxIDTab].client, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRCC].rport[idxIDTab].client[idxIDTable].operation = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxSWRCC].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
@@ -9951,6 +10886,20 @@ const mutations = {
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'edcontext') { // Process 에서 Machine -> Function Group ref할때
+                var idxProEDC = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProEDC].dependent[tableLine[2]].exection[tableLine[1]].contextMode = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProEDC].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'edtarget') { // Process 에서  Module Declaration-> mode Declarations ref할때
+                var idxProEDT = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProEDT].dependent[tableLine[2]].exection[tableLine[1]].targetMode = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProEDT].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'errordomain') { // Error 에서 Error Domain ref할때
                 var idxErrorD = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.Error[idxErrorD].errorDref = null
@@ -9961,7 +10910,8 @@ const mutations = {
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'error') { // Error Set 에서 Error  ref할때
                 var idxError = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxError].errorref[tableLine[1]].error = null
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxError].errorref, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxError].errorref[idxIDTable].error = null
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].children[idxError].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].validation = true
@@ -10057,9 +11007,9 @@ const mutations = {
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
-            } else if (tableLine[0] == 'tomachinServiceIns') { // SomeIPtoMachineMapping 에서 Required SomeIP ref할때
+            } else if (tableLine[0] == 'toMachinServiceIns') { // SomeIPtoMachineMapping 에서 Required SomeIP / Provide SomeIP ref할때
                 var idxSIRequired = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxSIRequired].siref = null
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxSIRequired].serviceI[tableLine[1]].service = null
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[idxSIRequired].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
@@ -10411,6 +11361,46 @@ const mutations = {
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGrant_index].children[idxMGProvide].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGrant_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'SCExecutable') { // SoftWareCluster 에서 Executable ref할때
+                var idxSCE = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxSCE].executable[tableLine[1]].execut = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxSCE].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'SCMachineD') { // SoftWareCluster 에서 Server ref할때
+                var idxSCM = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxSCM].machineD[tableLine[1]].machine = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxSCM].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'SCtoMachine') { //SoftWareCluster 에서 Server ref할때
+                var idxSCS = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxSCS].toMachine[tableLine[1]].mapping = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxSCS].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'SCProcess') { // SoftWareCluster 에서 Server ref할때
+                var idxSCP = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxSCP].process[tableLine[1]].pro = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxSCP].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'SCswc') { // SoftWareCluster 에서 Server ref할때
+                var idxSCSC = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxSCSC].sswc[tableLine[1]].swc = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxSCSC].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'UCMSWPSWC') { //SoftWarePackage 에서 SoftWareCluster ref할때

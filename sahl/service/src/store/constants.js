@@ -130,7 +130,7 @@ export default {
     Process_str: 'Process',
     ProcessDesign_str: 'Process Design',
     Executable_str: 'Executable',
-    StartupConfig_str: 'Startup Config',
+    StartupConfig_str: 'Startup Config Set',
     DeterministicClient_str: 'Deterministic Client',
     //Machines
     Machine_str: 'Machine',

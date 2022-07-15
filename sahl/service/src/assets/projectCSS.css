@@ -228,3 +228,10 @@ tr.v-data-table__selected {
 .my-handle {
     cursor: move !important;
 }
+
+.text-editDialog {
+    white-space: nowrap;
+    overflow-X: auto;
+    overflow-Y: hidden;
+    width: 700px;
+}

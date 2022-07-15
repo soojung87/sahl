@@ -162,6 +162,7 @@ export default({
                 { title: 'Copy & Paste', menuAction: action => { this.copyElement(action) } },
             ],
             menuFirstitems: [
+                { title: 'New',    menuAction: action => { this.newGroupElement(action) } },
                 { title: 'Open',   menuAction: action => { this.openElement(action) } },
                 { title: 'Close',   menuAction: action => { this.closeElement(action) } },
             ],
@@ -223,11 +224,11 @@ export default({
         openNode() {
             //alert(this.openIds)
         },
-        newElement () {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
-            //const elementX = Math.floor(Math.random() * (1400 - 11)) + 10 // (max - min) + min
-            //const elementY = Math.floor(Math.random() * (200 - 6)) + 5
+        newElement() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+            // const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
+            // const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
 
             if (this.activenode[0] == constant.CompuMethod_str) {
                 this.$store.commit('addElementCompuMehtod', {
@@ -312,7 +313,7 @@ export default({
                 this.$store.commit('addElementStartupConfig', {
                     name: this.$store.getters.getNameStartupConfig, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    configname: '', policy:null, priority:'', entertimeout:'', exittimeout:''
+                    config: []
                 })
             } else if (this.activenode[0] == constant.DeterministicClient_str) {
                 this.$store.commit('addElementDeterministicClien', {
@@ -361,7 +362,7 @@ export default({
                 this.$store.commit('addElementSomeIPtoMachine', { //ccref, siref  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                     name: this.$store.getters.getNameSomeIPtoMachine, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    ccref: null, siref: null, tcp:'', udp: '',
+                    ccref: null, serviceI: [], tcp:'', udp: '',
                 })
             } else if (this.activenode[0] == constant.ToPortPrototypeMapping_str) {
                 this.$store.commit('addElementToPortPrototype', { 
@@ -510,7 +511,7 @@ export default({
                 this.$store.commit('addElementSoftWareCluster', {
                     name: this.$store.getters.getNameSoftWareCluster, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    category: '', inVendor: '', version: '', sdgs: [], executable: [], machineD: [], toMachine: []
+                    category: '', idVendor: '', version: '', sdgs: [], executable: [], machineD: [], toMachine: [], process: [], sswc: [],
                 })
             } else if (this.activenode[0] == constant.SWPackage_str) {
                 this.$store.commit('addElementSoftWarePackage', {
@@ -535,6 +536,121 @@ export default({
 
             if(!this.openIds.some(item => item === this.activenode[0])){
                 this.openIds.push(this.activenode[0])
+            }
+        },
+        newGroupElement() {
+            if (this.activenode[0] == constant.AdaptiveApplication_str) {
+                if(!this.openIds.some(item => item === constant.AdaptiveApplication_str)){
+                    this.openIds.push(constant.AdaptiveApplication_str)
+                }
+                this.$store.commit('addElementProtoMachineMapping', { 
+                    name: this.$store.getters.getNameProcesstoMachineMapping, input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    ptmmname: '',  ptmmMachine: null, ptmmProcess: null,
+                })
+                if(!this.openIds.some(item => item === constant.ProcesstoMachineMapping_str)){
+                    this.openIds.push(constant.ProcesstoMachineMapping_str)
+                }
+                this.$store.commit('addElementSWComponents', {
+                    name: this.$store.getters.getNameSWComponents, input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    pport: [], rport: [], prport: [],
+                })
+                if(!this.openIds.some(item => item === constant.SWComponents_str)){
+                    this.openIds.push(constant.SWComponents_str)
+                }
+                this.$store.commit('addElementProcess', { 
+                    name: this.$store.getters.getNameProcess, input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
+                })
+                if(!this.openIds.some(item => item === constant.Process_str)){
+                    this.openIds.push(constant.Process_str)
+                }
+                this.$store.commit('addElementProcessDesign', {
+                    name: this.$store.getters.getNameProcessDesign, input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10,icon:"mdi-clipboard-outline", validation: false,
+                    executableref: null, determin: [],
+                })
+                if(!this.openIds.some(item => item === constant.ProcessDesign_str)){
+                    this.openIds.push(constant.ProcessDesign_str)
+                }
+                this.$store.commit('addElementExecutable', { 
+                    name: this.$store.getters.getNameExecutable, input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() *3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    version: '', category:'', buildType:null, loggingBehabior:null, reportingBehabior:null, swname:'', applicationtyperef: null,
+                })
+                if(!this.openIds.some(item => item === constant.Executable_str)){
+                    this.openIds.push(constant.Executable_str)
+                }
+                this.$store.commit('addElementStartupConfig', {
+                    name: this.$store.getters.getNameStartupConfig, input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    config: []
+                })
+                if(!this.openIds.some(item => item === constant.StartupConfig_str)){
+                    this.openIds.push(constant.StartupConfig_str)
+                }
+                this.$store.commit('addElementDeterministicClien', {
+                    name: this.$store.getters.getNameDeterministicClient, input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    cycletiem: '', numofworkers: '',
+                })
+                if(!this.openIds.some(item => item === constant.DeterministicClient_str)){
+                    this.openIds.push(constant.DeterministicClient_str)
+                }
+            } else if (this.activenode[0] == constant.Machines_str) {
+                if(!this.openIds.some(item => item === constant.Machines_str)){
+                    this.openIds.push(constant.Machines_str)
+                }
+                this.$store.commit('addElementMachine', {
+                    name: this.$store.getters.getNameMachine, input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, admin: '',
+                    functiongroup:[], processor: [], moduleinstant: [], icon:"mdi-clipboard-outline", validation: false
+                })
+                if(!this.openIds.some(item => item === constant.Machine_str)){
+                    this.openIds.push(constant.Machine_str)
+                }
+                this.$store.commit('addElementMachineDesign', {
+                    name: this.$store.getters.getNameMachineDesign, input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, access: null, resettimer:'', connector:[], servicediscover:[], icon:"mdi-clipboard-outline", validation: false
+                })
+                if(!this.openIds.some(item => item === constant.MachineDesigne_str)){
+                    this.openIds.push(constant.MachineDesigne_str)
+                }
+                this.$store.commit('addElementModeDeclarationGroup', {
+                    name: this.$store.getters.getNameModeDeclarationGroup, input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, modedeclaration:[], initmode:null, icon:"mdi-clipboard-outline", validation: false
+                })
+                if(!this.openIds.some(item => item === constant.ModeDeclarationGroup_str)){
+                    this.openIds.push(constant.ModeDeclarationGroup_str)
+                }
+                this.$store.commit('addElementHWElement', {
+                    name: this.$store.getters.getNameHWElement,  input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, category:null, attribute:[], icon:"mdi-clipboard-outline", validation: false
+                })
+                if(!this.openIds.some(item => item === constant.HWElement_str)){
+                    this.openIds.push(constant.HWElement_str)
+                }
+                this.$store.commit('addElementEthernetCluster', {
+                    name: this.$store.getters.getNameEthernetCluster, input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, conditional:[], icon:"mdi-clipboard-outline", validation: false
+                })
+                if(!this.openIds.some(item => item === constant.EthernetCluster_str)){
+                    this.openIds.push(constant.EthernetCluster_str)
+                }
             }
         },
         openElement() {

@@ -17,6 +17,9 @@ Vue.config.productionTip = false
 require('@/assets/projectCSS.css')
 export const EventBus = new Vue()
 
+Vue.prototype.$setZoominTooltip = 0.45
+Vue.prototype.$setZoominElement = 0.55
+
 new Vue({
     vuetify,
     router,

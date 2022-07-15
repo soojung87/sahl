@@ -146,7 +146,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SW Components')"
                 @resizing="changeElementSize()">
-                <SWComponents :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <SWComponents :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -196,7 +196,7 @@
                 :resizable="true" :draggable="isDraggable"
                 :handles="['mr','ml']" :min-width="400"
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Startup Config')"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Startup Config Set')"
                 @resizing="changeElementSize()">
                 <StartupConfig :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
@@ -369,7 +369,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error Set')"
                 @resizing="changeElementSize()">
-                <APErrorSet :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <APErrorSet :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -382,7 +382,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error')"
                 @resizing="changeElementSize()">
-                <APError :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <APError :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
 
             <vue-draggable-resizable :id="element.uuid+location"
@@ -553,7 +553,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Method Grant Design')"
                 @resizing="changeElementSize()">
-                <MethodGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <MethodGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -566,7 +566,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Event Grant Design')"
                 @resizing="changeElementSize()">
-                <EventGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <EventGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -579,7 +579,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Field Grant Design')"
                 @resizing="changeElementSize()">
-                <FieldGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <FieldGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -592,7 +592,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Method Grant')"
                 @resizing="changeElementSize()">
-                <MethodGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <MethodGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -605,7 +605,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Event Grant')"
                 @resizing="changeElementSize()">
-                <EventGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <EventGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -618,7 +618,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Field Grant')"
                 @resizing="changeElementSize()">
-                <FieldGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <FieldGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -707,7 +707,6 @@ import SomeIPService from '../components/SomeIPService.vue'
 import ToPortPrototype from '../components/ToPortPrototype.vue'
 import RequiredSomeIP from '../components/RequiredSomeIP.vue'
 import ProvidedSomeIP from '../components/ProvidedSomeIP.vue'
-
 import PerFileArray from './PerFileArray.vue'
 import PerFileProxy from '../components/PerFileProxy.vue'
 import PerKeyValueDB from '../components/PerKeyValueDB.vue'
@@ -843,10 +842,11 @@ export default{
             })
         },
         isPositionLine(val) {
+            console.log(val)
             if (val) {
-                document.getElementById('wrapper').style.zIndex = 1;
-            } else {
                 document.getElementById('wrapper').style.zIndex = 0;
+            } else {
+                document.getElementById('wrapper').style.zIndex = 1;
             }
         }
     },
@@ -935,7 +935,7 @@ export default{
         EventBus.$off('goElement'); //중복호출되어 같이 정의해줘야 한번 들어온다. 
         EventBus.$on('goElement', (id) => {
             console.log('goElement  '+ this.$store.state.selectScreen)
-            document.getElementById(id+this.$store.state.selectScreen).scrollIntoView(true);
+            document.getElementById(id+this.$store.state.selectScreen).scrollIntoView({ behavior: 'smooth', block: 'start' })
             EventBus.$emit('active-element', id)
             this.$store.commit( 'setSelectScreen', {num: 1})
         })
@@ -1145,17 +1145,17 @@ export default{
             if (this.location == '1') {
                 var bodyWidth = document.getElementById('main-view1').scrollWidth+200 //+200해주면 minimap에서 우측으로 갈때 element가 작게 보이는게 좀 나아짐
                 var bodyHeight
-                if(this.zoom.value < 0.75) {
-                    bodyHeight = document.getElementById('main-view1').scrollHeight +100
-                } else {
-                    bodyHeight = document.getElementById('main-view1').scrollHeight
-                }
+                // if(this.zoom.value < 0.75) {
+                //     bodyHeight = document.getElementById('main-view1').scrollHeight +300
+                // } else {
+                    bodyHeight = document.getElementById('main-view1').scrollHeight +300
+                //}
                 var realScaleX = document.getElementsByClassName('mini-map')[0].clientWidth /bodyWidth
                 var realScaleY = document.getElementsByClassName('mini-map')[0].clientHeight /bodyHeight
 
                 document.getElementsByClassName('minimap-view')[0].style.transform = `scale(${realScaleX}, ${realScaleY})`
                 if(this.zoom.value < 0.75) { // minimap안에서 보여질때, 화면에서 왼쪽으로 이동시 minimap에 다 나타나지 않아서 설정해줌
-                    document.getElementsByClassName('minimap-view')[0].style.width = (100 * (realScaleX+0.9-this.zoom.value)) + '%'
+                    document.getElementsByClassName('minimap-view')[0].style.width = (100 * (realScaleX+0.6-this.zoom.value)) + '%'
                 } else {
                     document.getElementsByClassName('minimap-view')[0].style.width = (100 * realScaleX) + '%'
                 }
@@ -1255,8 +1255,10 @@ export default{
                     //tab이 아닌 애들만 선그리기
                     if (!(tableLine[0] == 'field' || tableLine[0] == 'event' || tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror' ||
                         tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient' || tableLine[0] == 'providEventG' || tableLine[0] == 'providServer' ||
-                        tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' || tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup' ||
-                        tableLine[0] == 'comconet' || tableLine[0] == 'PERKeyV')) {
+                        tableLine[0] == 'edcontext' || tableLine[0] == 'edtarget' || tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' ||
+                        tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup' || tableLine[0] == 'comconet' || tableLine[0] == 'PERKeyV' ||
+                        tableLine[0] == 'PPortI' || tableLine[0] == 'pportQSC' || tableLine[0] == 'pportFSC' || tableLine[0] == 'PRPortI' || tableLine[0] == 'prporttab' || 
+                        tableLine[0] == 'RPortI' || tableLine[0] == 'rportQRC' || tableLine[0] == 'rportCC')) {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(tableLine[0] == 'ddpccompu' || tableLine[0] == 'ddpcdata'){ //implementation에서 table에 ref가 두개라..
@@ -1273,6 +1275,7 @@ export default{
             if(this.minimaptoolbar && this.location == '1') {
                 var activeLine = this.$store.getters.getactiveLine(uuid)
                 var startLine
+                console.log(activeLine)
                 for (let i=0; i< activeLine.length;i++) {
                     startLine = this.$store.getters.getStartLineInfo(activeLine[i]) 
                     var startUUID = startLine.split('/')
@@ -1383,6 +1386,24 @@ export default{
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/processStarupC')
                         }
                         this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'edcontext') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[2]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/edtable'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processStarupC')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'edtarget') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(idx == tableLine[2]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/edtable'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processStarupC')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'processresorce') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
@@ -1436,11 +1457,85 @@ export default{
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/PERKeyV')
                         }
                         this.changeLineAppendChild(activeLine[i])
+                    } else if (tableLine[0] == 'PPortI' && item == 'pport') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/PPortI-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/pport')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'PRPortI' && item == 'prport') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/PRPortI-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/prport')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'RPortI' && item == 'rport') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/RPortI-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/rport')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'pportQSC' && item == 'pport') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[2]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/pportQSC-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/pport')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'pportFSC' && item == 'pport') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[2]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/pportFSC-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/pport')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'prporttab' && item == 'prport') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[2]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/prporttab-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/prport')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'rportQRC' && item == 'rport') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[2]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/rportQRC-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/rport')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'rportCC' && item == 'rport') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[2]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/rportCC-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/rport')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } 
                 }
                 //console.log(this.appendLine)
                 this.$nextTick(() => {
-                    this.setanimationLine(uuid, true)
+                    if (this.$store.state.activeUUID == uuid) {
+                        this.setanimationLine(uuid, true)
+                    }
                     this.moveline()
                 })
             }
