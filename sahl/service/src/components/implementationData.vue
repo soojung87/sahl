@@ -22,7 +22,7 @@
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Implementation Data Type</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputImplementationName' outlined dense></v-text-field>
                             <v-text-field v-model="element.category" label="Category" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -75,6 +75,59 @@
                             </v-row>
                             <v-text-field v-model="element.desc" label="Desc" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" style="height:20px">
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showIntroduction" x-small color="indigo">
+                                            <v-icon>{{ isIntroductionOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    Introduction
+                                    <v-btn @click="isCheckIntroduction" text x-small color="indigo" v-if="isIntroductionOpenClose">
+                                        <v-icon>mdi-check</v-icon>
+                                    </v-btn>
+                                    <v-btn v-if="isIntroductionOpenClose && isdeleteIntroductionItem" @click="deleteIntroduction" text x-small color="indigo" >
+                                        <v-icon>mdi-minus</v-icon>
+                                    </v-btn>
+                                </div>
+                                <v-card-text v-if="isIntroductionOpenClose"> 
+                                    <v-text-field v-model="element.traceName" label="Trace Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                    <v-data-table v-model="selectDelectIntroductionItem" :headers="headerIntroduction" :items="element.trace"  :items-per-page='20'
+                                            :show-select="isdeleteIntroductionItem" item-key="id" height="140px" dense hide-default-footer >
+                                        <template v-slot:item.data-table-select="{ isSelected, select }">
+                                            <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                        </template>
+                                        <template v-if="!isdeleteIntroductionItem" v-slot:body="{ items, headers }">
+                                            <tbody>
+                                                <tr v-for="(item,idx) in items" :key="idx">
+                                                    <td v-for="(header,key) in headers" :key="key">
+                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openIntroduction(idx)" @cancel="editIntroduction(idx)" @save="cancelIntroduction" large >
+                                                            {{item[header.value]}}
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-text-field v-model="editIntroductionItem.traceref" label="Trace Ref" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="3">
+                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addIntroduction()" @save="cancelIntroduction"> 
+                                                            <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                            </v-btn>
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-text-field v-model="editIntroductionItem.traceref" label="Trace Ref" @click="setactiveUUID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </template>
+                                    </v-data-table>
+                                </v-card-text>
+                            </v-card>
+                            <v-card outlined class="mx-auto">
                                 <div class="subtitle-2" :id="element.uuid+'/DDPC'" style="height:20px">
                                     <v-hover v-slot="{ hover }">
                                         <v-btn text @click="showDDPCItem" x-small color="indigo">
@@ -91,7 +144,7 @@
                                 </div>
                                 <v-card-text v-show="isDDPCOpenClose">  
                                     <v-data-table v-model="selectDelectDDPCItem" :headers="headerDDPC" :items="element.ddpc" :items-per-page='20'
-                                            :show-select="isdeleteDDPCItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteDDPCItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -178,7 +231,7 @@
                                 </div>
                                 <v-card-text v-show="isIDTElementOpenClose">  
                                     <v-data-table v-model="selectDelectIDTElementItem" :headers="headerIDTElement" :items="element.idtelement" :items-per-page='20'
-                                            :show-select="isdeleteIDTElementItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteIDTElementItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -192,7 +245,7 @@
                                                                 <br>
                                                                 <v-text-field v-model="editIDTElementItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-autocomplete v-model='editIDTElementItem.typeref' label='Type Reference' :items='selTemplateType' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                        return-object :readonly="!isEditingIDTETypeRef" @click="setIDTElementSelect()" @blur="isEditingIDTETypeRef=true" outlined dense style="height: 45px;"
+                                                                        return-object :readonly="!isEditingIDTETypeRef" @click="setIDTElementSelect()" @blur="isEditingIDTETypeRef=true" outlined dense style="height: 25px;"
                                                                         clearable @click:clear='clearIDTETypeRef'>
                                                                     <template v-slot:append-item>
                                                                         <v-btn outlined color="indigo" dense text small block @click="newTemplateType">
@@ -200,8 +253,8 @@
                                                                         </v-btn>
                                                                     </template>
                                                                 </v-autocomplete>
-                                                                <v-checkbox v-model="editIDTElementItem.inplace" label="Inplace" @click="setactiveUUID()"></v-checkbox>
-                                                                <v-text-field v-model="editIDTElementItem.desc" label="Desc" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-checkbox v-model="editIDTElementItem.inplace" label="Inplace" value="editIDTElementItem.inplace" :indeterminate="editIDTElementItem.inplace==null? true:false" true-value="true" false-value="false" @click="setactiveUUID()" style="height: 35px;"></v-checkbox>
+                                                                <v-text-field v-model="editIDTElementItem.desc" label="Desc" @click="setactiveUUID" style="height: 35px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             </template>
                                                         </v-edit-dialog>
                                                     </td>
@@ -216,7 +269,7 @@
                                                                 <br>
                                                                 <v-text-field v-model="editIDTElementItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-autocomplete v-model='editIDTElementItem.typeref' label='Type Reference' :items='selTemplateType' item-text='name' item-value="uuid" class="lable-placeholer-color"
-                                                                        return-object :readonly="!isEditingIDTETypeRef" @click="setIDTElementSelect()" @blur="isEditingIDTETypeRef=true" outlined dense style="height: 45px;"
+                                                                        return-object :readonly="!isEditingIDTETypeRef" @click="setIDTElementSelect()" @blur="isEditingIDTETypeRef=true" outlined dense style="height: 25px;"
                                                                         clearable @click:clear='clearIDTETypeRef'>
                                                                     <template v-slot:append-item>
                                                                         <v-btn outlined color="indigo" dense text small block @click="newTemplateType">
@@ -224,8 +277,8 @@
                                                                         </v-btn>
                                                                     </template>
                                                                 </v-autocomplete>
-                                                                <v-checkbox v-model="editIDTElementItem.inplace" label="Inplace" @click="setactiveUUID()"></v-checkbox>
-                                                                <v-text-field v-model="editIDTElementItem.desc" label="Desc" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-checkbox v-model="editIDTElementItem.inplace" label="Inplace" value="editIDTElementItem.inplace" :indeterminate="editIDTElementItem.inplace==null? true:false" true-value="true" false-value="false" @click="setactiveUUID()" style="height: 35px;"></v-checkbox>
+                                                                <v-text-field v-model="editIDTElementItem.desc" label="Desc" @click="setactiveUUID" style="height: 35px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             </template>
                                                         </v-edit-dialog>
                                                     </th>
@@ -236,7 +289,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -280,6 +333,13 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                    })
+                }
             }
         },
     },
@@ -299,6 +359,14 @@ export default {
             isEditingCompuMethod: true,
             isEditingDataConstr: true,
             isDDPCOpenClose: true,
+
+            isIntroductionOpenClose: true,
+            isdeleteIntroductionItem: false,
+            headerIntroduction: [
+                { text: 'Trace Ref', align: 'start', sortable: false, value: 'traceref' },
+            ],
+            selectDelectIntroductionItem: [],
+            editIntroductionItem: {traceref: '', id: '' },
 
             isdeleteDDPCItem: false,
             headerDDPC: [
@@ -322,8 +390,8 @@ export default {
                 { text: 'Desc', sortable: false, value: 'desc' }
             ],
             selectDelectIDTElementItem: [],
-            defaultIDTElementItem: { name: '', typeref: null, inplace: false, desc: '', id: '' },
-            editIDTElementItem: { name: '', typeref: null, inplace: false, desc: '', id: '' },
+            defaultIDTElementItem: { name: '', typeref: null, inplace: null, desc: '', id: '' },
+            editIDTElementItem: { name: '', typeref: null, inplace: null, desc: '', id: '' },
             changeLineImp: [],
             changeLineDDPC: [],
         }
@@ -362,6 +430,10 @@ export default {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
             })
         },
+        showIntroduction () {
+            this.isIntroductionOpenClose = this.isIntroductionOpenClose ? false : true
+            EventBus.$emit('drawLine')
+        },
         showDDPCItem() {
             this.isDDPCOpenClose = this.isDDPCOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
@@ -397,6 +469,46 @@ export default {
                 this.deleteLine(this.element.uuid+'/typeref')
             }
         },
+
+        isCheckIntroduction() {
+            if (this.isdeleteIntroductionItem == true) {
+                this.isdeleteIntroductionItem = false
+                this.selectDelectIntroductionItem = []
+            } else {
+                this.isdeleteIntroductionItem = true
+            }
+        },
+        deleteIntroduction () {
+            if (this.isdeleteIntroductionItem == true) {
+                this.element.trace = this.element.trace.filter(item => {
+                         return this.selectDelectIntroductionItem.indexOf(item) < 0 })
+                this.isdeleteIntroductionItem = false
+                this.selectDelectIntroductionItem = []
+            }
+        },
+        openIntroduction (idx) {
+            this.editIntroductionItem.traceref = this.element.trace[idx].traceref
+        },
+        addIntroduction () {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.trace.some(item => item.id === n)
+            }
+            this.editIntroductionItem.id = n
+            const addObj = Object.assign({}, this.editIntroductionItem);
+            this.element.trace.push(addObj);
+            this.cancelIntroduction()
+        },
+        editIntroduction (idx) {
+            this.element.trace[idx].traceref = this.editIntroductionItem.traceref
+            this.cancelIntroduction()
+        },
+        cancelIntroduction () {
+            this.editIntroductionItem.traceref = ''
+            this.setactiveUUID()
+        },
+
         isCheckDDPC() {
             if (this.isdeleteDDPCItem == true) {
                 this.isdeleteDDPCItem = false
@@ -538,7 +650,7 @@ export default {
 
             this.$store.commit('addElementCompuMehtod', {
                     name: this.$store.getters.getNameCompuMethod,  input: false, path: '',
-                    top: elementY, left: elementX, zindex: 10, category:null, scales:[], icon:"mdi-clipboard-outline", validation: false
+                    top: elementY, left: elementX, zindex: 10, category:null, attributeName:'', scales:[], icon:"mdi-clipboard-outline", validation: false
                 })
             EventBus.$emit('add-element', constant.CompuMethod_str)
             EventBus.$emit('add-element', constant.DateType_str)
@@ -768,7 +880,7 @@ export default {
             this.$store.commit('addElementImplementation', {
                     name: this.$store.getters.getNameImplementation,  input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    category:'', namespace:'', arraysize:'', typeemitter:'', 
+                    category:'', namespace:'', arraysize:'', typeemitter:'', traceName: '', trace: [],
                     typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
                 })
             EventBus.$emit('add-element', constant.Implementation_str)

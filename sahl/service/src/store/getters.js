@@ -26,6 +26,17 @@ const getters = {
         }
         return name
     },
+    getNameSWBaseType(state) {
+        let name = null,
+            res = true,
+            n = 0
+
+        while (res) {
+            name = constant.SWBaseType_str + '_' + n++;
+            res = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.some(ele => ele.name === name)
+        }
+        return name
+    },
     getNameApplicationArray(state) {
         let name = null,
             res = true,
@@ -89,6 +100,17 @@ const getters = {
         while (res) {
             name = constant.HWElement_str + '_' + n++;
             res = state.SAHLProject[state.openProjectIndex].Machine.HWElement.some(ele => ele.name === name)
+        }
+        return name
+    },
+    getNameHWCategory(state) {
+        let name = null,
+            res = true,
+            n = 0
+
+        while (res) {
+            name = constant.HWCategory_str + '_' + n++;
+            res = state.SAHLProject[state.openProjectIndex].Machine.HWCategory.some(ele => ele.name === name)
         }
         return name
     },
@@ -287,6 +309,28 @@ const getters = {
         while (res) {
             name = constant.ProvidedSomeIP_str + '_' + n++;
             res = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.some(ele => ele.name === name)
+        }
+        return name
+    },
+    getNameE2EProfileConfig(state) {
+        let name = null,
+            res = true,
+            n = 0
+
+        while (res) {
+            name = constant.E2EProfileConfig_str + '_' + n++;
+            res = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.some(ele => ele.name === name)
+        }
+        return name
+    },
+    getNameSDG_DEF(state) {
+        let name = null,
+            res = true,
+            n = 0
+
+        while (res) {
+            name = constant.SDG_DEF_str + '_' + n++;
+            res = state.SAHLProject[state.openProjectIndex].Service.SdgDef.some(ele => ele.name === name)
         }
         return name
     },
@@ -555,19 +599,6 @@ const getters = {
         }
         return name
     },
-    getNameModuleInstant(state) {
-        let name = null,
-            res = true,
-            n = 0
-
-        while (res) {
-            name = constant.ModuleInstantiation_str + '_' + n++;
-            res = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.some(ele => ele.name === name)
-        }
-        return name
-    },
-
-
 
     getImplementationDataType(state) {
         var datatype = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.map(ele => {
@@ -605,6 +636,41 @@ const getters = {
         })
         return datatype
     },
+    getMachinProcessor(state) { //Machine의 process core
+        var datatype = []
+        state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(ele => {
+            if (ele.processor.length > 0) {
+                ele.processor.forEach(item => {
+                    if (item.core.length > 0) {
+                        item.core.forEach(data => {
+                            datatype.push({
+                                name: ele.path + '/' + ele.name + '/' + item.name + '/' + data.name,
+                                uuid: ele.uuid,
+                                id: data.id
+                            })
+
+                        })
+                    }
+                })
+            }
+        })
+        return datatype
+    },
+    getUCMModuleIns(state) { //Machine의 ucm module
+        var datatype = []
+        state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(ele => {
+            if (ele.ucm.length > 0) {
+                ele.ucm.forEach(item => {
+                    datatype.push({
+                        name: ele.path + '/' + ele.name + '/' + item.name,
+                        uuid: ele.uuid,
+                        id: item.id
+                    })
+                })
+            }
+        })
+        return datatype
+    },
     getMachineDesign(state) {
         var datatype = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.map(ele => {
             var returnObj = {}
@@ -623,6 +689,30 @@ const getters = {
         })
         return datatype
     },
+    getHWCategory(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].Machine.HWCategory.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
+    getHWAttributeDef(state) { //Mode Declaration Group의 mode Declaration
+        var datatype = []
+        state.SAHLProject[state.openProjectIndex].Machine.HWCategory.forEach(ele => {
+            if (ele.attribute.length > 0) {
+                ele.attribute.forEach(item => {
+                    datatype.push({
+                        name: ele.path + '/' + ele.name + '/' + item.name,
+                        uuid: ele.uuid,
+                        id: item.id
+                    })
+                })
+            }
+        })
+        return datatype
+    },
     getModeDeclarationG(state) {
         var datatype = state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.map(ele => {
             var returnObj = {}
@@ -638,8 +728,9 @@ const getters = {
             if (ele.modedeclaration.length > 0) {
                 ele.modedeclaration.forEach(item => {
                     datatype.push({
-                        name: ele.path + '/' + ele.name + '/' + item,
-                        uuid: ele.uuid
+                        name: ele.path + '/' + ele.name + '/' + item.name,
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -662,7 +753,8 @@ const getters = {
                                         channelidx: v,
                                         endpointidx: c,
                                         fullname: ethernet.name + '/' + condi.name + '/' + channel.name + '/' + end.name,
-                                        name: ethernet.path + '/' + ethernet.name + '/' + condi.name + '/' + channel.name + '/' + end.name
+                                        name: ethernet.path + '/' + ethernet.name + '/' + condi.name + '/' + channel.name + '/' + end.name,
+                                        id: end.id
                                     })
                                 })
                             }
@@ -680,7 +772,8 @@ const getters = {
                 ele.connector.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -694,21 +787,23 @@ const getters = {
                 ele.moduleinstant.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
         })
         return datatype
     },
-    getModeDeclarationGP(state) { //Machine안에 Function Group
+    getMachineFG(state) { //Machine안에 Function Group
         var datatype = []
         state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(ele => {
             if (ele.functiongroup != null) {
                 ele.functiongroup.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -731,7 +826,8 @@ const getters = {
                 ele.pport.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -745,7 +841,8 @@ const getters = {
                 ele.rport.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -759,7 +856,8 @@ const getters = {
                 ele.prport.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -791,6 +889,18 @@ const getters = {
             returnObj['name'] = ele.path + '/' + ele.name
             returnObj['uuid'] = ele.uuid
             return returnObj
+        })
+        return datatype
+    },
+    getRootSWComponentPrototype(state) { //Executable안에 RootSWComponentPrototype
+        var datatype = []
+        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.forEach(ele => {
+            if (ele.swname != '') {
+                datatype.push({
+                    name: ele.path + '/' + ele.name + '/' + ele.swname,
+                    uuid: ele.uuid,
+                })
+            }
         })
         return datatype
     },
@@ -828,8 +938,70 @@ const getters = {
                 ele.methodD.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
+                })
+            }
+        })
+        return datatype
+    },
+    getSomeIPMethodDeployment(state) { //Provided, Required의 Method Props를 위한 함수
+        var datatype = []
+        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(ele => {
+            if (ele.methodD.length > 0) {
+                ele.methodD.forEach(item => {
+                    datatype.push({
+                        name: ele.path + '/' + ele.name + '/' + item.name,
+                        uuid: ele.uuid,
+                        id: item.id
+                    })
+                })
+            }
+            if (ele.fieldD.length > 0) {
+                ele.fieldD.forEach(data => {
+                    if (data.name != '') {
+                        if (data.getname != '') {
+                            datatype.push({
+                                name: ele.path + '/' + ele.name + '/' + data.name + '/' + data.getname,
+                                uuid: ele.uuid,
+                                id: data.id
+                            })
+                        }
+                        if (data.setname != '') {
+                            datatype.push({
+                                name: ele.path + '/' + ele.name + '/' + data.name + '/' + data.setname,
+                                uuid: ele.uuid,
+                                id: data.id
+                            })
+                        }
+                    }
+                })
+            }
+        })
+        return datatype
+    },
+    getSomeIPEventDeployment(state) { //Provided,serviceD eventG의  Event Props를 위한 함수
+        var datatype = []
+        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(ele => {
+            if (ele.eventD.length > 0) {
+                ele.eventD.forEach(item => {
+                    datatype.push({
+                        name: ele.path + '/' + ele.name + '/' + item.name,
+                        uuid: ele.uuid,
+                        id: item.id
+                    })
+                })
+            }
+            if (ele.fieldD.length > 0) {
+                ele.fieldD.forEach(data => {
+                    if (data.name != '' && data.notname != '') {
+                        datatype.push({
+                            name: ele.path + '/' + ele.name + '/' + data.name + '/' + data.notname,
+                            uuid: ele.uuid,
+                            id: data.id
+                        })
+                    }
                 })
             }
         })
@@ -842,7 +1014,8 @@ const getters = {
                 ele.eventG.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -856,7 +1029,8 @@ const getters = {
                 ele.eventD.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -879,7 +1053,8 @@ const getters = {
                 ele.events.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -893,7 +1068,8 @@ const getters = {
                 ele.methods.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -907,7 +1083,8 @@ const getters = {
                 ele.fields.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -974,6 +1151,21 @@ const getters = {
             returnObj['name'] = ele.path + '/' + ele.name
             returnObj['uuid'] = ele.uuid
             return returnObj
+        })
+        return datatype
+    },
+    getE2EProfileConfig(state) { //Service Deployment 안에 Event Group
+        var datatype = []
+        state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.forEach(ele => {
+            if (ele.profile.length > 0) {
+                ele.profile.forEach(item => {
+                    datatype.push({
+                        name: ele.path + '/' + ele.name + '/' + item.configName,
+                        uuid: ele.uuid,
+                        id: item.id
+                    })
+                })
+            }
         })
         return datatype
     },
@@ -1047,7 +1239,8 @@ const getters = {
                 ele.data.forEach(item => {
                     datatype.push({
                         name: ele.path + '/' + ele.name + '/' + item.name,
-                        uuid: ele.uuid
+                        uuid: ele.uuid,
+                        id: item.id
                     })
                 })
             }
@@ -1083,6 +1276,33 @@ const getters = {
     },
     getPHMSupervised(state) {
         var datatype = state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
+    getFieldGrant(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].IamG.FieldG.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
+    getEventGrant(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].IamG.EventG.map(ele => {
+            var returnObj = {}
+            returnObj['name'] = ele.path + '/' + ele.name
+            returnObj['uuid'] = ele.uuid
+            return returnObj
+        })
+        return datatype
+    },
+    getMethodGrant(state) {
+        var datatype = state.SAHLProject[state.openProjectIndex].IamG.MethodG.map(ele => {
             var returnObj = {}
             returnObj['name'] = ele.path + '/' + ele.name
             returnObj['uuid'] = ele.uuid
@@ -1126,16 +1346,6 @@ const getters = {
         })
         return datatype
     },
-    getModuleInstant(state) {
-        var datatype = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.map(ele => {
-            var returnObj = {}
-            returnObj['name'] = ele.path + '/' + ele.name
-            returnObj['uuid'] = ele.uuid
-            return returnObj
-        })
-        return datatype
-    },
-
 
     gettreeviewitems(state) {
         const replaceChildren = (obj, parent) => {
@@ -1194,6 +1404,9 @@ const getters = {
     getDataHWElement: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].Machine.HWElement.find(data => data.uuid === uuid)
     },
+    getDataHWCategory: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].Machine.HWCategory.find(data => data.uuid === uuid)
+    },
     getDataSWComponent: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.find(data => data.uuid === uuid)
     },
@@ -1235,6 +1448,9 @@ const getters = {
     },
     getDataProvidedSomeIP: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.find(data => data.uuid === uuid)
+    },
+    getDataE2EProfileConfig: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.find(data => data.uuid === uuid)
     },
     getDataError: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].Service.Error.find(data => data.uuid === uuid)
@@ -1278,8 +1494,14 @@ const getters = {
     getDataMethodGrantDesign: (state) => (uuid) => {
         return state.SAHLProject[state.openProjectIndex].IamG.MethodGD.find(data => data.uuid === uuid)
     },
-    getDataModuleInstant: (state) => (uuid) => {
-        return state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.find(data => data.uuid === uuid)
+    getDataFieldGrant: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].IamG.FieldG.find(data => data.uuid === uuid)
+    },
+    getDataEventGrant: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].IamG.EventG.find(data => data.uuid === uuid)
+    },
+    getDataMethodGrant: (state) => (uuid) => {
+        return state.SAHLProject[state.openProjectIndex].IamG.MethodG.find(data => data.uuid === uuid)
     },
     getchangenamelist: (state) => (uuid) => {
         var idx = state.connectionLine[state.openProjectIndex].end.indexOf(uuid)
@@ -1379,6 +1601,48 @@ const getters = {
         })
         return uuidRef
     },
+    getSomeIPMethodDeploymentPath: (state) => (method) => { //Provided, Required의 Method Props를 위한 함수
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(data => {
+            data.methodD.forEach(item => {
+                var strEvent = data.path + '/' + data.name + '/' + item.name
+                    //var strEvent = data.name + '/' + item.name
+                if (method == strEvent) {
+                    uuidRef = data.uuid
+                }
+            })
+            data.fieldD.forEach(item => {
+                var strGetter = data.path + '/' + data.name + '/' + item.name + '/' + item.getname,
+                    strSetter = data.path + '/' + data.name + '/' + item.name + '/' + item.setname
+                if (method == strGetter) {
+                    uuidRef = data.uuid
+                }
+                if (method == strSetter) {
+                    uuidRef = data.uuid
+                }
+            })
+        })
+        return uuidRef
+    },
+    getSomeIPEventDeploymentPath: (state) => (event) => { //Provided, ServiceD eventG의 event Props를 위한 함수
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(data => {
+            data.eventD.forEach(item => {
+                var strEvent = data.path + '/' + data.name + '/' + item.name
+                    //var strEvent = data.name + '/' + item.name
+                if (event == strEvent) {
+                    uuidRef = data.uuid
+                }
+            })
+            data.fieldD.forEach(item => {
+                var strNoti = data.path + '/' + data.name + '/' + item.name + '/' + item.notname
+                if (event == strNoti) {
+                    uuidRef = data.uuid
+                }
+            })
+        })
+        return uuidRef
+    },
     getServiceInterfacePath: (state) => (service, idx) => { //idx=0 : element전체  1: event, 2:Filed, 3:Method
         var uuidRef = null
         state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(data => {
@@ -1475,6 +1739,16 @@ const getters = {
             var strPath = data.path + '/' + data.name
                 //var strPath = data.name
             if (strPath === proc) {
+                uuidRef = data.uuid
+            }
+        })
+        return uuidRef
+    },
+    getE2EProfileConfigPath: (state) => (config) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.forEach(data => {
+            var strPath = data.path + '/' + data.name
+            if (strPath === config) {
                 uuidRef = data.uuid
             }
         })
@@ -1581,6 +1855,17 @@ const getters = {
         })
         return uuidRef
     },
+    getRootSWComponentPrototypePath: (state) => (exe) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.forEach(data => {
+            var strPath = data.path + '/' + data.name + '/' + data.swname
+                //var strPath = data.name
+            if (strPath === exe) {
+                uuidRef = data.uuid
+            }
+        })
+        return uuidRef
+    },
     getStartupConfigPath: (state) => (start) => {
         var uuidRef = null
         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.forEach(data => {
@@ -1603,7 +1888,7 @@ const getters = {
         })
         return uuidRef
     },
-    getMachinePath: (state) => (machine, idx) => { //idx=0 : element전체  1: Modul  2: function   3:
+    getMachinePath: (state) => (machine, idx) => { //idx=0 : element전체  1: Modul  2: function   3: ucm Module
         var uuidRef = null
         state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(data => {
             var strPath = data.path + '/' + data.name
@@ -1624,6 +1909,30 @@ const getters = {
                         //strPath = data.name + '/' + item.name
                     if (machine == strPath) {
                         uuidRef = data.uuid
+                    }
+                })
+            } else if (idx == 3) {
+                data.ucm.forEach(item => {
+                    strPath = data.path + '/' + data.name + '/' + item.name
+                    if (machine == strPath) {
+                        uuidRef = data.uuid
+                    }
+                })
+            }
+        })
+        return uuidRef
+    },
+    getMachineProcessorPath: (state) => (machine) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(data => {
+            if (data.processor.length > 0) {
+                data.processor.forEach(item => {
+                    if (item.core.length > 0) {
+                        item.core.forEach(co => {
+                            if (machine == data.path + '/' + data.name + '/' + item.name + '/' + co.name) {
+                                uuidRef = data.uuid
+                            }
+                        })
                     }
                 })
             }
@@ -1682,12 +1991,22 @@ const getters = {
                 uuidRef = data.uuid
             } else if (idx == 1) {
                 data.modedeclaration.forEach(item => {
-                    strPath = data.path + '/' + data.name + '/' + item
+                    strPath = data.path + '/' + data.name + '/' + item.name
                         //strPath = data.name + '/' + item
                     if (mode == strPath) {
                         uuidRef = data.uuid
                     }
                 })
+            }
+        })
+        return uuidRef
+    },
+    getHWCategoryPath: (state) => (deter) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].Machine.HWCategory.forEach(data => {
+            var strPath = data.path + '/' + data.name
+            if (strPath === deter) {
+                uuidRef = data.uuid
             }
         })
         return uuidRef
@@ -1784,6 +2103,36 @@ const getters = {
         })
         return uuidRef
     },
+    getEventPath: (state) => (eventD) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].IamG.EventG.forEach(data => {
+            var strPath = data.path + '/' + data.name
+            if (strPath === eventD) {
+                uuidRef = data.uuid
+            }
+        })
+        return uuidRef
+    },
+    getMethodPath: (state) => (methodD) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].IamG.MethodG.forEach(data => {
+            var strPath = data.path + '/' + data.name
+            if (strPath === methodD) {
+                uuidRef = data.uuid
+            }
+        })
+        return uuidRef
+    },
+    getFieldPath: (state) => (fieldD) => {
+        var uuidRef = null
+        state.SAHLProject[state.openProjectIndex].IamG.FieldG.forEach(data => {
+            var strPath = data.path + '/' + data.name
+            if (strPath === fieldD) {
+                uuidRef = data.uuid
+            }
+        })
+        return uuidRef
+    },
     getEventDesignPath: (state) => (eventD) => {
         var uuidRef = null
         state.SAHLProject[state.openProjectIndex].IamG.EventGD.forEach(data => {
@@ -1814,16 +2163,6 @@ const getters = {
         })
         return uuidRef
     },
-    getModuleInstantPath: (state) => (methodD) => {
-        var uuidRef = null
-        state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.forEach(data => {
-            var strPath = data.path + '/' + data.name
-            if (strPath === methodD) {
-                uuidRef = data.uuid
-            }
-        })
-        return uuidRef
-    },
 
     sortSaveList: (state) => (savelist) => {
         var pathList = [],
@@ -1843,6 +2182,15 @@ const getters = {
             } else if (data.parent == constant.DataConstr_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.findIndex(item => item.uuid === data.uuid)
                 path = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxelement].path.substr(1)
+                pathList.push({
+                    path: path,
+                    pathLength: path.split('/').length,
+                    idx: idxelement,
+                    parent: data.parent
+                })
+            } else if (data.parent == constant.SWBaseType_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.findIndex(item => item.uuid === data.uuid)
+                path = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[idxelement].path.substr(1)
                 pathList.push({
                     path: path,
                     pathLength: path.split('/').length,
@@ -1906,6 +2254,15 @@ const getters = {
             } else if (data.parent == constant.HWElement_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(item => item.uuid === data.uuid)
                 path = state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxelement].path.substr(1)
+                pathList.push({
+                    path: path,
+                    pathLength: path.split('/').length,
+                    idx: idxelement,
+                    parent: data.parent
+                })
+            } else if (data.parent == constant.HWCategory_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].Machine.HWCategory.findIndex(item => item.uuid === data.uuid)
+                path = state.SAHLProject[state.openProjectIndex].Machine.HWCategory[idxelement].path.substr(1)
                 pathList.push({
                     path: path,
                     pathLength: path.split('/').length,
@@ -2059,6 +2416,24 @@ const getters = {
             } else if (data.parent == constant.ProvidedSomeIP_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(item => item.uuid === data.uuid)
                 path = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].path.substr(1)
+                pathList.push({
+                    path: path,
+                    pathLength: path.split('/').length,
+                    idx: idxelement,
+                    parent: data.parent
+                })
+            } else if (data.parent == constant.E2EProfileConfig_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(item => item.uuid === data.uuid)
+                path = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxelement].path.substr(1)
+                pathList.push({
+                    path: path,
+                    pathLength: path.split('/').length,
+                    idx: idxelement,
+                    parent: data.parent
+                })
+            } else if (data.parent == constant.SDG_DEF_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(item => item.uuid === data.uuid)
+                path = state.SAHLProject[state.openProjectIndex].Service.SdgDef[idxelement].path.substr(1)
                 pathList.push({
                     path: path,
                     pathLength: path.split('/').length,
@@ -2281,15 +2656,6 @@ const getters = {
                     idx: idxelement,
                     parent: data.parent
                 })
-            } else if (data.parent == constant.ModuleInstantiation_str) {
-                idxelement = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(item => item.uuid === data.uuid)
-                path = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxelement].path.substr(1)
-                pathList.push({
-                    path: path,
-                    pathLength: path.split('/').length,
-                    idx: idxelement,
-                    parent: data.parent
-                })
             }
         })
         while (pathList.length > 0) {
@@ -2434,6 +2800,18 @@ const getters = {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<CATEGORY>" + state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].category + "</CATEGORY>"
                 }
+                if (state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].attributeName != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<BLUEPRINT-POLICYS>"
+                    saveStr += getters.getEndterStr(elementTab + 1)
+                    saveStr += "<BLUEPRINT-POLICY-NOT-MODIFIABLE>"
+                    saveStr += getters.getEndterStr(elementTab + 2)
+                    saveStr += "<ATTRIBUTE-NAME>" + state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].attributeName + "</ATTRIBUTE-NAME>"
+                    saveStr += getters.getEndterStr(elementTab + 1)
+                    saveStr += "</BLUEPRINT-POLICY-NOT-MODIFIABLE>"
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</BLUEPRINT-POLICYS>"
+                }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[data.idx].scales.length > 0) {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<COMPU-INTERNAL-TO-PHYS>"
@@ -2515,6 +2893,24 @@ const getters = {
                 }
                 saveStr += getters.getEndterStr(enterLine)
                 saveStr += "</DATA-CONSTR>"
+            } else if (data.parent == constant.SWBaseType_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<SW-BASE-TYPE UUID ="' + state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[data.idx].category != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<CATEGORY>" + state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[data.idx].category + "</CATEGORY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[data.idx].encoding != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<BASE-TYPE-ENCODING>" + state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[data.idx].encoding + "</BASE-TYPE-ENCODING>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</SW-BASE-TYPE>"
             } else if (data.parent == constant.ApplicationArray_str) {
                 saveStr += getters.getEndterStr(++enterLine)
                 elementTab = enterLine + 1
@@ -2566,9 +2962,34 @@ const getters = {
                     saveStr += getters.getEndterStr(enterLine)
                     saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].name + "</SHORT-NAME>"
                 }
-                if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].category) {
+                if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].category != '') {
                     saveStr += getters.getEndterStr(enterLine)
                     saveStr += "<CATEGORY>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].category + "</CATEGORY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].traceName != '' ||
+                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].trace.length > 0) {
+                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += "<INTRODUCTION>"
+                    saveStr += getters.getEndterStr(enterLine + 1)
+                    saveStr += "<TRACE>"
+                    if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].traceName != '') {
+                        saveStr += getters.getEndterStr(enterLine + 2)
+                        saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].traceName + "</SHORT-NAME>"
+                    }
+                    if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].trace.length > 0) {
+                        saveStr += getters.getEndterStr(enterLine + 2)
+                        saveStr += "<TRACE-REFS>"
+                        state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].trace.forEach(trace => {
+                            saveStr += getters.getEndterStr(enterLine + 3)
+                            saveStr += '<TRACE-REF DEST="TRACEABLE">' + trace.traceref + "</TRACE-REF>"
+                        })
+                        saveStr += getters.getEndterStr(enterLine + 2)
+                        saveStr += "</TRACE-REFS>"
+                    }
+                    saveStr += getters.getEndterStr(enterLine + 1)
+                    saveStr += "</TRACE>"
+                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += "</INTRODUCTION>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].namespace != '') {
                     namespace = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].namespace.split(',')
@@ -2664,13 +3085,17 @@ const getters = {
                             saveStr += getters.getEndterStr(enterLine + 2)
                             saveStr += "</DESC>"
                         }
-                        if (ele.typeref != null) {
+                        if (ele.typeref != null || ele.inplace != null) {
                             saveStr += getters.getEndterStr(enterLine + 2)
                             saveStr += "<TYPE-REFERENCE>"
-                            saveStr += getters.getEndterStr(enterLine + 3)
-                            saveStr += "<INPLACE>" + ele.inplace + "</INPLACE>"
-                            saveStr += getters.getEndterStr(enterLine + 3)
-                            saveStr += '<TYPE-REFERENCE-REF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + ele.typeref + "</TYPE-REFERENCE-REF>"
+                            if (ele.inplace != null) {
+                                saveStr += getters.getEndterStr(enterLine + 3)
+                                saveStr += "<INPLACE>" + ele.inplace.toUpperCase() + "</INPLACE>"
+                            }
+                            if (ele.typeref != null) {
+                                saveStr += getters.getEndterStr(enterLine + 3)
+                                saveStr += '<TYPE-REFERENCE-REF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + ele.typeref + "</TYPE-REFERENCE-REF>"
+                            }
                             saveStr += getters.getEndterStr(enterLine + 2)
                             saveStr += "</TYPE-REFERENCE>"
                         }
@@ -2734,7 +3159,7 @@ const getters = {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</ADMIN-DATA>"
                 }
-                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].functiongroup != null) {
+                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].functiongroup.length > 0) {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<FUNCTION-GROUPS>"
                     state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].functiongroup.forEach(ele => {
@@ -2754,7 +3179,27 @@ const getters = {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</FUNCTION-GROUPS>"
                 }
-                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].processor != null) {
+                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].environ.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<ENVIRONMENT-VARIABLES>"
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].environ.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<TAG-WITH-OPTIONAL-VALUE>"
+                        if (ele.key != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<KEY>" + ele.key + "</KEY>"
+                        }
+                        if (ele.value != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<VALUE>' + ele.value + "</VALUE>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</TAG-WITH-OPTIONAL-VALUE>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</ENVIRONMENT-VARIABLES>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].processor.length > 0) {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<PROCESSORS>"
                     state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].processor.forEach(ele => {
@@ -2790,7 +3235,9 @@ const getters = {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</PROCESSORS>"
                 }
-                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].moduleinstant != null) {
+                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].moduleinstant.length > 0 ||
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].ucm.length > 0 ||
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].iam.length > 0) {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<MODULE-INSTANTIATIONS>"
                     state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].moduleinstant.forEach(ele => {
@@ -2826,6 +3273,40 @@ const getters = {
                         }
                         saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += "</OS-MODULE-INSTANTIATION>"
+                    })
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].ucm.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<UCM-MODULE-INSTANTIATION>"
+                        if (ele.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
+                        }
+                        if (ele.ident != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<IDENTIFIER>" + ele.ident + "</IDENTIFIER>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</UCM-MODULE-INSTANTIATION>"
+                    })
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].iam.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<IAM-MODULE-INSTANTIATION>"
+                        if (ele.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
+                        }
+                        if (ele.grants.length > 0) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<GRANT-REFS>"
+                            ele.grants.forEach(item => {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += '<GRANT-REF DEST="' + item.select + '">' + item.grant + "</GRANT-REF>"
+                            })
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "</GRANT-REFS>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</IAM-MODULE-INSTANTIATION>"
                     })
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</MODULE-INSTANTIATIONS>"
@@ -2864,7 +3345,7 @@ const getters = {
                         }
                         if (ele.mtuenable != null) {
                             saveStr += getters.getEndterStr(elementTab + 2)
-                            saveStr += "<PATH-MTU-ENABLED>" + ele.mtuenable + "</PATH-MTU-ENABLED>"
+                            saveStr += "<PATH-MTU-ENABLED>" + ele.mtuenable.toUpperCase() + "</PATH-MTU-ENABLED>"
                         }
                         if (ele.timeout != '') {
                             saveStr += getters.getEndterStr(elementTab + 2)
@@ -2980,6 +3461,14 @@ const getters = {
                                                     saveStr += getters.getEndterStr(elementTab + 8)
                                                     saveStr += "<DEFAULT-GATEWAY>" + ip4.gateway + "</DEFAULT-GATEWAY>"
                                                 }
+                                                if (ip4.DNSAddr != '') {
+                                                    saveStr += getters.getEndterStr(elementTab + 8)
+                                                    saveStr += "<DNS-SERVER-ADDRESSES>"
+                                                    saveStr += getters.getEndterStr(elementTab + 9)
+                                                    saveStr += "<DNS-SERVER-ADDRESS>" + ip4.DNSAddr + "</DNS-SERVER-ADDRESS>"
+                                                    saveStr += getters.getEndterStr(elementTab + 8)
+                                                    saveStr += "</DNS-SERVER-ADDRESSES>"
+                                                }
                                                 if (ip4.behavior != null) {
                                                     saveStr += getters.getEndterStr(elementTab + 8)
                                                     saveStr += "<IP-ADDRESS-KEEP-BEHAVIOR>" + ip4.behavior + "</IP-ADDRESS-KEEP-BEHAVIOR>"
@@ -2995,6 +3484,10 @@ const getters = {
                                                 if (ip4.mask != '') {
                                                     saveStr += getters.getEndterStr(elementTab + 8)
                                                     saveStr += "<NETWORK-MASK>" + ip4.mask + "</NETWORK-MASK>"
+                                                }
+                                                if (ip4.ttl != '') {
+                                                    saveStr += getters.getEndterStr(elementTab + 8)
+                                                    saveStr += "<TTL>" + ip4.ttl + "</TTL>"
                                                 }
                                                 saveStr += getters.getEndterStr(elementTab + 7)
                                                 saveStr += "</IPV-4-CONFIGURATION>"
@@ -3076,7 +3569,11 @@ const getters = {
                         saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += "<MODE-DECLARATION>"
                         saveStr += getters.getEndterStr(elementTab + 2)
-                        saveStr += "<SHORT-NAME>" + ele + "</SHORT-NAME>"
+                        saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
+                        if (ele.value != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<VALUE>" + ele.value + "</VALUE>"
+                        }
                         saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += "</MODE-DECLARATION>"
                     })
@@ -3111,7 +3608,7 @@ const getters = {
                             saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += '<HW-ATTRIBUTE-DEF-REF DEST="HW-ATTRIBUTE-DEF">' + ele.attr + "</HW-ATTRIBUTE-DEF-REF>"
                         }
-                        if (ele.vt != '') {
+                        if (ele.vt != null) {
                             saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<VT>" + ele.vt + "</VT>"
                         }
@@ -3127,6 +3624,57 @@ const getters = {
                 }
                 saveStr += getters.getEndterStr(enterLine)
                 saveStr += "</HW-ELEMENT>"
+            } else if (data.parent == constant.HWCategory_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<HW-CATEGORY UUID ="' + state.SAHLProject[state.openProjectIndex].Machine.HWCategory[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].Machine.HWCategory[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Machine.HWCategory[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Machine.HWCategory[data.idx].attribute.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<HW-ATTRIBUTE-DEFS>"
+                    state.SAHLProject[state.openProjectIndex].Machine.HWCategory[data.idx].attribute.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<HW-ATTRIBUTE-DEF>"
+                        if (ele.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
+                        }
+                        if (ele.category != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<CATEGORY>" + ele.category + "</CATEGORY>"
+                        }
+                        if (ele.isrequired != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<IS-REQUIRED>' + ele.isrequired.toUpperCase() + "</IS-REQUIRED>"
+                        }
+                        if (ele.literal != '') {
+                            var literals = ele.literal.split('/')
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<HW-ATTRIBUTE-LITERALS>"
+                            literals.forEach(item => {
+                                if (item != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += '<HW-ATTRIBUTE-LITERAL-DEF>'
+                                    saveStr += getters.getEndterStr(elementTab + 4)
+                                    saveStr += '<SHORT-NAME>' + item + "</SHORT-NAME>"
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += "</HW-ATTRIBUTE-LITERAL-DEF>"
+                                }
+                            })
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "</HW-ATTRIBUTE-LITERALS>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</HW-ATTRIBUTE-DEF>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</HW-ATTRIBUTE-DEFS>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</HW-CATEGORY>"
             } else if (data.parent == constant.ProcesstoMachineMapping_str) {
                 saveStr += getters.getEndterStr(++enterLine)
                 elementTab = enterLine + 1
@@ -3135,27 +3683,39 @@ const getters = {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].name + "</SHORT-NAME>"
                 }
-                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmname != '' ||
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmMachine != null ||
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmProcess != null) {
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].mapping.length > 0) {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<PROCESS-TO-MACHINE-MAPPINGS>"
-                    saveStr += getters.getEndterStr(elementTab + 1)
-                    saveStr += "<PROCESS-TO-MACHINE-MAPPING>"
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmname != '') {
-                        saveStr += getters.getEndterStr(elementTab + 2)
-                        saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmname + "</SHORT-NAME>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmMachine != null) {
-                        saveStr += getters.getEndterStr(elementTab + 2)
-                        saveStr += '<MACHINE-REF DEST="MACHINE">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmMachine + "</MACHINE-REF>"
-                    }
-                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmProcess != null) {
-                        saveStr += getters.getEndterStr(elementTab + 2)
-                        saveStr += '<PROCESS-REF DEST="PROCESS">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].ptmmProcess + "</PROCESS-REF>"
-                    }
-                    saveStr += getters.getEndterStr(elementTab + 1)
-                    saveStr += "</PROCESS-TO-MACHINE-MAPPING>"
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[data.idx].mapping.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<PROCESS-TO-MACHINE-MAPPING>"
+                        if (ele.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SHORT-NAME>" + ele.name + "</SHOET-NAME>"
+                        }
+                        if (ele.ptmmMachine != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<MACHINE-REF DEST="MACHINE">' + ele.ptmmMachine + "</MACHINE-REF>"
+                        }
+                        if (ele.ptmmProcess != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<PROCESS-REF DEST="PROCESS">' + ele.ptmmProcess + '<PROCESS-REF>'
+                        }
+                        if (ele.runon.length > 0) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SHALL-RUN-ON-REFS>"
+                            ele.runon.forEach(run => {
+                                if (run.shall != null) {
+                                    saveStr += getters.getEndterStr(elementTab + 3)
+                                    saveStr += '<SHALL-NOT-RUN-ON-REF DEST="PROCESSOR-CORE">' + run.shall + "</SHALL-NOT-RUN-ON-REF>"
+                                }
+                            })
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "</SHALL-RUN-ON-REFS>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</PROCESS-TO-MACHINE-MAPPING>"
+                    })
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</PROCESS-TO-MACHINE-MAPPINGS>"
                 }
@@ -3190,7 +3750,7 @@ const getters = {
                                     saveStr += '<PROVIDED-INTERFACE-TREF DEST="PHM-RECOVERY-ACTION-INTERFACE">' + ele.interface + "</PROVIDED-INTERFACE-TREF>"
                                 }
                             }
-                            if (ele.queued.length > 0 || ele.field.length > 0) {
+                            if (ele.queued.length > 0 || ele.field.length > 0 || ele.server.length > 0) {
                                 saveStr += getters.getEndterStr(elementTab + 2)
                                 saveStr += "<PROVIDED-COM-SPECS>"
                                 if (ele.queued.length > 0) {
@@ -3223,6 +3783,18 @@ const getters = {
                                         }
                                         saveStr += getters.getEndterStr(elementTab + 3)
                                         saveStr += "</FIELD-SENDER-COM-SPEC>"
+                                    })
+                                }
+                                if (ele.server.length > 0) {
+                                    ele.server.forEach(ser => {
+                                        saveStr += getters.getEndterStr(elementTab + 3)
+                                        saveStr += "<SERVER-COM-SPEC>"
+                                        if (ser.oper != null) {
+                                            saveStr += getters.getEndterStr(elementTab + 4)
+                                            saveStr += '<OPERATION-REF DEST="CLIENT-SERVER-OPERATION">' + ser.oper + "</OPERATION-REF>"
+                                        }
+                                        saveStr += getters.getEndterStr(elementTab + 3)
+                                        saveStr += "</SERVER-COM-SPEC>"
                                     })
                                 }
                                 saveStr += getters.getEndterStr(elementTab + 2)
@@ -3284,6 +3856,14 @@ const getters = {
                                         if (cl.clientCapa != null) {
                                             saveStr += getters.getEndterStr(elementTab + 4)
                                             saveStr += '<CLIENT-CAPABILITY>' + cl.clientCapa + "</CLIENT-CAPABILITY>"
+                                        }
+                                        if (cl.getter != null) {
+                                            saveStr += getters.getEndterStr(elementTab + 4)
+                                            saveStr += '<GETTER-REF DEST="FIELD">' + cl.getter + "</GETTER-REF>"
+                                        }
+                                        if (cl.setter != null) {
+                                            saveStr += getters.getEndterStr(elementTab + 4)
+                                            saveStr += '<SETTER-REF DEST="FIELD">' + cl.setter + "</SETTER-REF>"
                                         }
                                         saveStr += getters.getEndterStr(elementTab + 3)
                                         saveStr += "</CLIENT-COM-SPEC>"
@@ -3358,6 +3938,40 @@ const getters = {
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].execut != null) {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += '<EXECUTABLE-REF DEST="EXECUTABLE">' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].execut + "</EXECUTABLE-REF>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].logLevel != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<LOG-TRACE-DEFAULT-LOG-LEVEL>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].logLevel + "</LOG-TRACE-DEFAULT-LOG-LEVEL>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].logPath != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<LOG-TRACE-FILE-PATH>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].logPath + "</LOG-TRACE-FILE-PATH>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].logMode.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '<LOG-TRACE-LOG-MODES>'
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].logMode.forEach(mode => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += '<LOG-TRACE-LOG-MODE>' + mode + '</LOG-TRACE-LOG-MODE>'
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += '</LOG-TRACE-LOG-MODES>'
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].logProDesc != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<LOG-TRACE-PROCESS-DESC>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].logProDesc + "</LOG-TRACE-PROCESS-DESC>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].logProID != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<LOG-TRACE-PROCESS-ID>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].logProID + "</LOG-TRACE-PROCESS-ID>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].restart != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<NUMBER-OF-RESTART-ATTEMPTS>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].restart + "</NUMBER-OF-RESTART-ATTEMPTS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].preMapping != null) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<PRE-MAPPING>" + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].preMapping.toUpperCase() + "</PRE-MAPPING>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinname != '' ||
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[data.idx].machinetype != null) {
@@ -3617,11 +4231,35 @@ const getters = {
                                     saveStr += getters.getEndterStr(elementTab + 4)
                                     saveStr += "<OPTION-KIND>" + item.kind + "</OPTION-KIND>"
                                 }
+                                if (item.name != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 4)
+                                    saveStr += "<OPTION-KIND>" + item.name + "</OPTION-KIND>"
+                                }
                                 saveStr += getters.getEndterStr(elementTab + 3)
                                 saveStr += "</STARTUP-OPTION>"
                             })
                             saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "</STARTUP-OPTIONS>"
+                        }
+                        if (ele.environ.length > 0) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<ENVIRONMENT-VARIABLES>"
+                            ele.environ.forEach(item => {
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "<TAG-WITH-OPTIONAL-VALUE>"
+                                if (item.key != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 4)
+                                    saveStr += "<KEY>" + item.key + "</KEY>"
+                                }
+                                if (item.value != '') {
+                                    saveStr += getters.getEndterStr(elementTab + 4)
+                                    saveStr += "<VALUE>" + item.value + "</VALUE>"
+                                }
+                                saveStr += getters.getEndterStr(elementTab + 3)
+                                saveStr += "</TAG-WITH-OPTIONAL-VALUE>"
+                            })
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "</ENVIRONMENT-VARIABLES>"
                         }
                         saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += "</STARTUP-CONFIG>"
@@ -3953,9 +4591,9 @@ const getters = {
                     saveStr += getters.getEndterStr(enterLine)
                     saveStr += "</NAMESPACES>"
                 }
-                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].isservice != '') {
+                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].isservice != null) {
                     saveStr += getters.getEndterStr(enterLine)
-                    saveStr += "<IS-SERVICE>" + state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].isservice + "</IS-SERVICE>"
+                    saveStr += "<IS-SERVICE>" + state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].isservice.toUpperCase() + "</IS-SERVICE>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[data.idx].events.length > 0) {
                     saveStr += getters.getEndterStr(enterLine)
@@ -3993,15 +4631,15 @@ const getters = {
                         }
                         if (ele.getter != null) {
                             saveStr += getters.getEndterStr(enterLine + 2)
-                            saveStr += "<HAS-GETTER>" + ele.getter + "</HAS-GETTER>"
+                            saveStr += "<HAS-GETTER>" + ele.getter.toUpperCase() + "</HAS-GETTER>"
                         }
                         if (ele.setter != null) {
                             saveStr += getters.getEndterStr(enterLine + 2)
-                            saveStr += "<HAS-SETTER>" + ele.setter + "</HAS-SETTER>"
+                            saveStr += "<HAS-SETTER>" + ele.setter.toUpperCase() + "</HAS-SETTER>"
                         }
                         if (ele.notifier != null) {
                             saveStr += getters.getEndterStr(enterLine + 2)
-                            saveStr += "<HAS-NOTIFIER>" + ele.notifier + "</HAS-NOTIFIER>"
+                            saveStr += "<HAS-NOTIFIER>" + ele.notifier.toUpperCase() + "</HAS-NOTIFIER>"
                         }
                         saveStr += getters.getEndterStr(enterLine + 1)
                         saveStr += "</FIELD>"
@@ -4021,7 +4659,7 @@ const getters = {
                         }
                         if (ele.fireforget != null) {
                             saveStr += getters.getEndterStr(enterLine + 2)
-                            saveStr += "<FIRE-AND-FORGET>" + ele.fireforget + "</FIRE-AND-FORGET>"
+                            saveStr += "<FIRE-AND-FORGET>" + ele.fireforget.toUpperCase() + "</FIRE-AND-FORGET>"
                         }
                         if (ele.argument.length > 0) {
                             saveStr += getters.getEndterStr(enterLine + 2)
@@ -4300,7 +4938,8 @@ const getters = {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].name + "</SHORT-NAME>"
                 }
-                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].porttype != null) {
+                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].porttype != null ||
+                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].context != null) {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<PORT-PROTOTYPE-IREF>"
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].selectPort == "P-PORT-PROTOTYPE") {
@@ -4312,6 +4951,10 @@ const getters = {
                     } else if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].selectPort == "PR-PORT-PROTOTYPE") {
                         saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += '<TARGET-PORT-PROTOTYPE-REF DEST="PR-PORT-PROTOTYPE">' + state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].porttype + "</TARGET-PORT-PROTOTYPE-REF>"
+                    }
+                    if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].context != null) {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += '<CONTEXT-ROOT-SW-COMPONENT-PROTOTYPE-REF DEST="ROOT-SW-COMPONENT-PROTOTYPE">' + state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[data.idx].context + "</CONTEXT-ROOT-SW-COMPONENT-PROTOTYPE-REF>"
                     }
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</PORT-PROTOTYPE-IREF>"
@@ -4338,6 +4981,98 @@ const getters = {
                 if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].name != '') {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].E2EEvent.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<E-2-E-EVENT-PROTECTION-PROPSS>"
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].E2EEvent.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<END-2-END-EVENT-PROTECTION-PROPS>"
+                        if (ele.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SHORT-NAME>' + ele.name + "</SHORT-NAME>"
+                        }
+                        if (ele.dataIds != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-IDS>'
+                            saveStr += getters.getEndterStr(elementTab + 3)
+                            saveStr += '<DATA-ID>' + ele.dataIds + "</DATA-ID>"
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '</DATA-IDS>'
+                        }
+                        if (ele.dataLength != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-LENGTH>' + ele.dataLength + "</DATA-LENGTH>"
+                        }
+                        if (ele.period != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-UPDATE-PERIOD>' + ele.period + "</DATA-UPDATE-PERIOD>"
+                        }
+                        if (ele.e2e != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<E-2-E-PROFILE-CONFIGURATION-REF DEST="E-2-E-PROFILE-CONFIGURATION">' + ele.e2e + "</E-2-E-PROFILE-CONFIGURATION-REF>"
+                        }
+                        if (ele.event != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<EVENT-REF DEST="SOMEIP-EVENT-DEPLOYMENT">' + ele.event + "</EVENT-REF>"
+                        }
+                        if (ele.max != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<MAX-DATA-LENGTH>' + ele.max + "</MAX-DATA-LENGTH>"
+                        }
+                        if (ele.min != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<MIN-DATA-LENGTH>' + ele.min + "</MIN-DATA-LENGTH>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</END-2-END-EVENT-PROTECTION-PROPS>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</E-2-E-EVENT-PROTECTION-PROPSS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].E2EMethod.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<E-2-E-METHOD-PROTECTION-PROPSS>"
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].E2EMethod.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<END-2-END-METHOD-PROTECTION-PROPS>"
+                        if (ele.dataIds != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-IDS>'
+                            saveStr += getters.getEndterStr(elementTab + 3)
+                            saveStr += '<DATA-ID>' + ele.dataIds + "</DATA-ID>"
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '</DATA-IDS>'
+                        }
+                        if (ele.dataLength != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-LENGTH>' + ele.dataLength + "</DATA-LENGTH>"
+                        }
+                        if (ele.period != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-UPDATE-PERIOD>' + ele.period + "</DATA-UPDATE-PERIOD>"
+                        }
+                        if (ele.e2e != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<E-2-E-PROFILE-CONFIGURATION-REF DEST="E-2-E-PROFILE-CONFIGURATION">' + ele.e2e + "</E-2-E-PROFILE-CONFIGURATION-REF>"
+                        }
+                        if (ele.method != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<METHOD-REF DEST="SOMEIP-METHOD-DEPLOYMENT">' + ele.method + "</METHOD-REF>"
+                        }
+                        if (ele.max != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<MAX-DATA-LENGTH>' + ele.max + "</MAX-DATA-LENGTH>"
+                        }
+                        if (ele.min != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<MIN-DATA-LENGTH>' + ele.min + "</MIN-DATA-LENGTH>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</END-2-END-METHOD-PROTECTION-PROPS>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</E-2-E-METHOD-PROTECTION-PROPSS>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[data.idx].deployref != null) {
                     saveStr += getters.getEndterStr(elementTab)
@@ -4409,6 +5144,98 @@ const getters = {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].name + "</SHORT-NAME>"
                 }
+                if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].E2EEvent.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<E-2-E-EVENT-PROTECTION-PROPSS>"
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].E2EEvent.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<END-2-END-EVENT-PROTECTION-PROPS>"
+                        if (ele.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<SHORT-NAME>' + ele.name + "</SHORT-NAME>"
+                        }
+                        if (ele.dataIds != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-IDS>'
+                            saveStr += getters.getEndterStr(elementTab + 3)
+                            saveStr += '<DATA-ID>' + ele.dataIds + "</DATA-ID>"
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '</DATA-IDS>'
+                        }
+                        if (ele.dataLength != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-LENGTH>' + ele.dataLength + "</DATA-LENGTH>"
+                        }
+                        if (ele.period != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-UPDATE-PERIOD>' + ele.period + "</DATA-UPDATE-PERIOD>"
+                        }
+                        if (ele.e2e != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<E-2-E-PROFILE-CONFIGURATION-REF DEST="E-2-E-PROFILE-CONFIGURATION">' + ele.e2e + "</E-2-E-PROFILE-CONFIGURATION-REF>"
+                        }
+                        if (ele.event != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<EVENT-REF DEST="SOMEIP-EVENT-DEPLOYMENT">' + ele.event + "</EVENT-REF>"
+                        }
+                        if (ele.max != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<MAX-DATA-LENGTH>' + ele.max + "</MAX-DATA-LENGTH>"
+                        }
+                        if (ele.min != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<MIN-DATA-LENGTH>' + ele.min + "</MIN-DATA-LENGTH>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</END-2-END-EVENT-PROTECTION-PROPS>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</E-2-E-EVENT-PROTECTION-PROPSS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].E2EMethod.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<E-2-E-METHOD-PROTECTION-PROPSS>"
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].E2EMethod.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<END-2-END-METHOD-PROTECTION-PROPS>"
+                        if (ele.dataIds != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-IDS>'
+                            saveStr += getters.getEndterStr(elementTab + 3)
+                            saveStr += '<DATA-ID>' + ele.dataIds + "</DATA-ID>"
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '</DATA-IDS>'
+                        }
+                        if (ele.dataLength != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-LENGTH>' + ele.dataLength + "</DATA-LENGTH>"
+                        }
+                        if (ele.period != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<DATA-UPDATE-PERIOD>' + ele.period + "</DATA-UPDATE-PERIOD>"
+                        }
+                        if (ele.e2e != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<E-2-E-PROFILE-CONFIGURATION-REF DEST="E-2-E-PROFILE-CONFIGURATION">' + ele.e2e + "</E-2-E-PROFILE-CONFIGURATION-REF>"
+                        }
+                        if (ele.method != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<METHOD-REF DEST="SOMEIP-METHOD-DEPLOYMENT">' + ele.method + "</METHOD-REF>"
+                        }
+                        if (ele.max != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<MAX-DATA-LENGTH>' + ele.max + "</MAX-DATA-LENGTH>"
+                        }
+                        if (ele.min != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += '<MIN-DATA-LENGTH>' + ele.min + "</MIN-DATA-LENGTH>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</END-2-END-METHOD-PROTECTION-PROPS>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</E-2-E-METHOD-PROTECTION-PROPSS>"
+                }
                 if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].deployref != null) {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += '<SERVICE-INTERFACE-DEPLOYMENT-REF DEST="SOMEIP-SERVICE-INTERFACE-DEPLOYMENT">' + state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].deployref + "</SERVICE-INTERFACE-DEPLOYMENT-REF>"
@@ -4436,6 +5263,14 @@ const getters = {
                     })
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</EVENT-PROPSS>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].loadPriority != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<LOAD-BALANCING-PRIORITY>" + state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].loadPriority + "</LOAD-BALANCING-PRIORITY>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].loadWeight != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<LOAD-BALANCING-WEIGHT>" + state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].loadWeight + "</LOAD-BALANCING-WEIGHT>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[data.idx].method != null) {
                     saveStr += getters.getEndterStr(elementTab)
@@ -4495,6 +5330,148 @@ const getters = {
                 }
                 saveStr += getters.getEndterStr(enterLine)
                 saveStr += "</PROVIDED-SOMEIP-SERVICE-INSTANCE>"
+            } else if (data.parent == constant.E2EProfileConfig_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<E-2-E-PROFILE-CONFIGURATION-SET UUID="' + state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[data.idx].profile.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<E-2-E-PROFILE-CONFIGURATIONS>"
+                    state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[data.idx].profile.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<E-2-E-PROFILE-CONFIGURATION>"
+                        if (ele.configName != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SHORT-NAME>" + ele.configName + "</SHORT-NAME>"
+                        }
+                        if (ele.invalid != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<CLEAR-FROM-VALID-TO-INVALID>" + ele.invalid.toUpperCase() + "</CLEAR-FROM-VALID-TO-INVALID>"
+                        }
+                        if (ele.IDMode != null) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<DATA-ID-MODE>" + ele.IDMode + "</DATA-ID-MODE>"
+                        }
+                        if (ele.MaxConter != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<MAX-DELTA-COUNTER>" + ele.MaxConter + "</MAX-DELTA-COUNTER>"
+                        }
+                        if (ele.errorInit != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<MAX-ERROR-STATE-INIT>" + ele.errorInit + "</MAX-ERROR-STATE-INIT>"
+                        }
+                        if (ele.errorInvalid != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<MAX-ERROR-STATE-INVALID>" + ele.errorInvalid + "</MAX-ERROR-STATE-INVALID>"
+                        }
+                        if (ele.errorValid != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<MAX-ERROR-STATE-VALID>" + ele.errorValid + "</MAX-ERROR-STATE-VALID>"
+                        }
+                        if (ele.okInit != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<MIN-OK-STATE-INIT>" + ele.okInit + "</MIN-OK-STATE-INIT>"
+                        }
+                        if (ele.okInvalid != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<MIN-OK-STATE-INVALID>" + ele.okInvalid + "</MIN-OK-STATE-INVALID>"
+                        }
+                        if (ele.okValid != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<MIN-OK-STATE-VALID>" + ele.okValid + "</MIN-OK-STATE-VALID>"
+                        }
+                        if (ele.profileName != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<PROFILE-NAME>" + ele.profileName + "</PROFILE-NAME>"
+                        }
+                        if (ele.sizeInit != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<WINDOW-SIZE-INIT>" + ele.sizeInit + "</WINDOW-SIZE-INIT>"
+                        }
+                        if (ele.sizeInvalid != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<WINDOW-SIZE-INVALID>" + ele.sizeInvalid + "</WINDOW-SIZE-INVALID>"
+                        }
+                        if (ele.sizeValid != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<WINDOW-SIZE-VALID>" + ele.sizeValid + "</WINDOW-SIZE-VALID>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</E-2-E-PROFILE-CONFIGURATION>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</E-2-E-PROFILE-CONFIGURATIONS>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</E-2-E-PROFILE-CONFIGURATION-SET>"
+            } else if (data.parent == constant.SDG_DEF_str) {
+                saveStr += getters.getEndterStr(++enterLine)
+                elementTab = enterLine + 1
+                saveStr += '<SDG-DEF UUID="' + state.SAHLProject[state.openProjectIndex].Service.SdgDef[data.idx].uuid + '">'
+                if (state.SAHLProject[state.openProjectIndex].Service.SdgDef[data.idx].name != '') {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].Service.SdgDef[data.idx].name + "</SHORT-NAME>"
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.SdgDef[data.idx].sdgClass.length > 0) {
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "<SDG-CLASSES>"
+                    state.SAHLProject[state.openProjectIndex].Service.SdgDef[data.idx].sdgClass.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<SDG-CLASS>"
+                        if (ele.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
+                        }
+                        if (ele.gid != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<GID>" + ele.gid + "</GID>"
+                        }
+                        if (ele.metaClass != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<EXTENDS-META-CLASS>" + ele.metaClass + "</EXTENDS-META-CLASS>"
+                        }
+                        if (ele.attriName != '' || ele.lowMulti != '' || ele.upMulti != '' || ele.atrriGid != '' || ele.pattern != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<ATTRIBUTES>"
+                            saveStr += getters.getEndterStr(elementTab + 3)
+                            saveStr += "<SDG-PRIMITIVE-ATTRIBUTE>"
+                            if (ele.attriName != '') {
+                                saveStr += getters.getEndterStr(elementTab + 4)
+                                saveStr += "<SHORT-NAME>" + ele.attriName + "</SHORT-NAME>"
+                            }
+                            if (ele.lowMulti != '') {
+                                saveStr += getters.getEndterStr(elementTab + 4)
+                                saveStr += "<LOWER-MULTIPLICITY>" + ele.lowMulti + "</LOWER-MULTIPLICITY>"
+                            }
+                            if (ele.upMulti != '') {
+                                saveStr += getters.getEndterStr(elementTab + 4)
+                                saveStr += "<UPPER-MULTIPLICITY>" + ele.upMulti + "</UPPER-MULTIPLICITY>"
+                            }
+                            if (ele.atrriGid != '') {
+                                saveStr += getters.getEndterStr(elementTab + 4)
+                                saveStr += "<GID>" + ele.atrriGid + "</GID>"
+                            }
+                            if (ele.pattern != '') {
+                                saveStr += getters.getEndterStr(elementTab + 4)
+                                saveStr += "<PATTERN>" + ele.pattern + "</PATTERN>"
+                            }
+                            saveStr += getters.getEndterStr(elementTab + 3)
+                            saveStr += "</SDG-PRIMITIVE-ATTRIBUTE>"
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "</ATTRIBUTES>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</SDG-CLASS>"
+                    })
+                    saveStr += getters.getEndterStr(elementTab)
+                    saveStr += "</SDG-CLASSES>"
+                }
+                saveStr += getters.getEndterStr(enterLine)
+                saveStr += "</SDG-DEF>"
             } else if (data.parent == constant.Error_str) {
                 saveStr += getters.getEndterStr(++enterLine)
                 elementTab = enterLine + 1
@@ -5055,7 +6032,7 @@ const getters = {
                     }
                     if (state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery[data.idx].faf != null) {
                         saveStr += getters.getEndterStr(elementTab + 1)
-                        saveStr += '<FIRE-AND-FORGET>' + state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery[data.idx].faf + "</FIRE-AND-FORGET>"
+                        saveStr += '<FIRE-AND-FORGET>' + state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery[data.idx].faf.toUpperCase() + "</FIRE-AND-FORGET>"
                     }
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</RECOVERY>"
@@ -5389,7 +6366,7 @@ const getters = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].deltaPakage != null) {
                     saveStr += getters.getEndterStr(elementTab)
-                    saveStr += "<IS-DELTA-PACKAGE>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].deltaPakage + "</IS-DELTA-PACKAGE>"
+                    saveStr += "<IS-DELTA-PACKAGE>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].deltaPakage.toUpperCase() + "</IS-DELTA-PACKAGE>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].maximunVer != '') {
                     saveStr += getters.getEndterStr(elementTab)
@@ -5405,11 +6382,11 @@ const getters = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].postReboot != null) {
                     saveStr += getters.getEndterStr(elementTab)
-                    saveStr += "<POST-VERIFICATION-REBOOT>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].postReboot + "</POST-VERIFICATION-REBOOT>"
+                    saveStr += "<POST-VERIFICATION-REBOOT>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].postReboot.toUpperCase() + "</POST-VERIFICATION-REBOOT>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].preReboot != null) {
                     saveStr += getters.getEndterStr(elementTab)
-                    saveStr += "<PRE-ACTIVATION-REBOOT>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].preReboot + "</PRE-ACTIVATION-REBOOT>"
+                    saveStr += "<PRE-ACTIVATION-REBOOT>" + state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].preReboot.toUpperCase() + "</PRE-ACTIVATION-REBOOT>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[data.idx].swcluster != null) {
                     saveStr += getters.getEndterStr(elementTab)
@@ -5519,20 +6496,6 @@ const getters = {
                 }
                 saveStr += getters.getEndterStr(enterLine)
                 saveStr += "</VEHICLE-PACKAGE>"
-            } else if (data.parent == constant.ModuleInstantiation_str) {
-                saveStr += getters.getEndterStr(++enterLine)
-                elementTab = enterLine + 1
-                saveStr += '<UCM-MODULE-INSTANTIATION UUID="' + state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[data.idx].uuid + '">'
-                if (state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[data.idx].name != '') {
-                    saveStr += getters.getEndterStr(elementTab)
-                    saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[data.idx].name + "</SHORT-NAME>"
-                }
-                if (state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[data.idx].ident != '') {
-                    saveStr += getters.getEndterStr(elementTab)
-                    saveStr += "<IDENTIFIER>" + state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[data.idx].ident + "</IDENTIFIER>"
-                }
-                saveStr += getters.getEndterStr(enterLine)
-                saveStr += "</UCM-MODULE-INSTANTIATION>"
             }
 
             console.log(saveStr)
@@ -5568,14 +6531,6 @@ const getters = {
         })
         return idx
     },
-    getelementX() {
-        var eleX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-        return eleX
-    },
-    getelementY() {
-        var eleY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-        return eleY
-    }
 }
 
 export default getters

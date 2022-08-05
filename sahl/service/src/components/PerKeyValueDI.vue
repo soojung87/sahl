@@ -46,7 +46,7 @@
                                 </div>
                                 <v-card-text v-if="isDataOpenClose">
                                     <v-data-table v-model="selectDelectData" :headers="headerPersistency" :items="element.data" :items-per-page='20'
-                                            :show-select="isdeleteDataItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteDataItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -118,7 +118,7 @@
                                 </div>
                                 <v-card-text v-if="isSerializationOpenClose">
                                     <v-data-table v-model="selectDelectSerialization" :headers="headerSerialization" :items="element.serialization" :items-per-page='20'
-                                            :show-select="isdeleteSerializationItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteSerializationItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -370,7 +370,7 @@ export default {
 
             if (this.element.data[idx].name != this.editItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'PerDataInter', listname: this.editItem.name} )
+                                                          changeName: 'PerDataInter', listname: this.editItem.name, beforename: this.element.data[idx].name} )
             }
 
             this.element.data[idx].name = this.editItem.name
@@ -530,7 +530,7 @@ export default {
             this.$store.commit('addElementImplementation', {
                     name: this.$store.getters.getNameImplementation, input: false, path: '',
                     top: elementY, left: elementX,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    category:'', namespace:'', arraysize:'', typeemitter:'', 
+                    category:'', namespace:'', arraysize:'', typeemitter:'', traceName: '', trace: [],
                     typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
             })
             EventBus.$emit('add-element', constant.Implementation_str)

@@ -30,8 +30,9 @@
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputCompuMethodName' outlined dense></v-text-field>
                             <v-text-field v-model="element.category" label="Category" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.attributeName" label="Blueprint Policy Attribute Name " placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-card outlined class="mx-auto">
-                                <div class="subtitle-2" :id="element.uuid+'/scale'" style="height:20px">
+                                <div class="subtitle-2" style="height:20px">
                                     <v-hover v-slot="{ hover }">
                                         <v-btn text @click="showScaleItem" x-small color="indigo">
                                             <v-icon>{{ isScaleOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -47,7 +48,7 @@
                                 </div>
                                 <v-card-text v-if="isScaleOpenClose">  
                                     <v-data-table v-model="selectDelectScaleItem" :headers="headerScale" :items="element.scales"  :items-per-page='20'
-                                            :show-select="isdeleteScaleItem" item-key="symbol" height="150px" dense hide-default-footer >
+                                            :show-select="isdeleteScaleItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -115,6 +116,23 @@
                             <label style="padding:10px;">&#60;&#47;CATEGORY&#62;</label>
                         </v-row>
                         <v-row>
+                            <label style="padding:10px;height: 25px;">&#60;BLUEPRINT-POLICYS&#62;</label>
+                        </v-row>
+                        <v-row>
+                            <label style="padding:10px;margin-left: 30px;height: 25px;">&#60;BLUEPRINT-POLICY-NOT-MODIFIABLE&#62;</label>
+                        </v-row>
+                        <v-row>
+                            <label style="padding:10px;margin-left: 60px;">&#60;ATTRIBUTE-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;ATTRIBUTE-NAME&#62;</label>
+                        </v-row>
+                        <v-row>
+                            <label style="padding:10px;margin-left: 30px;height: 25px;">&#60;&#47;BLUEPRINT-POLICY-NOT-MODIFIABLE&#62;</label>
+                            </v-row>
+                        <v-row>
+                            <label style="padding:10px;height: 35px;">&#60;&#47;BLUEPRINT-POLICYS&#62;</label>
+                        </v-row>
+                        <v-row>
                             <label style="padding:10px;height: 15px;">&#60;COMPU-INTERNAL-TO-PHYS&#62;</label>
                         </v-row>
                         <v-row>
@@ -139,7 +157,9 @@
                                         </v-row>
                                         <v-row style="height: 25px;margin:0px;">
                                             <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;COMPU-CONST&#62;</label>
+                                            <label style="padding:10px;">&#60;VT&#62;</label>
                                             <v-text-field v-model="item.const" placeholder="String"  class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;VT&#62;</label>
                                             <label style="padding:10px;">&#60;&#47;COMPU-CONST&#62;</label>
                                         </v-row>
                                         <v-row style="height: 25px;margin:0px;">
@@ -251,10 +271,9 @@ export default {
                 { text: 'Upper Limit', sortable: false, value: 'upperlimit' },
                 { text: 'Desc', sortable: false, value: 'desc' },
             ],
-            scalesItem: [],
             selectDelectScaleItem: [],
-            defaultScaleItem: { const: '', symbol:'', lowerlimit: '', upperlimit: '', desc: '' },
-            editScaleItem: {const: '', symbol:'', lowerlimit: '', upperlimit: '', desc: '' },
+            defaultScaleItem: { const: '', symbol:'', lowerlimit: '', upperlimit: '', desc: '', id: '' },
+            editScaleItem: {const: '', symbol:'', lowerlimit: '', upperlimit: '', desc: '', id: '' },
         }
     },
     mounted () {
@@ -293,7 +312,7 @@ export default {
             this.isScaleOpenClose = this.isScaleOpenClose ? false : true
         },
         inputCompuMethodName () {
-            this.$store.commit('editCompuMehtod', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
+            this.$store.commit('editCompuMethod', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
@@ -323,6 +342,12 @@ export default {
             this.editScaleItem.desc = this.element.scales[idx].desc
         },
         addScale () {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.scales.some(item => item.id === n)
+            }
+            this.editScaleItem.id = n
             const addObj = Object.assign({}, this.editScaleItem);
             this.element.scales.push(addObj);
             this.cancelScale()
@@ -339,9 +364,10 @@ export default {
             this.editScaleItem = Object.assign({}, this.defaultScaleItem)
             this.setactiveUUID()
         },
+        
         setactiveUUID() {
             this.$store.commit('setuuid', {uuid: this.element.uuid} )
-            this.$store.commit('editCompuMehtod', {compo:"z", uuid:this.element.uuid, zindex:10} )
+            this.$store.commit('editCompuMethod', {compo:"z", uuid:this.element.uuid, zindex:10} )
         },
 
         viewARXML() {

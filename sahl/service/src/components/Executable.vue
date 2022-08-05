@@ -26,14 +26,14 @@
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Executable</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputExecutableName' outlined dense  @click="setactiveUUID"></v-text-field>
                             <v-text-field v-model="element.category" label="Category"  @click="setactiveUUID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-select :items="buildType" label="Build Type"  v-model="element.buildType" @click="setactiveUUID()" clearable outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
                             <v-select :items="loggingBehabior" label="Logging Behavior"  v-model="element.loggingBehabior" @click="setactiveUUID()" clearable outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
                             <v-select :items="reportingBehabior" label="Reporting Behavior"  v-model="element.reportingBehabior" @click="setactiveUUID()" clearable outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
-                            <v-text-field v-model="element.version" label="Version" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.version" label="Version" placeholder="Int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-card outlined class="mx-auto">
                                 <div class="subtitle-2" style="height:20px">
                                     <!-- <v-hover v-slot="{ hover }">
@@ -47,7 +47,7 @@
                                     Root SW Component Prototype
                                 </div>
                                 <v-card-text v-if="isRootSWComponentOpenClose">
-                                    <v-text-field v-model="element.swname" label="name" :rules="rules.name" @click="setactiveUUID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                    <v-text-field v-model="element.swname" label="name" :rules="rules.name" @input='inputRootSWName' @click="setactiveUUID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                     <v-row style="height: 70px">
                                         <v-col cols="10">
                                             <v-text-field v-model="element.applicationtyperef" readonly @click="setApplicationTypeRefSelect()" clearable @click:clear='clearApplicationTypeRef()' label="Application Type Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -73,7 +73,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -81,7 +81,7 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
-                        <v-dialog v-model="dialogText" persistent scrollable width="800">
+            <v-dialog v-model="dialogText" persistent scrollable width="800">
                 <v-card >
                     <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
                     <v-card-text>
@@ -92,35 +92,45 @@
                             <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px;">&#60;REQUEST-RESPONSE-DELAY&#62;</label>
+                            <label style="padding:10px;">&#60;CATEGORY&#62;</label>
+                                <v-text-field v-model="editARXML.category" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;CATEGORY&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px; margin-left: 30px;">&#60;MAX-VALUE&#62;</label>
-                            <v-text-field v-model="editARXML.delaymax" placeholder="Time" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
-                            <label style="padding:10px;">&#60;&#47;MAX-VALUE&#62;</label>
+                            <label style="padding:10px;">&#60;BUILD-TYPE&#62;</label>
+                            <v-text-field v-model="editARXML.buildType" placeholder="Enum" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;BUILD-TYPE&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px; margin-left: 30px;">&#60;MIN-VALUE&#62;</label>
-                            <v-text-field v-model="editARXML.delaymin" placeholder="Time" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
-                            <label style="padding:10px;">&#60;&#47;MIN-VALUE&#62;</label>
+                            <label style="padding:10px;">&#60;LOGGING-BEHAVIOR&#62;</label>
+                            <v-text-field v-model="editARXML.loggingBehabior" placeholder="Enum" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;LOGGING-BEHAVIOR&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px;">&#60;&#47;REQUEST-RESPONSE-DELAY&#62;</label>
+                            <label style="padding:10px;">&#60;REPORTING-BEHAVIOR&#62;</label>
+                            <v-text-field v-model="editARXML.reportingBehabior" placeholder="Enum" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;REPORTING-BEHAVIOR&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px;">&#60;SUBSCRIBE-EVENTGROUP-RETRY-DELAY&#62;</label>
-                                <v-text-field v-model="editARXML.retrydelay" placeholder="Time" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
-                            <label style="padding:10px;">&#60;&#47;SUBSCRIBE-EVENTGROUP-RETRY-DELAY&#62;</label>
+                            <label style="padding:10px;">&#60;VERSION&#62;</label>
+                                <v-text-field v-model="editARXML.version" placeholder="Int" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;VERSION&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px;">&#60;SUBSCRIBE-EVENTGROUP-RETRY-MAX&#62;</label>
-                            <v-text-field v-model="editARXML.retrymax" placeholder="Int" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
-                            <label style="padding:10px;">&#60;&#47;SUBSCRIBE-EVENTGROUP-RETRY-MAX&#62;</label>
+                            <label style="padding:10px;">&#60;ROOT-SW-COMPONENT-PROTOTYPE&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px;">&#60;TIME-TO-LIVE&#62;</label>
-                            <v-text-field v-model="editARXML.timetolive" placeholder="Int" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
-                            <label style="padding:10px;">&#60;&#47;TIME-TO-LIVE&#62;</label>
+                            <label style="padding:10px; margin-left: 30px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.swname" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row>
+                            <label style="padding:10px; margin-left: 30px;">&#60;APPLICATION-TYPE-TREF&#62;</label>
+                            <v-text-field v-model="editARXML.applicationtyperef" placeholder="Reference" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;APPLICATION-TYPE-TREF&#62;</label>
+                        </v-row>
+                        <v-row>
+                            <label style="padding:10px;">&#60;&#47;ROOT-SW-COMPONENT-PROTOTYPE&#62;</label>
                         </v-row>
                     </v-card-text>
                     <v-card-actions>
@@ -170,6 +180,13 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                    })
+                }
             }
         },
     },
@@ -191,8 +208,8 @@ export default {
             editARXML: {name:'', category: '', buildType: null, loggingBehabior: null, reportingBehabior: null, version: '', swname: '', applicationtyperef: null},
             isRootSWComponentOpenClose: true,
             buildType: ['BUILD-TYPE-DEBUG', 'BUILD-TYPE-RELEASE'],
-            loggingBehabior: ['DOES-NOT-USE-LOGGUNG', 'USES-LOGGING',],
-            reportingBehabior: ['DOES-NOT-REPORT-EXECUTION-STATE', 'REPORTS-EXECUTION-STATE',],
+            loggingBehabior: ['USES-LOGGING', 'DOES-NOT-USE-LOGGUNG', ],
+            reportingBehabior: ['REPORTS-EXECUTION-STATE', 'DOES-NOT-REPORT-EXECUTION-STATE', ],
             selApplicationType: this.$store.getters.getSWComponentType,
         }
     },
@@ -239,6 +256,10 @@ export default {
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
+        },
+        inputRootSWName() {
+            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                            changeName: 'swname', listname: this.element.swname} )
         },
         clearApplicationTypeRef() {
             this.element.applicationtyperef = null
@@ -306,20 +327,51 @@ export default {
 
         viewARXML() {
             this.editARXML.name = this.element.name
-            this.editARXML.delaymax = this.element.delaymax
-            this.editARXML.delaymin = this.element.delaymin
-            this.editARXML.retrydelay = this.element.retrydelay
-            this.editARXML.retrymax = this.element.retrymax
-            this.editARXML.timetolive = this.element.timetolive
+            this.editARXML.category = this.element.category
+            this.editARXML.buildType = this.element.buildType
+            this.editARXML.loggingBehabior = this.element.loggingBehabior
+            this.editARXML.reportingBehabior = this.element.reportingBehabior
+            this.editARXML.version = this.element.version
+            this.editARXML.swname = this.element.swname
+            this.editARXML.applicationtyperef = this.element.applicationtyperef
             this.dialogText= true
         },
         saveARXML() {
             this.element.name = this.editARXML.name
-            this.element.delaymax = this.editARXML.delaymax
-            this.element.delaymin = this.editARXML.delaymin
-            this.element.retrydelay = this.editARXML.retrydelay
-            this.element.retrymax = this.editARXML.retrymax
-            this.element.timetolive = this.editARXML.timetolive
+            this.element.category = this.editARXML.category
+            if (this.editARXML.buildType == 'BUILD-TYPE-DEBUG' || this.editARXML.buildType == 'BUILD-TYPE-RELEASE' || this.editARXML.buildType == '') {
+                if (this.editARXML.buildType == '') {
+                    this.element.buildType = null
+                } else {
+                    this.element.buildType = this.editARXML.buildType
+                }
+            }
+            if (this.editARXML.loggingBehabior == 'USES-LOGGING' || this.editARXML.loggingBehabior == 'DOES-NOT-USE-LOGGUNG' || this.editARXML.loggingBehabior == '') {
+                if (this.editARXML.loggingBehabior == '') {
+                    this.element.loggingBehabior = null
+                } else {
+                    this.element.loggingBehabior = this.editARXML.loggingBehabior
+                }
+            }
+            if (this.editARXML.reportingBehabior == 'REPORTS-EXECUTION-STATE' || this.editARXML.reportingBehabior == 'DOES-NOT-REPORT-EXECUTION-STATE' || this.editARXML.reportingBehabior == '') {
+                if (this.editARXML.reportingBehabior == '') {
+                    this.element.reportingBehabior = null
+                } else {
+                    this.element.reportingBehabior = this.editARXML.reportingBehabior
+                }
+            }
+            this.element.version = this.editARXML.version
+            this.element.swname = this.editARXML.swname
+            if (this.element.applicationtyperef != this.editARXML.applicationtyperef) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/applicationtyperef')
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/applicationtyperef')
+                }
+                var chandEndLine = this.$store.getters.getSWComponentPath(this.editARXML.applicationtyperef, 0)
+                if (chandEndLine != null) {
+                    this.newLine(this.element.uuid+'/applicationtyperef', this.element.uuid+'/applicationtyperef', chandEndLine)
+                }
+            }
             this.cancelARXML()
         },
         cancelARXML() {

@@ -25,7 +25,7 @@
                         </v-toolbar>
                         <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                        @input='inputSomeIPServiceName' outlined dense></v-text-field>
+                                        @input='inputSomeIPServiceName' @click="clickSomeIPServiceName()" outlined dense></v-text-field>
                             <v-row>
                                 <v-col cols="10">
                                     <v-text-field v-model="element.service" readonly @click="setServiceSelect()" clearable @click:clear='clearService()' label="Service Interface Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -79,7 +79,7 @@
                                         <v-tab-item v-for="(tab, idx) in element.eventG" :key="idx">
                                             <v-card flat>
                                                 <v-card-text>
-                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputEventGName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputEventGName(tab.name)" @click="clickEventGName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     <v-text-field v-model="tab.idG" label="Group Id" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     <v-card outlined class="mx-auto">
                                                         <div class="subtitle-2" style="height:20px" :id="element.uuid+'/eventtab'+tab.id">
@@ -98,7 +98,7 @@
                                                         </div>
                                                         <v-card-text v-show="isEventOpenClose">
                                                             <v-data-table v-model="selectDelectEvent" :headers="headerEvent" :items="tab.event" :items-per-page='20'
-                                                                    :show-select="isdeleteEvent" item-key="id" height="100px" dense hide-default-footer >
+                                                                    :show-select="isdeleteEvent" item-key="id" height="140px" dense hide-default-footer >
                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                                 </template>
@@ -162,7 +162,7 @@
                                 </div>
                                 <v-card-text v-show="isEventDOpenClose">
                                     <v-data-table v-model="selectDelectEventD" :headers="headerEventD" :items="element.eventD" :items-per-page='20'
-                                            :show-select="isdeleteEventD" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteEventD" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -232,7 +232,7 @@
                                 </div>
                                 <v-card-text v-show="isMethodDOpenClose">
                                     <v-data-table v-model="selectDelectMethodD" :headers="headerMethodD" :items="element.methodD" :items-per-page='20'
-                                            :show-select="isdeleteMethodD" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteMethodD" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -309,7 +309,7 @@
                                         <v-tab-item v-for="(tab, idx) in element.fieldD" :key="idx">
                                             <v-card flat>
                                                 <v-card-text>
-                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    <v-text-field v-model="tab.name" @input="inputFieldName(tab.name)" @click="clickFieldName(tab.name)" :rules="rules.name" label="Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     <v-row style="height: 70px">
                                                         <v-col cols="10">
                                                             <v-text-field v-model="tab.field" readonly @click="setFieldSelect()" clearable @click:clear='clearField()' label="Field Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -342,7 +342,7 @@
                                                             Get
                                                         </div>
                                                         <v-card-text v-if="isGetOpenClose">
-                                                            <v-text-field v-model="tab.getname" :rules="rules.name" label="Name" placeholder="String"  style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            <v-text-field v-model="tab.getname" @input="inputFieldGetName(tab.getname)" @click="clickFieldGetName(tab.getname)" :rules="rules.name" label="Name" placeholder="String"  style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             <v-text-field v-model="tab.getid" label="Method ID" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             <v-text-field v-model="tab.getmaxreq" label="Maximum Segment Length Request" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             <v-text-field v-model="tab.getmaxres" label="Maximum Segment Length Response" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -361,7 +361,7 @@
                                                             Set
                                                         </div>
                                                         <v-card-text v-if="isSetOpenClose">
-                                                            <v-text-field v-model="tab.setname" :rules="rules.name" label="Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            <v-text-field v-model="tab.setname" @input="inputFieldSetName(tab.setname)" @click="clickFieldSetName(tab.setname)" :rules="rules.name" label="Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             <v-text-field v-model="tab.setid" label="Method ID" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             <v-text-field v-model="tab.setmaxreq" label="Maximum Segment Length Request" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             <v-text-field v-model="tab.setmaxres" label="Maximum Segment Length Response" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -380,7 +380,7 @@
                                                             Notifier
                                                         </div>
                                                         <v-card-text v-if="isNotifierOpenClose">
-                                                            <v-text-field v-model="tab.notname" :rules="rules.name" label="Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            <v-text-field v-model="tab.notname" @input="inputFieldNotName(tab.notname)" @click="clickFieldNotName(tab.notname)" :rules="rules.name" label="Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             <v-text-field v-model="tab.notid" label="Event ID" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             <v-text-field v-model="tab.notmax" label="Maximum Segment Length" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             <v-text-field v-model="tab.nottime" label="Separation Time" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -440,6 +440,29 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                        if(this.iselementOpenClose && this.location == 1) {
+                            if(this.element.fieldD.length > 0) {
+                                if (this.isFieldDOpenClose) {
+                                    EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].id)
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, null)
+                                }
+                            }
+                            if(this.element.eventG.length > 0) {
+                                if (this.isEventGOpenClose) {
+                                    EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGTab, this.element.eventG[this.eventGTab].id)
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, null)
+                                }
+                            }
+                        }
+                    })
+                }
             }
         },
     },
@@ -472,7 +495,7 @@ export default {
             ],
             editEvent: { event: null, id: ''},
             isEditingEvent: true,
-            selEvent: this.$store.getters.getEventDeployment,
+            selEvent: this.$store.getters.getSomeIPEventDeployment,
 
             isdeleteEventD: false,
             selVariableData: this.$store.getters.getVariableDataPrototype,
@@ -490,8 +513,8 @@ export default {
             defaultEventD: { name:'', event: null, idE:'', maxlength:'', time:'', serializer:null, protocal:null, id: '' },
             deleteEventDLine : [],
             isEditingVariableData: true,
-            selectSerializer: ['SOMEIP',],
-            selectProtocal: ['TCP','UDP',],
+            selectSerializer: ['SOMEIP', 'SIGNAL-BASED'],
+            selectProtocal: ['UDP', 'TCP',],
 
             isdeleteMethodD: false,
             selClientServer: this.$store.getters.getClientServer,
@@ -516,6 +539,14 @@ export default {
             isGetOpenClose: true,
             isSetOpenClose: true,
             isNotifierOpenClose: true,
+
+            beforeField: '',
+            beforeGet: '',
+            beforeSet: '',
+            beforeNoti: '',
+            beforeEventG: '',
+            beforeName: '',
+            beforePath: ''
         }
     },
     mounted () {
@@ -525,8 +556,10 @@ export default {
     },
     methods: {
         submitDialog(element) {
+            this.beforePath = this.element.path
             this.element.path = element
-            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
+            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,  
+                                                        changeName: 'Path', beforename: this.beforePath} )
             this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
         },
         setToolbarColor(uuid) 
@@ -620,16 +653,25 @@ export default {
             this.isNotifierOpenClose = this.isNotifierOpenClose ? false : true
         },
 
+        clickSomeIPServiceName() {
+            this.beforeName = this.element.name
+        },
         inputSomeIPServiceName() {
             this.$store.commit('editSomeIPService', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
-            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
+            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name, 
+                                                        changeName: 'Name', pathLength:this.element.path.split('/').length, beforename: this.beforeName} )
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
+            this.beforeName = this.element.name
+        },
+        clickEventGName(name) {
+            this.beforeEventG = name
         },
         inputEventGName(name) {
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'EventG', listname: name} )
+                                                          changeName: 'EventG', listname: name, beforename: this.beforeEventG} )
+            this.beforeEventG = name
         },
 
         addEventG() {
@@ -714,12 +756,12 @@ export default {
             } 
         },
         openEvent(idx) { 
-            this.selEvent = this.$store.getters.getEventDeployment
+            this.selEvent = this.$store.getters.getSomeIPEventDeployment
 
             if ( this.element.eventG[this.eventGTab].event[idx].event != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/event-'+idx+'-'+this.eventGTab)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getServiceInterfaceDeploymentPath(this.element.eventG[this.eventGTab].event[idx].event, 1)
+                    endLine = this.$store.getters.getSomeIPEventDeploymentPath(this.element.eventG[this.eventGTab].event[idx].event)
                 }
                 this.editEvent.event = { name: this.element.eventG[this.eventGTab].event[idx].event, uuid: endLine}
             }
@@ -736,6 +778,8 @@ export default {
                 this.element.eventG[this.eventGTab].event[idx].event = this.editEvent.event.name
             } else if (endLine == undefined && this.editEvent.event != null) {
                 this.newLine(this.element.uuid+'/event-'+idx+'-'+this.eventGTab, this.element.uuid+'/eventtab'+this.element.eventG[this.eventGTab].id, this.editEvent.event.uuid)
+                this.element.eventG[this.eventGTab].event[idx].event = this.editEvent.event.name
+            } else if (this.editEvent.event != null && endLine == this.editEvent.event.uuid && this.element.eventG[this.eventGTab].event[idx].event != this.editEvent.event.name) {
                 this.element.eventG[this.eventGTab].event[idx].event = this.editEvent.event.name
             }
 
@@ -777,7 +821,7 @@ export default {
             }
         },
         setEventList() {
-            this.selEvent = this.$store.getters.getEventDeployment
+            this.selEvent = this.$store.getters.getSomeIPEventDeployment
             this.setactiveUUID()
         },
         clearEvent() {
@@ -828,7 +872,7 @@ export default {
             this.$store.commit('addElementService', {
                 name: this.$store.getters.getNameServiceInterface, input: false, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: '',
+                versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: null,
             })
             EventBus.$emit('add-element', constant.Service_str)
             EventBus.$emit('add-element', constant.ServiceInterfaces_str)
@@ -900,11 +944,13 @@ export default {
             } else if (endLine == undefined && this.editEventD.event != null) {
                 this.newLine(this.element.uuid+'/serviceEventD-'+idx, this.element.uuid+'/serviceEventD', this.editEventD.event.uuid)
                 this.element.eventD[idx].event = this.editEventD.event.name
+            } else if (this.editEventD.event != null && endLine == this.editEventD.event.uuid && this.element.eventD[idx].event != this.editEventD.event.name) {
+                this.element.eventD[idx].event = this.editEventD.event.name
             }
 
             if (this.element.eventD[idx].name != this.editEventD.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'EventD', listname: this.editEventD.name} )
+                                                          changeName: 'EventD', listname: this.editEventD.name, beforename:this.element.eventD[idx].name} )
             }
 
             this.element.eventD[idx].name = this.editEventD.name
@@ -978,7 +1024,7 @@ export default {
                     }
                 }
 
-                this.$store.commit('deleteRefTable', {deleteName:'methodD', deletItemList: this.element.methodD, path: this.element.path, name: this.element.name})
+                this.$store.commit('deleteRefTable', {deleteName:'methodD', deletItemList: this.selectDelectMethodD, path: this.element.path, name: this.element.name})
                 this.element.methodD = this.element.methodD.filter(item => {
                         return this.selectDelectMethodD.indexOf(item) < 0 })
 
@@ -1026,11 +1072,13 @@ export default {
             } else if (endLine == undefined && this.editMethodD.method != null) {
                 this.newLine(this.element.uuid+'/serviceMethodD-'+idx, this.element.uuid+'/serviceMethodD', this.editMethodD.method.uuid)
                 this.element.methodD[idx].method = this.editMethodD.method.name
+            } else if (this.editMethodD.method != null && endLine == this.editMethodD.method.uuid && this.element.methodD[idx].method != this.editMethodD.method.name) {
+                this.element.methodD[idx].method = this.editMethodD.method.name
             }
 
             if (this.element.methodD[idx].name != this.editMethodD.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'MethodD', listname: this.editMethodD.name} )
+                                                          changeName: 'MethodD', listname: this.editMethodD.name, beforename: this.element.methodD[idx].name} )
             }
 
             this.element.methodD[idx].name = this.editMethodD.name
@@ -1087,6 +1135,38 @@ export default {
             this.editMethodD.method = null
         },
 
+        clickFieldName(name) {
+            this.beforeField = name
+        },
+        clickFieldGetName(name) {
+            this.beforeGet = name
+        },
+        clickFieldSetName(name) {
+            this.beforeSet = name
+        },
+        clickFieldNotName(name) {
+            this.beforeNoti = name
+        },
+        inputFieldName(name) {
+            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                          changeName: 'fileName', listname: name, beforename: this.beforeField} )
+            this.beforeField = name
+        },
+        inputFieldGetName(name) {
+            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                          changeName: 'getName', listname: name, beforename: this.beforeGet} )
+            this.beforeGet = name
+        },
+        inputFieldSetName(name) {
+            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                          changeName: 'setName', listname: name, beforename: this.beforeSet} )
+            this.beforeSet = name
+        },
+        inputFieldNotName(name) {
+            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                          changeName: 'notName', listname: name, beforename: this.beforeNoti} )
+            this.beforeNoti = name
+        },
         addField() {
             const editItem = {name: '', field:null,
                               getname: '',getid: '',getmaxreq: '',getmaxres: '',gettimereq: '',gettimeres: '',getproto: null,
@@ -1131,6 +1211,9 @@ export default {
                     this.newLine(this.element.uuid+'/field-'+(i-1), this.element.uuid+'/field', endLine)
                 }
             }
+            this.$store.commit('deleteRefTable', {deleteName:'FieldD', deleteTab: true, tabName: this.element.fieldD[idx].name, path: this.element.path, name: this.element.name,
+                                                    getname: this.element.fieldD[idx].getname, setname: this.element.fieldD[idx].setname, notname: this.element.fieldD[idx].notname})
+
             this.element.fieldD.splice(idx, 1)
             this.changeFieldTab()
         },

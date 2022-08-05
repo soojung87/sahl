@@ -65,7 +65,7 @@
                                 </div>
                                 <v-card-text v-if="isContriOpenClose">
                                     <v-data-table v-model="selectDelectContri" :headers="headerContri" :items="element.contri" :items-per-page='20'
-                                            :show-select="isdeleteContriItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteContriItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>

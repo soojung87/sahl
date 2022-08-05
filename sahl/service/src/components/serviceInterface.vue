@@ -29,13 +29,13 @@
                             <v-text-field v-model="element.namespace" label="Name Spaces" @input='inputNameSpace' placeholder="String/String/..." style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-row>
                                 <v-col col="6">
-                                    <v-text-field v-model="element.majversion" label="Major Version" placeholder="number.number" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                    <v-text-field v-model="element.majversion" label="Major Version" placeholder="number.number" style="height: 25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                 </v-col>
                                 <v-col col="6">
-                                    <v-text-field v-model="element.minversion" label="Minor Version" placeholder="number.number" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                    <v-text-field v-model="element.minversion" label="Minor Version" placeholder="number.number" style="height: 25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                 </v-col>
                             </v-row>
-                            <v-checkbox v-model="element.isservice" label="Is Service" style="height: 33px;"></v-checkbox>
+                            <v-checkbox v-model="element.isservice" label="Is Service" value="element.isservice" :indeterminate="element.isservice==null? true:false" true-value="true" false-value="false" style="height: 33px;"></v-checkbox>
                             <v-card outlined class="mx-auto">
                                 <div class="subtitle-2" :id="element.uuid+'/Eventtable'" style="height:20px">
                                     <v-hover v-slot="{ hover }">
@@ -53,7 +53,7 @@
                                 </div>
                                 <v-card-text v-show="isEventsOpenClose">  
                                     <v-data-table v-model="selectDelectEventItem" :headers="headerEvents" :items="element.events" :items-per-page='20'
-                                            :show-select="isdeleteEventItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteEventItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -123,7 +123,7 @@
                                 </div>
                                 <v-card-text v-show="isFieldOpenClose">                            
                                     <v-data-table v-model="selectDelectFieldItem" :headers="headerField" :items="element.fields" :items-per-page='20'
-                                                :show-select="isdeleteFieldItem" item-key="id" height="100px" dense hide-default-footer>
+                                                :show-select="isdeleteFieldItem" item-key="id" height="140px" dense hide-default-footer>
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -147,13 +147,13 @@
                                                                 </v-autocomplete>
                                                                 <v-row>
                                                                     <v-col cols="4">
-                                                                        <v-checkbox v-model="editFieldsItem.getter" label="getter" @click="setactiveUUID"></v-checkbox>
+                                                                        <v-checkbox v-model="editFieldsItem.getter" label="getter" value="editFieldsItem.getter" :indeterminate="editFieldsItem.getter==null? true:false" true-value="true" false-value="false" @click="setactiveUUID"></v-checkbox>
                                                                     </v-col>
                                                                     <v-col cols="4">
-                                                                        <v-checkbox v-model="editFieldsItem.setter" label="setter" @click="setactiveUUID"></v-checkbox>
+                                                                        <v-checkbox v-model="editFieldsItem.setter" label="setter" value="editFieldsItem.setter" :indeterminate="editFieldsItem.setter==null? true:false" true-value="true" false-value="false" @click="setactiveUUID"></v-checkbox>
                                                                     </v-col>
                                                                     <v-col cols="4">
-                                                                        <v-checkbox v-model="editFieldsItem.notifier" label="notifier" @click="setactiveUUID"></v-checkbox>
+                                                                        <v-checkbox v-model="editFieldsItem.notifier" label="notifier" value="editFieldsItem.notifier" :indeterminate="editFieldsItem.notifier==null? true:false" true-value="true" false-value="false" @click="setactiveUUID"></v-checkbox>
                                                                     </v-col>
                                                                 </v-row>
                                                             </template>
@@ -180,13 +180,13 @@
                                                                 </v-autocomplete>
                                                                 <v-row>
                                                                     <v-col cols="4">
-                                                                        <v-checkbox v-model="editFieldsItem.getter" label="getter" @click="setactiveUUID"></v-checkbox>
+                                                                        <v-checkbox v-model="editFieldsItem.getter" label="getter" value="editFieldsItem.getter" :indeterminate="editFieldsItem.getter==null? true:false" true-value="true" false-value="false" @click="setactiveUUID"></v-checkbox>
                                                                     </v-col>
                                                                     <v-col cols="4">
-                                                                        <v-checkbox v-model="editFieldsItem.setter" label="setter" @click="setactiveUUID"></v-checkbox>
+                                                                        <v-checkbox v-model="editFieldsItem.setter" label="setter" value="editFieldsItem.setter" :indeterminate="editFieldsItem.setter==null? true:false" true-value="true" false-value="false" @click="setactiveUUID"></v-checkbox>
                                                                     </v-col>
                                                                     <v-col cols="4">
-                                                                        <v-checkbox v-model="editFieldsItem.notifier" label="notifier" @click="setactiveUUID"></v-checkbox>
+                                                                        <v-checkbox v-model="editFieldsItem.notifier" label="notifier" value="editFieldsItem.notifier" :indeterminate="editFieldsItem.notifier==null? true:false" true-value="true" false-value="false" @click="setactiveUUID"></v-checkbox>
                                                                     </v-col>
                                                                 </v-row>
                                                             </template>
@@ -220,8 +220,8 @@
                                     <v-tab-item v-for="(tab, idx) in element.methods" :key="idx">
                                         <v-card flat>
                                             <v-card-text>
-                                                <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputMethodName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                <v-checkbox v-model="tab.fireforget" label='Fire & Forget'></v-checkbox>
+                                                <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputMethodName(tab.name)" @click="clickMethodName(tab.name)" placeholder="String" style="height: 25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-checkbox v-model="tab.fireforget" label='Fire & Forget' value="tab.fireforget" :indeterminate="tab.fireforget==null? true:false" true-value="true" false-value="false" style="height: 35px;"></v-checkbox>
                                                 <v-card outlined class="mx-auto">
                                                     <div class="subtitle-2" style="height:20px" :id="element.uuid+'/argtable'+tab.id">
                                                         <v-hover v-slot="{ hover }">
@@ -239,7 +239,7 @@
                                                     </div>
                                                     <v-card-text v-show="isArgumentOpenClose">
                                                         <v-data-table v-model="selDeleteArgItem" :headers="headerArg" :items="tab.argument" :items-per-page='20'
-                                                                :show-select="isdeleteArg" item-key="id" height="100px" dense hide-default-footer >
+                                                                :show-select="isdeleteArg" item-key="id" height="140px" dense hide-default-footer >
                                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                             </template>
@@ -313,7 +313,7 @@
                                                     </div>
                                                     <v-card-text v-show="isErrorSetOpenClose">
                                                         <v-data-table v-model="selDeleteErrorSet" :headers="headerErrorSet" :items="tab.errorSet" :items-per-page='20'
-                                                                :show-select="isdeleteErrorSet" item-key="id" height="100px" dense hide-default-footer >
+                                                                :show-select="isdeleteErrorSet" item-key="id" height="140px" dense hide-default-footer >
                                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                             </template>
@@ -381,7 +381,7 @@
                                                     </div>
                                                     <v-card-text v-show="isErrorOpenClose">
                                                         <v-data-table v-model="selDeleteError" :headers="headerError" :items="tab.error" :items-per-page='20'
-                                                                :show-select="isdeleteError" item-key="id" height="100px" dense hide-default-footer >
+                                                                :show-select="isdeleteError" item-key="id" height="140px" dense hide-default-footer >
                                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                             </template>
@@ -490,6 +490,22 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                        if(this.iselementOpenClose) {
+                            if(this.element.methods.length > 0 && this.location == 1) {
+                                if(this.isMethodsOpenClose) {
+                                    EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.element.methods[this.methodTab].id)
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+                                }
+                            }
+                        }
+                    })
+                }
             }
         },
     },
@@ -571,6 +587,7 @@ export default {
             changeLineArg: [],
             changeLineES: [],
             changeLineE: [],
+            beforeName: '',
         }
     },
     mounted() {
@@ -795,7 +812,7 @@ export default {
 
             if (this.element.events[idx].name != this.editEventsItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'serviceEventD', listname: this.editEventsItem.name} )
+                                                          changeName: 'serviceEventD', listname: this.editEventsItem.name, beforename:this.element.events[idx].name} )
             }
             this.element.events[idx].name = this.editEventsItem.name
             this.cancelEventItem()
@@ -817,7 +834,7 @@ export default {
 
             if (this.element.fields[idx].name != this.editFieldsItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'field', listname: this.editFieldsItem.name} )
+                                                          changeName: 'field', listname: this.editFieldsItem.name, beforename: this.element.fields[idx].name} )
             }
 
             this.element.fields[idx].name = this.editFieldsItem.name
@@ -848,7 +865,7 @@ export default {
             this.$store.commit('addElementImplementation', {
                     name: this.$store.getters.getNameImplementation, input: false, path: '',
                     top: elementY, left: elementX,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    category:'', namespace:'', arraysize:'', typeemitter:'', 
+                    category:'', namespace:'', arraysize:'', typeemitter:'', traceName: '', trace: [],
                     typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
             })
             EventBus.$emit('add-element', constant.Implementation_str)
@@ -986,9 +1003,13 @@ export default {
             this.element.methods.splice(idx, 1)
             this.changeMethodTab()
         },
+        clickMethodName(name) {
+            this.beforeName = name
+        },
         inputMethodName(name) {
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                        changeName: 'serviceMethodD', listname: name} )
+                                                        changeName: 'serviceMethodD', listname: name, beforename:this.beforeName} )
+            this.beforeName = name
         },
 
         isCheckArg() {

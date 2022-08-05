@@ -43,7 +43,7 @@
                                 </div>
                                 <v-card-text v-if="isSDGSOpenClose">
                                     <v-data-table v-model="selectDelectSDGS" :headers="headerSDGS" :items="element.sdgs" :items-per-page='20'
-                                            :show-select="isdeleteSDGSItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteSDGSItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -113,7 +113,7 @@
                                 </div>
                                 <v-card-text v-if="isFileOpenClose">
                                     <v-data-table v-model="selectDelectFile" :headers="headerFile" :items="element.files" :items-per-page='20'
-                                            :show-select="isdeleteFileItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteFileItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -443,10 +443,10 @@ export default {
             } 
         },
         editFile(idx) {
-            if (this.element.files[idx].name != this.editItem.name){
+            /*if (this.element.files[idx].name != this.editItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'PerFile', listname: this.editItem.name} )
-            }
+            }*/
             this.element.files[idx].name = this.editItem.name
             this.element.files[idx].url = this.editItem.url
             this.element.files[idx].filename = this.editItem.filename

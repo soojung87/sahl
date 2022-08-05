@@ -43,7 +43,7 @@
                                 </div>
                                 <v-card-text v-if="isCheckPOpenClose">
                                     <v-data-table v-model="selectDelectCheckP" :headers="headerCheckP" :items="element.checkpoint" :items-per-page='20'
-                                            :show-select="isdeleteCheckPItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteCheckPItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -211,11 +211,10 @@ export default {
             } 
         },
         editCheckP(idx) {
-            if (this.element.checkpoint[idx].name != this.editItem.name){
+            /*if (this.element.checkpoint[idx].name != this.editItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'PHMSupervise', listname: this.editItem.name} )
-            }
-
+            }*/
             this.element.checkpoint[idx].name = this.editItem.name
             this.element.checkpoint[idx].check = this.editItem.check
             this.cancelCheckP()

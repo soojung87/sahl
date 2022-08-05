@@ -23,7 +23,7 @@
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Machine</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text  v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text  v-show="iselementOpenClose && zoomvalue > $setZoominElement">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputMachineName' outlined dense></v-text-field>
                             <v-row style="height: 70px">
@@ -68,7 +68,7 @@
                                 </div>
                                 <v-card-text v-if="isHWElementOpenClose">
                                     <v-data-table v-model="selectDelectHWElement" :headers="headerHWElement" :items="element.hwelement" :items-per-page='20'
-                                            :show-select="isdeleteHWElementItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteHWElementItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -136,7 +136,7 @@
                                 </div>
                                 <v-card-text v-if="isFunctionGroupOpenClose">
                                     <v-data-table v-model="selectDelectFunctionItem" :headers="headerFunctionGroup" :items="element.functiongroup" :items-per-page='20'
-                                            :show-select="isdeleteFunctionGroupItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteFunctionGroupItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -192,6 +192,60 @@
                             <v-card outlined class="mx-auto">
                                 <div class="subtitle-2" style="height:20px">
                                     <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showEnvironmentV" x-small color="indigo">
+                                            <v-icon>{{ isEnvironmentVOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    Environment Variables
+                                    <v-btn @click="isCheckEnvironmentV" text x-small color="indigo" v-if="isEnvironmentVOpenClose">
+                                        <v-icon>mdi-check</v-icon>
+                                    </v-btn>
+                                    <v-btn v-if="isEnvironmentVOpenClose && isdeleteEnvironmentV" @click="deleteEnvironmentV" text x-small color="indigo">
+                                        <v-icon>mdi-minus</v-icon>
+                                    </v-btn>
+                                </div>
+                                <v-card-text v-if="isEnvironmentVOpenClose">
+                                    <v-data-table v-model="selectDelectEnvironmentV" :headers="headerEnvironmentV" :items="element.environ" :items-per-page='20'
+                                            :show-select="isdeleteEnvironmentV" item-key="id" height="140px" dense hide-default-footer >
+                                        <template v-slot:item.data-table-select="{ isSelected, select }">
+                                            <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                        </template>
+                                        <template v-if="!isdeleteEnvironmentV" v-slot:body="{ items, headers }">
+                                            <tbody>
+                                                <tr v-for="(item,idx) in items" :key="idx">
+                                                    <td v-for="(header,key) in headers" :key="key">
+                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openEnvironmentV(idx)" @cancel="editEnvironmentV(idx)" @save="cancelEnvironmentV" large >
+                                                            {{item[header.value]}}
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-text-field v-model="editEnvironItem.key" label="Key" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-text-field v-model="editEnvironItem.value" label="Value" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="3">
+                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addEnvironmentV()" @save="cancelEnvironmentV"> 
+                                                            <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                            </v-btn>
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-text-field v-model="editEnvironItem.key" label="Key" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-text-field v-model="editEnvironItem.value" label="Value" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </template>
+                                    </v-data-table>
+                                </v-card-text>
+                            </v-card>
+                            <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" style="height:20px">
+                                    <v-hover v-slot="{ hover }">
                                         <v-btn text @click="showProcessorItem" x-small color="indigo">
                                             <v-icon>{{ isProcessorOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
                                         </v-btn>
@@ -201,7 +255,7 @@
                                         <v-icon>mdi-plus</v-icon>
                                     </v-btn>
                                 </div>
-                                <v-tabs v-model='processortab' height="30px" v-if="isProcessorOpenClose">
+                                <v-tabs v-model='processortab' height="30px" v-if="isProcessorOpenClose" show-arrows>
                                     <v-tab v-for="(tab, idx) in element.processor" :key="idx" @click="clickProcessortab()"> 
                                         {{tab.name}}
                                         <v-btn text x-small @click="deleteProcessor(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
@@ -210,7 +264,7 @@
                                     <v-tab-item v-for="(tab, idx) in element.processor" :key="idx">
                                         <v-card flat>
                                             <v-card-text>
-                                                <v-text-field v-model="tab.name" :rules="rules.name" label="Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-text-field v-model="tab.name" @input="inputProcessorName()" @click="clickProcessorName(tab.name)" :rules="rules.name" label="Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                 <div class="subtitle-2" style="height:20px">
                                                     <v-hover v-slot="{ hover }">
                                                         <v-btn text @click="showCore" x-small color="indigo">
@@ -226,7 +280,7 @@
                                                     </v-btn>
                                                 </div>
                                                 <v-data-table v-if="isCoreOpenClose" v-model="selectDelectCoreItem" :headers="headerCore" :items="tab.core" :id="element.uuid+'/processorCore-'"
-                                                        :show-select="isdeleteCoreItem" item-key="id" height="100px" dense hide-default-footer :items-per-page='20'>
+                                                        :show-select="isdeleteCoreItem" item-key="id" height="140px" dense hide-default-footer :items-per-page='20'>
                                                     <template v-slot:item.data-table-select="{ isSelected, select }">
                                                         <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                     </template>
@@ -267,86 +321,249 @@
                                 </v-tabs-items>
                             </v-card>
                             <v-card outlined class="mx-auto">
-                                <div class="subtitle-2" style="height:20px">
+                                <div class="subtitle-2" :id="element.uuid+'/moduleIns'" style="height:20px">
                                     <v-hover v-slot="{ hover }">
                                         <v-btn text @click="showModuleInsItem" x-small color="indigo">
                                             <v-icon>{{ isModuleInsOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
                                         </v-btn>
                                     </v-hover>
-                                    Module Instantiation
-                                    <v-btn v-if="isModuleInsOpenClose" @click="addModuleIns" text x-small color="indigo">
-                                        <v-icon>mdi-plus</v-icon>
-                                    </v-btn>
+                                    Module Instantiations
                                 </div>
-                                <v-tabs v-model='ModuleInstab' height="30px" v-if="isModuleInsOpenClose">
-                                    <v-tab v-for="(tab, idx) in element.moduleinstant" :key="idx" @click="clickModuleInstab()"> 
-                                        {{tab.name}}
-                                        <v-btn text x-small @click="deleteModuleIns(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
-                                </v-tabs>
-                                <v-tabs-items v-model="ModuleInstab" v-if="isModuleInsOpenClose">
-                                    <v-tab-item v-for="(tab, idx) in element.moduleinstant" :key="idx">
-                                        <v-card flat>
-                                            <v-card-text>
-                                                <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputModuleInsName()" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                <div class="subtitle-2" style="height:20px">
-                                                    <v-hover v-slot="{ hover }">
-                                                        <v-btn text @click="showResourceG" x-small color="indigo">
-                                                            <v-icon>{{ isResourceGOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                <v-card outlined class="mx-auto" v-if="isModuleInsOpenClose">
+                                    <div class="subtitle-2" style="height:20px">
+                                        <v-hover v-slot="{ hover }">
+                                            <v-btn text @click="showOSModuleInsItem" x-small color="indigo" style="margin-left:15px">
+                                                <v-icon>{{ isOSModuleInsOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                            </v-btn>
+                                        </v-hover>
+                                        OS Module Instantiation
+                                        <v-btn v-if="isOSModuleInsOpenClose" @click="addModuleIns" text x-small color="indigo">
+                                            <v-icon>mdi-plus</v-icon>
+                                        </v-btn>
+                                    </div>
+                                    <v-tabs v-model='ModuleInstab' height="30px" v-if="isOSModuleInsOpenClose">
+                                        <v-tab v-for="(tab, idx) in element.moduleinstant" :key="idx" @click="clickModuleInstab()"> 
+                                            {{tab.name}}
+                                            <v-btn text x-small @click="deleteModuleIns(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
+                                    </v-tabs>
+                                    <v-tabs-items v-model="ModuleInstab" v-if="isOSModuleInsOpenClose">
+                                        <v-tab-item v-for="(tab, idx) in element.moduleinstant" :key="idx">
+                                            <v-card flat>
+                                                <v-card-text>
+                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputModuleInsName()" @click="clickModuleInsName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    <div class="subtitle-2" style="height:20px">
+                                                        <v-hover v-slot="{ hover }">
+                                                            <v-btn text @click="showResourceG" x-small color="indigo">
+                                                                <v-icon>{{ isResourceGOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                                            </v-btn>
+                                                        </v-hover>
+                                                        Resource Group 
+                                                        <v-btn v-if="isResourceGOpenClose" @click="isCheckResourceG" text x-small color="indigo">
+                                                            <v-icon>mdi-check</v-icon>
                                                         </v-btn>
-                                                    </v-hover>
-                                                    Resource Group 
-                                                    <v-btn v-if="isResourceGOpenClose" @click="isCheckResourceG" text x-small color="indigo">
-                                                        <v-icon>mdi-check</v-icon>
-                                                    </v-btn>
-                                                    <v-btn v-if="isResourceGOpenClose && isdeleteResourceGItem" @click="deleteResourceG" text x-small color="indigo">
-                                                        <v-icon>mdi-minus</v-icon>
-                                                    </v-btn>
-                                                </div>
-                                                <v-data-table v-if="isResourceGOpenClose" v-model="selectDelectModuleInsItem" :headers="headerModuleIns" :items="tab.resource" :id="element.uuid+'/moduleInsable'"
-                                                        :show-select="isdeleteResourceGItem" item-key="id" height="100px" dense hide-default-footer :items-per-page='20'>
-                                                    <template v-slot:item.data-table-select="{ isSelected, select }">
-                                                        <v-simple-checkbox color="green" :value="isSelected" @input="select($event)" :ripple="false"></v-simple-checkbox>
-                                                    </template>
-                                                    <template v-if="!isdeleteResourceGItem" v-slot:body="{ items, headers }">
-                                                        <tbody>
-                                                            <tr v-for="(item,num) in items" :key="num">
-                                                                <td v-for="(header,key) in headers" :key="key">
-                                                                    <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openResourceG(num, items)" @cancel="editResourceG(num, items)" @save="cancelResourceG" large >
-                                                                        {{item[header.value]}}
-                                                                        <template v-slot:input>
-                                                                            <br>
-                                                                            <v-text-field v-model="editModuleInsItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                            <v-text-field v-model="editModuleInsItem.cpuUsage" label="CPU Usage" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                            <v-text-field v-model="editModuleInsItem.memoryUsage" label="Memory Usage" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="3">
-                                                                    <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addResourceG(idx)" @save="cancelResourceG"> 
-                                                                        <v-btn outlined color="indigo" dense text small block width="270px">
-                                                                            <v-icon >mdi-plus</v-icon>New Item
-                                                                        </v-btn>
-                                                                        <template v-slot:input>
-                                                                            <br>
-                                                                            <v-text-field v-model="editModuleInsItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                            <v-text-field v-model="editModuleInsItem.cpuUsage" label="CPU Usage" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                            <v-text-field v-model="editModuleInsItem.memoryUsage" label="Memory Usage" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                        </template>
-                                                                    </v-edit-dialog>
-                                                                </th>
-                                                            </tr>
-                                                        </tbody>
-                                                    </template>
-                                                </v-data-table>
-                                            </v-card-text>
-                                        </v-card>
-                                    </v-tab-item>
-                                </v-tabs-items>
+                                                        <v-btn v-if="isResourceGOpenClose && isdeleteResourceGItem" @click="deleteResourceG" text x-small color="indigo">
+                                                            <v-icon>mdi-minus</v-icon>
+                                                        </v-btn>
+                                                    </div>
+                                                    <v-data-table v-if="isResourceGOpenClose" v-model="selectDelectModuleInsItem" :headers="headerModuleIns" :items="tab.resource"
+                                                            :show-select="isdeleteResourceGItem" item-key="id" height="140px" dense hide-default-footer :items-per-page='20'>
+                                                        <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                            <v-simple-checkbox color="green" :value="isSelected" @input="select($event)" :ripple="false"></v-simple-checkbox>
+                                                        </template>
+                                                        <template v-if="!isdeleteResourceGItem" v-slot:body="{ items, headers }">
+                                                            <tbody>
+                                                                <tr v-for="(item,num) in items" :key="num">
+                                                                    <td v-for="(header,key) in headers" :key="key">
+                                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openResourceG(num, items)" @cancel="editResourceG(num, items)" @save="cancelResourceG" large >
+                                                                            {{item[header.value]}}
+                                                                            <template v-slot:input>
+                                                                                <br>
+                                                                                <v-text-field v-model="editModuleInsItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                <v-text-field v-model="editModuleInsItem.cpuUsage" label="CPU Usage" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                <v-text-field v-model="editModuleInsItem.memoryUsage" label="Memory Usage" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                            </template>
+                                                                        </v-edit-dialog>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th colspan="3">
+                                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addResourceG(idx)" @save="cancelResourceG"> 
+                                                                            <v-btn outlined color="indigo" dense text small block width="270px">
+                                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                                            </v-btn>
+                                                                            <template v-slot:input>
+                                                                                <br>
+                                                                                <v-text-field v-model="editModuleInsItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                <v-text-field v-model="editModuleInsItem.cpuUsage" label="CPU Usage" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                <v-text-field v-model="editModuleInsItem.memoryUsage" label="Memory Usage" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                            </template>
+                                                                        </v-edit-dialog>
+                                                                    </th>
+                                                                </tr>
+                                                            </tbody>
+                                                        </template>
+                                                    </v-data-table>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-tab-item>
+                                    </v-tabs-items>
+                                </v-card>
+                                <v-card outlined class="mx-auto" v-if="isModuleInsOpenClose">
+                                    <div class="subtitle-2" style="height:20px">
+                                        <v-hover v-slot="{ hover }">
+                                            <v-btn text @click="showUCMModule" x-small color="indigo" style="margin-left:15px">
+                                                <v-icon>{{ isUCMModuleOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                            </v-btn>
+                                        </v-hover>
+                                        UCM Module Instantiation
+                                        <v-btn @click="isCheckUCMModule" text x-small color="indigo" v-if="isUCMModuleOpenClose">
+                                            <v-icon>mdi-check</v-icon>
+                                        </v-btn>
+                                        <v-btn v-if="isUCMModuleOpenClose && isdeleteUCMModule" @click="deleteUCMModule" text x-small color="indigo">
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                    </div>
+                                    <v-card-text v-if="isUCMModuleOpenClose">
+                                        <v-data-table v-model="selectDelectUCMModule" :headers="headerUCMModule" :items="element.ucm" :items-per-page='20'
+                                                :show-select="isdeleteUCMModule" item-key="id" height="140px" dense hide-default-footer >
+                                            <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                            </template>
+                                            <template v-if="!isdeleteUCMModule" v-slot:body="{ items, headers }">
+                                                <tbody>
+                                                    <tr v-for="(item,idx) in items" :key="idx">
+                                                        <td v-for="(header,key) in headers" :key="key">
+                                                            <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openUCMModule(idx)" @cancel="editUCMModule(idx)" @save="cancelUCMModule" large >
+                                                                {{item[header.value]}}
+                                                                <template v-slot:input>
+                                                                    <br>
+                                                                    <v-text-field v-model="editUCMModuleItem.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                    <v-text-field v-model="editUCMModuleItem.ident" label="Identifier" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                </template>
+                                                            </v-edit-dialog>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th colspan="3">
+                                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addUCMModule()" @save="cancelUCMModule"> 
+                                                                <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                    <v-icon >mdi-plus</v-icon>New Item
+                                                                </v-btn>
+                                                                <template v-slot:input>
+                                                                    <br>
+                                                                    <v-text-field v-model="editUCMModuleItem.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                    <v-text-field v-model="editUCMModuleItem.ident" label="Identifier" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                </template>
+                                                            </v-edit-dialog>
+                                                        </th>
+                                                    </tr>
+                                                </tbody>
+                                            </template>
+                                        </v-data-table>
+                                    </v-card-text>
+                                </v-card>
+                                <v-card outlined class="mx-auto" v-if="isModuleInsOpenClose">
+                                    <div class="subtitle-2" :id="element.uuid+'/iamM'" style="height:20px">
+                                        <v-hover v-slot="{ hover }">
+                                            <v-btn text @click="showIamModule" x-small color="indigo"  style="margin-left:15px">
+                                                <v-icon>{{ isIamModuleOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                            </v-btn>
+                                        </v-hover>
+                                        IAM Module Instantiation
+                                        <v-btn v-if="isIamModuleOpenClose" @click="addIamModule()" text x-small color="indigo">
+                                            <v-icon>mdi-plus</v-icon>
+                                        </v-btn>
+                                    </div>
+                                    <v-card-text v-show="isIamModuleOpenClose">
+                                        <v-tabs v-model='IamModuleTab' height="30px" show-arrows @change="changeIamModuleTab()">
+                                            <v-tab v-for="(tab, idx) in element.iam" :key="idx" @click="clickIamModuletab()"> 
+                                                {{tab.name}}
+                                                <v-btn text x-small @click="deleteIamModule(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
+                                        </v-tabs>
+                                        <v-tabs-items v-model="IamModuleTab">
+                                            <v-tab-item v-for="(tab, idx) in element.iam" :key="idx">
+                                                <v-card flat>
+                                                    <v-card-text>
+                                                        <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputIamModuleName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-card outlined class="mx-auto">
+                                                            <div class="subtitle-2" style="height:20px" :id="element.uuid+'/grandtab-'+tab.id">
+                                                                <v-hover v-slot="{ hover }">
+                                                                    <v-btn text @click="showGrantRef" x-small color="indigo">
+                                                                        <v-icon>{{ isGrantRefOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                                                    </v-btn>
+                                                                </v-hover>
+                                                                Grant Refs
+                                                                <v-btn @click="isCheckGrantRef" text x-small color="indigo" v-if="isGrantRefOpenClose">
+                                                                    <v-icon>mdi-check</v-icon>
+                                                                </v-btn>
+                                                                <v-btn v-if="isGrantRefOpenClose && isdeleteGrantRef" @click="deleteGrantRef" text x-small color="indigo">
+                                                                    <v-icon>mdi-minus</v-icon>
+                                                                </v-btn>
+                                                            </div>
+                                                            <v-card-text v-show="isGrantRefOpenClose">
+                                                                <v-data-table v-model="selectDelectGrantRef" :headers="headerGrantRef" :items="tab.grants" :items-per-page='20'
+                                                                        :show-select="isdeleteGrantRef" item-key="id" height="140px" dense hide-default-footer >
+                                                                    <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                                        <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                                                    </template>
+                                                                    <template v-if="!isdeleteGrantRef" v-slot:body="{ items, headers }">
+                                                                        <tbody>
+                                                                            <tr v-for="(item,num) in items" :key="num">
+                                                                                <td v-for="(header,key) in headers" :key="key">
+                                                                                    <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openGrantRef(num)" @cancel="editGrantRefItem(num)" @save="cancelGrantRef" large >
+                                                                                        {{item[header.value]}}
+                                                                                        <template v-slot:input>
+                                                                                            <br>
+                                                                                            <v-select v-model="editGrant.select" :items="selectGrant" clearable @click:clear='clearGrantSelect()' label="Data Element" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                                                            <v-autocomplete v-if="editGrant.select != null" v-model='editGrant.grant' label='Data Element Reference' :items='selGrant' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                                                return-object :readonly="!isEditingGrant" clearable @click="setGrantSelect()" 
+                                                                                                @click:clear='clearGrant' @blur="isEditingGrant=true" outlined dense style="height: 45px;">
+                                                                                                <template v-slot:append-item>
+                                                                                                    <v-btn outlined color="indigo" dense text small block @click="newGrant()">
+                                                                                                        <v-icon >mdi-plus</v-icon>New Item
+                                                                                                    </v-btn>
+                                                                                                </template>
+                                                                                            </v-autocomplete>                            
+                                                                                        </template>
+                                                                                    </v-edit-dialog>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th colspan="3">
+                                                                                    <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addGrantRef()" @save="cancelGrantRef"> 
+                                                                                        <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                                            <v-icon >mdi-plus</v-icon>New Item
+                                                                                        </v-btn>
+                                                                                        <template v-slot:input>
+                                                                                            <br>
+                                                                                            <v-select v-model="editGrant.select" :items="selectGrant" clearable @click:clear='clearGrantSelect()' label="Grant Select" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                                                            <v-autocomplete v-if="editGrant.select != null" v-model='editGrant.grant' label='Grant Reference' :items='selGrant' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                                return-object :readonly="!isEditingGrant" clearable @click="setGrantSelect()" 
+                                                                                                @click:clear='clearGrant' @blur="isEditingGrant=true" outlined dense style="height: 45px;">
+                                                                                                <template v-slot:append-item>
+                                                                                                    <v-btn outlined color="indigo" dense text small block @click="newGrant()">
+                                                                                                        <v-icon >mdi-plus</v-icon>New Item
+                                                                                                    </v-btn>
+                                                                                                </template>
+                                                                                            </v-autocomplete>  
+                                                                                        </template>
+                                                                                    </v-edit-dialog>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </template>
+                                                                </v-data-table>
+                                                            </v-card-text>
+                                                        </v-card>
+                                                    </v-card-text>
+                                                </v-card>
+                                            </v-tab-item>
+                                        </v-tabs-items>
+                                    </v-card-text>
+                                </v-card>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -365,7 +582,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView','minimaptoolbar'],
+    props: ['element', 'isDatailView','minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -391,6 +608,22 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                        if(this.iselementOpenClose && this.location == 1) {
+                            if(this.element.iam.length > 0) {
+                                if (this.isModuleInsOpenClose) {
+                                    EventBus.$emit('changeLine-someipService', 'module', this.element.uuid, this.IamModuleTab, this.element.iam[this.IamModuleTab].id, this.isIamModuleOpenClose)
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+                                }
+                            }
+                        }
+                    })
+                }
             }
         },
     },
@@ -434,6 +667,16 @@ export default {
             defaultfunctionItem: { name: '', type: null, id: '' },
             deleteChangeLine : [],
 
+            isEnvironmentVOpenClose: true,
+            isdeleteEnvironmentV: false,
+            selectDelectEnvironmentV: [],
+            headerEnvironmentV: [
+                { text: 'Key', align: 'start', sortable: false, value: 'key' },
+                { text: 'Value', sortable: false, value: 'value' },
+            ],
+            editEnvironItem: { key: '', value: '', id: '' },
+            defaultEnvironItem: { key: '', value: '', id: '' },
+
             processortab: null,
             isProcessorOpenClose: true,
             isCoreOpenClose: true,
@@ -446,8 +689,9 @@ export default {
             editCoreItem: { name: '', idCore: '', id: '' },
             defaultCoreItem: { name: '', idCore: '', id: '' },
 
-            ModuleInstab: null,
             isModuleInsOpenClose: true,
+            ModuleInstab: null,
+            isOSModuleInsOpenClose: true,
             isResourceGOpenClose: true,
             isdeleteResourceGItem: false,
             selectDelectModuleInsItem: [],
@@ -458,6 +702,32 @@ export default {
             ],
             editModuleInsItem: { name: '',cpuUsage: '', memoryUsage: '', id: '' },
             defaultModuleInsItem: { name: '', cpuUsage: '', memoryUsage: '', id: '' },
+
+            isUCMModuleOpenClose: true,
+            isdeleteUCMModule: false,
+            selectDelectUCMModule: [],
+            headerUCMModule: [
+                { text: 'Name', align: 'start', sortable: false, value: 'name' },
+                { text: 'Identifier', sortable: false, value: 'ident' },
+            ],
+            editUCMModuleItem: { name: '', ident: '', id: '' },
+            defaultUCMModuleItem: { name: '', ident: '', id: '' },
+
+            IamModuleTab: null,
+            isIamModuleOpenClose: true,
+            isGrantRefOpenClose: true,
+            isdeleteGrantRef: false,
+            selectDelectGrantRef: [],
+            headerGrantRef: [
+                { text: 'Grant Ref', sortable: false, value: 'grant' },
+            ],
+            selectGrant: ['COM-EVENT-GRANT','COM-FIELD-GRANT', 'COM-METHOD-GRANT'],
+            editGrant: { grant: null, select: null, id: ''},
+            selGrant:this.$store.getters.getEventGrant,
+            isEditingGrant: true,
+
+            beforeProcess: '',
+            beforeModule: ''
         }
     },
     mounted () {
@@ -492,6 +762,15 @@ export default {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                if(this.iselementOpenClose && this.location == 1) {
+                    if(this.element.iam.length > 0) {
+                        if (this.isModuleInsOpenClose) {
+                            EventBus.$emit('changeLine-someipService', 'module', this.element.uuid, this.IamModuleTab, this.element.iam[this.IamModuleTab].id, this.isIamModuleOpenClose)
+                        } else {
+                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+                        }
+                    }
+                }
             })
         },
         showHWElement() {
@@ -504,17 +783,52 @@ export default {
             // 선을 다시 그려줘야 하기 때문에
             EventBus.$emit('drawLine')
         },
+        showEnvironmentV() {
+            this.isEnvironmentVOpenClose = this.isEnvironmentVOpenClose ? false : true
+            EventBus.$emit('drawLine')
+        },
         showProcessorItem() {
             this.isProcessorOpenClose = this.isProcessorOpenClose ? false : true
+            EventBus.$emit('drawLine')
         },
         showCore() {
             this.isCoreOpenClose = this.isCoreOpenClose ? false : true
+            EventBus.$emit('drawLine')
         },
         showModuleInsItem() {
             this.isModuleInsOpenClose = this.isModuleInsOpenClose ? false : true
+            this.$nextTick(() => {
+                if(this.iselementOpenClose && this.location == 1) {
+                    if(this.element.iam.length > 0) {
+                        if (this.isModuleInsOpenClose) {
+                            EventBus.$emit('changeLine-someipService', 'module', this.element.uuid, this.IamModuleTab, this.element.iam[this.IamModuleTab].id, this.isIamModuleOpenClose)
+                        } else {
+                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+                        }
+                    }
+                }
+            })
+        },
+        showOSModuleInsItem() {
+            this.isOSModuleInsOpenClose = this.isOSModuleInsOpenClose ? false : true
+            EventBus.$emit('drawLine')
         },
         showResourceG() {
             this.isResourceGOpenClose = this.isResourceGOpenClose ? false : true
+            EventBus.$emit('drawLine')
+        },
+        showUCMModule() {
+            this.isUCMModuleOpenClose = this.isUCMModuleOpenClose ? false : true
+            EventBus.$emit('drawLine')
+        },
+        showIamModule() {
+            this.isIamModuleOpenClose = this.isIamModuleOpenClose ? false : true
+            if (this.element.iam.length > 0) {
+                EventBus.$emit('changeLine-someipService', 'module', this.element.uuid, this.IamModuleTab, this.element.iam[this.IamModuleTab].id, this.isIamModuleOpenClose)
+            }
+        },
+        showGrantRef() {
+            this.isGrantRefOpenClose = this.isGrantRefOpenClose ? false : true 
         },
         inputMachineName() {
             this.$store.commit('editMachine', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
@@ -523,9 +837,21 @@ export default {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
         },
+        clickProcessorName(name) {
+            this.beforeProcess = name
+        },
+        clickModuleInsName(name) {
+            this.beforeModule = name
+        },
+        inputProcessorName() {
+            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                        changeName: 'Processor', listname: this.element.processor[this.processortab].name, beforename: this.beforeProcess} )
+            this.beforeProcess = this.element.processor[this.processortab].name
+        },
         inputModuleInsName() {
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                        changeName: 'ModuleIns', listname: this.element.moduleinstant[this.ModuleInstab].name} )
+                                                        changeName: 'ModuleIns', listname: this.element.moduleinstant[this.ModuleInstab].name, beforename: this.beforeModule} )
+            this.beforeModule = this.element.moduleinstant[this.ModuleInstab].name
         },
 
 
@@ -788,7 +1114,7 @@ export default {
 
             if (this.element.functiongroup[idx].name != this.editFunctionItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'functionG', listname: this.editFunctionItem.name} )
+                                                          changeName: 'functionG', listname: this.editFunctionItem.name, beforename: this.element.functiongroup[idx].name} )
             }
 
             this.element.functiongroup[idx].name = this.editFunctionItem.name
@@ -818,13 +1144,58 @@ export default {
             this.cancelFunctionGroup()
         },
 
+        isCheckEnvironmentV() {
+            if (this.isdeleteEnvironmentV == true) {
+                this.isdeleteEnvironmentV = false
+                this.selectDelectEnvironmentV = []
+            } else {
+                this.isdeleteEnvironmentV = true
+            }
+        },
+        deleteEnvironmentV() {
+            if (this.isdeleteEnvironmentV == true) {
+                this.element.environ = this.element.environ.filter(item => {
+                        return this.selectDelectEnvironmentV.indexOf(item) < 0 })
+
+                this.isdeleteEnvironmentV = false
+                this.selectDelectEnvironmentV = []
+            } 
+        },
+        openEnvironmentV(idx) {
+            this.editEnvironItem.key = this.element.environ[idx].key
+            this.editEnvironItem.value = this.element.environ[idx].value
+        },
+        editEnvironmentV(idx) {
+            this.element.environ[idx].key = this.editEnvironItem.key
+            this.element.environ[idx].value = this.editEnvironItem.value
+            this.cancelEnvironmentV()
+        },
+        cancelEnvironmentV() {
+            this.editEnvironItem = Object.assign({}, this.defaultEnvironItem)
+            this.setactiveUUID()
+        },
+        addEnvironmentV() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.environ.some(item => item.id === n)
+            }
+            this.editEnvironItem.id = n
+
+            const addObj = Object.assign({}, this.editEnvironItem)
+            this.element.environ.push(addObj);
+            this.cancelEnvironmentV()
+        },
+
         clickProcessortab() {
             this.isdeleteCoreItem = false
             this.selectDelectCoreItem = []
         },
         deleteProcessor(idx) {
+            this.$store.commit('deleteRefTable', {deleteName:'Processor', deleteTab: true, tabName: this.element.processor[idx].name, path: this.element.path, name: this.element.name})
+
             this.element.processor.splice(idx, 1)
-            this.inputProcessor()
+            this.clickProcessortab()
         },
         addProcessor() {
             const editItem = {name: '', core: []}
@@ -845,6 +1216,8 @@ export default {
         },
         deleteCore() {
             if (this.isdeleteCoreItem == true) {
+                this.$store.commit('deleteRefTable', {deleteName:'proCore', deletItemList: this.selectDelectCoreItem, path: this.element.path, name: this.element.name, tabname: this.element.processor[this.processortab].name})
+
                 this.element.processor[this.processortab].core = this.element.processor[this.processortab].core.filter(item => {
                          return this.selectDelectCoreItem.indexOf(item) < 0 })
                 this.isdeleteCoreItem = false
@@ -856,6 +1229,10 @@ export default {
             this.editCoreItem.idCore = core[idx].idCore
         },
         editCore(idx,core) {
+            if (this.editCoreItem.name != core[idx].name) {
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                          changeName: 'proCore', listname: this.editCoreItem.name, tabname: this.element.processor[this.processortab].name, beforename: core[idx].name} )
+            }
             core[idx].name = this.editCoreItem.name
             core[idx].idCore = this.editCoreItem.idCore
             this.cancelCore()
@@ -936,6 +1313,258 @@ export default {
             const addObj = Object.assign({}, this.editModuleInsItem)
             this.element.moduleinstant[idx].resource.push(addObj)
             this.cancelResourceG()
+        },
+
+        isCheckUCMModule() {
+            if (this.isdeleteUCMModule == true) {
+                this.isdeleteUCMModule = false
+                this.selectDelectUCMModule = []
+            } else {
+                this.isdeleteUCMModule = true
+            }
+        },
+        deleteUCMModule() {
+            if (this.isdeleteUCMModule == true) {
+                this.element.ucm = this.element.ucm.filter(item => {
+                        return this.selectDelectUCMModule.indexOf(item) < 0 })
+
+                this.isdeleteUCMModule = false
+                this.selectDelectUCMModule = []
+            } 
+        },
+        openUCMModule(idx) {
+            this.editUCMModuleItem.name = this.element.ucm[idx].name
+            this.editUCMModuleItem.ident = this.element.ucm[idx].ident
+        },
+        editUCMModule(idx) {
+            if (this.element.ucm[idx].name != this.editUCMModuleItem.name){
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                          changeName: 'ucm', listname: this.editUCMModuleItem.name, beforename: this.element.ucm[idx].name } )
+            }
+            this.element.ucm[idx].name = this.editUCMModuleItem.name
+            this.element.ucm[idx].ident = this.editUCMModuleItem.ident
+            this.cancelUCMModule()
+        },
+        cancelUCMModule() {
+            this.editUCMModuleItem = Object.assign({}, this.defaultUCMModuleItem)
+            this.setactiveUUID()
+        },
+        addUCMModule() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.ucm.some(item => item.id === n)
+            }
+            this.editUCMModuleItem.id = n
+
+            const addObj = Object.assign({}, this.editUCMModuleItem)
+            this.element.ucm.push(addObj);
+            this.cancelUCMModule()
+        },
+
+        addIamModule() {
+            const editItem = {name: '', grants: [], id: ''}
+            const addObj = new Object(editItem)
+            let res = true, n = 0
+
+            while (res) {
+                addObj.name = 'IAM_Instantiation_' + n++;
+                res = this.element.iam.some(ele => ele.name === addObj.name)
+            }
+            addObj.id = n
+            this.element.iam.push(addObj)
+            this.IamModuleTab = this.element.iam.length-1
+            if(this.location == 1) {
+                EventBus.$emit('changeLine-someipService', 'module', this.element.uuid, this.IamModuleTab, this.element.iam[this.IamModuleTab].id, false)
+            }
+        },
+        clickIamModuletab() {
+            this.isdeleteGrantRef = false
+            this.selectDelectGrantRef = []
+        },
+        changeIamModuleTab() {
+            if(this.element.iam.length > 0 && this.location == 1) {
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'module', this.element.uuid, this.IamModuleTab, this.element.iam[this.IamModuleTab].id, true)}, 300);
+            }
+        },
+        deleteIamModule(idx) {
+            this.$store.commit('deleteRefTable', {deleteName:'iam', deleteTab: true, tabName: this.element.iam[idx].name, path: this.element.path, name: this.element.name})
+            for(let i=0; i<this.element.iam[idx].grants.length; i++){
+                var endLineCon = this.$store.getters.getChangeEndLine(this.element.uuid+'/iamM-'+this.element.iam[i].id+'-'+this.element.iam[idx].id)
+                if(endLineCon != undefined) {
+                    this.deleteLine(this.element.uuid+'/iamM-'+this.element.iam[i].id+'-'+this.element.iam[idx].id)
+                }
+            }
+            this.element.iam.splice(idx, 1)
+            this.changeIamModuleTab()
+        },
+        isCheckGrantRef() {
+            if (this.isdeleteGrantRef == true) {
+                this.isdeleteGrantRef = false
+                this.selectDelectGrantRef = []
+            } else {
+                this.isdeleteGrantRef = true
+            }
+        },
+        deleteGrantRef() {
+            if (this.isdeleteGrantRef == true) {
+                this.selectDelectGrantRef.forEach( item => {
+                    for(let i=0; i<this.element.iam[this.IamModuleTab].grants.length; i++){
+                        if (item.id == this.element.iam[this.IamModuleTab].grants[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[i].id+'-'+this.element.iam[this.IamModuleTab].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[i].id+'-'+this.element.iam[this.IamModuleTab].id)
+                            }
+                        }
+                    }
+                })
+
+                this.element.iam[this.IamModuleTab].grants = this.element.iam[this.IamModuleTab].grants.filter(item => {
+                        return this.selectDelectGrantRef.indexOf(item) < 0 })
+
+                this.isdeleteGrantRef = false
+                this.selectDelectGrantRef = []
+            } 
+        },
+        openGrantRef(idx) { 
+            var endLine = null
+            this.editGrant.select = this.element.iam[this.IamModuleTab].grants[idx].select
+            if (this.editGrant.select == "COM-EVENT-GRANT") {
+                this.selGrant = this.$store.getters.getEventGrant
+
+                if (this.element.iam[this.IamModuleTab].grants[idx].grant != null) {
+                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[idx].id+'-'+this.element.iam[this.IamModuleTab].id)
+                    if (endLine == undefined) {
+                        endLine = this.$store.getters.getEventPath(this.element.iam[this.IamModuleTab].grants[idx].grant, 1)
+                    }
+                    this.editGrant.grant = { name: this.element.iam[this.IamModuleTab].grants[idx].grant, uuid: endLine}
+                }
+            } else if (this.editGrant.select == "COM-FIELD-GRANT") {
+                this.selGrant = this.$store.getters.getFieldGrant
+
+                if (this.element.iam[this.IamModuleTab].grants[idx].grant != null) {
+                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[idx].id+'-'+this.element.iam[this.IamModuleTab].id)
+                    if (endLine == undefined) {
+                        endLine = this.$store.getters.getFieldPath(this.element.iam[this.IamModuleTab].grants[idx].grant, 2)
+                    }
+                    this.editGrant.grant = { name: this.element.iam[this.IamModuleTab].grants[idx].grant, uuid: endLine}
+                }
+            } else if (this.editGrant.select == "COM-METHOD-GRANT") {
+                this.selGrant = this.$store.getters.getMethodGrant
+
+                if (this.element.iam[this.IamModuleTab].grants[idx].grant != null) {
+                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[idx].id+'-'+this.element.iam[this.IamModuleTab].id)
+                    if (endLine == undefined) {
+                        endLine = this.$store.getters.getMethodPath(this.element.iam[this.IamModuleTab].grants[idx].grant, 2)
+                    }
+                    this.editGrant.grant = { name: this.element.iam[this.IamModuleTab].grants[idx].grant, uuid: endLine}
+                }
+            }
+        },
+        editGrantRefItem(idx) {
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[idx].id+'-'+this.element.iam[this.IamModuleTab].id)
+            if (endLine != undefined && this.editGrant.grant == null) {
+                this.deleteLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[idx].id+'-'+this.element.iam[this.IamModuleTab].id)
+                this.element.iam[this.IamModuleTab].grants[idx].grant = null
+            } else if (endLine != undefined && endLine != this.editGrant.grant.uuid) {
+                //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
+                this.deleteLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[idx].id+'-'+this.element.iam[this.IamModuleTab].id)
+                this.newLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[idx].id+'-'+this.element.iam[this.IamModuleTab].id, this.element.uuid+'/grandtab-'+this.element.iam[this.IamModuleTab].id, this.editGrant.grant.uuid)
+                this.element.iam[this.IamModuleTab].grants[idx].grant = this.editGrant.grant.name
+            } else if (endLine == undefined && this.editGrant.grant != null) {
+                this.newLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[idx].id+'-'+this.element.iam[this.IamModuleTab].id, this.element.uuid+'/grandtab-'+this.element.iam[this.IamModuleTab].id, this.editGrant.grant.uuid)
+                this.element.iam[this.IamModuleTab].grants[idx].grant = this.editGrant.grant.name
+            }
+            this.element.iam[this.IamModuleTab].grants[idx].select = this.editGrant.select
+            this.cancelGrantRef()
+        },
+        cancelGrantRef() {
+            this.editGrant = {grant: null, select: null}
+            this.setactiveUUID()
+        },
+        addGrantRef() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.iam[this.IamModuleTab].grants.some(item => item.id === n)
+            }
+            this.editGrant.id = n
+
+            if( this.editGrant.grant != null) {
+                this.newLine(this.element.uuid+'/iamM-'+n+'-'+this.element.iam[this.IamModuleTab].id, this.element.uuid+'/grandtab-'+this.element.iam[this.IamModuleTab].id, this.editGrant.grant.uuid)
+                this.editGrant.grant = this.editGrant.grant.name
+            }
+
+            const addObj = Object.assign({}, this.editGrant)
+            this.element.iam[this.IamModuleTab].grants.push(addObj);
+            this.cancelGrantRef()
+        },
+        clearGrantSelect() {
+            this.editGrant.grant = null
+            this.editGrant.select = null
+        },
+        setGrantSelect() {
+            if (this.isEditingGrant == true) {
+                if (this.editGrant.grant != null && this.editGrant.grant.uuid != null) {
+                    if (this.editGrant.select == "COM-EVENT-GRANT") {
+                        this.$store.commit('setDetailView', {uuid: this.editGrant.grant.uuid, element: constant.ComEventGrant_str} )
+                    }else if (this.editGrant.select == "COM-FIELD-GRANT") {
+                        this.$store.commit('setDetailView', {uuid: this.editGrant.grant.uuid, element: constant.ComFieldGrant_str} )
+                    } else if (this.editGrant.select == "COM-METHOD-GRANT") {
+                        this.$store.commit('setDetailView', {uuid: this.editGrant.grant.uuid, element: constant.ComMethodGrant_str} )
+                    }
+                    document.getElementById(this.editGrant.grant.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editGrant.grant.uuid)
+                }
+                this.setGrantList()
+                this.isEditingGrant = false
+            } else {
+                this.isEditingGrant = true
+            }
+        },
+        setGrantList() {
+            if (this.editGrant.select == "COM-EVENT-GRANT") {
+                this.selGrant = this.$store.getters.getEventGrant
+            } else if (this.editGrant.select == "COM-FIELD-GRANT") {
+                this.selGrant = this.$store.getters.getFieldGrant
+            } else if (this.editGrant.select == "COM-METHOD-GRANT") {
+                this.selGrant = this.$store.getters.getMethodGrant
+            }
+            this.setactiveUUID()
+        },
+        clearGrant() {
+            this.isEditingGrant = true
+            this.editGrant.grant = null
+        },
+        newGrant() {
+            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
+
+            if (this.editGrant.select == "COM-EVENT-GRANT") {
+                this.$store.commit('addElementEventG', {
+                    name: this.$store.getters.getNameEventG, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    eventD: null, provide: null,
+                })
+                EventBus.$emit('add-element', constant.ComEventGrant_str)
+            } else if (this.editGrant.select == "COM-FIELD-GRANT") {
+                this.$store.commit('addElementFieldG', {
+                    name: this.$store.getters.getNameFieldG, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    fieldD: null, provide: null, role: null
+                })
+                EventBus.$emit('add-element', constant.ComFieldGrant_str)
+            } else if (this.editGrant.select == "COM-METHOD-GRANT") {
+                this.$store.commit('addElementMethodG', {
+                    name: this.$store.getters.getNameMethodG, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    methodD: null, provide: null,
+                })
+                EventBus.$emit('add-element', constant.ComMethodGrant_str)
+            }
+            EventBus.$emit('add-element', constant.IAM_str)
+            EventBus.$emit('add-element', constant.Platform_str)
+            this.$store.commit('editMachine', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
 
         setactiveUUID() {

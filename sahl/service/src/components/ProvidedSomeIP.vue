@@ -70,7 +70,9 @@
                                     </v-menu>
                                 </v-col>
                             </v-row>
-                            <v-text-field v-model="element.instanceid" label="Service Instance ID" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.instanceid" label="Service Instance ID" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.loadPriority" label="Load Balancing Priority" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.loadWeight" label="Load Balancing Weight" placeholder="Int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-card outlined class="mx-auto">
                                 <div class="subtitle-2" :id="element.uuid+'/proviedEventP'" style="height:20px">
                                     <v-hover v-slot="{ hover }">
@@ -88,7 +90,7 @@
                                 </div>
                                 <v-card-text v-show="isEventPOpenClose">
                                     <v-data-table v-model="selectEventP" :headers="headerEventP" :items="element.eventP" :items-per-page='20'
-                                            :show-select="isdeleteEventP" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteEventP" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -146,7 +148,7 @@
                                 </div>
                                 <v-card-text v-show="isMethodRefOpenClose">
                                     <v-data-table v-model="selectMethodRef" :headers="headerMethodRef" :items="element.method" :items-per-page='20'
-                                            :show-select="isdeleteMethodRef" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteMethodRef" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -263,6 +265,157 @@
                                     </v-tab-item>
                                 </v-tabs-items>
                             </v-card>
+                            <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" style="height:20px" :id="element.uuid+'/E2EEpro'">
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showE2EEvent" x-small color="indigo">
+                                            <v-icon>{{ isE2EEventOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    E-2-E Event Protection Propss
+                                    <v-btn v-if="isE2EEventOpenClose" @click="addE2EEvent()" text x-small color="indigo">
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                </div>
+                                <v-tabs v-model='E2EEventTab' v-show="isE2EEventOpenClose" show-arrows @change="changeE2EEventTab()">
+                                    <v-tab v-for="(tab, idx) in element.E2EEvent" :key="idx" @click="clickE2EEventTab()"> 
+                                        {{tab.name}}
+                                        <v-btn text x-small @click="deleteE2EEvent(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
+                                </v-tabs>
+                                <v-tabs-items v-model="E2EEventTab" v-show="isE2EEventOpenClose">
+                                    <v-tab-item v-for="(tab, idx) in element.E2EEvent" :key="idx">
+                                        <v-card flat>
+                                            <v-card-text>
+                                                <v-text-field v-model="tab.name" label="name" :rules="rules.name" @input='inputEventGName(tab.name)' @click="setactiveUUID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.dataIds" label="Data IDs" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.dataLength" label="Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.period" label="Data Update Period" @click="setactiveUUID" placeholder="Time" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-row style="height: 45px">
+                                                    <v-col cols="10">
+                                                        <v-text-field v-model="tab.e2e" readonly @click="setE2ESelect(tab)" clearable @click:clear='clearE2EProfile(tab)' label="E-2-E Profile Configuration Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="2">
+                                                        <v-menu>
+                                                            <template v-slot:activator="{ on, attrs }">
+                                                                <v-btn color="deep-purple accent-4" :id="element.uuid+'/e2ePropro-'+tab.id" icon v-bind="attrs" v-on="on" @click="setE2EProfileList()">
+                                                                    <v-icon>mdi-menu-down-outline</v-icon>
+                                                                </v-btn>
+                                                            </template>
+                                                            <v-list >
+                                                                <v-list-item v-for="(item, i) in selE2EProfile" :key="i" link @click="setE2EProfile(item, tab)">
+                                                                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                                                </v-list-item>
+                                                                <v-list-item v-if="selE2EProfile.length == 0">
+                                                                    <v-list-item-title>No Data Available</v-list-item-title>
+                                                                </v-list-item>
+                                                            </v-list>
+                                                        </v-menu>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row>
+                                                    <v-col cols="10">
+                                                        <v-text-field v-model="tab.event" readonly @click="setEventSelect(tab)" clearable @click:clear='clearEvent(tab)' label="Event Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="2">
+                                                        <v-menu>
+                                                            <template v-slot:activator="{ on, attrs }">
+                                                                <v-btn color="deep-purple accent-4" :id="element.uuid+'/e2eEventpro-'+tab.id" icon v-bind="attrs" v-on="on" @click="setEventList()">
+                                                                    <v-icon>mdi-menu-down-outline</v-icon>
+                                                                </v-btn>
+                                                            </template>
+                                                            <v-list>
+                                                                <v-list-item v-for="(item, i) in selEventProp" :key="i" link @click="setEvent(item, tab)">
+                                                                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                                                </v-list-item>
+                                                                <v-list-item v-if="selEventProp.length == 0">
+                                                                    <v-list-item-title>No Data Available</v-list-item-title>
+                                                                </v-list-item>
+                                                            </v-list>
+                                                        </v-menu>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-text-field v-model="tab.max" label="Max Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.min" label="Min Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                            </v-card-text>
+                                        </v-card>
+                                    </v-tab-item>
+                                </v-tabs-items>
+                            </v-card>
+                            <v-card outlined class="mx-auto">
+                                <div class="subtitle-2" style="height:20px" :id="element.uuid+'/E2EMpro'">
+                                    <v-hover v-slot="{ hover }">
+                                        <v-btn text @click="showE2EMethod" x-small color="indigo">
+                                            <v-icon>{{ isE2EMethodOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                        </v-btn>
+                                    </v-hover>
+                                    E-2-E Method Protection Propss
+                                    <v-btn v-if="isE2EMethodOpenClose" @click="addE2EMethod()" text x-small color="indigo">
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                </div>
+                                <v-tabs v-model='E2EMethodTab' v-show="isE2EMethodOpenClose" show-arrows @change="changeE2EMethodTab()">
+                                    <v-tab v-for="(tab, idx) in element.E2EMethod" :key="idx" @click="clickE2EMethodtTab()"> 
+                                        {{tab.id}}
+                                        <v-btn text x-small @click="deleteE2EMethod(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
+                                </v-tabs>
+                                <v-tabs-items v-model="E2EMethodTab" v-show="isE2EMethodOpenClose">
+                                    <v-tab-item v-for="(tab, idx) in element.E2EMethod" :key="idx">
+                                        <v-card flat>
+                                            <v-card-text>
+                                                <v-text-field v-model="tab.dataIds" label="Data IDs" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.dataLength" label="Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.period" label="Data Update Period" @click="setactiveUUID" placeholder="Time" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-row style="height: 45px">
+                                                    <v-col cols="10">
+                                                        <v-text-field v-model="tab.e2e" readonly @click="setE2ESelectM(tab)" clearable @click:clear='clearE2EProfileM(tab)' label="E-2-E Profile Configuration Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="2">
+                                                        <v-menu>
+                                                            <template v-slot:activator="{ on, attrs }">
+                                                                <v-btn color="deep-purple accent-4" :id="element.uuid+'/e2eProMpro-'+tab.id" icon v-bind="attrs" v-on="on" @click="setE2EProfileMList()">
+                                                                    <v-icon>mdi-menu-down-outline</v-icon>
+                                                                </v-btn>
+                                                            </template>
+                                                            <v-list >
+                                                                <v-list-item v-for="(item, i) in selE2EProfileM" :key="i" link @click="setE2EProfileM(item, tab)">
+                                                                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                                                </v-list-item>
+                                                                <v-list-item v-if="selE2EProfileM.length == 0">
+                                                                    <v-list-item-title>No Data Available</v-list-item-title>
+                                                                </v-list-item>
+                                                            </v-list>
+                                                        </v-menu>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row>
+                                                    <v-col cols="10">
+                                                        <v-text-field v-model="tab.method" readonly @click="setE2EMethodelect(tab)" clearable @click:clear='clearE2EMethod(tab)' label="Method Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="2">
+                                                        <v-menu>
+                                                            <template v-slot:activator="{ on, attrs }">
+                                                                <v-btn color="deep-purple accent-4" :id="element.uuid+'/e2eMethodpro-'+tab.id" icon v-bind="attrs" v-on="on" @click="setE2EMethodList()">
+                                                                    <v-icon>mdi-menu-down-outline</v-icon>
+                                                                </v-btn>
+                                                            </template>
+                                                            <v-list>
+                                                                <v-list-item v-for="(item, i) in selMethod" :key="i" link @click="setE2EMethod(item, tab)">
+                                                                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                                                </v-list-item>
+                                                                <v-list-item v-if="selMethod.length == 0">
+                                                                    <v-list-item-title>No Data Available</v-list-item-title>
+                                                                </v-list-item>
+                                                            </v-list>
+                                                        </v-menu>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-text-field v-model="tab.max" label="Max Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.min" label="Min Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                            </v-card-text>
+                                        </v-card>
+                                    </v-tab-item>
+                                </v-tabs-items>
+                            </v-card>
                         </v-card-text>
                         <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
@@ -309,6 +462,36 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                        if(this.iselementOpenClose) {
+                            if(this.element.eventG.length > 0 && this.location == 1) {
+                                if (this.isProvidEventOpenClose) {
+                                    EventBus.$emit('changeLine-someipService', 'ProvidEvent', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].id)
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', 'ProvidEvent', this.element.uuid, null)
+                                }
+                            }
+                            if(this.element.E2EEvent.length > 0 && this.location == 1) {
+                                if(this.isE2EEventOpenClose) {
+                                    EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, this.E2EEventTab, this.element.E2EEvent[this.E2EEventTab].id)
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, null)
+                                }
+                            }
+                            if(this.element.E2EMethod.length > 0 && this.location == 1) {
+                                if(this.isE2EMethodOpenClose) {
+                                    EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, this.E2EMethodTab, this.element.E2EMethod[this.E2EMethodTab].id)
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, null)
+                                }
+                            }
+                        }
+                    })
+                }
             }
         },
     },
@@ -328,6 +511,8 @@ export default {
             isMethodRefOpenClose: true,
             isEventPOpenClose: true,
             isProvidEventOpenClose: true,
+            isE2EEventOpenClose: true,
+            isE2EMethodOpenClose: true,
             selSIDeployment: this.$store.getters.getSIDeployment,
             selSomeIPServer: this.$store.getters.getSomeIPServer,
 
@@ -337,7 +522,7 @@ export default {
             ],
             editMethodItem: { method : null, id: ''},
             isdeleteMethodRef: false,
-            selMethodref: this.$store.getters.getDeploymentMethod,
+            selMethodref: this.$store.getters.getSomeIPMethodDeployment,
             isEditingMethod: true,
             deleteMethodLine: [],
 
@@ -347,13 +532,19 @@ export default {
             ],
             editEventItem: { event : null, id: ''},
             isdeleteEventP: false,
-            selEventProp: this.$store.getters.getEventDeployment,
+            selEventProp: this.$store.getters.getSomeIPEventDeployment,
             isEditingEventP: true,
             deleteEventLine: [],
 
             eventGroupTab: 0,
             selEventG: this.$store.getters.getEventGroup,
             selServer: this.$store.getters.getServer,
+
+            E2EEventTab: 0,
+            selE2EProfile: this.$store.getters.getE2EProfileConfig,
+            E2EMethodTab: 0,
+            selE2EProfileM: this.$store.getters.getE2EProfileConfig,
+            selMethod: this.$store.getters.getDeploymentMethod,
         }
     },
     mounted () {
@@ -391,9 +582,23 @@ export default {
                 if(this.iselementOpenClose) {
                     if(this.element.eventG.length > 0 && this.location == 1) {
                         if (this.isProvidEventOpenClose) {
-                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].id)
+                            EventBus.$emit('changeLine-someipService', 'ProvidEvent', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].id)
                         } else {
-                            EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+                            EventBus.$emit('changeLine-someipService', 'ProvidEvent', this.element.uuid, null)
+                        }
+                    }
+                    if(this.element.E2EEvent.length > 0 && this.location == 1) {
+                        if(this.isE2EEventOpenClose) {
+                            EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, this.E2EEventTab, this.element.E2EEvent[this.E2EEventTab].id)
+                        } else {
+                            EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, null)
+                        }
+                    }
+                    if(this.element.E2EMethod.length > 0 && this.location == 1) {
+                        if(this.isE2EMethodOpenClose) {
+                            EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, this.E2EMethodTab, this.element.E2EMethod[this.E2EMethodTab].id)
+                        } else {
+                            EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, null)
                         }
                     }
                 }
@@ -417,11 +622,37 @@ export default {
             if(this.element.eventG.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isProvidEventOpenClose) {
-                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].id)
+                        EventBus.$emit('changeLine-someipService', 'ProvidEvent', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].id)
                     } else {
-                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+                        EventBus.$emit('changeLine-someipService', 'ProvidEvent', this.element.uuid, null)
                     }
                     EventBus.$emit('drawLine')
+                })
+            }
+        },
+        showE2EEvent() {
+            this.isE2EEventOpenClose = this.isE2EEventOpenClose ? false : true
+            // 선을 다시 그려줘야 하기 때문에
+            if(this.element.E2EEvent.length > 0 && this.location == 1) {
+                this.$nextTick(() => {
+                    if(this.isE2EEventOpenClose) {
+                        EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, this.E2EEventTab, this.element.E2EEvent[this.E2EEventTab].id)
+                    } else {
+                        EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, null)
+                    }
+                })
+            }
+        },
+        showE2EMethod() {
+            this.isE2EMethodOpenClose = this.isE2EMethodOpenClose ? false : true
+            // 선을 다시 그려줘야 하기 때문에
+            if(this.element.E2EMethod.length > 0 && this.location == 1) {
+                this.$nextTick(() => {
+                    if(this.isE2EMethodOpenClose) {
+                        EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, this.E2EMethodTab, this.element.E2EMethod[this.E2EMethodTab].id)
+                    } else {
+                        EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, null)
+                    }
                 })
             }
         },
@@ -573,11 +804,11 @@ export default {
             } 
         },
         openEventP(idx) {
-            this.selEventProp = this.$store.getters.getEventDeployment
+            this.selEventProp = this.$store.getters.getSomeIPEventDeployment
             if ( this.element.eventP[idx].event != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedEventP-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getServiceInterfaceDeploymentPath(this.element.eventP[idx].event, 2)
+                    endLine = this.$store.getters.getSomeIPEventDeploymentPath(this.element.eventP[idx].event)
                 }
                 this.editEventItem.event = { name: this.element.eventP[idx].event, uuid: endLine }
             }
@@ -594,6 +825,8 @@ export default {
                 this.element.eventP[idx].event = this.editEventItem.event.name
             } else if (endLine == undefined && this.editEventItem.event != null) {
                 this.newLine(this.element.uuid+'/proviedEventP-'+idx, this.element.uuid+'/proviedEventP', this.editEventItem.event.uuid)
+                this.element.eventP[idx].event = this.editEventItem.event.name
+            } else if (this.editEventItem.event != null && endLine == this.editEventItem.event.uuid && this.element.eventP[idx].event != this.editEventItem.event.name) {
                 this.element.eventP[idx].event = this.editEventItem.event.name
             }
             
@@ -635,7 +868,7 @@ export default {
             }
         },
         setEventList() {
-            this.selEventProp = this.$store.getters.getEventDeployment
+            this.selEventProp = this.$store.getters.getSomeIPEventDeployment
             this.setactiveUUID()
         },
         clearEventP() {
@@ -678,11 +911,11 @@ export default {
             } 
         },
         openMethodRef(idx) {
-            this.selMethodref = this.$store.getters.getDeploymentMethod
+            this.selMethodref = this.$store.getters.getSomeIPMethodDeployment
             if ( this.element.method[idx].method != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedMethod-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getServiceInterfaceDeploymentPath(this.element.method[idx].method, 3)
+                    endLine = this.$store.getters.getSomeIPMethodDeploymentPath(this.element.method[idx].method)
                 }
                 this.editMethodItem.method = { name: this.element.method[idx].method, uuid: endLine }
             }
@@ -699,6 +932,8 @@ export default {
                 this.element.method[idx].method = this.editMethodItem.method.name
             } else if (endLine == undefined && this.editMethodItem.method != null) {
                 this.newLine(this.element.uuid+'/proviedMethod-'+idx, this.element.uuid+'/proviedMethod', this.editMethodItem.method.uuid)
+                this.element.method[idx].method = this.editMethodItem.method.name
+            } else if (this.editMethodItem.method != null && endLine == this.editMethodItem.method.uuid && this.element.method[idx].method != this.editMethodItem.method.name) {
                 this.element.method[idx].method = this.editMethodItem.method.name
             }
             
@@ -740,7 +975,7 @@ export default {
             }
         },
         setMethodList() {
-            this.selMethodref = this.$store.getters.getDeploymentMethod
+            this.selMethodref = this.$store.getters.getSomeIPMethodDeployment
             this.setactiveUUID()
         },
         clearMethodRef() {
@@ -892,6 +1127,233 @@ export default {
             this.$store.commit('editProvidedSomeIP', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
 
+        addE2EEvent() {
+            const editItem = { name: '', dataIds: '', dataLength: '', period: '', e2e: null, event: null, max: '', min: '', id: ''}
+            const addObj = new Object(editItem)
+            let res = true, n = 0
+
+            while (res) {
+                addObj.name = 'E2EEvtProtProps_' + n++;
+                res = this.element.E2EEvent.some(ele => ele.name === addObj.name)
+            }
+            addObj.id = n
+
+            this.element.E2EEvent.push(addObj)
+            this.E2EEventTab = this.element.E2EEvent.length-1
+            if (this.location == 1) {
+                EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, null)
+            }
+        },
+        clickE2EEventTab() {},
+        changeE2EEventTab() {
+            if(this.element.E2EEvent.length > 0 && this.location == 1) {
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, this.E2EEventTab, this.element.E2EEvent[this.E2EEventTab].id)}, 300);
+            }
+        },
+        deleteE2EEvent(idx) {
+            var endLine
+            if (this.element.E2EEvent[idx].e2e != null) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePropro-'+this.element.E2EEvent[idx].id)
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/e2ePropro-'+this.element.E2EEvent[idx].id)
+                }
+            }
+            if (this.element.E2EEvent[idx].event != null) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eEventpro-'+this.element.E2EEvent[idx].id)
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/e2eEventpro-'+this.element.E2EEvent[idx].id)
+                }
+            }
+
+            this.element.E2EEvent.splice(idx, 1)
+            this.changeE2EEventTab()
+        },
+        clearE2EProfile(item) {
+            item.e2e = null
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePropro-'+this.element.E2EEvent[this.E2EEventTab].id)
+            if (endLine != undefined) {
+                this.deleteLine(this.element.uuid+'/e2ePropro-'+this.element.E2EEvent[this.E2EEvent].id)
+            }
+        },
+        setE2ESelect(item) {
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePropro-'+this.element.E2EEvent[this.E2EEventTab].id)
+            if (endLine == undefined) {
+                endLine = this.$store.getters.getE2EProfileConfigPath(item.e2e, 1)
+            }
+            if (endLine != null) {
+                this.$store.commit('setDetailView', {uuid: endLine, element: constant.E2EProfileConfig_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
+            }
+        },
+        setE2EProfileList() {
+            this.selE2EProfile =  this.$store.getters.getE2EProfileConfig
+            this.setactiveUUID()
+        },
+        setE2EProfile(item, tab){
+            if( tab.e2e != item.name) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePropro-'+this.element.E2EEvent[this.E2EEventTab].id)
+                if (endLine != undefined && endLine != item.uuid) {
+                    //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
+                    this.deleteLine(this.element.uuid+'/e2ePropro-'+this.element.E2EEvent[this.E2EEventTab].id)
+                }
+                //새로 추가해준다
+                if (endLine != item.uuid) {
+                    this.newLine(this.element.uuid+'/e2ePropro-'+this.element.E2EEvent[this.E2EEventTab].id, this.element.uuid+'/e2ePropro-'+this.element.E2EEvent[this.E2EEventTab].id, item.uuid)
+                }
+                tab.e2e = item.name
+            }
+            this.setactiveUUID()
+        },
+        clearEvent(item) {
+            item.event = null
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eEventpro-'+this.element.E2EEvent[this.E2EEventTab].id)
+            if (endLine != undefined) {
+                this.deleteLine(this.element.uuid+'/e2eEventpro-'+this.element.E2EEvent[this.E2EEventTab].id)
+            }
+        },
+        setEventSelect(item) {
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eEventpro-'+this.element.E2EEvent[this.E2EEventTab].id)
+            if (endLine == undefined) {
+                endLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.event,2)
+            }
+            if (endLine != null) {
+                this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPServiceInterfaceDeployment_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
+            }
+        },
+        setEvent(item, tab){
+            if( tab.event != item.name) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eEventpro-'+this.element.E2EEvent[this.E2EEventTab].id)
+                if (endLine != undefined && endLine != item.uuid) {
+                    //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
+                    this.deleteLine(this.element.uuid+'/e2eEventpro-'+this.element.E2EEvent[this.E2EEventTab].id)
+                }
+                //새로 추가해준다
+                if (endLine != item.uuid) {
+                    this.newLine(this.element.uuid+'/e2eEventpro-'+this.element.E2EEvent[this.E2EEventTab].id, this.element.uuid+'/e2eEventpro-'+this.element.E2EEvent[this.E2EEventTab].id, item.uuid)
+                }
+                tab.event = item.name
+            }
+            this.setactiveUUID()
+        },
+
+        addE2EMethod() {
+            const editItem = { dataIds: '', dataLength: '', period: '', e2e: null, method: null, max: '', min: '', id: ''}
+            const addObj = new Object(editItem)
+            let res = true, n = 0
+
+            while (res) {
+                n++;
+                res = this.element.E2EMethod.some(ele => ele.id === n)
+            }
+            addObj.id = n
+
+            this.element.E2EMethod.push(addObj)
+            this.E2EMethodTab = this.element.E2EMethod.length-1
+            if (this.location == 1) {
+                EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, null)
+            }
+        },
+        clickE2EMethodtTab() {},
+        changeE2EMethodTab() {
+            if(this.element.E2EMethod.length > 0 && this.location == 1) {
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, this.E2EMethodTab, this.element.E2EMethod[this.E2EMethodTab].id)}, 300);
+            }
+        },
+        deleteE2EMethod(idx) {
+            var endLine
+            if (this.element.E2EMethod[idx].e2e != null) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProMpro-'+this.element.E2EMethod[idx].id)
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/e2eProMpro-'+this.element.E2EMethod[idx].id)
+                }
+            }
+            if (this.element.E2EMethod[idx].event != null) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eMethodpro-'+this.element.E2EMethod[idx].id)
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/e2eMethodpro-'+this.element.E2EMethod[idx].id)
+                }
+            }
+
+            this.element.E2EMethod.splice(idx, 1)
+            this.changeE2EMethodTab()
+        },
+        clearE2EProfileM(item) {
+            item.e2e = null
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProMpro-'+this.element.E2EMethod[this.E2EMethodTab].id)
+            if (endLine != undefined) {
+                this.deleteLine(this.element.uuid+'/e2eProMpro-'+this.element.E2EMethod[this.E2EMethodTab].id)
+            }
+        },
+        setE2ESelectM(item) {
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProMpro-'+this.element.E2EMethod[this.E2EMethodTab].id)
+            if (endLine == undefined) {
+                endLine = this.$store.getters.getE2EProfileConfigPath(item.e2e, 1)
+            }
+            if (endLine != null) {
+                this.$store.commit('setDetailView', {uuid: endLine, element: constant.E2EProfileConfig_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
+            }
+        },
+        setE2EProfileMList() {
+            this.selE2EProfileM =  this.$store.getters.getE2EProfileConfig
+            this.setactiveUUID()
+        },
+        setE2EProfileM(item, tab){
+            if (tab.e2e != item.name) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProMpro-'+this.element.E2EMethod[this.E2EMethodTab].id)
+                if (endLine != undefined && endLine != item.uuid) {
+                    //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
+                    this.deleteLine(this.element.uuid+'/e2eProMpro-'+this.element.E2EMethod[this.E2EMethodTab].id)
+                }
+                //새로 추가해준다
+                if (endLine != item.uuid) {
+                    this.newLine(this.element.uuid+'/e2eProMpro-'+this.element.E2EMethod[this.E2EMethodTab].id, this.element.uuid+'/e2eProMpro-'+this.element.E2EMethod[this.E2EMethodTab].id, item.uuid)
+                }
+                tab.e2e = item.name
+            }
+            this.setactiveUUID()
+        },
+        clearE2EMethod(item) {
+            item.method = null
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eMethodpro-'+this.element.E2EMethod[this.E2EMethodTab].id)
+            if (endLine != undefined) {
+                this.deleteLine(this.element.uuid+'/e2eMethodpro-'+this.element.E2EMethod[this.E2EMethodTab].id)
+            }
+        },
+        setE2EMethodelect(item) {
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eMethodpro-'+this.element.E2EMethod[this.E2EMethodTab].id)
+            if (endLine == undefined) {
+                endLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.event,3)
+            }
+            if (endLine != null) {
+                this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPServiceInterfaceDeployment_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
+            }
+        },
+        setE2EMethodList() {
+            this.selMethod =  this.$store.getters.getDeploymentMethod
+            this.setactiveUUID()
+        },
+        setE2EMethod(item, tab){
+            if( tab.method != item.name) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eMethodpro-'+this.element.E2EMethod[this.E2EMethodTab].id)
+                if (endLine != undefined && endLine != item.uuid) {
+                    //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
+                    this.deleteLine(this.element.uuid+'/e2eMethodpro-'+this.element.E2EMethod[this.E2EMethodTab].id)
+                }
+                //새로 추가해준다
+                if (endLine != item.uuid) {
+                    this.newLine(this.element.uuid+'/e2eMethodpro-'+this.element.E2EMethod[this.E2EMethodTab].id, this.element.uuid+'/e2eMethodpro-'+this.element.E2EMethod[this.E2EMethodTab].id, item.uuid)
+                }
+                tab.method = item.name
+            }
+            this.setactiveUUID()
+        },
 
         setactiveUUID() {
             this.$store.commit('setuuid', {uuid: this.element.uuid} )

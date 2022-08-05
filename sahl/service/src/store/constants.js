@@ -9,6 +9,7 @@ export default {
     DataConstr_index: 1,
     ApplicationArray_index: 2,
     Implementation_index: 3,
+    SWBaseType_index: 4,
     //Service
     ServiceInterfaces_index: 0,
     SomeIPEvents_index: 1,
@@ -27,6 +28,8 @@ export default {
     ToPortPrototypeMapping_index: 3,
     RequiredSomeIP_index: 4,
     ProvidedSomeIP_index: 5,
+    E2EProfileConfig_index: 6,
+    SDG_DEF_index: 7,
     // //Errors
     Error_index: 0,
     Errorset_index: 1,
@@ -45,6 +48,7 @@ export default {
     EthernetCluster_index: 2,
     ModeDeclarationGroup_index: 3,
     HWElement_index: 4,
+    HWCategory_index: 5,
     //Platform
     PER_index: 0,
     PHM_index: 1,
@@ -70,7 +74,6 @@ export default {
     SWCluster_index: 0,
     SWPackage_index: 1,
     VehiclePackage_index: 2,
-    ModuleInstantiation_index: 3,
     //IAM and Grant
     ComFieldGrant_index: 0,
     ComEventGrant_index: 1,
@@ -102,6 +105,7 @@ export default {
     DataConstr_str: 'Data Constr',
     ApplicationArray_str: 'Application Array',
     Implementation_str: 'Implementation',
+    SWBaseType_str: 'SW Base Type',
     //Service
     ServiceInterfaces_str: 'Service Interfaces',
     SomeIPEvents_str: 'SomeIP Events',
@@ -120,6 +124,8 @@ export default {
     ToPortPrototypeMapping_str: 'To Port Prototype Mapping',
     RequiredSomeIP_str: 'Required SomeIP',
     ProvidedSomeIP_str: 'Provided SomeIP',
+    E2EProfileConfig_str: 'E2E Profile Configuration Set',
+    SDG_DEF_str: 'SDG DEF',
     // //Errors
     Error_str: 'Error',
     Errorset_str: 'Error Set',
@@ -138,6 +144,7 @@ export default {
     EthernetCluster_str: 'Ethernet Cluster',
     ModeDeclarationGroup_str: 'Mode Declaration Group',
     HWElement_str: 'HW Element',
+    HWCategory_str: 'HW Category',
     //Platform
     PER_str: 'PER',
     PHM_str: 'PHM',
@@ -163,7 +170,6 @@ export default {
     SWCluster_str: 'SoftWare Cluster',
     SWPackage_str: 'SoftWare Package',
     VehiclePackage_str: 'Vehicle Package',
-    ModuleInstantiation_str: 'UCM Module Instantiation',
     //IAM and Grant
     ComFieldGrant_str: 'Com Field Grant',
     ComEventGrant_str: 'Com Event Grant',

@@ -49,7 +49,7 @@
                                 </div>
                                 <v-card-text v-if="isFileProxyOpenClose">
                                     <v-data-table v-model="selectDelectFileProxy" :headers="headerFileProxy" :items="element.proxy" :items-per-page='20'
-                                            :show-select="isdeleteFileProxyItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteFileProxyItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -225,10 +225,10 @@ export default {
             } 
         },
         editFileProxy(idx) {
-            if (this.element.proxy[idx].name != this.editItem.name){
+            /*if (this.element.proxy[idx].name != this.editItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'PerFileProxy', listname: this.editItem.name} )
-            }
+            }*/
             this.element.proxy[idx].name = this.editItem.name
             this.element.proxy[idx].url = this.editItem.url
             this.element.proxy[idx].filename = this.editItem.filename

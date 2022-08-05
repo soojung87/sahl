@@ -23,7 +23,7 @@
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>SomeIP Service Instance To Machine Mapping</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputSomeIPtoMachineName' outlined dense></v-text-field>
                             <v-row style="height: 70px">
@@ -65,7 +65,7 @@
                                 </div>
                                 <v-card-text v-if="isSIOpenClose">
                                     <v-data-table v-model="selectDelectSI" :headers="headerSI" :items="element.serviceI" :items-per-page='20'
-                                            :show-select="isdeleteSIItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteSIItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -143,7 +143,7 @@
                             <v-text-field v-model="element.udp" label="UDP Port" placeholder="int" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-text-field v-model="element.tcp" label="TCP Port" placeholder="int" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement  || !minimaptoolbar">
+                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -188,6 +188,13 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                    })
+                }
             }
         },
     },

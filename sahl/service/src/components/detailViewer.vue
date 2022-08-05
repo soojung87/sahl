@@ -60,6 +60,9 @@
             <div v-else-if="detailViewer.element == 'HW Element'">
                 <HWElement :element= this.$store.getters.getDataHWElement(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
+            <div v-else-if="detailViewer.element == 'HW Category'">
+                <HWCategory :element= this.$store.getters.getDataHWCategory(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
 
             <div v-else-if="detailViewer.element == 'Error'">
                 <APError :element= this.$store.getters.getDataError(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
@@ -97,6 +100,9 @@
             <div v-else-if="detailViewer.element == 'Provided SomeIP'">
                 <Provided :element= this.$store.getters.getDataProvidedSomeIP(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
+            <div v-else-if="detailViewer.element == 'E2E Profile Configuration Set'">
+                <E2EProfileConfig :element= this.$store.getters.getDataE2EProfileConfig(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
 
             <div v-else-if="detailViewer.element == 'File Array'">
                 <PerFileArray :element= this.$store.getters.getDataPERFileArray(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
@@ -131,8 +137,14 @@
             <div v-else-if="detailViewer.element == 'Com Field Grant Design'">
                 <FieldGrantD :element= this.$store.getters.getDataFieldGrantDesign(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
-            <div v-else-if="detailViewer.element == 'UCM Module Instantiation'">
-                <UCMModuleIns :element= this.$store.getters.getDataModuleInstant(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            <div v-else-if="detailViewer.element == 'Com MEthod Grant'">
+                <MethodGrant :element= this.$store.getters.getDataMethodGrant(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+            <div v-else-if="detailViewer.element == 'Com Event Grant'">
+                <EventGrant :element= this.$store.getters.getDataEventGrant(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
+            </div>
+            <div v-else-if="detailViewer.element == 'Com Field Grant'">
+                <FieldGrant :element= this.$store.getters.getDataFieldGrant(detailViewer.uuid) :isDatailView="true" :minimaptoolbar='true'/> 
             </div>
 
         </v-card>
@@ -156,6 +168,7 @@ import MachineDesign from '../components/MachineDesign.vue'
 import EthernetCluster from '../components/EthernetCluster.vue'
 import ModeDeclarationGroup from '../components/ModeDeclarationGroup.vue'
 import HWElement from '../components/HWElement.vue'
+import HWCategory from '../components/HWCategory.vue'
 import APErrorDomain from '../components/APErrorDomain.vue'
 import APError from '../components/APError.vue'
 import APErrorSet from '../components/APErrorSet.vue'
@@ -168,6 +181,7 @@ import SomeIPServer from '../components/SomeIPServer.vue'
 import SomeIPtoMachine from '../components/SomeIPtoMachineMapping.vue'
 import Required from '../components/RequiredSomeIP.vue'
 import Provided from '../components/ProvidedSomeIP.vue'
+import E2EProfileConfig from '../components/E2EProfileConfigurationSet.vue'
 
 import PerFileArray from './PerFileArray.vue'
 import PerFileProxy from './PerFileProxy.vue'
@@ -180,20 +194,22 @@ import PHMSupervised from '../components/PHMSupervised.vue'
 import MethodGrantD from '../components/MethodGrantDesign.vue'
 import EventGrantD from '../components/EventGrantDesign.vue'
 import FieldGrantD from '../components/FieldGrantDesign.vue'
-import UCMModuleIns from '../components/UCMModuleIns.vue'
+import MethodGrant from '../components/MethodGrant.vue'
+import EventGrant from '../components/EventGrant.vue'
+import FieldGrant from '../components/FieldGrant.vue'
 
 //SWCluster_str
 
 export default {
     components:{CompuMethod, DataConstr, ApplicationArrayDate, ImplementationDataType,
                 SomeIPService, ServiceInterface, Client, Server,
-                SomeIPClient, SomeIPServer, SomeIPtoMachine, Required, Provided,
+                SomeIPClient, SomeIPServer, SomeIPtoMachine, Required, Provided, E2EProfileConfig,
                 APError, APErrorDomain, APErrorSet,
                 SWComponents, ProcessDesign, Executable, StartupConfig, DeterministicClient,
-                Machine, MachineDesign, EthernetCluster, ModeDeclarationGroup, HWElement,
+                Machine, MachineDesign, EthernetCluster, ModeDeclarationGroup, HWElement, HWCategory,
                 PerFileArray, PerFileProxy, PerKeyValueDB, PerKeyValueDI,
                 PHMContribution, PHMHealthChannel, PHMRecovery, PHMSupervised,
-                MethodGrantD, EventGrantD, FieldGrantD, UCMModuleIns },
+                MethodGrantD, EventGrantD, FieldGrantD, MethodGrant, EventGrant, FieldGrant },
     computed: {
         detailViewer() {
             return this.$store.state.detailViewer

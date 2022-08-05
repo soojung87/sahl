@@ -46,7 +46,7 @@
                                 </div>
                                 <v-card-text v-if="isSDGSOpenClose">
                                     <v-data-table v-model="selectDelectSDGS" :headers="headerSDGS" :items="element.sdgs" :items-per-page='20'
-                                            :show-select="isdeleteSDGSItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteSDGSItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -100,7 +100,7 @@
                                 </div>
                                 <v-card-text v-if="isExecutableOpenClose">
                                     <v-data-table v-model="selectDelectExecutable" :headers="headerExecutable" :items="element.executable" :items-per-page='20'
-                                            :show-select="isdeleteExecutableItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteExecutableItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -168,7 +168,7 @@
                                 </div>
                                 <v-card-text v-if="isMachineDOpenClose">
                                     <v-data-table v-model="selectDelectMachineD" :headers="headerMachineD" :items="element.machineD" :items-per-page='20'
-                                            :show-select="isdeleteMachineDItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteMachineDItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -236,7 +236,7 @@
                                 </div>
                                 <v-card-text v-if="isToMachineMOpenClose">
                                     <v-data-table v-model="selectDelectToMachineM" :headers="headerToMachineM" :items="element.toMachine" :items-per-page='20'
-                                            :show-select="isdeleteToMachineMItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteToMachineMItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -304,7 +304,7 @@
                                 </div>
                                 <v-card-text v-if="isProcessOpenClose">
                                     <v-data-table v-model="selectDelectProcess" :headers="headerProcess" :items="element.process" :items-per-page='20'
-                                            :show-select="isdeleteProcessItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteProcessItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -372,7 +372,7 @@
                                 </div>
                                 <v-card-text v-if="isSWClusterOpenClose">
                                     <v-data-table v-model="selectDelectSWCluster" :headers="headerSWCluster" :items="element.sswc" :items-per-page='20'
-                                            :show-select="isdeleteSWClusterItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteSWClusterItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -1128,6 +1128,7 @@ export default {
             this.$store.commit('addElementProcess', {
                 name: this.$store.getters.getNameProcess, input: false, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
                 prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
             })
             EventBus.$emit('add-element', constant.Process_str)

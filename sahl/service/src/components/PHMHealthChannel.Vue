@@ -43,7 +43,7 @@
                                 </div>
                                 <v-card-text v-if="isStatussOpenClose">
                                     <v-data-table v-model="selectDelectStatuss" :headers="headerStatus" :items="element.status" :items-per-page='20'
-                                            :show-select="isdeleteStatussItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteStatussItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -209,10 +209,10 @@ export default {
             } 
         },
         editStatuss(idx) {
-            if (this.element.status[idx].name != this.editItem.name){
+            /*if (this.element.status[idx].name != this.editItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'PHMHealth', listname: this.editItem.name} )
-            }
+            }*/
             this.element.status[idx].name = this.editItem.name
             this.element.status[idx].status = this.editItem.status
             this.cancelStatuss()

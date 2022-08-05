@@ -23,7 +23,7 @@
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>SW Component Type</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputSWComponentName' outlined dense></v-text-field>
                             <v-card outlined class="mx-auto">
@@ -48,7 +48,7 @@
                                         <v-tab-item v-for="(tab, idx) in element.pport" :key="idx">
                                             <v-card flat>
                                                 <v-card-text>
-                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputPportName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputPportName(tab.name)" @click="clickPportName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     <v-select v-model="tab.selectI" :items="selectPInterfaceList" @change="inputSelectPInterf" clearable @click:clear='clearPInterface()' label="Select Provided Interface" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                                                     <v-row>
                                                         <v-col cols="10">
@@ -89,7 +89,7 @@
                                                         </div>
                                                         <v-card-text v-show="isPQSCOpenClose">
                                                             <v-data-table v-model="selectDelectPQSC" :headers="headerPQSC" :items="tab.queued" :items-per-page='20'
-                                                                    :show-select="isdeletePQSC" item-key="id" height="100px" dense hide-default-footer >
+                                                                    :show-select="isdeletePQSC" item-key="id" height="140px" dense hide-default-footer >
                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                                 </template>
@@ -149,7 +149,7 @@
                                                         </div>
                                                         <v-card-text v-show="isPFSCOpenClose">
                                                             <v-data-table v-model="selectDelectPFSC" :headers="headerPFSC" :items="tab.field" :items-per-page='20'
-                                                                    :show-select="isdeletePFSC" item-key="id" height="100px" dense hide-default-footer >
+                                                                    :show-select="isdeletePFSC" item-key="id" height="140px" dense hide-default-footer >
                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                                 </template>
@@ -192,6 +192,64 @@
                                                             </v-data-table>
                                                         </v-card-text>
                                                     </v-card>
+                                                    <v-card outlined class="mx-auto">
+                                                        <div class="subtitle-2" style="height:20px" :id="element.uuid+'/pportSC-'+tab.id">
+                                                            <v-hover v-slot="{ hover }">
+                                                                <v-btn text @click="showSC" x-small color="indigo">
+                                                                    <v-icon>{{ isSCOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                                                </v-btn>
+                                                            </v-hover>
+                                                            Server Com Specs
+                                                            <v-btn @click="isCheckSC" text x-small color="indigo" v-if="isSCOpenClose">
+                                                                <v-icon>mdi-check</v-icon>
+                                                            </v-btn>
+                                                            <v-btn v-if="isSCOpenClose && isdeleteSC" @click="deleteSC" text x-small color="indigo">
+                                                                <v-icon>mdi-minus</v-icon>
+                                                            </v-btn>
+                                                        </div>
+                                                        <v-card-text v-show="isSCOpenClose">
+                                                            <v-data-table v-model="selectDelectSC" :headers="headerSC" :items="tab.server" :items-per-page='20'
+                                                                    :show-select="isdeleteSC" item-key="id" height="140px" dense hide-default-footer >
+                                                                <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                                    <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                                                </template>
+                                                                <template v-if="!isdeleteSC" v-slot:body="{ items, headers }">
+                                                                    <tbody>
+                                                                        <tr v-for="(item,num) in items" :key="num">
+                                                                            <td v-for="(header,key) in headers" :key="key">
+                                                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openSC(num)" @cancel="editSCItem(num)" @save="cancelSC" large >
+                                                                                    {{item[header.value]}}
+                                                                                    <template v-slot:input>
+                                                                                        <br>
+                                                                                        <v-autocomplete v-model='editSC.oper' label='Data Element Reference' :items='selSIMethod' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingSC" clearable @click="setSCSelect()" 
+                                                                                            @click:clear='clearSC' @blur="isEditingSC=true" outlined dense style="height: 45px;">
+                                                                                        </v-autocomplete>
+                                                                                    </template>
+                                                                                </v-edit-dialog>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th colspan="3">
+                                                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addSC()" @save="cancelSC"> 
+                                                                                    <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                                        <v-icon >mdi-plus</v-icon>New Item
+                                                                                    </v-btn>
+                                                                                    <template v-slot:input>
+                                                                                        <br>
+                                                                                        <v-autocomplete v-model='editSC.oper' label='Data Element Reference' :items='selSIMethod' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingSC" clearable @click="setSCSelect()" 
+                                                                                            @click:clear='clearSC' @blur="isEditingSC=true" outlined dense style="height: 45px;">
+                                                                                        </v-autocomplete>
+                                                                                    </template>
+                                                                                </v-edit-dialog>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </template>
+                                                            </v-data-table>
+                                                        </v-card-text>
+                                                    </v-card>
                                                 </v-card-text>
                                             </v-card>
                                         </v-tab-item>
@@ -220,7 +278,7 @@
                                         <v-tab-item v-for="(tab, idx) in element.prport" :key="idx">
                                             <v-card flat>
                                                 <v-card-text>
-                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputPRportName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputPRportName(tab.name)" @click="clickPRportName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     <v-select v-model="tab.selectI" :items="selectPRInterfaceList" @change="inputSelectPRInterf" clearable @click:clear='clearPRInterface()' label="Select Provided Required Interface" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                                                     <v-row>
                                                         <v-col cols="10">
@@ -261,7 +319,7 @@
                                                         </div>
                                                         <v-card-text v-show="isPRProvideOpenClose">
                                                             <v-data-table v-model="selectDelectPRProvide" :headers="headerPRProvide" :items="tab.provide" :items-per-page='20'
-                                                                    :show-select="isdeletePRProvide" item-key="id" height="100px" dense hide-default-footer >
+                                                                    :show-select="isdeletePRProvide" item-key="id" height="140px" dense hide-default-footer >
                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                                 </template>
@@ -331,7 +389,7 @@
                                         <v-tab-item v-for="(tab, idx) in element.rport" :key="idx">
                                             <v-card flat>
                                                 <v-card-text>
-                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputRportName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputRportName(tab.name)" @click="clickRportName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     <v-select v-model="tab.selectI" :items="selectRInterfaceList" @change="inputSelectRInterf" clearable @click:clear='clearRInterface()' label="Select Required Interface" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                                                     <v-row>
                                                         <v-col cols="10">
@@ -372,7 +430,7 @@
                                                         </div>
                                                         <v-card-text v-show="isRQRCOpenClose">
                                                             <v-data-table v-model="selectDelectRQRC" :headers="headerRQRC" :items="tab.queued" :items-per-page='20'
-                                                                    :show-select="isdeleteRQRC" item-key="id" height="100px" dense hide-default-footer >
+                                                                    :show-select="isdeleteRQRC" item-key="id" height="140px" dense hide-default-footer >
                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                                 </template>
@@ -434,7 +492,7 @@
                                                         </div>
                                                         <v-card-text v-show="isRCCOpenClose">
                                                             <v-data-table v-model="selectDelectRCC" :headers="headerRCC" :items="tab.client" :items-per-page='20'
-                                                                    :show-select="isdeleteRCC" item-key="id" height="100px" dense hide-default-footer >
+                                                                    :show-select="isdeleteRCC" item-key="id" height="140px" dense hide-default-footer >
                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                                 </template>
@@ -451,6 +509,14 @@
                                                                                             @click:clear='clearRCC' @blur="isEditingRCC=true" outlined dense style="height: 45px;">
                                                                                         </v-autocomplete>
                                                                                         <v-select v-model="editRCC.clientCapa" :items="selectClientCapa" clearable @click:clear='editRCC.clientCapa = null' label="Receiver Capability" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                                                        <v-autocomplete v-model='editRCC.getter' label='Getter Reference' :items='selSIField' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingGetter" clearable @click="setGetterSelect()" 
+                                                                                            @click:clear='clearGetter' @blur="isEditingGetter=true" outlined dense style="height: 45px;">
+                                                                                        </v-autocomplete>
+                                                                                        <v-autocomplete v-model='editRCC.setter' label='Setter Reference' :items='selSIField' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingSetter" clearable @click="setSetterSelect()" 
+                                                                                            @click:clear='clearSetter' @blur="isEditingSetter=true" outlined dense style="height: 45px;">
+                                                                                        </v-autocomplete>
                                                                                     </template>
                                                                                 </v-edit-dialog>
                                                                             </td>
@@ -468,6 +534,14 @@
                                                                                             @click:clear='clearRCC' @blur="isEditingRCC=true" outlined dense style="height: 45px;">
                                                                                         </v-autocomplete>
                                                                                         <v-select v-model="editRCC.clientCapa" :items="selectClientCapa" clearable @click:clear='editRCC.clientCapa = null' label="Receiver Capability" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                                                        <v-autocomplete v-model='editRCC.getter' label='Getter Reference' :items='selSIField' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingGetter" clearable @click="setGetterSelect()" 
+                                                                                            @click:clear='clearGetter' @blur="isEditingGetter=true" outlined dense style="height: 45px;">
+                                                                                        </v-autocomplete>
+                                                                                        <v-autocomplete v-model='editRCC.setter' label='Setter Reference' :items='selSIField' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                            return-object :readonly="!isEditingSetter" clearable @click="setSetterSelect()" 
+                                                                                            @click:clear='clearSetter' @blur="isEditingSetter=true" outlined dense style="height: 45px;">
+                                                                                        </v-autocomplete>
                                                                                     </template>
                                                                                 </v-edit-dialog>
                                                                             </th>
@@ -484,7 +558,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement  || !minimaptoolbar">
+                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -528,6 +602,36 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                        if(this.iselementOpenClose) {
+                            if(this.element.pport.length > 0 && this.location == 1) {
+                                if(this.isPPortOpenClose) {
+                                    EventBus.$emit('changeLine-someipService', 'pport', this.element.uuid, this.PportTab, this.element.pport[this.PportTab].id)
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', 'pport', this.element.uuid, null)
+                                }
+                            }
+                            if(this.element.prport.length > 0 && this.location == 1) {
+                                if(this.isPRPortOpenClose) {
+                                    EventBus.$emit('changeLine-someipService', 'prport', this.element.uuid, this.PRportTab, this.element.prport[this.PRportTab].id)
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', 'prport', this.element.uuid, null)
+                                }
+                            }
+                            if(this.element.rport.length > 0 && this.location == 1) {
+                                if(this.isRPortOpenClose) {
+                                    EventBus.$emit('changeLine-someipService', 'rport', this.element.uuid, this.RportTab, this.element.rport[this.RportTab].id)
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', 'rport', this.element.uuid, null)
+                                }
+                            }
+                        }
+                    })
+                }
             }
         },
     },
@@ -544,7 +648,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: this.minimaptoolbar,
             isPPortOpenClose: true,
             isPRPortOpenClose: true,
             isRPortOpenClose: true,
@@ -564,6 +668,7 @@ export default {
             ],
             editPQSC: { dataE: null, senderCapa:null, id: ''},
             isEditingPQSC: true,
+
             isPFSCOpenClose: true,
             isdeletePFSC: false,
             selectDelectPFSC: [],
@@ -573,6 +678,15 @@ export default {
             ],
             editPFSC: { dataE: null, senderCapa:null, id: ''},
             isEditingPFSC: true,
+
+            isSCOpenClose: true,
+            isdeleteSC: false,
+            selectDelectSC: [],
+            headerSC: [
+                { text: 'Operation Ref', sortable: false, value: 'oper' },
+            ],
+            editSC: { oper: null, id: ''},
+            isEditingSC: true,
 
             PRportTab: null,
             isPRProvideOpenClose: true,
@@ -608,11 +722,19 @@ export default {
             headerRCC: [
                 { text: 'Operation Ref', sortable: false, value: 'operation' },
                 { text: 'Client Capability', sortable: false, value: 'clientCapa' },
+                { text: 'Getter Ref', sortable: false, value: 'getter' },
+                { text: 'Setter Ref', sortable: false, value: 'setter' },
             ],
-            editRCC: { operation: null, clientCapa:null, id: ''},
+            editRCC: { operation: null, clientCapa:null, getter: null, setter: null, id: ''},
             isEditingRCC: true,
+            isEditingGetter: true,
+            isEditingSetter: true,
             selSIQRC: this.$store.getters.getVariableDataPrototype,
             selSIMethod: this.$store.getters.getClientServer,
+
+            beforePport: '',
+            beforePRport: '',
+            beforeRport: ''
         }
     },
     mounted () {
@@ -693,6 +815,10 @@ export default {
             this.isPFSCOpenClose = this.isPFSCOpenClose ? false : true
             EventBus.$emit('drawLine')
         },
+        showSC() {
+            this.isSCOpenClose = this.isSCOpenClose ? false : true
+            EventBus.$emit('drawLine')
+        },
         showPRPort() {
             this.isPRPortOpenClose = this.isPRPortOpenClose ? false : true
             if(this.element.prport.length > 0 && this.location == 1) {
@@ -740,17 +866,29 @@ export default {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
         },
+        clickPportName(name) {
+            this.beforePport = name
+        },
+        clickPRportName(name) {
+            this.beforePRport = name
+        },
+        clickRportName(name) {
+            this.beforeRport = name
+        },
         inputPportName(name) {
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'pPort', listname: name} )
+                                                          changeName: 'pPort', listname: name, beforename: this.beforePport} )
+            this.beforePport = name
         }, 
         inputPRportName(name) {
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'prPort', listname: name} )
+                                                          changeName: 'prPort', listname: name, beforename: this.beforePRport} )
+            this.beforePRport = name
         },
         inputRportName(name) {
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'rPort', listname: name} )
+                                                          changeName: 'rPort', listname: name, beforename: this.beforeRport} )
+            this.beforeRport = name
         }, 
 
         inputSelectPInterf() {
@@ -798,10 +936,8 @@ export default {
             if( this.element.pport[this.PportTab].interface != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PPortI-'+ this.element.pport[this.PportTab].id)
                 if (endLine != undefined && endLine != item.uuid) {
-                    //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                     this.deleteLine(this.element.uuid+'/PPortI-'+ this.element.pport[this.PportTab].id)
                 }
-                //새로 추가해준다
                 if (endLine != item.uuid) {
                     this.newLine(this.element.uuid+'/PPortI-'+ this.element.pport[this.PportTab].id, this.element.uuid+'/PPortI-'+ this.element.pport[this.PportTab].id, item.uuid)
                 }
@@ -830,7 +966,7 @@ export default {
         },
 
         addPport() {
-            const editItem = {name: '', selectI: null, interface: null, queued: [], field: [], id: ''}
+            const editItem = {name: '', selectI: null, interface: null, queued: [], field: [], server: [], id: ''}
             const addObj = new Object(editItem)
             let res = true, n = 0
 
@@ -851,6 +987,8 @@ export default {
             this.selectDelectPQSC = []
             this.isdeletePFSC = false
             this.selectDelectPFSC = []
+            this.isdeleteSC = false
+            this.selectDelectSC = []
         },
         changePportTab() {
             if(this.element.pport.length > 0 && this.location == 1) {
@@ -876,6 +1014,12 @@ export default {
                 var endLineF = this.$store.getters.getChangeEndLine(this.element.uuid+'/pportFSC-'+this.element.pport[idx].field[i].id+'-'+this.element.pport[idx].id)
                 if(endLineF != undefined) {
                     this.deleteLine(this.element.uuid+'/pportFSC-'+this.element.pport[idx].field[i].id+'-'+this.element.pport[idx].id)
+                }
+            }
+            for(let i=0; i<this.element.pport[idx].server.length; i++){
+                var endLineS = this.$store.getters.getChangeEndLine(this.element.uuid+'/pportSC-'+this.element.pport[idx].server[i].id+'-'+this.element.pport[idx].id)
+                if(endLineS != undefined) {
+                    this.deleteLine(this.element.uuid+'/pportSC-'+this.element.pport[idx].server[i].id+'-'+this.element.pport[idx].id)
                 }
             }
 
@@ -928,12 +1072,13 @@ export default {
                 this.deleteLine(this.element.uuid+'/pportQSC-'+this.element.pport[this.PportTab].queued[idx].id+'-'+this.element.pport[this.PportTab].id)
                 this.element.pport[this.PportTab].queued[idx].dataE = null
             } else if (endLine != undefined && endLine != this.editPQSC.dataE.uuid) {
-                //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/pportQSC-'+this.element.pport[this.PportTab].queued[idx].id+'-'+this.element.pport[this.PportTab].id)
                 this.newLine(this.element.uuid+'/pportQSC-'+this.element.pport[this.PportTab].queued[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportQSC-'+this.element.pport[this.PportTab].id, this.editPQSC.dataE.uuid)
                 this.element.pport[this.PportTab].queued[idx].dataE = this.editPQSC.dataE.name
             } else if (endLine == undefined && this.editPQSC.dataE != null) {
                 this.newLine(this.element.uuid+'/pportQSC-'+this.element.pport[this.PportTab].queued[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportQSC-'+this.element.pport[this.PportTab].id, this.editPQSC.dataE.uuid)
+                this.element.pport[this.PportTab].queued[idx].dataE = this.editPQSC.dataE.name
+            } else if (this.editPQSC.dataE != null && endLine == this.editPQSC.dataE.uuid && this.element.pport[this.PportTab].queued[idx].dataE != this.editPQSC.dataE.name) {
                 this.element.pport[this.PportTab].queued[idx].dataE = this.editPQSC.dataE.name
             }
             this.element.pport[this.PportTab].queued[idx].senderCapa = this.editPQSC.senderCapa
@@ -1028,12 +1173,13 @@ export default {
                 this.deleteLine(this.element.uuid+'/pportFSC-'+this.element.pport[this.PportTab].field[idx].id+'-'+this.element.pport[this.PportTab].id)
                 this.element.pport[this.PportTab].field[idx].dataE = null
             } else if (endLine != undefined && endLine != this.editPFSC.dataE.uuid) {
-                //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/pportFSC-'+this.element.pport[this.PportTab].field[idx].id+'-'+this.element.pport[this.PportTab].id)
                 this.newLine(this.element.uuid+'/pportFSC-'+this.element.pport[this.PportTab].field[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportFSC-'+this.element.pport[this.PportTab].id, this.editPFSC.dataE.uuid)
                 this.element.pport[this.PportTab].field[idx].dataE = this.editPFSC.dataE.name
             } else if (endLine == undefined && this.editPFSC.dataE != null) {
                 this.newLine(this.element.uuid+'/pportFSC-'+this.element.pport[this.PportTab].field[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportFSC-'+this.element.pport[this.PportTab].id, this.editPFSC.dataE.uuid)
+                this.element.pport[this.PportTab].field[idx].dataE = this.editPFSC.dataE.name
+            } else if (this.editPFSC.dataE != null && endLine == this.editPFSC.dataE.uuid && this.element.pport[this.PportTab].field[idx].dataE != this.editPFSC.dataE.name) {
                 this.element.pport[this.PportTab].field[idx].dataE = this.editPFSC.dataE.name
             }
             this.element.pport[this.PportTab].field[idx].senderCapa = this.editPFSC.senderCapa
@@ -1080,6 +1226,105 @@ export default {
         clearPFSC() {
             this.isEditingPFSC = true
             this.editPFSC.dataE = null
+        },
+        isCheckSC() {
+            if (this.isdeleteSC == true) {
+                this.isdeleteSC = false
+                this.selectDelectSC = []
+            } else {
+                this.isdeleteSC = true
+            }
+        },
+        deleteSC() {
+            if (this.isdeleteSC == true) {
+                this.selectDelectSC.forEach( item => {
+                    for(let i=0; i<this.element.pport[this.PportTab].server.length; i++){
+                        if (item.id == this.element.pport[this.PportTab].server[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].server[i].id+'-'+this.element.pport[this.PportTab].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].server[i].id+'-'+this.element.pport[this.PportTab].id)
+                            }
+                        }
+                    }
+                })
+
+                this.element.pport[this.PportTab].server = this.element.pport[this.PportTab].server.filter(item => {
+                        return this.selectDelectSC.indexOf(item) < 0 })
+
+
+                this.isdeleteSC = false
+                this.selectDelectSC = []
+            } 
+        },
+        openSC(idx) { 
+            this.selSIMethod = this.$store.getters.getClientServer
+
+            if ( this.element.pport[this.PportTab].server[idx].oper != null) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].server[idx].id+'-'+this.element.pport[this.PportTab].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getServiceInterfacePath(this.element.pport[this.PportTab].server[idx].oper, 2)
+                }
+                this.editSC.oper = { name: this.element.pport[this.PportTab].server[idx].oper, uuid: endLine}
+            }
+        },
+        editSCItem(idx) {
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].server[idx].id+'-'+this.element.pport[this.PportTab].id)
+            if (endLine != undefined && this.editSC.oper == null) {
+                this.deleteLine(this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].server[idx].id+'-'+this.element.pport[this.PportTab].id)
+                this.element.pport[this.PportTab].server[idx].oper = null
+            } else if (endLine != undefined && endLine != this.editSC.oper.uuid) {
+                this.deleteLine(this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].server[idx].id+'-'+this.element.pport[this.PportTab].id)
+                this.newLine(this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].server[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].id, this.editSC.oper.uuid)
+                this.element.pport[this.PportTab].server[idx].oper = this.editSC.oper.name
+            } else if (endLine == undefined && this.editSC.oper != null) {
+                this.newLine(this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].server[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].id, this.editSC.oper.uuid)
+                this.element.pport[this.PportTab].server[idx].oper = this.editSC.oper.name
+            } else if (this.editSC.oper != null && endLine == this.editSC.oper.uuid && this.element.pport[this.PportTab].server[idx].oper != this.editSC.oper.name) {
+                this.element.pport[this.PportTab].server[idx].oper = this.editSC.oper.name
+            }
+            this.cancelSC()
+        },
+        cancelSC() {
+            this.editSC = {oper: null}
+            this.setactiveUUID()
+        },
+        addSC() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.pport[this.PportTab].server.some(item => item.id === n)
+            }
+            this.editSC.id = n
+
+            if( this.editSC.oper != null) {
+                this.newLine(this.element.uuid+'/pportSC-'+n+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].id, this.editSC.oper.uuid)
+                this.editSC.oper = this.editSC.oper.name
+            }
+
+            const addObj = Object.assign({}, this.editSC)
+            this.element.pport[this.PportTab].server.push(addObj);
+            this.cancelSC()
+        },
+        setSCSelect() {
+            if (this.isEditingSC == true) {
+                if (this.editSC.oper != null && this.editSC.oper.uuid != null) {
+                    this.$store.commit('setDetailView', {uuid: this.editSC.oper.uuid, element: constant.ServiceInterface_str} )
+                    document.getElementById(this.editSC.oper.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editSC.oper.uuid)
+                }
+                this.setSCList()
+                this.isEditingSC = false
+            } else {
+                this.isEditingSC = true
+            }
+        },
+        setSCList() {
+            this.selSIMethod = this.$store.getters.getClientServer
+            this.setactiveUUID()
+        },
+        clearSC() {
+            this.isEditingSC = true
+            this.editSC.oper = null
         },
 
         inputSelectPRInterf() {
@@ -1133,10 +1378,8 @@ export default {
             if( this.element.prport[this.PRportTab].interface != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PRPortI-'+ this.element.prport[this.PRportTab].id)
                 if (endLine != undefined && endLine != item.uuid) {
-                    //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                     this.deleteLine(this.element.uuid+'/PRPortI-'+ this.element.prport[this.PRportTab].id)
                 }
-                //새로 추가해준다
                 if (endLine != item.uuid) {
                     this.newLine(this.element.uuid+'/PRPortI-'+ this.element.prport[this.PRportTab].id, this.element.uuid+'/PRPortI-'+this.element.prport[this.PRportTab].id, item.uuid)
                 }
@@ -1263,12 +1506,13 @@ export default {
                 this.deleteLine(this.element.uuid+'/prporttab-'+this.element.prport[this.PRportTab].provide[idx].id+'-'+this.element.prport[this.PRportTab].id)
                 this.element.prport[this.PRportTab].provide[idx].dataE = null
             } else if (endLine != undefined && endLine != this.editPRProvide.dataE.uuid) {
-                //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/prporttab-'+this.element.prport[this.PRportTab].provide[idx].id+'-'+this.element.prport[this.PRportTab].id)
                 this.newLine(this.element.uuid+'/prporttab-'+this.element.prport[this.PRportTab].provide[idx].id+'-'+this.element.prport[this.PRportTab].id, this.element.uuid+'/prporttab'+this.element.prport[this.PRportTab].id, this.editPRProvide.dataE.uuid)
                 this.element.prport[this.PRportTab].provide[idx].dataE = this.editPRProvide.dataE.name
             } else if (endLine == undefined && this.editPRProvide.dataE != null) {
                 this.newLine(this.element.uuid+'/prporttab-'+this.element.prport[this.PRportTab].provide[idx].id+'-'+this.element.prport[this.PRportTab].id, this.element.uuid+'/prporttab'+this.element.prport[this.PRportTab].id, this.editPRProvide.dataE.uuid)
+                this.element.prport[this.PRportTab].provide[idx].dataE = this.editPRProvide.dataE.name
+            } else if (this.editPRProvide.dataE != null && endLine == this.editPRProvide.dataE.uuid && this.element.prport[this.PRportTab].provide[idx].dataE != this.editPRProvide.dataE.name) {
                 this.element.prport[this.PRportTab].provide[idx].dataE = this.editPRProvide.dataE.name
             }
 
@@ -1368,10 +1612,8 @@ export default {
             if( this.element.rport[this.RportTab].interface != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/RPortI-'+ this.element.rport[this.RportTab].id)
                 if (endLine != undefined && endLine != item.uuid) {
-                    //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                     this.deleteLine(this.element.uuid+'/RPortI-'+ this.element.rport[this.RportTab].id)
                 }
-                //새로 추가해준다
                 if (endLine != item.uuid) {
                     this.newLine(this.element.uuid+'/RPortI-'+ this.element.rport[this.RportTab].id, this.element.uuid+'/RPortI-'+ this.element.rport[this.RportTab].id, item.uuid)
                 }
@@ -1520,14 +1762,15 @@ export default {
                 this.deleteLine(this.element.uuid+'/rportQRC-'+this.element.rport[this.RportTab].queued[idx].id+'-'+this.element.rport[this.RportTab].id)
                 this.element.rport[this.RportTab].queued[idx].dataE = null
             } else if (endLine != undefined && endLine != this.editRQRC.dataE.uuid) {
-                //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/rportQRC-'+this.element.rport[this.RportTab].queued[idx].id+'-'+this.element.rport[this.RportTab].id)
                 this.newLine(this.element.uuid+'/rportQRC-'+this.element.rport[this.RportTab].queued[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportQRC-'+this.element.rport[this.RportTab].id, this.editRQRC.dataE.uuid)
                 this.element.rport[this.RportTab].queued[idx].dataE = this.editRQRC.dataE.name
             } else if (endLine == undefined && this.editRQRC.dataE != null) {
                 this.newLine(this.element.uuid+'/rportQRC-'+this.element.rport[this.RportTab].queued[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportQRC-'+this.element.rport[this.RportTab].id, this.editRQRC.dataE.uuid)
                 this.element.rport[this.RportTab].queued[idx].dataE = this.editRQRC.dataE.name
-            }
+            } else if (this.editRQRC.dataE != null && endLine == this.editRQRC.dataE.uuid && this.element.rport[this.RportTab].queued[idx].dataE != this.editRQRC.dataE.name) {
+                this.element.rport[this.RportTab].queued[idx].dataE = this.editRQRC.dataE.name
+            } 
             this.element.rport[this.RportTab].queued[idx].select = this.editRQRC.select
             this.element.rport[this.RportTab].queued[idx].receiveCapa = this.editRQRC.receiveCapa
             this.cancelRQRC()
@@ -1600,6 +1843,14 @@ export default {
                             if(endLine != undefined) {
                                 this.deleteLine(this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].client[i].id+'-'+this.element.rport[this.RportTab].id)
                             }
+                            var endLineG = this.$store.getters.getChangeEndLine(this.element.uuid+'/rportCCG-'+this.element.rport[this.RportTab].client[i].id+'-'+this.element.rport[this.RportTab].id)
+                            if(endLineG != undefined) {
+                                this.deleteLine(this.element.uuid+'/rportCCG-'+this.element.rport[this.RportTab].client[i].id+'-'+this.element.rport[this.RportTab].id)
+                            }
+                            var endLineS = this.$store.getters.getChangeEndLine(this.element.uuid+'/rportCCS-'+this.element.rport[this.RportTab].client[i].id+'-'+this.element.rport[this.RportTab].id)
+                            if(endLineS != undefined) {
+                                this.deleteLine(this.element.uuid+'/rportCCS-'+this.element.rport[this.RportTab].client[i].id+'-'+this.element.rport[this.RportTab].id)
+                            }
                         }
                     }
                 })
@@ -1614,6 +1865,7 @@ export default {
         },
         openRCC(idx) { 
             this.selSIMethod = this.$store.getters.getClientServer
+            this.selSIField = this.$store.getters.getField
 
             if ( this.element.rport[this.RportTab].client[idx].operation != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
@@ -1621,6 +1873,20 @@ export default {
                     endLine = this.$store.getters.getServiceInterfacePath(this.element.rport[this.RportTab].client[idx].operation, 3)
                 }
                 this.editRCC.operation = { name: this.element.rport[this.RportTab].client[idx].operation, uuid: endLine}
+            }
+            if ( this.element.rport[this.RportTab].client[idx].getter != null) {
+                var endLineG = this.$store.getters.getChangeEndLine(this.element.uuid+'/rportCCG-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
+                if (endLineG == undefined) {
+                    endLineG = this.$store.getters.getServiceInterfacePath(this.element.rport[this.RportTab].client[idx].getter, 2)
+                }
+                this.editRCC.getter = { name: this.element.rport[this.RportTab].client[idx].getter, uuid: endLineG}
+            }
+            if ( this.element.rport[this.RportTab].client[idx].setter != null) {
+                var endLineS = this.$store.getters.getChangeEndLine(this.element.uuid+'/rportCCS-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
+                if (endLineS == undefined) {
+                    endLineS = this.$store.getters.getServiceInterfacePath(this.element.rport[this.RportTab].client[idx].setter, 2)
+                }
+                this.editRCC.setter = { name: this.element.rport[this.RportTab].client[idx].setter, uuid: endLineS}
             }
             this.editRCC.clientCapa = this.element.rport[this.RportTab].client[idx].clientCapa
         },
@@ -1630,19 +1896,50 @@ export default {
                 this.deleteLine(this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
                 this.element.rport[this.RportTab].client[idx].operation = null
             } else if (endLine != undefined && endLine != this.editRCC.operation.uuid) {
-                //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
                 this.newLine(this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].id, this.editRCC.operation.uuid)
                 this.element.rport[this.RportTab].client[idx].operation = this.editRCC.operation.name
             } else if (endLine == undefined && this.editRCC.operation != null) {
                 this.newLine(this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].id, this.editRCC.operation.uuid)
                 this.element.rport[this.RportTab].client[idx].operation = this.editRCC.operation.name
+            } else if (this.editRCC.operation != null && endLine == this.editRCC.operation.uuid && this.element.rport[this.RportTab].client[idx].operation != this.editRCC.operation.name) {
+                this.element.rport[this.RportTab].client[idx].operation = this.editRCC.operation.name
+            }
+
+            var endLineG = this.$store.getters.getChangeEndLine(this.element.uuid+'/rportCCG-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
+            if (endLineG != undefined && this.editRCC.getter == null) {
+                this.deleteLine(this.element.uuid+'/rportCCG-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
+                this.element.rport[this.RportTab].client[idx].getter = null
+            } else if (endLineG != undefined && endLineG != this.editRCC.getter.uuid) {
+                this.deleteLine(this.element.uuid+'/rportCCG-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
+                this.newLine(this.element.uuid+'/rportCCG-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].id, this.editRCC.getter.uuid)
+                this.element.rport[this.RportTab].client[idx].getter = this.editRCC.getter.name
+            } else if (endLineG == undefined && this.editRCC.getter != null) {
+                this.newLine(this.element.uuid+'/rportCCG-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].id, this.editRCC.getter.uuid)
+                this.element.rport[this.RportTab].client[idx].getter = this.editRCC.getter.name
+            } else if (this.editRCC.getter != null && endLine == this.editRCC.getter.uuid && this.element.rport[this.RportTab].client[idx].getter != this.editRCC.getter.name) {
+                this.element.rport[this.RportTab].client[idx].getter = this.editRCC.getter.name
+            }
+
+            var endLineS = this.$store.getters.getChangeEndLine(this.element.uuid+'/rportCCS-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
+            if (endLineS != undefined && this.editRCC.setter == null) {
+                this.deleteLine(this.element.uuid+'/rportCCS-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
+                this.element.rport[this.RportTab].client[idx].setter = null
+            } else if (endLineS != undefined && endLineS != this.editRCC.setter.uuid) {
+                this.deleteLine(this.element.uuid+'/rportCCS-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
+                this.newLine(this.element.uuid+'/rportCCS-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].id, this.editRCC.setter.uuid)
+                this.element.rport[this.RportTab].client[idx].setter = this.editRCC.setter.name
+            } else if (endLineS == undefined && this.editRCC.setter != null) {
+                this.newLine(this.element.uuid+'/rportCCS-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].id, this.editRCC.setter.uuid)
+                this.element.rport[this.RportTab].client[idx].setter = this.editRCC.setter.name
+            } else if (this.editRCC.setter != null && endLine == this.editRCC.setter.uuid && this.element.rport[this.RportTab].client[idx].setter != this.editRCC.setter.name) {
+                this.element.rport[this.RportTab].client[idx].setter = this.editRCC.setter.name
             }
             this.element.rport[this.RportTab].client[idx].clientCapa = this.editRCC.clientCapa
             this.cancelRCC()
         },
         cancelRCC() {
-            this.editRCC = {operation: null, clientCapa: null}
+            this.editRCC = {operation: null, clientCapa: null, getter: null, setter: null}
             this.setactiveUUID()
         },
         addRCC() {
@@ -1656,6 +1953,14 @@ export default {
             if( this.editRCC.operation != null) {
                 this.newLine(this.element.uuid+'/rportCC-'+n+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].id, this.editRCC.operation.uuid)
                 this.editRCC.operation = this.editRCC.operation.name
+            }
+            if( this.editRCC.getter != null) {
+                this.newLine(this.element.uuid+'/rportCCG-'+n+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].id, this.editRCC.getter.uuid)
+                this.editRCC.getter = this.editRCC.getter.name
+            }
+            if( this.editRCC.setter != null) {
+                this.newLine(this.element.uuid+'/rportCCS-'+n+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].id, this.editRCC.setter.uuid)
+                this.editRCC.setter = this.editRCC.setter.name
             }
 
             const addObj = Object.assign({}, this.editRCC)
@@ -1681,7 +1986,41 @@ export default {
         },
         clearRCC() {
             this.isEditingRCC = true
-            this.editRCCv.operation = null
+            this.editRCC.operation = null
+        },
+        setGetterSelect() {
+            if (this.isEditingGetter == true) {
+                if (this.editRCC.getter != null && this.editRCC.getter.uuid != null) {
+                    this.$store.commit('setDetailView', {uuid: this.editRCC.getter.uuid, element: constant.ServiceInterface_str} )
+                    document.getElementById(this.editRCC.getter.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editRCC.getter.uuid)
+                }
+                this.setPFSCList()
+                this.isEditingGetter = false
+            } else {
+                this.isEditingGetter = true
+            }
+        },
+        clearGetter() {
+            this.isEditingGetter = true
+            this.editRCC.getter = null
+        },
+        setSetterSelect() {
+            if (this.isEditingSetter == true) {
+                if (this.editRCC.setter != null && this.editRCC.setter.uuid != null) {
+                    this.$store.commit('setDetailView', {uuid: this.editRCC.setter.uuid, element: constant.ServiceInterface_str} )
+                    document.getElementById(this.editRCC.setter.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editRCC.setter.uuid)
+                }
+                this.setPFSCList()
+                this.isEditingSetter = false
+            } else {
+                this.isEditingSetter = true
+            }
+        },
+        clearSetter() {
+            this.isEditingSetter = true
+            this.editRCC.setter = null
         },
 
 
@@ -1693,7 +2032,7 @@ export default {
             this.$store.commit('addElementService', {
                     name: this.$store.getters.getNameServiceInterface, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
-                    versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: '',
+                    versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: null,
                 })
             EventBus.$emit('add-element', constant.ServiceInterface_str)
             EventBus.$emit('add-element', constant.ServiceInterfaces_str)

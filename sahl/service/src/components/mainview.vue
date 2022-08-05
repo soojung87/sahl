@@ -32,6 +32,19 @@
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
                 class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].DataTypes.SWBaseType"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SW Base Type')"
+                @resizing="changeElementSize()">
+                <SWBaseType :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/>
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
                 v-for="element in SAHLProject[openProjectIndex].DataTypes.ApplicationArrayDataType"
                 :key="element.uuid" :scale="zoom.value"
                 :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
@@ -67,7 +80,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Machine')"
                 @resizing="changeElementSize()">
-                <Machine :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <Machine :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -81,6 +94,19 @@
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'HW Element')"
                 @resizing="changeElementSize()">
                 <HWElement :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].Machine.HWCategory"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'HW Category')"
+                @resizing="changeElementSize()">
+                <HWCategory :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -133,7 +159,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process to Machine Mapping Set')"
                 @resizing="changeElementSize()">
-                <ProcessToMachine :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <ProcessToMachine :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -146,7 +172,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SW Components')"
                 @resizing="changeElementSize()">
-                <SWComponents :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <SWComponents :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -159,7 +185,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process')"
                 @resizing="changeElementSize()">
-                <Process :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <Process :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -172,7 +198,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process Design')"
                 @resizing="changeElementSize()">
-                <ProcessDesign :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <ProcessDesign :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -185,7 +211,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Executable')"
                 @resizing="changeElementSize()">
-                <Executable :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <Executable :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -198,7 +224,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Startup Config Set')"
                 @resizing="changeElementSize()">
-                <StartupConfig :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <StartupConfig :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -211,7 +237,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Deterministic Client')"
                 @resizing="changeElementSize()">
-                <DeterministicClient :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <DeterministicClient :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
 
             <vue-draggable-resizable :id="element.uuid+location"
@@ -251,7 +277,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Client')"
                 @resizing="changeElementSize()">
-                <Client :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <Client :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -264,7 +290,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Server')"
                 @resizing="changeElementSize()">
-                <Server :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <Server :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -277,7 +303,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Client')"
                 @resizing="changeElementSize()">
-                <SomeIPClient :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <SomeIPClient :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -290,7 +316,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP Server')"
                 @resizing="changeElementSize()">
-                <SomeIPServer :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <SomeIPServer :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -303,7 +329,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP To Machine Mapping')"
                 @resizing="changeElementSize()">
-                <SomeIPtoMachine :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <SomeIPtoMachine :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -316,7 +342,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'To Port Prototype Mapping')"
                 @resizing="changeElementSize()">
-                <ToPortPrototype :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <ToPortPrototype :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -329,7 +355,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Required SomeIP')"
                 @resizing="changeElementSize()">
-                <RequiredSomeIP :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <RequiredSomeIP :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -342,7 +368,33 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Provided SomeIP')"
                 @resizing="changeElementSize()">
-                <ProvidedSomeIP :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <ProvidedSomeIP :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].Service.E2EProfileConfig"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'E2E Profile Configuration Set')"
+                @resizing="changeElementSize()">
+                <E2EProfileConfig :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+            </vue-draggable-resizable>
+            <vue-draggable-resizable :id="element.uuid+location"
+                class-name-active="my-active-class"
+                class-name="basic-form"
+                v-for="element in SAHLProject[openProjectIndex].Service.SdgDef"
+                :key="element.uuid" :scale="zoom.value"
+                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
+                :resizable="true" :draggable="isDraggable"
+                :handles="['mr','ml']" :min-width="400"
+                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
+                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SDG DEF')"
+                @resizing="changeElementSize()">
+                <SdgDef :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
 
             <vue-draggable-resizable :id="element.uuid+location"
@@ -356,7 +408,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error Domain')"
                 @resizing="changeElementSize()">
-                <APErrorDomain :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <APErrorDomain :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -369,7 +421,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error Set')"
                 @resizing="changeElementSize()">
-                <APErrorSet :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <APErrorSet :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -382,7 +434,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Error')"
                 @resizing="changeElementSize()">
-                <APError :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <APError :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
 
             <vue-draggable-resizable :id="element.uuid+location"
@@ -396,7 +448,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'File Array')"
                 @resizing="changeElementSize()">
-                <PerFileArray :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <PerFileArray :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -409,7 +461,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'File Proxy Interface')"
                 @resizing="changeElementSize()">
-                <PerFileProxy :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <PerFileProxy :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -422,7 +474,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'KeyV Database')"
                 @resizing="changeElementSize()">
-                <PerKeyValueDB :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <PerKeyValueDB :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -435,7 +487,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'KeyV Database Interface')"
                 @resizing="changeElementSize()">
-                <PerKeyValueDI :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <PerKeyValueDI :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -448,7 +500,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'PP To File Array Mapping')"
                 @resizing="changeElementSize()">
-                <PPPtoFileArray :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <PPPtoFileArray :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -461,7 +513,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'PP To Key Value Database Mapping')"
                 @resizing="changeElementSize()">
-                <PPPtoKeyValue :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <PPPtoKeyValue :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -474,7 +526,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Platform Health Management Contribution')"
                 @resizing="changeElementSize()">
-                <PHMContribution :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <PHMContribution :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -487,7 +539,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Contribution To Machine Mapping')"
                 @resizing="changeElementSize()">
-                <PHMtoMachine :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <PHMtoMachine :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -500,7 +552,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Health Channel Interface')"
                 @resizing="changeElementSize()">
-                <PHMHealthChannel :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <PHMHealthChannel :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -513,7 +565,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Recovery Action Interface')"
                 @resizing="changeElementSize()">
-                <PHMRecovery :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <PHMRecovery :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -526,7 +578,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Supervised Enity Interface')"
                 @resizing="changeElementSize()">
-                <PHMSupervised :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <PHMSupervised :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -539,7 +591,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Recovery VIA Application')"
                 @resizing="changeElementSize()">
-                <PHMRecoveryVia :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <PHMRecoveryVia :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
 
             <vue-draggable-resizable :id="element.uuid+location"
@@ -553,7 +605,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Method Grant Design')"
                 @resizing="changeElementSize()">
-                <MethodGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <MethodGrantD :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -566,7 +618,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Event Grant Design')"
                 @resizing="changeElementSize()">
-                <EventGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <EventGrantD :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -579,7 +631,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Field Grant Design')"
                 @resizing="changeElementSize()">
-                <FieldGrantD :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <FieldGrantD :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -592,7 +644,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Method Grant')"
                 @resizing="changeElementSize()">
-                <MethodGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <MethodGrant :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -605,7 +657,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Event Grant')"
                 @resizing="changeElementSize()">
-                <EventGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <EventGrant :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -618,7 +670,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Com Field Grant')"
                 @resizing="changeElementSize()">
-                <FieldGrant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar' :location='location'/> 
+                <FieldGrant :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -631,7 +683,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SoftWare Cluster')"
                 @resizing="changeElementSize()">
-                <SoftwareCluster :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <SoftwareCluster :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -644,7 +696,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SoftWare Package')"
                 @resizing="changeElementSize()">
-                <SoftwarePackage :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <SoftwarePackage :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -657,22 +709,8 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Vehicle Package')"
                 @resizing="changeElementSize()">
-                <VehiclePackage :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
+                <VehiclePackage :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
             </vue-draggable-resizable>
-            <vue-draggable-resizable :id="element.uuid+location"
-                class-name-active="my-active-class"
-                class-name="basic-form"
-                v-for="element in SAHLProject[openProjectIndex].UCM.ModuleInstant"
-                :key="element.uuid" :scale="zoom.value"
-                :x="element.left[location]" :y="element.top[location]" :w=400 :h=100 :z='element.zindex'
-                :resizable="true" :draggable="isDraggable"
-                :handles="['mr','ml']" :min-width="400"
-                @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
-                @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'UCM Module Instantiation')"
-                @resizing="changeElementSize()">
-                <ModuleInstant :element='element' :isDatailView="false" :viewInfo="null" :minimaptoolbar='minimaptoolbar'/> 
-            </vue-draggable-resizable>
-
         </v-main>
     </div>
 </template>
@@ -681,10 +719,12 @@
 import ServiceInterface from './serviceInterface.vue'
 import CompuMethod from './compumethod.vue'
 import DataConstr from './dataconstr.vue'
+import SWBaseType from './SWBaseType.vue'
 import ApplicationArrayDate from './applicationArrayData.vue'
 import ImplementationDataType from './implementationData.vue'
 import Machine from '../components/Machine.vue'
 import HWElement from '../components/HWElement.vue'
+import HWCategory from '../components/HWCategory.vue'
 import ModeDeclarationGroup from '../components/ModeDeclarationGroup.vue'
 import MachineDesign from '../components/MachineDesign.vue'
 import EthernetCluster from '../components/EthernetCluster.vue'
@@ -707,6 +747,8 @@ import SomeIPService from '../components/SomeIPService.vue'
 import ToPortPrototype from '../components/ToPortPrototype.vue'
 import RequiredSomeIP from '../components/RequiredSomeIP.vue'
 import ProvidedSomeIP from '../components/ProvidedSomeIP.vue'
+import E2EProfileConfig from '../components/E2EProfileConfigurationSet.vue'
+import SdgDef from '../components/SDG-DEF.vue'
 import PerFileArray from './PerFileArray.vue'
 import PerFileProxy from '../components/PerFileProxy.vue'
 import PerKeyValueDB from '../components/PerKeyValueDB.vue'
@@ -728,7 +770,6 @@ import FieldGrant from '../components/FieldGrant.vue'
 import SoftwareCluster from '../components/UCMSoftwareCluster.vue'
 import SoftwarePackage from '../components/UCMSoftWarePackage.vue'
 import VehiclePackage from '../components/UCMVehiclePackage.vue'
-import ModuleInstant from '../components/UCMModuleIns.vue'
 
 import { EventBus } from '../main'
 import LeaderLine from 'leader-line-vue'
@@ -736,16 +777,16 @@ import constant from "../store/constants.js"
 
 export default{
     props: ['minimaptoolbar', 'location'],
-    components:{CompuMethod, DataConstr, ApplicationArrayDate, ImplementationDataType, 
+    components:{CompuMethod, DataConstr, SWBaseType, ApplicationArrayDate, ImplementationDataType, 
                 SomeIPService, ServiceInterface, Client, Server,
-                SomeIPClient, SomeIPServer, SomeIPtoMachine, ToPortPrototype, RequiredSomeIP, ProvidedSomeIP,
+                SomeIPClient, SomeIPServer, SomeIPtoMachine, ToPortPrototype, RequiredSomeIP, ProvidedSomeIP, E2EProfileConfig, SdgDef,
                 APErrorDomain, APErrorSet, APError,
-                Machine, HWElement, ModeDeclarationGroup, MachineDesign, EthernetCluster,
+                Machine, HWElement, HWCategory, ModeDeclarationGroup, MachineDesign, EthernetCluster,
                 DeterministicClient, Executable, Process, ProcessDesign, ProcessToMachine, StartupConfig, SWComponents,
                 PerFileArray, PerFileProxy, PerKeyValueDB, PerKeyValueDI, PPPtoKeyValue, PPPtoFileArray,
                 PHMContribution, PHMtoMachine, PHMHealthChannel, PHMRecovery, PHMSupervised, PHMRecoveryVia,
                 MethodGrantD, EventGrantD, FieldGrantD, MethodGrant, EventGrant, FieldGrant,
-                SoftwareCluster, SoftwarePackage, VehiclePackage, ModuleInstant},
+                SoftwareCluster, SoftwarePackage, VehiclePackage},
     computed: {
         SAHLProject() {
             return this.$store.state.SAHLProject
@@ -943,7 +984,7 @@ export default{
     methods: {
         onActivated(uuid) {
             //console.log('onActivated'+uuid)
-            if(!this.minimaptoolbar && this.location == '1') {
+            if(this.minimaptoolbar == false && this.location == '1') {
                 document.getElementById(uuid+this.location).scrollIntoView(true)
             }
             this.isMouseDiagram = true
@@ -961,9 +1002,11 @@ export default{
         onElementDrag(uuid, left, top, ele) {
             var editStr = null
             if (ele == constant.CompuMethod_str){
-                editStr = 'editCompuMehtod'
+                editStr = 'editCompuMethod'
             } else if (ele == constant.DataConstr_str) {
                 editStr = 'editDataConstr'
+            } else if (ele == constant.SWBaseType_str) {
+                editStr = 'editSWBaseType'
             } else if (ele == constant.ApplicationArray_str) {
                 editStr = 'editApplicationArray'
             } else if (ele == constant.Implementation_str) {
@@ -978,7 +1021,9 @@ export default{
                 editStr = 'editModeDeclarationGroup'
             } else if (ele == constant.HWElement_str) {
                 editStr = 'editHWElement'
-            } else if (ele == constant.ProcesstoMachineMapping_str) {
+            } else if (ele == constant.HWCategory_str) {
+                editStr = 'editHWCategory'
+            }else if (ele == constant.ProcesstoMachineMapping_str) {
                 editStr = 'editProtoMachineMapping'
             } else if (ele == constant.SWComponents_str) {
                 editStr = 'editSWComponents'
@@ -1012,6 +1057,10 @@ export default{
                 editStr = 'editRequiredSomeIP'
             } else if (ele == constant.ProvidedSomeIP_str) {
                 editStr = 'editProvidedSomeIP'
+            }  else if (ele == constant.E2EProfileConfig_str) {
+                editStr = 'editE2EProfileConfig'
+            }   else if (ele == constant.SDG_DEF_str) {
+                editStr = 'editSDG_DEF'
             }  else if (ele == constant.Error_str) {
                 editStr = 'editError'
             }  else if (ele == constant.Errorset_str) {
@@ -1060,8 +1109,6 @@ export default{
                 editStr = 'editSoftWarePackage'
             } else if (ele == constant.VehiclePackage_str) {
                 editStr = 'editVehiclePackage'
-            } else if (ele == constant.ModuleInstantiation_str) {
-                editStr = 'editModuleInstant'
             }
             document.getElementById(uuid+this.location).scrollIntoView(true)
             this.$store.commit(editStr, {compo:"drag", uuid: uuid, top: top, left: left, location: this.location} )
@@ -1172,7 +1219,7 @@ export default{
             var scale 
             if (e.deltaY < 0) {
                 scale = this.zoom.value >= this.zoom.max ? this.zoom.max : this.zoom.value + this.zoom.step;
-            } else  if (e.deltaY > 0) {
+            } else if (e.deltaY > 0) {
                 scale = this.zoom.value <= this.zoom.min ? this.zoom.min : this.zoom.value - this.zoom.step;
             }
             this.$store.commit('setZoomInOut', {valueMain: scale, valueDetail: null})
@@ -1253,12 +1300,14 @@ export default{
                     var startUUID = startLine.split('/')
                     var tableLine = startUUID[1].split('-')
                     //tab이 아닌 애들만 선그리기
-                    if (!(tableLine[0] == 'field' || tableLine[0] == 'event' || tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror' ||
-                        tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient' || tableLine[0] == 'providEventG' || tableLine[0] == 'providServer' ||
+                    if (!(tableLine[0] == 'iamM' || tableLine[0] == 'field' || tableLine[0] == 'event' || tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror' ||
+                        tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient' || tableLine[0] == 'e2ePro' || tableLine[0] == 'e2eEvent' || tableLine[0] == 'e2eProM' || tableLine[0] == 'e2eMethod' || 
+                        tableLine[0] == 'providEventG' || tableLine[0] == 'providServer' || tableLine[0] == 'e2ePropro' || tableLine[0] == 'e2eEventpro' || tableLine[0] == 'e2eProMpro' || tableLine[0] == 'e2eMethodpro' || 
                         tableLine[0] == 'edcontext' || tableLine[0] == 'edtarget' || tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' ||
+                        tableLine[0] == 'processfromptmm' || tableLine[0] == 'machinefromptmm' || tableLine[0] == 'runOn' ||
                         tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup' || tableLine[0] == 'comconet' || tableLine[0] == 'PERKeyV' ||
-                        tableLine[0] == 'PPortI' || tableLine[0] == 'pportQSC' || tableLine[0] == 'pportFSC' || tableLine[0] == 'PRPortI' || tableLine[0] == 'prporttab' || 
-                        tableLine[0] == 'RPortI' || tableLine[0] == 'rportQRC' || tableLine[0] == 'rportCC')) {
+                        tableLine[0] == 'PPortI' || tableLine[0] == 'pportQSC' || tableLine[0] == 'pportFSC' || tableLine[0] == 'pportSC' || tableLine[0] == 'PRPortI' || tableLine[0] == 'prporttab' || 
+                        tableLine[0] == 'RPortI' || tableLine[0] == 'rportQRC' || tableLine[0] == 'rportCC' || tableLine[0] == 'rportCCG' || tableLine[0] == 'rportCCS')) {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(tableLine[0] == 'ddpccompu' || tableLine[0] == 'ddpcdata'){ //implementation에서 table에 ref가 두개라..
@@ -1275,13 +1324,13 @@ export default{
             if(this.minimaptoolbar && this.location == '1') {
                 var activeLine = this.$store.getters.getactiveLine(uuid)
                 var startLine
-                console.log(activeLine)
+                //console.log(activeLine)
                 for (let i=0; i< activeLine.length;i++) {
                     startLine = this.$store.getters.getStartLineInfo(activeLine[i]) 
                     var startUUID = startLine.split('/')
                     var tableLine = startUUID[1].split('-')
-                    console.log(tableLine[0]+' / '+ item + ' / '+tableLine[2]+' / '+ tableLine[3])
-                    console.log(str1+' / '+ str2)
+                    //console.log(tableLine[0]+' / '+ item + ' / '+tableLine[2]+' / '+ tableLine[3])
+                    //console.log(str1+' / '+ str2)
                     if (tableLine[0] == 'field' && item == 'field') {
                         //console.log('/field')
                         document.body.appendChild(this.appendLine[activeLine[i]])
@@ -1332,7 +1381,7 @@ export default{
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/methods')
                         }
                         this.changeLineAppendChild(activeLine[i]) 
-                    } else if (tableLine[0] == 'requiredEventG') {
+                    } else if (tableLine[0] == 'requiredEventG' && item == 'requiredEvent') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
@@ -1341,7 +1390,7 @@ export default{
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredE')
                         }
                         this.changeLineAppendChild(activeLine[i]) 
-                    } else if (tableLine[0] == 'requiredClient') {
+                    } else if (tableLine[0] == 'requiredClient' && item == 'requiredEvent') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
@@ -1350,7 +1399,79 @@ export default{
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredE')
                         }
                         this.changeLineAppendChild(activeLine[i]) 
-                    } else if (tableLine[0] == 'providEventG') {
+                    } else if (tableLine[0] == 'e2ePro' && item == 'E2EEvent') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/e2ePro-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/E2EE')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'e2eEvent' && item == 'E2EEvent') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/e2eEvent-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/E2EE')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'e2eProM' && item == 'E2EMethod') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/e2eProM-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/E2EM')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'e2eMethod' && item == 'E2EMethod') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/e2eMethod-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/E2EM')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'e2ePropro' && item == 'E2EEvent') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/e2ePropro-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/E2EEpro')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'e2eEventpro' && item == 'E2EEvent') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/e2eEventpro-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/E2EEpro')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'e2eProMpro' && item == 'E2EMethod') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/e2eProMpro-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/E2EMpro')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'e2eMethodpro' && item == 'E2EMethod') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/e2eMethodpro-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/E2EMpro')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'providEventG' && item == 'ProvidEvent') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
@@ -1359,7 +1480,7 @@ export default{
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/providE')
                         }
                         this.changeLineAppendChild(activeLine[i]) 
-                    } else if (tableLine[0] == 'providServer') {
+                    } else if (tableLine[0] == 'providServer' && item == 'ProvidEvent') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(idx == tableLine[1]) {
@@ -1502,6 +1623,15 @@ export default{
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/pport')
                         }
                         this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'pportSC' && item == 'pport') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[2]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/pportSC-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/pport')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
                     } else if (tableLine[0] == 'prporttab' && item == 'prport') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
@@ -1520,13 +1650,53 @@ export default{
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/rport')
                         }
                         this.changeLineAppendChild(activeLine[i]) 
-                    } else if (tableLine[0] == 'rportCC' && item == 'rport') {
+                    } else if ((tableLine[0] == 'rportCC' && item == 'rport') || 
+                               (tableLine[0] == 'rportCCG' && item == 'rport') ||
+                               (tableLine[0] == 'rportCCS' && item == 'rport') ) {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
                         if(tabID == tableLine[2]) {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/rportCC-'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/rport')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'iamM') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[2] && str1) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/grandtab-'+tabID)
+                        } else if (item == 'module'){ // iam module 가 close일때
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/iamM')
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/moduleIns')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'processfromptmm') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/processfromptmm-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/proMapping')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'machinefromptmm') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/machinefromptmm-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/proMapping')
+                        }
+                        this.changeLineAppendChild(activeLine[i]) 
+                    } else if (tableLine[0] == 'runOn') {
+                        document.body.appendChild(this.appendLine[activeLine[i]])
+                        this.connections[activeLine[i]].remove()
+                        if(tabID == tableLine[2]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/runOn-'+tabID)
+                        } else {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/proMapping')
                         }
                         this.changeLineAppendChild(activeLine[i]) 
                     } 

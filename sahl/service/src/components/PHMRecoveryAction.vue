@@ -35,7 +35,7 @@
                                 </div>
                                 <v-card-text>
                                     <v-text-field v-model="element.reconame" label="name" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                                    <v-checkbox v-model="element.faf" label="Fire And Forget"></v-checkbox>
+                                    <v-checkbox v-model="element.faf" label="Fire And Forget" value="element.faf" :indeterminate="element.faf==null? true:false" true-value="true" false-value="false"></v-checkbox>
                                 </v-card-text>
                             </v-card>
                         </v-card-text>

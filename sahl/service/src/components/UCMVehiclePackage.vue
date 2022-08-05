@@ -44,7 +44,7 @@
                                 </div>
                                 <v-card-text v-if="isSDGSOpenClose">
                                     <v-data-table v-model="selectDelectSDGS" :headers="headerSDGS" :items="element.sdgs" :items-per-page='20'
-                                            :show-select="isdeleteSDGSItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteSDGSItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -96,7 +96,7 @@
                                 </div>
                                 <v-card-text v-if="isDriverOpenClose">
                                     <v-data-table v-model="selectDelectDriver" :headers="headerDriver" :items="element.driver" :items-per-page='20'
-                                            :show-select="isdeleteDriverItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteDriverItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -150,7 +150,7 @@
                                 </div>
                                 <v-card-text v-if="isRolloutOpenClose">
                                     <v-data-table v-model="selectDelectRollout" :headers="headerRollout" :items="element.rollout" :items-per-page='20'
-                                            :show-select="isdeleteRolloutItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteRolloutItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -204,7 +204,7 @@
                                 </div>
                                 <v-card-text v-if="isUCMSOpenClose">
                                     <v-data-table v-model="selectDelectUCMS" :headers="headerUCMS" :items="element.ucms" :items-per-page='20'
-                                            :show-select="isdeleteUCMSItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteUCMSItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -218,14 +218,9 @@
                                                                 <br>
                                                                 <v-text-field v-model="editUCMSItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-text-field v-model="editUCMSItem.ident" label="Identifier" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                <v-autocomplete v-model='editUCMSItem.module' label='UCM Module Instantiation Ref' :items='selModule' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                <v-autocomplete v-model='editUCMSItem.module' label='UCM Module Instantiation Ref' :items='selModule' item-text='name' item-value="name" class="lable-placeholer-color"
                                                                             return-object :readonly="!isEditingModule" clearable @click="setModuleSelect()" 
                                                                             @click:clear='clearModuleRef' @blur="isEditingModule=true" outlined dense style="height: 45px;">
-                                                                    <template v-slot:append-item>
-                                                                        <v-btn outlined color="indigo" dense text small block @click="newUCMModule">
-                                                                            <v-icon >mdi-plus</v-icon>New Item
-                                                                        </v-btn>
-                                                                    </template>
                                                                 </v-autocomplete>
                                                             </template>
                                                         </v-edit-dialog>
@@ -241,14 +236,9 @@
                                                                 <br>
                                                                 <v-text-field v-model="editUCMSItem.name" :rules="rules.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-text-field v-model="editUCMSItem.ident" label="Identifier" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                <v-autocomplete v-model='editUCMSItem.module' label='UCM Module Instantiation Ref' :items='selModule' item-text='name' item-value="uuid" class="lable-placeholer-color"
+                                                                <v-autocomplete v-model='editUCMSItem.module' label='UCM Module Instantiation Ref' :items='selModule' item-text='name' item-value="name" class="lable-placeholer-color"
                                                                             return-object :readonly="!isEditingModule" clearable @click="setModuleSelect()" 
                                                                             @click:clear='clearModuleRef' @blur="isEditingModule=true" outlined dense style="height: 45px;">
-                                                                    <template v-slot:append-item>
-                                                                        <v-btn outlined color="indigo" dense text small block @click="newUCMModule">
-                                                                            <v-icon >mdi-plus</v-icon>New Item
-                                                                        </v-btn>
-                                                                    </template>
                                                                 </v-autocomplete>
                                                             </template>
                                                         </v-edit-dialog>
@@ -353,7 +343,7 @@ export default {
             isUCMSOpenClose: true,
             isEditingModule: true,
             isdeleteUCMSItem: false,
-            selModule: this.$store.getters.getModuleInstant,
+            selModule: this.$store.getters.getUCMModuleIns,
             selectDelectUCMS: [],
             headerUCMS: [
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
@@ -521,10 +511,10 @@ export default {
             } 
         },
         editRollout(idx) {
-            if (this.element.rollout[idx].name != this.editRolloutItem.name){
+            /*if (this.element.rollout[idx].name != this.editRolloutItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'UCMRollout', listname: this.editRolloutItem.name} )
-            }
+            }*/
             this.element.rollout[idx].name = this.editRolloutItem.name
             this.element.rollout[idx].policy = this.editRolloutItem.policy
             this.cancelRollout()
@@ -586,11 +576,11 @@ export default {
             } 
         },
         openUCMS(idx) {
-            this.selModule = this.$store.getters.getModuleInstant
+            this.selModule = this.$store.getters.getUCMModuleIns
             if ( this.element.ucms[idx].module != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/UCMModule-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getModuleInstantPath(this.element.ucms[idx].module)
+                    endLine = this.$store.getters.getMachinePath(this.element.ucms[idx].module, 3)
                 }
                 this.editUCMSItem.module = { name: this.element.ucms[idx].module, uuid: endLine }
             }
@@ -646,7 +636,7 @@ export default {
         setModuleSelect() {
             if (this.isEditingModule == true) {
                 if (this.editUCMSItem.module != null && this.editUCMSItem.module.uuid != null) {
-                    this.$store.commit('setDetailView', {uuid: this.editUCMSItem.module.uuid, element: constant.ModuleInstantiation_str} )
+                    this.$store.commit('setDetailView', {uuid: this.editUCMSItem.module.uuid, element: constant.Machine_str} )
                     document.getElementById(this.editUCMSItem.module.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
                     EventBus.$emit('active-element', this.editUCMSItem.module.uuid)
                 }
@@ -657,20 +647,8 @@ export default {
             }
         },
         setModuleList() {
-            this.selModule = this.$store.getters.getModuleInstant
+            this.selModule = this.$store.getters.getUCMModuleIns
             this.setactiveUUID()
-        },
-        newUCMModule() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
-            this.$store.commit('addElementModuleInstant', {
-                name: this.$store.getters.getNameModuleInstant, input: false, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                ident: '',
-            })
-            EventBus.$emit('add-element', constant.ModuleInstantiation_str)
-            this.$store.commit('editVehiclePackage', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
 
         setactiveUUID() {

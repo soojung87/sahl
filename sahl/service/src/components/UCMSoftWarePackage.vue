@@ -29,12 +29,12 @@
                             <v-select v-model="element.action" :items="actiontype" clearable label="Action Type" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                             <v-select v-model="element.activation" :items="activationAction" clearable label="Activation Action" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                             <v-text-field v-model="element.compSWPsize" label="Compressed Software Package Size" placeholder="Integer" style="height: 30px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                            <v-checkbox v-model="element.deltaPakage" label="Is Delta Package" style="height: 35px"></v-checkbox>
+                            <v-checkbox v-model="element.deltaPakage" label="Is Delta Package" value="element.deltaPakage" :indeterminate="element.deltaPakage==null? true:false" true-value="true" false-value="false" style="height: 35px"></v-checkbox>
                             <v-text-field v-model="element.maximunVer" label="Maximun Supported UCM Version" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-text-field v-model="element.minimunVer" label="minimun Supported UCM Version" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-text-field v-model="element.id" label="Package ID" placeholder="Integer" style="height: 30px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                            <v-checkbox v-model="element.postReboot" label="Post Verification Reboot" style="height: 15px"></v-checkbox>
-                            <v-checkbox v-model="element.preReboot" label="Pre Activation Reboot" style="height: 35px"></v-checkbox>
+                            <v-checkbox v-model="element.postReboot" label="Post Verification Reboot" value="element.postReboot" :indeterminate="element.postReboot==null? true:false" true-value="true" false-value="false" style="height: 15px"></v-checkbox>
+                            <v-checkbox v-model="element.preReboot" label="Pre Activation Reboot" value="element.preReboot" :indeterminate="element.preReboot==null? true:false" true-value="true" false-value="false" style="height: 35px"></v-checkbox>
                             <v-row style="height: 70px">
                                 <v-col cols="10">
                                     <v-text-field v-model="element.swcluster" readonly @click="setSWClusterSelect()" clearable @click:clear='clearSWCluster()' label="Software Cluster Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>

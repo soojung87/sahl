@@ -23,9 +23,9 @@
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Ethernet Cluster</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && !isDatailView && zoomvalue > $setZoominElement">
+                        <v-card-text v-show="iselementOpenClose && !isDatailView && zoomvalue > $setZoominElement">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                        @input='inputEthernetClusterName' outlined dense></v-text-field>
+                                        @input='inputEthernetClusterName' @click="clickEthernetClusterName" outlined dense></v-text-field>
                             <!-- <v-card outlined class="mx-auto ehternetcluster"> --> <!--화면 고정에 스크롤 할것인지 말것인지--> 
                             <v-card outlined class="mx-auto">
                                 <div class="subtitle-2" style="height:20px" :id="element.uuid+'/conditional'">
@@ -55,7 +55,7 @@
                                         <v-tab-item v-for="(tab, idx) in element.conditional" :key="idx">
                                             <v-card flat>
                                                 <v-card-text>
-                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Protocol Name" @input="inputConditionalName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Protocol Name" @input="inputConditionalName(tab.name)" @click="clickConditionalName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     <v-text-field v-model="tab.version" label="Protocol Version" placeholder="Numeric Only(Unit Second)" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     <div class="subtitle-2" style="height:20px" :id="element.uuid+'/channel-'+tab.id">
                                                         <v-hover v-slot="{ hover }">
@@ -77,7 +77,7 @@
                                                         <v-tab-item v-for="(subtab, channelidx) in tab.channel" :key="channelidx">
                                                             <v-card flat>
                                                                 <v-card-text>
-                                                                    <v-text-field v-model="subtab.name" :rules="rules.name" label="Name" @input="inputChannelName(subtab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                    <v-text-field v-model="subtab.name" :rules="rules.name" label="Name" @input="inputChannelName(subtab.name)" @click="clickChannelName(subtab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                     <div class="subtitle-2" style="height:20px" :id="element.uuid+'/comconet-'+subtab.id+'-'+tab.id">
                                                                         <v-hover v-slot="{ hover }">
                                                                             <v-btn text @click="showCommConnectItem" x-small color="indigo">
@@ -93,7 +93,7 @@
                                                                         </v-btn>
                                                                     </div>
                                                                     <v-data-table v-model="selectDelectCommConnectItem" :headers="headerCommConnector" :items="subtab.comconnect" :items-per-page='20'
-                                                                            :show-select="isdeleteCommConnect" item-key="id" height="100px" v-if="isCommConnectOpenClose" dense hide-default-footer >
+                                                                            :show-select="isdeleteCommConnect" item-key="id" height="140px" v-if="isCommConnectOpenClose" dense hide-default-footer >
                                                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                                         </template>
@@ -150,7 +150,7 @@
                                                                     <v-tabs-items v-model="endpointTab[idx][channelidx]" v-if="isNetworkEndpointOpenClose">
                                                                         <v-tab-item v-for="(subendpointtab, endpoingidx) in subtab.endpoint" :key="endpoingidx">
                                                                             <br>
-                                                                            <v-text-field v-model="subendpointtab.name" :rules="rules.name" label="Name" @input="inputEndPointName(subendpointtab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                            <v-text-field v-model="subendpointtab.name" :rules="rules.name" label="Name" @input="inputEndPointName(subendpointtab.name)" @click="clickEndPointName(subendpointtab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                             <v-text-field v-model="subendpointtab.domainname" label="Fully Qualified Domain Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                             <v-text-field v-model="subendpointtab.priority" label="Priority" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                             <div class="subtitle-2" style="height:20px">
@@ -168,7 +168,7 @@
                                                                                 </v-btn>
                                                                             </div>
                                                                             <v-data-table v-model="selectDelectIP4tem" :headers="headerIP4" :items="subendpointtab.ip4address" :items-per-page='20'
-                                                                                    :show-select="isdeleteIP4Item" v-if="isIP4OpenClose" item-key="id" height="100px" dense hide-default-footer >
+                                                                                    :show-select="isdeleteIP4Item" v-if="isIP4OpenClose" item-key="id" height="140px" dense hide-default-footer >
                                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                                                 </template>
@@ -181,10 +181,13 @@
                                                                                                     <template v-slot:input>
                                                                                                         <br>
                                                                                                         <v-text-field v-model="editIP4Item.gateway" label="Default Gateway" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                                        <v-text-field v-model="editIP4Item.DNSAddr" label="DNS-SERVER-ADDR" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                                        <v-select v-model="editIP4Item.behavior" clearable :items="addressBehavior" label="IP Address Keep Behavior" @click="setactiveUUID"  outlined dense style="height: 45px;"></v-select>
                                                                                                         <v-select v-model="editIP4Item.behavior" clearable :items="addressBehavior" label="IP Address Keep Behavior" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                                                                                                         <v-text-field v-model="editIP4Item.address" label="IPV-4 Address" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                                                         <v-select v-model="editIP4Item.addresssorce" clearable :items="addressSourceIP4" label="IPV-4 Address Source" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                                                                                                         <v-text-field v-model="editIP4Item.mask" label="Network Mask" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                                        <v-text-field v-model="editIP4Item.ttl" label="TTL" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>    
                                                                                                     </template>
                                                                                                 </v-edit-dialog>
                                                                                             </td>
@@ -198,10 +201,12 @@
                                                                                                     <template v-slot:input>
                                                                                                         <br>
                                                                                                         <v-text-field v-model="editIP4Item.gateway" label="Default Gateway" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                                        <v-text-field v-model="editIP4Item.DNSAddr" label="DNS-SERVER-ADDR" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                                                         <v-select v-model="editIP4Item.behavior" clearable :items="addressBehavior" label="IP Address Keep Behavior" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                                                                                                         <v-text-field v-model="editIP4Item.address" label="IPV-4 Address" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                                                         <v-select v-model="editIP4Item.addresssorce" clearable :items="addressSourceIP4" label="IPV-4 Address Source" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                                                                                                         <v-text-field v-model="editIP4Item.mask" label="Network Mask" placeholder="int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                                        <v-text-field v-model="editIP4Item.ttl" label="TTL" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                                                     </template>
                                                                                                 </v-edit-dialog>
                                                                                             </th>
@@ -224,7 +229,7 @@
                                                                                 </v-btn>
                                                                             </div>
                                                                             <v-data-table v-model="selectDelectIP6tem" :headers="headerIP6" :items="subendpointtab.ip6address" :items-per-page='20'
-                                                                                    :show-select="isdeleteIP6Item" v-if="isIP6OpenClose" item-key="id" height="100px" dense hide-default-footer >
+                                                                                    :show-select="isdeleteIP6Item" v-if="isIP6OpenClose" item-key="id" height="140px" dense hide-default-footer >
                                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                                                 </template>
@@ -283,7 +288,7 @@
                                 </div>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="iselementOpenClose && isDatailView">
+                        <v-card-text v-if="iselementOpenClose && isDatailView">
                             <div class="subtitle-2" style="height:20px">
                                 Conditional
                             </div>
@@ -306,7 +311,7 @@
                                     </v-btn>
                                 </div>
                                 <v-data-table v-model="selectDelectInfoCC" :headers="headerCommConnector" :items="element.conditional[viewInfo.idxConditional].channel[viewInfo.idxChannel].comconnect"  
-                                        :show-select="isdeleteInfoCC" item-key="id" height="100px" dense hide-default-footer :items-per-page='20'>
+                                        :show-select="isdeleteInfoCC" item-key="id" height="140px" dense hide-default-footer :items-per-page='20'>
                                     <template v-slot:item.data-table-select="{ isSelected, select }">
                                         <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                     </template>
@@ -360,7 +365,7 @@
                                         </v-btn>
                                     </div>
                                     <v-data-table v-model="selectDelectInfoIP4" :headers="headerIP4" :items="element.conditional[viewInfo.idxConditional].channel[viewInfo.idxChannel].endpoint[viewInfo.idxEndpoint].ip4address" 
-                                            :show-select="isdeleteInfoIPV4" item-key="id" height="100px" dense hide-default-footer :items-per-page='20'>
+                                            :show-select="isdeleteInfoIPV4" item-key="id" height="140px" dense hide-default-footer :items-per-page='20'>
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -373,10 +378,12 @@
                                                             <template v-slot:input>
                                                                 <br>
                                                                 <v-text-field v-model="editIP4Item.gateway" label="Default Gateway" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-text-field v-model="editIP4Item.DNSAddr" label="DNS-SERVER-ADDR" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-select v-model="editIP4Item.behavior" clearable :items="addressBehavior" label="IP Address Keep Behavior" @click="setactiveUUID"  outlined dense style="height: 45px;"></v-select>
                                                                 <v-text-field v-model="editIP4Item.address" label="IPV-4 Address" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-select v-model="editIP4Item.addresssorce" clearable :items="addressSourceIP4" label="IPV-4 Address Source" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                                                                 <v-text-field v-model="editIP4Item.mask" label="Network Mask" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-text-field v-model="editIP4Item.ttl" label="TTL" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             </template>
                                                         </v-edit-dialog>
                                                     </td>
@@ -390,10 +397,12 @@
                                                             <template v-slot:input>
                                                                 <br>
                                                                 <v-text-field v-model="editIP4Item.gateway" label="Default Gateway" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-text-field v-model="editIP4Item.DNSAddr" label="DNS-SERVER-ADDR" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-select v-model="editIP4Item.behavior" clearable :items="addressBehavior" label="IP Address Keep Behavior" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                                                                 <v-text-field v-model="editIP4Item.address" label="IPV-4 Address" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-select v-model="editIP4Item.addresssorce" clearable :items="addressSourceIP4" label="IPV-4 Address Source" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
                                                                 <v-text-field v-model="editIP4Item.mask" label="Network Mask" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-text-field v-model="editIP4Item.ttl" label="TTL" placeholder="int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
                                                             </template>
                                                         </v-edit-dialog>
                                                     </th>
@@ -411,7 +420,7 @@
                                         </v-btn>
                                     </div>
                                     <v-data-table v-model="selectDelectInfoIP6" :headers="headerIP6" :items="element.conditional[viewInfo.idxConditional].channel[viewInfo.idxChannel].endpoint[viewInfo.idxEndpoint].ip6address"
-                                            :show-select="isdeleteInfoIPV6" item-key="id" height="100px" dense hide-default-footer :items-per-page='20'>
+                                            :show-select="isdeleteInfoIPV6" item-key="id" height="140px" dense hide-default-footer :items-per-page='20'>
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -455,7 +464,7 @@
                                 </div>
                             </div>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -499,6 +508,28 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                        if(this.iselementOpenClose && this.location == 1) {
+                            if(this.isEthernetClusterOpenClose && this.element.conditional.length > 0) {
+                                if(this.element.conditional[this.conditionalTab].channel.length > 0) {
+                                    if(this.isPhysicalChannelOpenClose) {
+                                        setTimeout(() => {EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].id, this.element.conditional[this.conditionalTab].id)}, 300);
+                                    } else {
+                                        setTimeout(() => {EventBus.$emit('changeLine-someipService', 'channel', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].id)}, 300);
+                                    }
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', 'conditional', this.element.uuid, null)
+                                }
+                            } else {
+                                EventBus.$emit('changeLine-someipService', 'conditional', this.element.uuid, null)
+                            }
+                        } 
+                    })
+                }
             }
         },
     },
@@ -542,7 +573,7 @@ export default {
             selectDelectIP6tem: [],
             conditionalTab: 0,
             channelTab: [],
-            endpointTab: [],
+            endpointTab: [[],[]],
             headerCommConnector: [
                 { text: 'Communication Connector Ref', align: 'start', sortable: false, value: 'connector' },
             ],
@@ -553,10 +584,12 @@ export default {
 
             headerIP4: [
                 { text: 'DEFAULT-GATEWAY', width:'140px', align: 'start', sortable: false, value: 'gateway' },
+                { text: 'DNS-SERVER-ADDR', width:'140px', align: 'start', sortable: false, value: 'DNSAddr' },
                 { text: 'IP-ADDRESS-KEEP-BEHAVIOR', width:'200px', sortable: false, value: 'behavior'},
                 { text: 'IPV-4-ADDRESS', width:'130px', sortable: false, value: 'address'},
                 { text: 'IPV-4-ADDRESS-SOURCE', width:'180px', sortable: false, value: 'addresssorce'},
                 { text: 'NETWORK-MASK', width:'130px', sortable: false, value: 'mask'},
+                { text: 'TTL', sortable: false, value: 'ttl'},
             ],
             headerIP6: [
                 { text: 'ASSIGNMENT-PRIORITY', width:'180px', sortable: false, value: 'priority'},
@@ -565,9 +598,9 @@ export default {
                 { text: 'IPV-6-ADDRESS', width:'130px', sortable: false, value: 'address'},
                 { text: 'IPV-6-ADDRESS-SOURCE', width:'180px', sortable: false, value: 'addresssource'},
             ],
-            editIP4Item: { gateway:'', behavior: null, address:'', addresssorce:null, mask:'', id: ''},
+            editIP4Item: { gateway:'', DNSAddr:'', behavior: null, address:'', addresssorce:null, mask:'', id: '', ttl: ''},
             editIP6Item: { priority:'', behavior:null, prelength:'', address:'', addresssource:null, id: ''},
-            defaultIP4Item: { gateway:'', behavior:null, address:'', addresssorce:null, mask:'', id: ''},
+            defaultIP4Item: { gateway:'', DNSAddr:'', behavior:null, address:'', addresssorce:null, mask:'', id: '', ttl: ''},
             defaultIP6Item: { priority:'', behavior:null, prelength:'', address:'', addresssource:null, id: ''},
             addressSourceIP4: [ 'FIXED', 'DHCPV-4', 'AUTO-IP', 'AUTO-IP--DOIP'],
             addressSourceIP6: [ 'FIXED', 'DHCPV-6', 'LINK-LOCAL', 'ROUTER-ADVERTISEMENT', 'LINK-LOCAL--DOIP'],
@@ -591,6 +624,12 @@ export default {
             selectDelectInfoCC: [],
             selectDelectInfoIP4: [],
             selectDelectInfoIP6: [],
+
+            beforePath: '',
+            beforeName: '',
+            beforeCondi: '',
+            beforeChannl: '',
+            beforeEnd: ''
         }
     },
     mounted () {
@@ -600,15 +639,14 @@ export default {
     },
     methods: {
         submitDialog(element) {
+            this.beforePath = this.element.path
             this.element.path = element
             if(this.element.conditional[this.conditionalTab] != undefined) {
                 if(this.element.conditional[this.conditionalTab].channel.length > 0) {
                     if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.length > 0) {
-                        if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].name != '') {
+                        if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].name != '') {
                             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                        condi: this.element.conditional[this.conditionalTab].name,
-                                                        channl: this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name,
-                                                        endpoint: this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].name} )
+                                                        beforename: this.beforePath, changeName: 'path'} )
                         }
                     }
                 }
@@ -637,7 +675,7 @@ export default {
             this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
                 if(this.iselementOpenClose && this.location == 1) {
-                    if(this.isEthernetClusterOpenClose) {
+                    if(this.isEthernetClusterOpenClose && this.element.conditional.length > 0) {
                         if(this.element.conditional[this.conditionalTab].channel.length > 0) {
                             if(this.isPhysicalChannelOpenClose) {
                                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].id, this.element.conditional[this.conditionalTab].id)}, 300);
@@ -658,7 +696,7 @@ export default {
             var activeLine = this.$store.getters.getactiveLine(this.element.uuid)
             if (this.location == 1 && activeLine.length > 0) {
                 this.$nextTick(() => {
-                    if(this.isEthernetClusterOpenClose) {
+                    if(this.isEthernetClusterOpenClose && this.element.conditional.length > 0) {
                         if(this.element.conditional[this.conditionalTab].channel.length > 0) {
                             if(this.isPhysicalChannelOpenClose) {
                                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].id, this.element.conditional[this.conditionalTab].id)}, 300);
@@ -711,16 +749,18 @@ export default {
             }
         },
 
+        clickEthernetClusterName() {
+            this.beforeName = this.element.name
+        },
         inputEthernetClusterName () {
             console.log('inputEthernetClusterName')
             this.$store.commit('editEthernetCluster', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             if(this.element.conditional[this.conditionalTab].channel.length>0) {
                 if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.length > 0) {
-                    if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].name != '') {
+                    if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].name != '') {
                         this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                    condi: this.element.conditional[this.conditionalTab].name,
-                                                    channl: this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name,
-                                                    endpoint: this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].name} )
+                                                    beforename: this.beforeName, changeName: 'name'} )
+                        this.beforeName = this.element.name
                     }
                 }
             }
@@ -728,38 +768,52 @@ export default {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
         },
+        clickConditionalName(name) {
+            this.beforeCondi = name
+        },
         inputConditionalName(name) {
             if(this.element.conditional[this.conditionalTab].channel.length>0) {
                 if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.length > 0) {
-                    if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].name != '') {
+                    if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].name != '') {
                         this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                     condi: name,
-                                                    channl: this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name,
-                                                    endpoint: this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].name} )
+                                                    beforename: this.beforeCondi, changeName: 'condi'} )
+                        this.beforeCondi = name
                     }
                 }
             }
+        },
+        clickChannelName(name) {
+            this.beforeChannel = name
         },
         inputChannelName(name) {
             if(this.element.conditional[this.conditionalTab].channel.length>0) {
                 if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.length > 0) {
-                    if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].name != '') {
+                    if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].name != '') {
                         this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                     condi: this.element.conditional[this.conditionalTab].name,
-                                                    channl: name,
-                                                    endpoint: this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].name} )
+                                                    channel: name,
+                                                    beforename: this.beforeChannel, changeName: 'channel'} )
+                        this.beforeChannel = name
                     }
                 }
             }
         },
+        clickEndPointName(name) {
+            this.beforeEnd = name
+        },
         inputEndPointName(name) {
-            if(this.element.conditional[this.conditionalTab].channel.length>0) {
-                if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.length > 0) {
-                    if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].name != '') {
-                        this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                    condi: this.element.conditional[this.conditionalTab].name,
-                                                    channl: this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name,
-                                                    endpoint: name} )
+            if (this.element.conditional.length > 0) {
+                if(this.element.conditional[this.conditionalTab].channel.length>0) {
+                    if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.length > 0) {
+                        if(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].name != '') {
+                            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                        condi: this.element.conditional[this.conditionalTab].name,
+                                                        channel: this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name,
+                                                        endpoint: name,
+                                                        beforename: this.beforeEnd, changeName: 'endpoint'} )
+                            this.beforeEnd = name
+                        }
                     }
                 }
             }
@@ -789,7 +843,7 @@ export default {
             console.log('changeConditionalTab    ' + this.conditionalTab)
             if (this.location == 1) {
                 if(this.element.conditional.length > 0) {
-                    if(this.isPhysicalChannelOpenClose) {
+                    if(this.isPhysicalChannelOpenClose && this.element.conditional[this.conditionalTab].channel.length > 0) {
                         setTimeout(() => {EventBus.$emit('changeLine-someipService', 'connector', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].id, this.element.conditional[this.conditionalTab].id)}, 300);
                     } else {
                         setTimeout(() => {EventBus.$emit('changeLine-someipService', 'channel', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].id)}, 300);
@@ -827,12 +881,11 @@ export default {
             this.element.conditional.splice(idx, 1)
             this.conditionalTab = 0
             this.channelTab[this.conditionalTab] = 0
-            this.endpointTab[this.conditionalTab][this.channelTab] = 0
+            this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]] = 0
             this.changeConditionalTab()
         },
         addPhysicalChannel() {
-            //console.log('addPhysicalChannel  '+this.conditionalTab)
-            this.endpointTab.push([this.conditionalTab,0]) //2차원 배열로 초기화 해줘야지 안그러면 tab이 안생김
+            //this.endpointTab.push([this.conditionalTab,0]) //2차원 배열로 초기화 해줘야지 안그러면 tab이 안생김
             const editItem = {name: '', comconnect:[], endpoint: [], id: ''}
             const addObj = new Object(editItem)
 
@@ -842,14 +895,11 @@ export default {
                 res = this.element.conditional[this.conditionalTab].channel.some(ele => ele.name === addObj.name)
             }
             addObj.id = n
-
             this.element.conditional[this.conditionalTab].channel.push(addObj)
             this.channelTab[this.conditionalTab] = this.element.conditional[this.conditionalTab].channel.length-1
             if (this.location == 1) {
                 EventBus.$emit('changeLine-someipService', 'channel', this.element.uuid, this.channelTab[this.conditionalTab], this.conditionalTab, this.element.conditional[this.conditionalTab].id)
             }
-            //console.log(this.channelTab)
-            //console.log(this.endpointTab)
         },
         clickChanneltab(idx) {
            // console.log('clickChanneltab ' + this.channelTab[this.conditionalTab]+ '  /  '+ idx +'   /  '+this.conditionalTab)
@@ -884,7 +934,7 @@ export default {
             this.$store.commit('deleteRefTable', {deleteName:'machineD', deleteTab: true, deletTab:'2', tabName: this.element.conditional[this.conditionalTab].name+'/'+this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name, path: this.element.path, name: this.element.name})
             this.element.conditional[this.conditionalTab].channel.splice(idx, 1)
             this.channelTab[this.conditionalTab] = 0
-            this.endpointTab[this.conditionalTab][this.channelTab] = 0
+            this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]] = 0
             this.changeChannelTab()
         },
 
@@ -962,6 +1012,8 @@ export default {
             } else if (endLine == undefined && this.editCCItem.connector != null) {
                 this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.channelTab[this.conditionalTab]+'-'+this.conditionalTab, this.element.uuid+'/comconet-'+this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].id+'-'+this.element.conditional[this.conditionalTab].id, this.editCCItem.connector.uuid)
                 this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].comconnect[idx].connector = this.editCCItem.connector.name
+            } else if (this.editCCItem.connector != null && endLine == this.editCCItem.connector.uuid && this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].comconnect[idx].connector != this.editCCItem.connector.name) {
+                this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].comconnect[idx].connector = this.editCCItem.connector.name
             }
             
             this.cancelCommConnect()
@@ -999,15 +1051,21 @@ export default {
         },
 
         addNetworkEndpoint() {
-            const editItem = {name: '', domainname:'', ip4address: [], ip6address: [], priority: ''}
+            const editItem = {name: '', domainname:'', ip4address: [], ip6address: [], priority: '', id: ''}
             const addObj = new Object(editItem)
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.some(ele => ele.id === n)
+            }
+            addObj.id = n
             addObj.name = 'Endpoint'+(this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.length+1)
             this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.push(addObj)
-            this.endpointTab[this.conditionalTab][this.channelTab] = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.length-1
+            this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]] = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.length-1
         },
         clickEndpointTab(idx) {
             //console.log('clickEndpointTab '+ this.conditionalTab +'  /  ' + this.channelTab)
-            this.endpointTab[this.conditionalTab][this.channelTab] = idx
+            this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]] = idx
             this.isdeleteIP4Item = false
             this.isdeleteIP6Item = false
             this.selectDelectIP4tem = []
@@ -1016,7 +1074,7 @@ export default {
         deleteEndpointTab(idx) {
             this.$store.commit('deleteRefTable', {deleteName:'machineD', deleteTab: true, deletTab:'3', tabName: this.element.conditional[this.conditionalTab].name+'/'+this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].name+'/'+this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[idx].name, path: this.element.path, name: this.element.name})
             this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint.splice(idx, 1)
-            this.endpointTab[this.conditionalTab][this.channelTab] = 0
+            this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]] = 0
         },
         isEndpointIP4() {
             if (this.isdeleteIP4Item == true) {
@@ -1028,7 +1086,7 @@ export default {
         },
         deleteIP4() {
             if (this.isdeleteIP4Item == true) {
-                this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address.filter(item => {
+                this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address.filter(item => {
                          return this.selectDelectIP4tem.indexOf(item) < 0 })
                 this.isdeleteIP4Item = false
                 this.selectDelectIP4tem = []
@@ -1044,37 +1102,41 @@ export default {
         },
         deleteIP6() {
             if (this.isdeleteIP6Item == true) {
-                this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address.filter(item => {
+                this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address.filter(item => {
                          return this.selectDelectIP6tem.indexOf(item) < 0 })
                 this.isdeleteIP6Item = false
                 this.selectDelectIP6tem = []
             } 
         },
         openIP4(idx) {
-            this.editIP4Item.gateway = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address[idx].gateway
-            this.editIP4Item.behavior = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address[idx].behavior
-            this.editIP4Item.address = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address[idx].address
-            this.editIP4Item.addresssorce = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address[idx].addresssorce
-            this.editIP4Item.mask = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address[idx].mask
+            this.editIP4Item.gateway = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].gateway
+            this.editIP4Item.behavior = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].behavior
+            this.editIP4Item.address = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].address
+            this.editIP4Item.addresssorce = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].addresssorce
+            this.editIP4Item.mask = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].mask
+            this.editIP4Item.DNSAddr = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].DNSAddr
+            this.editIP4Item.ttl = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].ttl
         },
         editIP4(idx) {
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address[idx].gateway = this.editIP4Item.gateway
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address[idx].behavior = this.editIP4Item.behavior
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address[idx].address = this.editIP4Item.address
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address[idx].addresssorce = this.editIP4Item.addresssorce
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address[idx].mask = this.editIP4Item.mask
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].gateway = this.editIP4Item.gateway
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].behavior = this.editIP4Item.behavior
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].address = this.editIP4Item.address
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].addresssorce = this.editIP4Item.addresssorce
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].mask = this.editIP4Item.mask
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].DNSAddr = this.editIP4Item.DNSAddr
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address[idx].ttl = this.editIP4Item.ttl
             this.cancelIP4()
         },
         addIP4() {
                         let res = true, n = 0
             while (res) {
                 n++
-                res = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address.some(item => item.id === n)
+                res = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address.some(item => item.id === n)
             }
             this.editIP4Item.id = n
 
             const addObj = Object.assign({}, this.editIP4Item)
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip4address.push(addObj)
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip4address.push(addObj)
             this.cancelIP4()
         },
         cancelIP4() {
@@ -1082,30 +1144,30 @@ export default {
             this.setactiveUUID()
         },
         openIP6(idx) {
-            this.editIP6Item.priority = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address[idx].priority
-            this.editIP6Item.behavior = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address[idx].behavior
-            this.editIP6Item.prelength = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address[idx].prelength
-            this.editIP6Item.address = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address[idx].address
-            this.editIP6Item.addresssource = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address[idx].addresssource
+            this.editIP6Item.priority = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address[idx].priority
+            this.editIP6Item.behavior = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address[idx].behavior
+            this.editIP6Item.prelength = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address[idx].prelength
+            this.editIP6Item.address = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address[idx].address
+            this.editIP6Item.addresssource = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address[idx].addresssource
         },
         editIP6(idx) {
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address[idx].gatpriorityway = this.editIP6Item.priority
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address[idx].behavior = this.editIP6Item.behavior
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address[idx].prelength = this.editIP6Item.prelength
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab].ip6address[idx].address = this.editIP6Item.address
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address[idx].addresssource = this.editIP6Item.addresssource
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address[idx].gatpriorityway = this.editIP6Item.priority
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address[idx].behavior = this.editIP6Item.behavior
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address[idx].prelength = this.editIP6Item.prelength
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address[idx].address = this.editIP6Item.address
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address[idx].addresssource = this.editIP6Item.addresssource
             this.cancelIP6()
         },
         addIP6() {
             let res = true, n = 0
             while (res) {
                 n++
-                res = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address.some(item => item.id === n)
+                res = this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address.some(item => item.id === n)
             }
             this.editIP6Item.id = n
 
             const addObj = Object.assign({}, this.editIP6Item)
-            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab]].ip6address.push(addObj)
+            this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].endpoint[this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]]].ip6address.push(addObj)
             this.cancelIP6()
         },
         cancelIP6() {
@@ -1242,6 +1304,8 @@ export default {
             } else if (endLine == undefined && this.editCCItem.connector != null) {
                 this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional, this.element.uuid+'/comconet-'+this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].id+'-'+this.element.conditional[this.viewInfo.idxConditional].id, this.editCCItem.connector.uuid)
                 this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].comconnect[idx].connector = this.editCCItem.connector.name
+            } else if (this.editCCItem.connector != null && endLine == this.editCCItem.connector.uuid && this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].comconnect[idx].connector != this.editCCItem.connector.name) {
+                this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].comconnect[idx].connector = this.editCCItem.connector.name
             }
             
             this.canceldialogCC()
@@ -1296,6 +1360,8 @@ export default {
             this.editIP4Item.address = this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].endpoint[this.viewInfo.idxEndpoint].ip4address[idx].address
             this.editIP4Item.addresssorce = this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].endpoint[this.viewInfo.idxEndpoint].ip4address[idx].addresssorce
             this.editIP4Item.mask = this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].endpoint[this.viewInfo.idxEndpoint].ip4address[idx].mask
+            this.editIP4Item.DNSAddr = this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].endpoint[this.viewInfo.idxEndpoint].ip4address[idx].DNSAddr
+            this.editIP4Item.ttl = this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].endpoint[this.viewInfo.idxEndpoint].ip4address[idx].ttl
         },
         editdialogIP4(idx) {
             this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].endpoint[this.viewInfo.idxEndpoint].ip4address[idx].gateway = this.editIP4Item.gateway
@@ -1303,6 +1369,8 @@ export default {
             this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].endpoint[this.viewInfo.idxEndpoint].ip4address[idx].address = this.editIP4Item.address
             this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].endpoint[this.viewInfo.idxEndpoint].ip4address[idx].addresssorce = this.editIP4Item.addresssorce
             this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].endpoint[this.viewInfo.idxEndpoint].ip4address[idx].mask = this.editIP4Item.mask
+            this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].endpoint[this.viewInfo.idxEndpoint].ip4address[idx].DNSAddr = this.editIP4Item.DNSAddr
+            this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].endpoint[this.viewInfo.idxEndpoint].ip4address[idx].ttl = this.editIP4Item.ttl
             this.canceldialogIP4()
         },
         canceldialogIP4() {

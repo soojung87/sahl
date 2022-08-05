@@ -118,11 +118,6 @@ export default({
         },
     },
     watch:{
-        // activenode() {
-        //     if(this.activenode[0] == null) {
-        //         this.$store.commit('setuuid', { uuid: null} )
-        //     }
-        // },
         activeUUID(val) {
             //console.log('activeUUID '+this.activenode[0])
             //console.log('activeUUID*** '+ val)
@@ -233,12 +228,17 @@ export default({
             if (this.activenode[0] == constant.CompuMethod_str) {
                 this.$store.commit('addElementCompuMehtod', {
                     name: this.$store.getters.getNameCompuMethod, input: false, path: '',
-                    top: elementY, left: elementX, zindex: 10, category:'', scales:[], icon:"mdi-clipboard-outline", validation: false
+                    top: elementY, left: elementX, zindex: 10, category:'', attributeName: '', scales:[], icon:"mdi-clipboard-outline", validation: false
                 })
             } else if (this.activenode[0] == constant.DataConstr_str) {
                 this.$store.commit('addElementDataConstr', {
                     name: this.$store.getters.getNameDataConstr, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, lowerlimit:'', upperlimit:'', icon:"mdi-clipboard-outline", validation: false
+                })
+            } else if (this.activenode[0] == constant.SWBaseType_str) {
+                this.$store.commit('addElementSWBaseType', {
+                    name: this.$store.getters.getNameSWBaseType, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, category:'', encoding:'', icon:"mdi-clipboard-outline", validation: false
                 })
             } else if (this.activenode[0] == constant.ApplicationArray_str) {
                 this.$store.commit('addElementApplicationArray', { // elehandling, elesemantics 는 select라서 초기값이 null이다.
@@ -251,13 +251,13 @@ export default({
                     name: this.$store.getters.getNameImplementation, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', 
-                    typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
+                    typeref: null, templatetype:null, desc:'', traceName: '', trace: [], ddpc:[], idtelement:[],
                 })
             } else if (this.activenode[0] == constant.Machine_str) {
                 this.$store.commit('addElementMachine', {
                     name: this.$store.getters.getNameMachine, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, admin: '',
-                    functiongroup:[], processor: [], moduleinstant: [], icon:"mdi-clipboard-outline", validation: false
+                    functiongroup:[], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], icon:"mdi-clipboard-outline", validation: false
                 })
             } else if (this.activenode[0] == constant.MachineDesigne_str) {
                 this.$store.commit('addElementMachineDesign', {
@@ -274,7 +274,13 @@ export default({
                     name: this.$store.getters.getNameHWElement,  input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, category:null, attribute:[], icon:"mdi-clipboard-outline", validation: false
                 })
-            } else if (this.activenode[0] == constant.EthernetCluster_str) {
+            } else if (this.activenode[0] == constant.HWCategory_str) {
+                this.$store.commit('addElementHWCategory', { 
+                    name: this.$store.getters.getNameHWCategory,  input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    attribute: []
+                })
+            }else if (this.activenode[0] == constant.EthernetCluster_str) {
                 this.$store.commit('addElementEthernetCluster', {
                     name: this.$store.getters.getNameEthernetCluster, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, conditional:[], icon:"mdi-clipboard-outline", validation: false
@@ -283,7 +289,7 @@ export default({
                 this.$store.commit('addElementProtoMachineMapping', { //ptmmMachine, ptmmProcess  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                     name: this.$store.getters.getNameProcesstoMachineMapping, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    ptmmname: '',  ptmmMachine: null, ptmmProcess: null,
+                    mapping: [],
                 })
             } else if (this.activenode[0] == constant.SWComponents_str) {
                 this.$store.commit('addElementSWComponents', {
@@ -295,6 +301,7 @@ export default({
                 this.$store.commit('addElementProcess', { //prodesign, determin, execut, machinetype  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                     name: this.$store.getters.getNameProcess, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
                     prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
                 })
             } else if (this.activenode[0] == constant.ProcessDesign_str) {
@@ -331,7 +338,7 @@ export default({
                 this.$store.commit('addElementService', {
                     name: this.$store.getters.getNameServiceInterface, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: '',
+                    versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: null,
                 })
             } else if (this.activenode[0] == constant.Client_str) {
                 this.$store.commit('addElementClient', { 
@@ -368,19 +375,31 @@ export default({
                 this.$store.commit('addElementToPortPrototype', { 
                     name: this.$store.getters.getNameToPortPrototype, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    selectPort:null, porttype: null, process:null, selectServiceIns: null, serviceIns: null,
+                    selectPort:null, porttype: null, context: null, process:null, selectServiceIns: null, serviceIns: null,
                 })
             } else if (this.activenode[0] == constant.RequiredSomeIP_str) {
                 this.$store.commit('addElementRequiredSomeIP', {  //deployref, clientref,ver는 null해줘야한다. clearable하면 값이 null변하기 때문에 
                     name: this.$store.getters.getNameRequiredSomeIP, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    deployref: null, minover: '', id: '', clientref: null, ver: null, method: [], requiredevent: [],
+                    deployref: null, minover: '', id: '', clientref: null, ver: null, method: [], requiredevent: [], E2EEvent: [], E2EMethod: []
                 })
             } else if (this.activenode[0] == constant.ProvidedSomeIP_str) {
                 this.$store.commit('addElementProvidedSomeIP', {
                     name: this.$store.getters.getNameProvidedSomeIP, input: false, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    deployref: null, someipserver: null, id: '', eventP: [], method: [], eventG: [],
+                    deployref: null, someipserver: null, id: '', loadPriority: '', loadWeight: '', eventP: [], method: [], eventG: [], E2EEvent: [], E2EMethod: []
+                })
+            } else if (this.activenode[0] == constant.E2EProfileConfig_str) {
+                this.$store.commit('addElementE2EProfileConfig', {
+                    name: this.$store.getters.getNameE2EProfileConfig, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    profile: []
+                })
+            } else if (this.activenode[0] == constant.SDG_DEF_str) {
+                this.$store.commit('addElementSDG_DEF', {
+                    name: this.$store.getters.getNameSDG_DEF, input: false, path: '',
+                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    sdgClass: []
                 })
             } else if (this.activenode[0] == constant.Error_str) {
                 this.$store.commit('addElementError', { //errorDref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
@@ -526,12 +545,6 @@ export default({
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     reposi: '', sdgs: [], driver: [], rollout: [], ucms: [],
                 })
-            } else if (this.activenode[0] == constant.ModuleInstantiation_str) {
-                this.$store.commit('addElementModuleInstant', {
-                    name: this.$store.getters.getNameModuleInstant, input: false, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    ident: '',
-                })
             }
 
             if(!this.openIds.some(item => item === this.activenode[0])){
@@ -546,8 +559,7 @@ export default({
                 this.$store.commit('addElementProtoMachineMapping', { 
                     name: this.$store.getters.getNameProcesstoMachineMapping, input: false, path: '',
                     top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
-                    zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    ptmmname: '',  ptmmMachine: null, ptmmProcess: null,
+                    zindex: 10, icon:"mdi-clipboard-outline", validation: false, mapping: [],
                 })
                 if(!this.openIds.some(item => item === constant.ProcesstoMachineMapping_str)){
                     this.openIds.push(constant.ProcesstoMachineMapping_str)
@@ -565,6 +577,7 @@ export default({
                     name: this.$store.getters.getNameProcess, input: false, path: '',
                     top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
                     zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
                     prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
                 })
                 if(!this.openIds.some(item => item === constant.Process_str)){
@@ -642,6 +655,14 @@ export default({
                 })
                 if(!this.openIds.some(item => item === constant.HWElement_str)){
                     this.openIds.push(constant.HWElement_str)
+                }
+                this.$store.commit('addElementHWCategory', {
+                    name: this.$store.getters.getNameHWCategory,  input: false, path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, icon:"mdi-clipboard-outline", validation: false, attribute: []
+                })
+                if(!this.openIds.some(item => item === constant.HWCategory_str)){
+                    this.openIds.push(constant.HWCategory_str)
                 }
                 this.$store.commit('addElementEthernetCluster', {
                     name: this.$store.getters.getNameEthernetCluster, input: false, path: '',

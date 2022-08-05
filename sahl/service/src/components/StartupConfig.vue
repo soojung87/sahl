@@ -70,7 +70,7 @@
                                                         </div>
                                                         <v-card-text v-show="isOptionsOpenClose">
                                                             <v-data-table v-model="selectDelectOptions" :headers="headerOptions" :items="tab.option" :items-per-page='20'
-                                                                    :show-select="isdeleteOptions" item-key="id" height="100px" dense hide-default-footer >
+                                                                    :show-select="isdeleteOptions" item-key="id" height="140px" dense hide-default-footer >
                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                                 </template>
@@ -84,6 +84,7 @@
                                                                                         <br>
                                                                                         <v-text-field v-model="editOptions.arg" label="Option Argument" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                                         <v-select :items="optionKind" label="Option Kind" @click="setactiveUUID()" v-model="editOptions.kind" clearable outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
+                                                                                        <v-text-field v-model="editOptions.name" label="Option Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                                     </template>
                                                                                 </v-edit-dialog>
                                                                             </td>
@@ -98,6 +99,61 @@
                                                                                         <br>
                                                                                         <v-text-field v-model="editOptions.arg" label="Option Argument" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                                         <v-select :items="optionKind" label="Option Kind" @click="setactiveUUID()" v-model="editOptions.kind" clearable outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
+                                                                                        <v-text-field v-model="editOptions.name" label="Option Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                    </template>
+                                                                                </v-edit-dialog>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </template>
+                                                            </v-data-table>
+                                                        </v-card-text>
+                                                    </v-card>
+                                                    <v-card outlined class="mx-auto">
+                                                        <div class="subtitle-2" style="height:20px">
+                                                            <v-hover v-slot="{ hover }">
+                                                                <v-btn text @click="showEnvironmentV" x-small color="indigo">
+                                                                    <v-icon>{{ isEnvironmentVOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                                                </v-btn>
+                                                            </v-hover>
+                                                            Environment Variables
+                                                            <v-btn @click="isCheckEnvironmentV" text x-small color="indigo" v-if="isEnvironmentVOpenClose">
+                                                                <v-icon>mdi-check</v-icon>
+                                                            </v-btn>
+                                                            <v-btn v-if="isEnvironmentVOpenClose && isdeleteEnvironmentV" @click="deleteEnvironmentV" text x-small color="indigo">
+                                                                <v-icon>mdi-minus</v-icon>
+                                                            </v-btn>
+                                                        </div>
+                                                        <v-card-text v-if="isEnvironmentVOpenClose">
+                                                            <v-data-table v-model="selectDelectEnvironmentV" :headers="headerEnvironmentV" :items="tab.environ" :items-per-page='20'
+                                                                    :show-select="isdeleteEnvironmentV" item-key="id" height="140px" dense hide-default-footer >
+                                                                <template v-slot:item.data-table-select="{ isSelected, select }">
+                                                                    <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                                                </template>
+                                                                <template v-if="!isdeleteEnvironmentV" v-slot:body="{ items, headers }">
+                                                                    <tbody>
+                                                                        <tr v-for="(item,num) in items" :key="num">
+                                                                            <td v-for="(header,key) in headers" :key="key">
+                                                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openEnvironmentV(num)" @cancel="editEnvironmentV(num)" @save="cancelEnvironmentV" large >
+                                                                                    {{item[header.value]}}
+                                                                                    <template v-slot:input>
+                                                                                        <br>
+                                                                                        <v-text-field v-model="editEnvironItem.key" label="Key" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                        <v-text-field v-model="editEnvironItem.value" label="Value" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                    </template>
+                                                                                </v-edit-dialog>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th colspan="3">
+                                                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addEnvironmentV()" @save="cancelEnvironmentV"> 
+                                                                                    <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                                        <v-icon >mdi-plus</v-icon>New Item
+                                                                                    </v-btn>
+                                                                                    <template v-slot:input>
+                                                                                        <br>
+                                                                                        <v-text-field v-model="editEnvironItem.key" label="Key" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                                        <v-text-field v-model="editEnvironItem.value" label="Value" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                                     </template>
                                                                                 </v-edit-dialog>
                                                                             </th>
@@ -183,8 +239,20 @@ export default {
             headerOptions: [
                 { text: 'Option Argument', sortable: false, value: 'arg' },
                 { text: 'Option Kind', sortable: false, value: 'kind' },
+                { text: 'Option Name', sortable: false, value: 'name' },
             ],
-            editOptions: { arg: '', kind: null, id: ''},
+            editOptions: { arg: '', kind: null, name: '', id: ''},
+
+            isEnvironmentVOpenClose: true,
+            isdeleteEnvironmentV: false,
+            selectDelectEnvironmentV: [],
+            headerEnvironmentV: [
+                { text: 'Key', align: 'start', sortable: false, value: 'key' },
+                { text: 'Value', sortable: false, value: 'value' },
+            ],
+            editEnvironItem: { key: '', value: '', id: '' },
+            defaultEnvironItem: { key: '', value: '', id: '' },
+
         }
     },
     mounted () {
@@ -224,6 +292,9 @@ export default {
         showOptions() {
             this.isOptionsOpenClose = this.isOptionsOpenClose ? false : true
         },
+        showEnvironmentV() {
+            this.isEnvironmentVOpenClose = this.isEnvironmentVOpenClose ? false : true
+        },
         inputStartupConfigName() {
             this.$store.commit('editStartupConfig', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
@@ -233,7 +304,7 @@ export default {
         },
 
         addStartUpConfig() {
-            const editItem = {configname: '', policy: null, priority: '', entertimeout: '', exittimeout: '', option: [], id: ''}
+            const editItem = {configname: '', policy: null, priority: '', entertimeout: '', exittimeout: '', option: [], environ: [], id: ''}
             const addObj = new Object(editItem)
             let res = true, n = 0
 
@@ -274,14 +345,16 @@ export default {
         openOptions(idx) {
             this.editOptions.arg = this.element.config[this.startupCTab].option[idx].arg
             this.editOptions.kind = this.element.config[this.startupCTab].option[idx].kind
+            this.editOptions.name = this.element.config[this.startupCTab].option[idx].name
         },
         editOptionsItem(idx) {
             this.element.config[this.startupCTab].option[idx].arg = this.editOptions.arg
             this.element.config[this.startupCTab].option[idx].kind = this.editOptions.kind
+            this.element.config[this.startupCTab].option[idx].name = this.editOptions.name
             this.cancelOptions()
         },
         cancelOptions() {
-            this.editOptions = {arg: '', kind: null, id: ''}
+            this.editOptions = {arg: '', kind: null, name: '', id: ''}
             this.setactiveUUID()
         },
         addOptions() {
@@ -296,6 +369,50 @@ export default {
             this.element.config[this.startupCTab].option.push(addObj);
             this.cancelOptions()
         },
+
+        isCheckEnvironmentV() {
+            if (this.isdeleteEnvironmentV == true) {
+                this.isdeleteEnvironmentV = false
+                this.selectDelectEnvironmentV = []
+            } else {
+                this.isdeleteEnvironmentV = true
+            }
+        },
+        deleteEnvironmentV() {
+            if (this.isdeleteEnvironmentV == true) {
+                this.element.config[this.startupCTab].environ = this.element.config[this.startupCTab].environ.filter(item => {
+                        return this.selectDelectEnvironmentV.indexOf(item) < 0 })
+
+                this.isdeleteEnvironmentV = false
+                this.selectDelectEnvironmentV = []
+            } 
+        },
+        openEnvironmentV(idx) {
+            this.editEnvironItem.key = this.element.config[this.startupCTab].environ[idx].key
+            this.editEnvironItem.value = this.element.config[this.startupCTab].environ[idx].value
+        },
+        editEnvironmentV(idx) {
+            this.element.config[this.startupCTab].environ[idx].key = this.editEnvironItem.key
+            this.element.config[this.startupCTab].environ[idx].value = this.editEnvironItem.value
+            this.cancelEnvironmentV()
+        },
+        cancelEnvironmentV() {
+            this.editEnvironItem = Object.assign({}, this.defaultEnvironItem)
+            this.setactiveUUID()
+        },
+        addEnvironmentV() {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.config[this.startupCTab].environ.some(item => item.id === n)
+            }
+            this.editEnvironItem.id = n
+
+            const addObj = Object.assign({}, this.editEnvironItem)
+            this.element.config[this.startupCTab].environ.push(addObj);
+            this.cancelEnvironmentV()
+        },
+
         
         setactiveUUID() {
             this.$store.commit('setuuid', {uuid: this.element.uuid} )

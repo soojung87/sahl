@@ -327,6 +327,7 @@ export default {
             this.$store.commit('addElementProcess', { 
                 name: this.$store.getters.getNameProcess, input: false, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
                 prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
             })
             EventBus.$emit('add-element', constant.Process_str)

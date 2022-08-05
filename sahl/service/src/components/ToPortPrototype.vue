@@ -23,7 +23,7 @@
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Service Instance To Port Prototype Mapping</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputToPortPrototypeName' outlined dense></v-text-field>
                             <v-card outlined class="mx-auto">
@@ -40,7 +40,7 @@
                                 </div>
                                 <v-card-text v-if="isPortOpenClose">
                                     <v-select v-model="element.selectPort" :items="selectPortList" @change="inputSelectPort" clearable @click:clear='clearPort()' label="Select Port Prototype" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
-                                    <v-row>
+                                    <v-row style="height: 45px">
                                         <v-col cols="10">
                                             <v-text-field v-model="element.porttype" readonly @click="setPortSelect()" clearable @click:clear='clearPort()' label="Type TReference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                         </v-col>
@@ -56,6 +56,28 @@
                                                         <v-list-item-title>{{ item.name }}</v-list-item-title>
                                                     </v-list-item>
                                                     <v-list-item v-if="selPortPrototype == null || (selPortPrototype !=null && selPortPrototype.length == 0)">
+                                                        <v-list-item-title>No Data Available</v-list-item-title>
+                                                    </v-list-item>
+                                                </v-list>
+                                            </v-menu>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row style="height: 60px">
+                                        <v-col cols="10">
+                                            <v-text-field v-model="element.context" readonly @click="setContextSelect()" clearable @click:clear='clearContext()' label="Context Root SW Component Prototype Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="2">
+                                            <v-menu>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn color="deep-purple accent-4" :id="element.uuid+'/toportcontext'" dark icon v-bind="attrs" v-on="on" @click="setContextList()">
+                                                        <v-icon>mdi-menu-down-outline</v-icon>
+                                                    </v-btn>
+                                                </template>
+                                                <v-list>
+                                                    <v-list-item v-for="(item, i) in selContext" :key="i" link @click="setContextRef(item)">
+                                                        <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                                    </v-list-item>
+                                                    <v-list-item v-if="selContext.length == 0">
                                                         <v-list-item-title>No Data Available</v-list-item-title>
                                                     </v-list-item>
                                                 </v-list>
@@ -125,7 +147,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement  || !minimaptoolbar">
+                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -170,6 +192,13 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                    })
+                }
             }
         },
     },
@@ -193,6 +222,7 @@ export default {
             selProcess: this.$store.getters.getProcessDesign,
             selectServiceInsList: ["PROVIDED-SOMEIP-SERVICE-INSTANCE", "REQUIRED-SOMEIP-SERVICE-INSTANCE"],
             selServiceIns: null,
+            selContext: this.$store.getters.getRootSWComponentPrototype,
         }
     },
     mounted () {
@@ -297,6 +327,43 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/toportport')
             }
+        },
+        clearContext() {
+            this.element.context = null
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toportcontext')
+            if (endLine != undefined) {
+                this.deleteLine(this.element.uuid+'/toportcontext')
+            }
+        },
+        setContextSelect() {
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toportcontext')
+            if (endLine == undefined) {
+                endLine = this.$store.getters.getRootSWComponentPrototypePath(this.element.context)
+            }
+            if (endLine != null) {
+                this.$store.commit('setDetailView', {uuid: endLine, element: constant.Executable_str} )
+                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)
+            }
+        },
+        setContextList() {
+            this.selContext = this.$store.getters.getRootSWComponentPrototype
+            this.setactiveUUID()
+        },
+        setContextRef(item){
+            if( this.element.context != item.name) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toportcontext')
+                if (endLine != undefined && endLine != item.uuid) {
+                    //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
+                    this.deleteLine(this.element.uuid+'/toportcontext')
+                }
+                //새로 추가해준다
+                if (endLine != item.uuid) {
+                    this.newLine(this.element.uuid+'/toportcontext', this.element.uuid+'/toportcontext', item.uuid)
+                }
+                this.element.context = item.name
+            }
+            this.setactiveUUID()
         },
 
         clearProcess() {

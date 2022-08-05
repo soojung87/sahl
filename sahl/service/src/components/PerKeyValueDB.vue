@@ -43,7 +43,7 @@
                                 </div>
                                 <v-card-text v-if="isSDGSOpenClose">
                                     <v-data-table v-model="selectDelectSDGS" :headers="headerSDGS" :items="element.sdgs" :items-per-page='20'
-                                            :show-select="isdeleteSDGSItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteSDGSItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -113,7 +113,7 @@
                                 </div>
                                 <v-card-text v-if="isRedundancyOpenClose">
                                     <v-data-table v-model="selectDelectRedundancy" :headers="headerRedundancy" :items="element.redundancy" :items-per-page='20'
-                                            :show-select="isdeleteRedundancyItem" item-key="id" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteRedundancyItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -215,7 +215,7 @@
                                                     </div>
                                                     <v-card-text v-show="isArrayOpenClose">
                                                         <v-data-table v-model="selDeleteArray" :headers="headerArray" :items="tab.array" :items-per-page='20'
-                                                                :show-select="isdeleteArray" item-key="id" height="100px" dense hide-default-footer >
+                                                                :show-select="isdeleteArray" item-key="id" height="140px" dense hide-default-footer >
                                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                             </template>
@@ -267,7 +267,7 @@
                                                     </div>
                                                     <v-card-text v-show="isNumericalOpenClose">
                                                         <v-data-table v-model="selDeleteNumerical" :headers="headerNumeri" :items="tab.numerical" :items-per-page='20'
-                                                                :show-select="isdeleteNumerical" item-key="id" height="100px" dense hide-default-footer >
+                                                                :show-select="isdeleteNumerical" item-key="id" height="140px" dense hide-default-footer >
                                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                             </template>
@@ -688,7 +688,7 @@ export default {
             this.$store.commit('addElementImplementation', {
                     name: this.$store.getters.getNameImplementation, input: false, path: '',
                     top: elementY, left: elementX,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    category:'', namespace:'', arraysize:'', typeemitter:'', 
+                    category:'', namespace:'', arraysize:'', typeemitter:'', traceName: '', trace: [],
                     typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
             })
             EventBus.$emit('add-element', constant.Implementation_str)
@@ -854,9 +854,9 @@ export default {
             this.element.keyValue.splice(idx, 1)
             this.changeMethodTab()
         },
-        inputKeyValueName(name) {
-            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                        changeName: 'PERDBKeyV', listname: name} )
+        inputKeyValueName(/*name*/) {
+            /*this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                        changeName: 'PERDBKeyV', listname: name} )*/
         },
 
 

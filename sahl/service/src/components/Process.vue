@@ -92,6 +92,13 @@
                                     </v-menu>
                                 </v-col>
                             </v-row>
+                            <v-select v-model="element.logLevel" :items="logLevel" label="Log Trace Default log Level" @click="setactiveUUID()" clearable outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
+                            <v-text-field v-model="element.logPath" label="Log Trace File Path" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                            <v-select v-model="element.logMode" :items="logMode" label="Log Trace log Mode" chips @click="setactiveUUID()" style="height: 70px;" outlined multiple class="lable-placeholer-color"></v-select>
+                            <v-text-field v-model="element.logProDesc" label="Log Trace Process Desc" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                            <v-text-field v-model="element.logProID" label="Log Trace Process ID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                            <v-text-field v-model="element.restart" label="Number Of Restart Attempts" placeholder="Int" style="height: 25px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                            <v-checkbox v-model="element.preMapping" label="Pre Mapping" value="element.preMapping" :indeterminate="element.preMapping==null? true:false" true-value="true" false-value="false" style="height: 35px;"></v-checkbox>
                             <v-card outlined class="mx-auto">
                                 <div class="subtitle-2" :id="element.uuid+'/processmodedeclar'" style="height:20px">
                                     <v-hover v-slot="{ hover }">
@@ -165,7 +172,7 @@
                                                     </div>
                                                     <v-card-text v-show="isExecutionDOpenClose">
                                                         <v-data-table v-model="selectDelectExecutionDItem" :headers="headerFunctionG" :items="tab.exection" :items-per-page='20'
-                                                                :show-select="isdeleteExecutionD" item-key="id" height="100px" dense hide-default-footer >
+                                                                :show-select="isdeleteExecutionD" item-key="id" height="140px" dense hide-default-footer >
                                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                             </template>
@@ -182,7 +189,7 @@
                                                                                             return-object :readonly="!isEditingCM" @click="setCMSelect()" @blur="isEditingCM=true" 
                                                                                             clearable @click:clear='clearCMRef'>
                                                                                     </v-autocomplete>
-                                                                                    <v-autocomplete v-model='editExecutionDItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                    <v-autocomplete v-model='editExecutionDItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="id" class="lable-placeholer-color"
                                                                                             return-object :readonly="!isEditingTM"  @click="setTMSelect()" @blur="isEditingTM=true" 
                                                                                             clearable @click:clear='clearTMRef'>
                                                                                     </v-autocomplete>
@@ -202,7 +209,7 @@
                                                                                             return-object :readonly="!isEditingCM" @click="setCMSelect()" @blur="isEditingCM=true" 
                                                                                             clearable @click:clear='clearCMRef'>
                                                                                     </v-autocomplete>
-                                                                                    <v-autocomplete v-model='editExecutionDItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                    <v-autocomplete v-model='editExecutionDItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="id" class="lable-placeholer-color"
                                                                                             return-object :readonly="!isEditingTM"  @click="setTMSelect()" @blur="isEditingTM=true" 
                                                                                             clearable @click:clear='clearTMRef'>
                                                                                     </v-autocomplete>
@@ -232,7 +239,7 @@
                                                     </div>
                                                     <v-card-text v-show="isFunctionGOpenClose">
                                                         <v-data-table v-model="selectDelectFunctionGItem" :headers="headerFunctionG" :items="tab.functionItem" :items-per-page='20'
-                                                                :show-select="isdeleteFunctionG" item-key="id" height="100px" dense hide-default-footer >
+                                                                :show-select="isdeleteFunctionG" item-key="id" height="140px" dense hide-default-footer >
                                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                             </template>
@@ -249,7 +256,7 @@
                                                                                             return-object :readonly="!isEditingContextMode" @click="setContextModeSelect()" @blur="isEditingContextMode=true" 
                                                                                             clearable @click:clear='clearContextModeRef'>
                                                                                     </v-autocomplete>
-                                                                                    <v-autocomplete v-model='editFunctionGItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                    <v-autocomplete v-model='editFunctionGItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="id" class="lable-placeholer-color"
                                                                                             return-object :readonly="!isEditingTargetMode"  @click="setTargetModeSelect()" @blur="isEditingTargetMode=true" 
                                                                                             clearable @click:clear='clearTargetModeRef'>
                                                                                     </v-autocomplete>
@@ -269,7 +276,7 @@
                                                                                             return-object :readonly="!isEditingContextMode" @click="setContextModeSelect()" @blur="isEditingContextMode=true" 
                                                                                             clearable @click:clear='clearContextModeRef'>
                                                                                     </v-autocomplete>
-                                                                                    <v-autocomplete v-model='editFunctionGItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                    <v-autocomplete v-model='editFunctionGItem.targetMode' label='Target Mode Declaration Ref' :items='selTargetMode' item-text='name' item-value="id" class="lable-placeholer-color"
                                                                                             return-object :readonly="!isEditingTargetMode"  @click="setTargetModeSelect()" @blur="isEditingTargetMode=true" 
                                                                                             clearable @click:clear='clearTargetModeRef'>
                                                                                     </v-autocomplete>
@@ -376,6 +383,22 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                        if(this.iselementOpenClose) {
+                            if(this.element.dependent.length > 0 && this.location == 1) {
+                                if (this.isDependentStartupOpenClose) {
+                                    EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.dependentStartupTab, this.dependentStartupTab)
+                                } else {
+                                    EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+                                }
+                            }
+                        }
+                    })
+                }
             }
         },
     },
@@ -404,7 +427,9 @@ export default {
             selResourceG: this.$store.getters.getResourceGroup,
             selStartupC: this.$store.getters.getStartupConfig,
             dependentStartupTab: 0,
-            
+
+            logLevel: ['FATAL', 'ERROR', 'WARN', 'INFO', 'DEBUG', 'VERBOSE'],
+            logMode: [ 'CONSOLE', 'FILE', 'NETWORK'],
             isdeleteFunctionG: false,
             selectDelectFunctionGItem: [],
             headerFunctionG: [
@@ -415,7 +440,7 @@ export default {
             isEditingTargetMode: true,
             defaultItem: { contextMode: null, targetMode: null, id: '' },
             editFunctionGItem: { contextMode: null, targetMode: null, id: '' },
-            selContextMode: this.$store.getters.getModeDeclarationGP,
+            selContextMode: this.$store.getters.getMachineFG,
             selTargetMode: this.$store.getters.getModeDeclaration,
             changeLineFunc: [],
 
@@ -841,7 +866,7 @@ export default {
             }
         },
         openFunctionG(idx) {
-            this.selContextMode = this.$store.getters.getModeDeclarationGP
+            this.selContextMode = this.$store.getters.getMachineFG
             this.selTargetMode = this.$store.getters.getModeDeclaration
 
             if (this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode != null ) {
@@ -872,6 +897,8 @@ export default {
             } else if(endcontextMLine == undefined && this.editFunctionGItem.contextMode != null) {
                 this.newLine(this.element.uuid+'/fgcontext-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.editFunctionGItem.contextMode.uuid)
                 this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode = this.editFunctionGItem.contextMode.name
+            } else if (this.editFunctionGItem.contextMode != null && endcontextMLine == this.editFunctionGItem.contextMode.uuid && this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode != this.editFunctionGItem.contextMode.name) {
+                this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode = this.editFunctionGItem.contextMode.name
             }
 
             var endtargetMLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/fgtarget-'+idx+'-'+this.dependentStartupTab)
@@ -885,6 +912,8 @@ export default {
                 this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode = this.editFunctionGItem.targetMode.name
             } else if (endtargetMLine == undefined && this.editFunctionGItem.targetMode != undefined) {
                 this.newLine(this.element.uuid+'/fgtarget-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.editFunctionGItem.targetMode.uuid)
+                this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode = this.editFunctionGItem.targetMode.name
+            } else if (this.editFunctionGItem.targetMode != undefined && endtargetMLine == this.editFunctionGItem.targetMode.uuid && this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode != this.editFunctionGItem.targetMode.name) {
                 this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode = this.editFunctionGItem.targetMode.name
             }
             
@@ -935,7 +964,7 @@ export default {
             }
         },
         setContextMList() {
-            this.selContextMode =  this.$store.getters.getModeDeclarationGP
+            this.selContextMode =  this.$store.getters.getMachineFG
             this.setactiveUUID()
         },
         clearContextModeRef() {
@@ -1099,7 +1128,7 @@ export default {
             }
         },
         openExecutionD(idx) {
-            this.selContextMode = this.$store.getters.getModeDeclarationGP
+            this.selContextMode = this.$store.getters.getMachineFG
             this.selTargetMode = this.$store.getters.getModeDeclaration
 
             if (this.element.dependent[this.dependentStartupTab].exection[idx].contextMode != null ) {
@@ -1108,14 +1137,15 @@ export default {
                     endLineC = this.$store.getters.getMachinePath(this.element.dependent[this.dependentStartupTab].exection[idx].contextMode, 2)
                 }
                 this.editExecutionDItem.contextMode = { name :this.element.dependent[this.dependentStartupTab].exection[idx].contextMode, uuid: endLineC }
-            }
+            } 
+
             if (this.element.dependent[this.dependentStartupTab].exection[idx].targetMode != null) {
                 var endLineT = this.$store.getters.getChangeEndLine(this.element.uuid+'/edtarget-'+this.dependentStartupTab+'/'+idx)
                 if (endLineT == undefined) {
                     endLineT = this.$store.getters.getModeDeclarationPath(this.element.dependent[this.dependentStartupTab].exection[idx].targetMode, 1)
                 }
                 this.editExecutionDItem.targetMode = { name :this.element.dependent[this.dependentStartupTab].exection[idx].targetMode, uuid: endLineT }
-            }
+            } 
         },
         editExecutionD(idx) {
             var endcontextMLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/edcontext-'+idx+'-'+this.dependentStartupTab)
@@ -1130,6 +1160,8 @@ export default {
             } else if(endcontextMLine == undefined && this.editExecutionDItem.contextMode != null) {
                 this.newLine(this.element.uuid+'/edcontext-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.contextMode.uuid)
                 this.element.dependent[this.dependentStartupTab].exection[idx].contextMode = this.editExecutionDItem.contextMode.name
+            } else if (this.editExecutionDItem.contextMode!= null && endcontextMLine == this.editExecutionDItem.contextMode.uuid && this.element.dependent[this.dependentStartupTab].exection[idx].contextMode != this.editExecutionDItem.contextMode.name) {
+                this.element.dependent[this.dependentStartupTab].exection[idx].contextMode = this.editExecutionDItem.contextMode.name
             }
 
             var endtargetMLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/edtarget-'+idx+'-'+this.dependentStartupTab)
@@ -1143,6 +1175,8 @@ export default {
                 this.element.dependent[this.dependentStartupTab].exection[idx].targetMode = this.editExecutionDItem.targetMode.name
             } else if (endtargetMLine == undefined && this.editExecutionDItem.targetMode != undefined) {
                 this.newLine(this.element.uuid+'/edtarget-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.targetMode.uuid)
+                this.element.dependent[this.dependentStartupTab].exection[idx].targetMode = this.editExecutionDItem.targetMode.name
+            } else if (this.editExecutionDItem.targetMode != null && endtargetMLine == this.editExecutionDItem.targetMode.uuid && this.element.dependent[this.dependentStartupTab].exection[idx].targetMode != this.editExecutionDItem.targetMode.name) {
                 this.element.dependent[this.dependentStartupTab].exection[idx].targetMode = this.editExecutionDItem.targetMode.name
             }
             

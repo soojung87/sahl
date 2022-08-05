@@ -171,6 +171,7 @@ export default {
         },
         inputMethodGName() {
             this.$store.commit('editMethodG', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
+            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name} )
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }

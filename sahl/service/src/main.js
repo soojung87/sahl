@@ -19,6 +19,9 @@ export const EventBus = new Vue()
 
 Vue.prototype.$setZoominTooltip = 0.45
 Vue.prototype.$setZoominElement = 0.55
+Vue.prototype.$setZoominLineSetupStart = 0.58
+Vue.prototype.$setZoominLineSetupEnd = 0.61
+Vue.prototype.$setZoominLineTitle = 0.50
 
 new Vue({
     vuetify,

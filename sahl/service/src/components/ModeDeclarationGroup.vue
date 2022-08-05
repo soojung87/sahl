@@ -29,7 +29,7 @@
                         <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputModeDeclarationName' outlined dense></v-text-field>
-                            <v-select v-model="element.initmode" :items="element.modedeclaration" label="Initial Mode" clearable @click:clear='element.initmode=null' @click="setactiveUUID()" outlined dense style="height: 45px;" class="lable-placeholer-color"></v-select>
+                            <v-select v-model="element.initmode" :items="element.modedeclaration" item-text="name" label="Initial Mode" clearable @click:clear='element.initmode=null' @click="setactiveUUID()" outlined dense style="height: 45px;" class="lable-placeholer-color"></v-select>
                             <v-card outlined class="mx-auto">
                                 <div class="subtitle-2" style="height:20px">
                                     <v-hover v-slot="{ hover }">
@@ -38,26 +38,50 @@
                                         </v-btn>
                                     </v-hover>
                                     Mode Declarations
+                                    <v-btn @click="isCheckModeDeclaration" text x-small color="indigo" v-if="isModeDeclarationOpenClose">
+                                        <v-icon>mdi-check</v-icon>
+                                    </v-btn>
+                                    <v-btn v-if="isModeDeclarationOpenClose && isdeleteModeDeclaration" @click="deleteModeDeclaration" text x-small color="indigo">
+                                        <v-icon>mdi-minus</v-icon>
+                                    </v-btn>
                                 </div>
                                 <v-card-text v-if="isModeDeclarationOpenClose">
-                                    <v-row>
-                                        <v-col v-for="(item, i) in element.modedeclaration" :key="i"  class="shrink">
-                                            <v-chip close @click:close="deleteModeDeclaration(i)" small>
-                                                {{item}}
-                                            </v-chip>
-                                        </v-col>
-                                        <v-col>
-                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addmodedeclaration" @save="editmodeDeclaration=''"> 
-                                                <v-btn outlined color="indigo" dense text small block width="270px" >
-                                                    <v-icon >mdi-plus</v-icon>New Item
-                                                </v-btn>
-                                                <template v-slot:input>
-                                                    <br>
-                                                    <v-text-field v-model="editmodeDeclaration" label="Mode declaration" placeholder="String" @click="setactiveUUID()" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                </template>
-                                            </v-edit-dialog>
-                                        </v-col>
-                                    </v-row>
+                                    <v-data-table v-model="selectDelectModeDeclaration" :headers="headerModeDeclaration" :items="element.modedeclaration" :items-per-page='20'
+                                            :show-select="isdeleteModeDeclaration" item-key="id" height="140px" dense hide-default-footer >
+                                        <template v-slot:item.data-table-select="{ isSelected, select }">
+                                            <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
+                                        </template>
+                                        <template v-if="!isdeleteModeDeclaration" v-slot:body="{ items, headers }">
+                                            <tbody>
+                                                <tr v-for="(item,idx) in items" :key="idx">
+                                                    <td v-for="(header,key) in headers" :key="key">
+                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openModeDeclaration(idx)" @cancel="editModeDeclaration(idx)" @save="cancelModeDeclaration" large >
+                                                            {{item[header.value]}}
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-text-field v-model="editModeDeclarationItem.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-text-field v-model="editModeDeclarationItem.value" label="Value" placeholder="Int" @click="setactiveUUID" style="height: 35px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="3">
+                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addModeDeclaration()" @save="cancelModeDeclaration"> 
+                                                            <v-btn outlined color="indigo" dense text small block width="270px" >
+                                                                <v-icon >mdi-plus</v-icon>New Item
+                                                            </v-btn>
+                                                            <template v-slot:input>
+                                                                <br>
+                                                                <v-text-field v-model="editModeDeclarationItem.name" label="Name" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                                <v-text-field v-model="editModeDeclarationItem.value" label="Value" placeholder="Int" @click="setactiveUUID" style="height: 35px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            </template>
+                                                        </v-edit-dialog>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </template>
+                                    </v-data-table>
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
@@ -186,6 +210,14 @@ export default {
             editARXML: {name:'', initmode: null, modedeclaration: []},
             isModeDeclarationOpenClose: true,
             editmodeDeclaration: '',
+
+            isdeleteModeDeclaration: false,
+            headerModeDeclaration: [
+                { text: 'Name', align: 'start', sortable: false, value: 'name' },
+                { text: 'Value', sortable: false, value: 'value' },
+            ],
+            selectDelectModeDeclaration: [],
+            editModeDeclarationItem: { name: '', value: '', id: ''}
         }
     },
     mounted () {
@@ -229,14 +261,55 @@ export default {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
         },
-        addmodedeclaration() {
-            this.element.modedeclaration.push(this.editmodeDeclaration)
-            this.editmodeDeclaration = ''
+
+        isCheckModeDeclaration() {
+            if (this.isdeleteModeDeclaration == true) {
+                this.isdeleteModeDeclaration = false
+                this.selectDelectModeDeclaration = []
+            } else {
+                this.isdeleteModeDeclaration = true
+            }
         },
-        deleteModeDeclaration(idx) {
-            this.$store.commit('deleteRefTable', {deleteName:'modeDeclar', deleteTab: true, tabName : this.element.modedeclaration[idx], path: this.element.path, name: this.element.name})
-            this.element.modedeclaration.splice(idx, 1)
+        deleteModeDeclaration () {
+            if (this.isdeleteModeDeclaration == true) {
+                this.$store.commit('deleteRefTable', {deleteName:'modeDeclar', deletItemList: this.selectDelectModeDeclaration, path: this.element.path, name: this.element.name})
+
+                this.element.modedeclaration = this.element.modedeclaration.filter(item => {
+                         return this.selectDelectModeDeclaration.indexOf(item) < 0 })
+                this.isdeleteModeDeclaration = false
+                this.selectDelectModeDeclaration = []
+            }
         },
+        openModeDeclaration (idx) {
+            this.editModeDeclarationItem.name = this.element.modedeclaration[idx].name
+            this.editModeDeclarationItem.value = this.element.modedeclaration[idx].value
+        },
+        addModeDeclaration () {
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.element.modedeclaration.some(item => item.id === n)
+            }
+            this.editModeDeclarationItem.id = n
+            const addObj = Object.assign({}, this.editModeDeclarationItem);
+            this.element.modedeclaration.push(addObj);
+            this.cancelModeDeclaration()
+        },
+        editModeDeclaration (idx) {
+            if (this.element.modedeclaration[idx].name != this.editModeDeclarationItem.name) {
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                            changeName: 'modeD', listname: this.editModeDeclarationItem.name, beforename:this.element.modedeclaration[idx].name} )
+            }
+            this.element.modedeclaration[idx].name = this.editModeDeclarationItem.name
+            this.element.modedeclaration[idx].value = this.editModeDeclarationItem.value
+            this.cancelModeDeclaration()
+        },
+        cancelModeDeclaration () {
+            this.editModeDeclarationItem.name = ''
+            this.editModeDeclarationItem.value = ''
+            this.setactiveUUID()
+        },
+
         setactiveUUID() {
             this.$store.commit('setuuid', {uuid: this.element.uuid} )
             this.$store.commit('editModeDeclarationGroup', {compo:"z", uuid:this.element.uuid, zindex:10} )

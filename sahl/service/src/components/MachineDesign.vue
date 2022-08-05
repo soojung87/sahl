@@ -23,7 +23,7 @@
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Machine Design</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text  v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text  v-show="iselementOpenClose && zoomvalue > $setZoominElement">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputMachineDesignName' outlined dense></v-text-field>
                             <v-select :items="accessControl" label="Access Control"  v-model="element.access" @click="setactiveUUID" clearable outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
@@ -45,7 +45,7 @@
                                 </div>
                                 <v-card-text v-if="isCCOpenClose">  
                                     <v-data-table v-model="selectdeleteCCItem" :headers="headersCC" :items="element.connector" :items-per-page='20'
-                                            :show-select="isdeleteCCItem" item-key="id" height="100px" dense hide-default-footer id="commun-table">
+                                            :show-select="isdeleteCCItem" item-key="id" height="140px" dense hide-default-footer id="commun-table">
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -63,7 +63,7 @@
                                                                 <v-text-field v-model="editedItemCC.mtu" label="MTU" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-text-field v-model="editedItemCC.timeout" label="MTU Timeout" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-text-field v-model="editedItemCC.mask" label="Filter Data Mask" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                <v-checkbox v-model="editedItemCC.mtuenable" label="MTU Enable" @click="setactiveUUID()"></v-checkbox>
+                                                                <v-checkbox v-model="editedItemCC.mtuenable" label="MTU Enable" value="editedItemCC.mtuenable" :indeterminate="editedItemCC.mtuenable==null? true:false" true-value="true" false-value="false" @click="setactiveUUID()"></v-checkbox>
                                                                 <v-autocomplete v-model='editedItemCC.endpoint' label='Unicast Network End Point' :items='selNetworkEndpoint' item-text='name' item-value="name" class="lable-placeholer-color"
                                                                     return-object :readonly="!isEditingMDEndpoint" clearable @click:clear='clearMDEndpoint' @click="setMDEndpointSelect()" @blur="isEditingMDEndpoint=true" outlined dense style="height: 45px;">
                                                                 </v-autocomplete>
@@ -83,7 +83,7 @@
                                                                 <v-text-field v-model="editedItemCC.mtu" label="MTU" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-text-field v-model="editedItemCC.timeout" label="MTU Timeout" placeholder="String" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                                 <v-text-field v-model="editedItemCC.mask" label="Filter Data Mask" placeholder="Int" @click="setactiveUUID" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                                <v-checkbox v-model="editedItemCC.mtuenable" label="MTU Enable" @click="setactiveUUID()"></v-checkbox>
+                                                                <v-checkbox v-model="editedItemCC.mtuenable" label="MTU Enable" value="editedItemCC.mtuenable" :indeterminate="editedItemCC.mtuenable==null? true:false" true-value="true" false-value="false" @click="setactiveUUID()"></v-checkbox>
                                                                 <v-autocomplete v-model='editedItemCC.endpoint' label='Unicast Network End Point' :items='selNetworkEndpoint' item-text='name' item-value="name" class="lable-placeholer-color"
                                                                     return-object :readonly="!isEditingMDEndpoint" clearable @click:clear='clearMDEndpoint' @click="setMDEndpointSelect()" @blur="isEditingMDEndpoint=true" outlined dense style="height: 45px;">
                                                                 </v-autocomplete>
@@ -114,7 +114,7 @@
                                 </div>
                                 <v-card-text v-if="isSDCOpenClose"> 
                                     <v-data-table v-model="selectdeleteSDCItem" :headers="headersSDC" :items="element.servicediscover" :items-per-page='20'
-                                            :show-select="isdeleteSDCItem" item-key="id" style="width:100%" height="100px" dense hide-default-footer >
+                                            :show-select="isdeleteSDCItem" item-key="id" style="width:100%" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
                                         </template>
@@ -156,7 +156,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -209,6 +209,13 @@ export default {
                 this.isTooltip = false
             } else {
                 this.isTooltip = this.minimaptoolbar
+                if (this.zoomvalue  > this.$setZoominLineTitle && this.zoomvalue < this.$setZoominLineSetupStart) {
+                    EventBus.$emit('drawLineTitleBar', this.element.uuid, false)
+                } else if (this.zoomvalue > this.$setZoominLineSetupStart && this.zoomvalue < this.$setZoominLineSetupEnd) {
+                    this.$nextTick(() => {
+                        EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                    })
+                }
             }
         },
     },
@@ -240,7 +247,7 @@ export default {
                 { text: 'MTU Enable', sortable: false, value: 'mtuenable' },
                 { text: 'MTU Timeout', width:'110px', sortable: false, value: 'timeout' },
                 { text: 'Unicast Network End Point', width:'180px', value: 'endpoint', sortable: false },
-                { text: 'Filter Data Mask', width:'120px', sortable: false, value: 'mask' },
+                { text: 'Filter Data Mask', width:'130px', sortable: false, value: 'mask' },
             ],
             editedItemCC: { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: '', id:''},
             defaultItemCC: { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: '', id:''},
@@ -377,7 +384,7 @@ export default {
                 if (endLine == undefined) {
                     endLine = this.$store.getters.getEthernetClusterPath(this.element.connector[idx].endpoint)
                 }
-                this.editedItemCC.endpoint = { name: this.element.connector[idx].endpoint, uuid: this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+idx) }
+                this.editedItemCC.endpoint = { name: this.element.connector[idx].endpoint, uuid: endLine}
             }
             this.setlistEthernetCluster()
         },
@@ -414,11 +421,13 @@ export default {
             } else if (endLine == undefined && this.editedItemCC.endpoint != null) {
                 this.newLine(this.element.uuid+'/cctable-'+idx, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
                 this.element.connector[idx].endpoint = this.editedItemCC.endpoint.name
+            } else if (this.editedItemCC.endpoint != null && endLine == this.editedItemCC.endpoint.uuid && this.element.connector[idx].endpoint != this.editedItemCC.endpoint.name) {
+                this.element.connector[idx].endpoint = this.editedItemCC.endpoint.name
             }
 
             if (this.element.connector[idx].name != this.editedItemCC.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
-                                                          changeName: 'CommunicationC', listname: this.editedItemCC.name} )
+                                                          changeName: 'CommunicationC', listname: this.editedItemCC.name, beforename: this.element.connector[idx].name} )
             }
 
 
@@ -517,10 +526,12 @@ export default {
                 this.deleteLine(this.element.uuid+'/sdctable-'+idx)
                 this.newLine(this.element.uuid+'/sdctable-'+idx, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)
             } else if (endLine == undefined && this.editedItemSDC.msia != null) {
-                this.newLine(this.element.uuid+'/sdctable-'+idx, this.element.uuid+'/functiontable', this.editedItemSDC.msia.uuid)
+                this.newLine(this.element.uuid+'/sdctable-'+idx, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)
+                this.element.servicediscover[idx].msia = this.editedItemSDC.msia.name
+            } else if (this.editedItemSDC.msia != null && endLine == this.editedItemSDC.msia.uuid && this.element.servicediscover[idx].msia != this.editedItemSDC.msia.name) {
                 this.element.servicediscover[idx].msia = this.editedItemSDC.msia.name
             }
-
+ 
             this.element.servicediscover[idx].ssdp = this.editedItemSDC.ssdp
             this.cancelSDC()
         },

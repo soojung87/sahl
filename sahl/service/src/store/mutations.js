@@ -22,7 +22,7 @@ const mutations = {
         state.SAHLProject.push({
             uuid: newUUid,
             name: payload.name,
-            DataTypes: { CompuMethod: [], DataConstr: [], ApplicationArrayDataType: [], ImplementationDataType: [] },
+            DataTypes: { CompuMethod: [], DataConstr: [], ApplicationArrayDataType: [], ImplementationDataType: [], SWBaseType: [] },
             Service: {
                 SomeIPServiceInterfaceDeployment: [],
                 ServiceInterface: [],
@@ -36,14 +36,16 @@ const mutations = {
                 SomeIPServiceInstanceToMachine: [],
                 ServiceInstanceToPortPrototype: [],
                 RequiredSomeIP: [],
-                ProvidedSomeIP: []
+                ProvidedSomeIP: [],
+                E2EProfileConfig: [],
+                SdgDef: [],
             },
-            Machine: { Machine: [], MachineDesign: [], EthernetCluster: [], ModeDeclarationGroup: [], HWElement: [] },
+            Machine: { Machine: [], MachineDesign: [], EthernetCluster: [], ModeDeclarationGroup: [], HWElement: [], HWCategory: [] },
             AdaptiveApplication: { ProtoMachineMapping: [], SWComponents: [], Process: [], Executable: [], StartupConfig: [], DeterministicClient: [], ProcessDesign: [] },
             Per: { PERFileArray: [], PERFileProxy: [], PERKeyValueD: [], PERKeyValueDI: [], PERPPtoFileArray: [], PERPPtoKeyValue: [] },
             Phm: { PHMContribution: [], PHMtoMachine: [], PHMHealth: [], PHMRecovery: [], PHMSupervised: [], RecoveryVia: [] },
             IamG: { FieldG: [], EventG: [], MethodG: [], FieldGD: [], EventGD: [], MethodGD: [] },
-            UCM: { SoftWareCluster: [], SoftWarePackage: [], VehiclePackage: [], ModuleInstant: [], }
+            UCM: { SoftWareCluster: [], SoftWarePackage: [], VehiclePackage: [] }
         })
         state.navigatorList.push({
             uuid: newUUid,
@@ -59,6 +61,7 @@ const mutations = {
                         { uuid: constant.DataConstr_str, name: constant.DataConstr_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                         { uuid: constant.ApplicationArray_str, name: constant.ApplicationArray_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                         { uuid: constant.Implementation_str, name: constant.Implementation_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.SWBaseType_str, name: constant.SWBaseType_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                     ]
                 },
                 {
@@ -95,6 +98,8 @@ const mutations = {
                                 { uuid: constant.ToPortPrototypeMapping_str, name: constant.ToPortPrototypeMapping_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                                 { uuid: constant.RequiredSomeIP_str, name: constant.RequiredSomeIP_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                                 { uuid: constant.ProvidedSomeIP_str, name: constant.ProvidedSomeIP_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                                { uuid: constant.E2EProfileConfig_str, name: constant.E2EProfileConfig_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                                { uuid: constant.SDG_DEF_str, name: constant.SDG_DEF_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                             ]
                         },
                         {
@@ -135,6 +140,7 @@ const mutations = {
                         { uuid: constant.EthernetCluster_str, name: constant.EthernetCluster_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                         { uuid: constant.ModeDeclarationGroup_str, name: constant.ModeDeclarationGroup_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                         { uuid: constant.HWElement_str, name: constant.HWElement_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.HWCategory_str, name: constant.HWCategory_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                     ]
                 },
                 {
@@ -213,7 +219,6 @@ const mutations = {
                             children: [{ uuid: constant.SWCluster_str, name: constant.SWCluster_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                                 { uuid: constant.SWPackage_str, name: constant.SWPackage_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                                 { uuid: constant.VehiclePackage_str, name: constant.VehiclePackage_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.ModuleInstantiation_str, name: constant.ModuleInstantiation_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                             ]
                         },
 
@@ -270,6 +275,16 @@ const mutations = {
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.push(copyEle)
             state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.DataConstr_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+        } else if (payload.parent == constant.SWBaseType_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.findIndex(item => item.uuid === payload.uuid)
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[idxEle]))
+            state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[idxEle].zindex = 2
+            copyEle.uuid = uuid.v1()
+            copyEle.name = this.getters.getNameSWBaseType
+            copyEle.left = elementX
+            copyEle.top = elementY
+            state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.push(copyEle)
+            state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.SWBaseType_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.ApplicationArray_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxEle]))
@@ -340,6 +355,16 @@ const mutations = {
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Machine.HWElement.push(copyEle)
             state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+        } else if (payload.parent == constant.HWCategory_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Machine.HWCategory.findIndex(item => item.uuid === payload.uuid)
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Machine.HWCategory[idxEle]))
+            state.SAHLProject[state.openProjectIndex].Machine.HWCategory[idxEle].zindex = 2
+            copyEle.uuid = uuid.v1()
+            copyEle.name = this.getters.getNameHWCategory
+            copyEle.left = elementX
+            copyEle.top = elementY
+            state.SAHLProject[state.openProjectIndex].Machine.HWCategory.push(copyEle)
+            state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWCategory_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.ProcesstoMachineMapping_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxEle]))
@@ -510,6 +535,26 @@ const mutations = {
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.push(copyEle)
             state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+        } else if (payload.parent == constant.E2EProfileConfig_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(item => item.uuid === payload.uuid)
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxEle]))
+            state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxEle].zindex = 2
+            copyEle.uuid = uuid.v1()
+            copyEle.name = this.getters.getNameE2EProfileConfig
+            copyEle.left = elementX
+            copyEle.top = elementY
+            state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.push(copyEle)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.E2EProfileConfig_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+        } else if (payload.parent == constant.SDG_DEF_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(item => item.uuid === payload.uuid)
+            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SdgDef[idxEle]))
+            state.SAHLProject[state.openProjectIndex].Service.SdgDef[idxEle].zindex = 2
+            copyEle.uuid = uuid.v1()
+            copyEle.name = this.getters.addElementSDG_DEF
+            copyEle.left = elementX
+            copyEle.top = elementY
+            state.SAHLProject[state.openProjectIndex].Service.SdgDef.push(copyEle)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SDG_DEF_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.Error_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.Error[idxEle]))
@@ -750,16 +795,6 @@ const mutations = {
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.push(copyEle)
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
-        } else if (payload.parent == constant.ModuleInstantiation_str) {
-            idxEle = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(item => item.uuid === payload.uuid)
-            copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxEle]))
-            state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxEle].zindex = 2
-            copyEle.uuid = uuid.v1()
-            copyEle.name = this.getters.getNameModuleInstant
-            copyEle.left = elementX
-            copyEle.top = elementY
-            state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.ModuleInstantiation_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         }
         state.activeUUID = copyEle.uuid
         Vue.nextTick(() => { // 선 하나씩 그려주기 때문에 끝날때 active line 해줘야한다.
@@ -779,29 +814,38 @@ const mutations = {
                         Vue.nextTick(() => {
                             var changTab = null,
                                 tabId = null //tab에서 선은 따로따로 그리기 때문에 하나씩 넣어야한다.
-                            if (tableLine[0] == 'field' || tableLine[0] == 'event' || tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror' ||
-                                tableLine[0] == 'providEventG' || tableLine[0] == 'providServer' || tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient' ||
+                            if (tableLine[0] == 'iamM' || tableLine[0] == 'field' || tableLine[0] == 'event' || tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror' ||
+                                tableLine[0] == 'providEventG' || tableLine[0] == 'providServer' || tableLine[0] == 'e2ePropro' || tableLine[0] == 'e2eEventpro' || tableLine[0] == 'e2eProMpro' || tableLine[0] == 'e2eMethodpro' ||
+                                tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient' || tableLine[0] == 'e2ePro' || tableLine[0] == 'e2eEvent' || tableLine[0] == 'e2eProM' || tableLine[0] == 'e2eMethod' ||
                                 tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' || tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup' ||
                                 tableLine[0] == 'edcontext' || tableLine[0] == 'edtarget' || tableLine[0] == 'comconet' || tableLine[0] == 'PERKeyV' ||
-                                tableLine[0] == 'PPortI' || tableLine[0] == 'pportQSC' || tableLine[0] == 'pportFSC' ||
+                                tableLine[0] == 'PPortI' || tableLine[0] == 'pportQSC' || tableLine[0] == 'pportFSC' || tableLine[0] == 'pportSC' ||
                                 tableLine[0] == 'PRPortI' || tableLine[0] == 'prporttab' ||
-                                tableLine[0] == 'RPortI' || tableLine[0] == 'rportQRC' || tableLine[0] == 'rportCC') {
+                                tableLine[0] == 'RPortI' || tableLine[0] == 'rportQRC' || tableLine[0] == 'rportCC' || tableLine[0] == 'rportCCG' || tableLine[0] == 'rportCCS') {
                                 changTab = true
                                 if (tableLine[0] == 'argtable' || tableLine[0] == 'methoderrors' || tableLine[0] == 'methoderror') {
                                     tabId = 'methods'
                                 } else if (tableLine[0] == 'providEventG' || tableLine[0] == 'providServer') {
                                     tabId = 'providE'
+                                } else if (tableLine[0] == 'e2ePropro' || tableLine[0] == 'e2eEventpro') {
+                                    tabId = 'E2EEpro'
+                                } else if (tableLine[0] == 'e2eProMpro' || tableLine[0] == 'e2eMethodpro') {
+                                    tabId = 'E2EMpro'
                                 } else if (tableLine[0] == 'requiredEventG' || tableLine[0] == 'requiredClient') {
                                     tabId = 'requiredE'
+                                } else if (tableLine[0] == 'e2ePro' || tableLine[0] == 'e2eEvent') {
+                                    tabId = 'E2EE'
+                                } else if (tableLine[0] == 'e2eProM' || tableLine[0] == 'e2eMethod') {
+                                    tabId = 'E2EM'
                                 } else if (tableLine[0] == 'edcontext' || tableLine[0] == 'edtarget' || tableLine[0] == 'fgcontext' || tableLine[0] == 'fgtarget' || tableLine[0] == 'processresorce' || tableLine[0] == 'processstartup') {
                                     tabId = 'processStarupC'
                                 } else if (tableLine[0] == 'comconet') {
                                     tabId = 'conditional'
-                                } else if (tableLine[0] == 'PPortI' || tableLine[0] == 'pportQSC' || tableLine[0] == 'pportFSC') {
+                                } else if (tableLine[0] == 'PPortI' || tableLine[0] == 'pportQSC' || tableLine[0] == 'pportFSC' || tableLine[0] == 'pportSC') {
                                     tabId = 'pport'
                                 } else if (tableLine[0] == 'PRPortI' || tableLine[0] == 'prporttab') {
                                     tabId = 'prport'
-                                } else if (tableLine[0] == 'RPortI' || tableLine[0] == 'rportQRC' || tableLine[0] == 'rportCC') {
+                                } else if (tableLine[0] == 'RPortI' || tableLine[0] == 'rportQRC' || tableLine[0] == 'rportCC' || tableLine[0] == 'rportCCG' || tableLine[0] == 'rportCCS') {
                                     tabId = 'rport'
                                 } else {
                                     tabId = tableLine[0]
@@ -1008,6 +1052,9 @@ const mutations = {
         } else if (payload.datatype == 'DataConstr') {
             idxchild = constant.DateType_index
             idxchildchild = constant.DataConstr_index
+        } else if (payload.datatype == 'SWBaseType') {
+            idxchild = constant.DateType_index
+            idxchildchild = constant.SWBaseType_index
         } else if (payload.datatype == 'ApplicationArrayDataType') {
             idxchild = constant.DateType_index
             idxchildchild = constant.ApplicationArray_index
@@ -1029,6 +1076,9 @@ const mutations = {
         } else if (payload.datatype == 'HWElement') {
             idxchild = constant.Machines_index
             idxchildchild = constant.HWElement_index
+        } else if (payload.datatype == 'HWCategory') {
+            idxchild = constant.Machines_index
+            idxchildchild = constant.HWCategory_index
         } else if (payload.datatype == 'ProtoMachineMapping') {
             idxchild = constant.AdaptiveApplication_index
             idxchildchild = constant.ProcesstoMachineMapping_index
@@ -1102,6 +1152,14 @@ const mutations = {
             idxService = constant.ServiceInstances_index
             idxchild = constant.Service_index
             idxchildchild = constant.ProvidedSomeIP_index
+        } else if (payload.datatype == 'E2EProfileConfig') {
+            idxService = constant.ServiceInstances_index
+            idxchild = constant.Service_index
+            idxchildchild = constant.E2EProfileConfig_index
+        } else if (payload.datatype == 'SdgDef') {
+            idxService = constant.ServiceInstances_index
+            idxchild = constant.Service_index
+            idxchildchild = constant.SDG_DEF_index
         } else if (payload.datatype == 'PERFileArray') {
             idxService = constant.PER_index
             idxchild = constant.Platform_index
@@ -1186,10 +1244,6 @@ const mutations = {
             idxService = constant.UCM_index
             idxchild = constant.Platform_index
             idxchildchild = constant.VehiclePackage_index
-        } else if (payload.datatype == 'ModuleInstant') {
-            idxService = constant.UCM_index
-            idxchild = constant.Platform_index
-            idxchildchild = constant.ModuleInstantiation_index
         }
 
         if (idxchild == constant.Service_index) {
@@ -1220,9 +1274,11 @@ const mutations = {
         //console.log(payload.parent)
         //console.log(payload.uuid)
         if (payload.parent == constant.CompuMethod_str) {
-            this.commit('editCompuMehtod', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
+            this.commit('editCompuMethod', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.DataConstr_str) {
             this.commit('editDataConstr', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
+        } else if (payload.parent == constant.SWBaseType_str) {
+            this.commit('editSWBaseType', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.ApplicationArray_str) {
             this.commit('editApplicationArray', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.Implementation_str) {
@@ -1247,6 +1303,10 @@ const mutations = {
             this.commit('editRequiredSomeIP', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.ProvidedSomeIP_str) {
             this.commit('editProvidedSomeIP', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
+        } else if (payload.parent == constant.E2EProfileConfig_str) {
+            this.commit('editE2EProfileConfig', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
+        } else if (payload.parent == constant.SDG_DEF_str) {
+            this.commit('editSDG_DEF', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.Error_str) {
             this.commit('editError', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.Errorset_str) {
@@ -1277,6 +1337,8 @@ const mutations = {
             this.commit('editModeDeclarationGroup', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.HWElement_str) {
             this.commit('editHWElement', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
+        } else if (payload.parent == constant.HWCategory_str) {
+            this.commit('editHWCategory', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.FileArray_str) {
             this.commit('editPERFileArray', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.FileProxyInterf_str) {
@@ -1319,8 +1381,6 @@ const mutations = {
             this.commit('editSoftWarePackage', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         } else if (payload.parent == constant.VehiclePackage_str) {
             this.commit('editVehiclePackage', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
-        } else if (payload.parent == constant.ModuleInstantiation_str) {
-            this.commit('editModuleInstant', { compo: "z", uuid: payload.uuid, zindex: payload.zindex })
         }
     },
     saveInputfile(state, payload) {
@@ -1349,7 +1409,8 @@ const mutations = {
                 var compuName = '',
                     path = '',
                     strPath = getEditPath(ele.parentNode.parentNode, path),
-                    compuCate = ''
+                    compuCate = '',
+                    attributeName = ''
                 var scalesItem = []
 
                 ele.childNodes.forEach(item => {
@@ -1358,6 +1419,19 @@ const mutations = {
                     }
                     if (item.nodeName == "CATEGORY") {
                         compuCate = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "BLUEPRINT-POLICYS") {
+                        item.childNodes.forEach((policy, p) => {
+                            if (p % 2 != 0) {
+                                item.childNodes[1].childNodes.forEach((attri, a) => {
+                                    if (a % 2 != 0) {
+                                        if (attri.nodeName == 'ATTRIBUTE-NAME') {
+                                            attributeName = attri.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                            }
+                        })
                     }
                     if (item.nodeName == "COMPU-INTERNAL-TO-PHYS") {
                         var scales = item.childNodes[1].childNodes
@@ -1406,6 +1480,7 @@ const mutations = {
                     left: elementX,
                     zindex: 2,
                     category: compuCate,
+                    attributeName: attributeName,
                     scales: scalesItem,
                     icon: "mdi-clipboard-outline",
                     validation: false
@@ -1463,6 +1538,51 @@ const mutations = {
                 state.inputFileList.push({ uuid: UUID, path: strPath + '/' + dataconName, parent: constant.DataConstr_str })
                 EventBus.$emit('add-element', constant.DateType_str)
                 EventBus.$emit('add-element', constant.DataConstr_str)
+            })
+            /// SW-BASE-TYPE
+        var SWBaseType = payload.xmlDoc.getElementsByTagName('SW-BASE-TYPE')
+        SWBaseType.forEach(ele => {
+                var swName = '',
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path),
+                    category = '',
+                    encoding = ''
+
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        swName = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "CATEGORY") {
+                        category = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "BASE-TYPE-ENCODING") {
+                        encoding = item.childNodes[0].nodeValue
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+
+                this.commit('addElementSWBaseType', {
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    name: swName,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    category: category,
+                    encoding: encoding,
+                    icon: "mdi-clipboard-outline",
+                    validation: false
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + swName, parent: constant.SWBaseType_str })
+                EventBus.$emit('add-element', constant.DateType_str)
+                EventBus.$emit('add-element', constant.SWBaseType_str)
             })
             /// APPLICATION-ARRAY-DATA-TYPE
         var application = payload.xmlDoc.getElementsByTagName('APPLICATION-ARRAY-DATA-TYPE')
@@ -1546,7 +1666,9 @@ const mutations = {
                     imptypeemitter = '',
                     imptyperef = null,
                     imptemplatetype = null,
-                    impdesc = ''
+                    impdesc = '',
+                    traceName = '',
+                    trace = []
                 var DDPCItem = [],
                     IDTElementItem = []
                 console.log(ele.childNodes)
@@ -1557,6 +1679,34 @@ const mutations = {
                     }
                     if (item.nodeName == "CATEGORY") {
                         impcategory = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "INTRODUCTION") {
+                        item.childNodes.forEach((intro, i) => {
+                            if (i % 2 != 0) {
+                                intro.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            traceName = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "TRACE-REFS") {
+                                            var editTrace = { traceref: '', id: '' },
+                                                idT = 0
+                                            data.childNodes.forEach((ref, r) => {
+                                                if (r % 2 != 0) {
+                                                    if (ref.nodeName == "TRACE-REF") {
+                                                        editTrace.traceref = ref.childNodes[0].nodeValue
+                                                        editTrace.id = idT
+                                                        const addObj = Object.assign({}, editTrace)
+                                                        trace.push(addObj)
+                                                        id++
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    }
+                                })
+                            }
+                        })
                     }
                     if (item.nodeName == "NAMESPACES") {
                         item.childNodes.forEach((symbol, s) => {
@@ -1613,7 +1763,7 @@ const mutations = {
                     if (item.nodeName == "SUB-ELEMENTS") {
                         id = 0
                         item.childNodes.forEach((cppImp, c) => {
-                            var editIDTElementItem = { name: '', typeref: null, inplace: false, desc: '', id: '' }
+                            var editIDTElementItem = { name: '', typeref: null, inplace: null, desc: '', id: '' }
                             if (c % 2 != 0) {
                                 cppImp.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -1627,7 +1777,7 @@ const mutations = {
                                             data.childNodes.forEach((typeR, t) => {
                                                 if (t % 2 != 0) {
                                                     if (typeR.nodeName == "INPLACE") {
-                                                        editIDTElementItem.inplace = typeR.childNodes[0].nodeValue
+                                                        editIDTElementItem.inplace = typeR.childNodes[0].nodeValue.toLowerCase()
                                                     }
                                                     if (typeR.nodeName == "TYPE-REFERENCE-REF") {
                                                         editIDTElementItem.typeref = typeR.childNodes[0].nodeValue
@@ -1668,6 +1818,8 @@ const mutations = {
                     typeref: imptyperef,
                     templatetype: imptemplatetype,
                     desc: impdesc,
+                    traceName: traceName,
+                    trace: trace,
                     ddpc: DDPCItem,
                     idtelement: IDTElementItem,
                     icon: "mdi-clipboard-outline",
@@ -1690,8 +1842,11 @@ const mutations = {
                     admin = '',
                     hwele = [],
                     functionG = [],
+                    environ = [],
                     processor = [],
-                    module = []
+                    module = [],
+                    ucm = [],
+                    iam = []
 
                 ele.childNodes.forEach(item => {
                     if (item.nodeName == "SHORT-NAME") {
@@ -1746,6 +1901,28 @@ const mutations = {
                             }
                         })
                     }
+                    if (item.nodeName == "ENVIRONMENT-VARIABLES") {
+                        id = 0
+                        item.childNodes.forEach((mode, m) => {
+                            var editEnvironItem = { key: '', value: '', id: '' }
+                            if (m % 2 != 0) {
+                                mode.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "KEY") {
+                                            editEnvironItem.key = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "VALUE") {
+                                            editEnvironItem.value = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                editEnvironItem.id = id
+                                const addObj = Object.assign({}, editEnvironItem)
+                                environ.push(addObj)
+                                id++
+                            }
+                        })
+                    }
                     if (item.nodeName == "PROCESSORS") {
                         id = 0
                         item.childNodes.forEach((pros, p) => {
@@ -1786,42 +1963,86 @@ const mutations = {
                     }
                     if (item.nodeName == "MODULE-INSTANTIATIONS") {
                         id = 0
+                        var idUCM = 0,
+                            idIAM = 0
                         item.childNodes.forEach((os, o) => {
                             var editModule = { name: '', resource: [] }
+                            var editUCM = { name: '', ident: '', id: '' }
+                            var editIAM = { name: '', grants: [], id: '' }
                             if (o % 2 != 0) {
-                                os.childNodes.forEach((osmodul, s) => {
-                                    if (s % 2 != 0) {
-                                        if (osmodul.nodeName == "SHORT-NAME") {
-                                            editModule.name = osmodul.childNodes[0].nodeValue
+                                if (os.nodeName == "OS-MODULE-INSTANTIATION") {
+                                    os.childNodes.forEach((osmodul, s) => {
+                                        if (s % 2 != 0) {
+                                            if (osmodul.nodeName == "SHORT-NAME") {
+                                                editModule.name = osmodul.childNodes[0].nodeValue
+                                            }
+                                            if (osmodul.nodeName == "RESOURCE-GROUPS") {
+                                                osmodul.childNodes.forEach((group, g) => {
+                                                    var editModuleInsItem = { name: '', cpuUsage: '', memoryUsage: '', id: '' }
+                                                    if (g % 2 != 0) {
+                                                        group.childNodes.forEach((data, d) => {
+                                                            if (d % 2 != 0) {
+                                                                if (data.nodeName == "SHORT-NAME") {
+                                                                    editModuleInsItem.name = data.childNodes[0].nodeValue
+                                                                }
+                                                                if (data.nodeName == "CPU-USAGE") {
+                                                                    editModuleInsItem.cpuUsage = data.childNodes[0].nodeValue
+                                                                }
+                                                                if (data.nodeName == "MEM-USAGE") {
+                                                                    editModuleInsItem.memoryUsage = data.childNodes[0].nodeValue
+                                                                }
+                                                            }
+                                                        })
+                                                        editModuleInsItem.id = id
+                                                        const addObjRes = Object.assign({}, editModuleInsItem)
+                                                        editModule.resource.push(addObjRes)
+                                                        id++
+                                                    }
+                                                })
+                                            }
                                         }
-                                        if (osmodul.nodeName == "RESOURCE-GROUPS") {
-                                            osmodul.childNodes.forEach((group, g) => {
-                                                var editModuleInsItem = { name: '', cpuUsage: '', memoryUsage: '', id: '' }
-                                                if (g % 2 != 0) {
-                                                    group.childNodes.forEach((data, d) => {
-                                                        if (d % 2 != 0) {
-                                                            if (data.nodeName == "SHORT-NAME") {
-                                                                editModuleInsItem.name = data.childNodes[0].nodeValue
-                                                            }
-                                                            if (data.nodeName == "CPU-USAGE") {
-                                                                editModuleInsItem.cpuUsage = data.childNodes[0].nodeValue
-                                                            }
-                                                            if (data.nodeName == "MEM-USAGE") {
-                                                                editModuleInsItem.memoryUsage = data.childNodes[0].nodeValue
-                                                            }
-                                                        }
-                                                    })
-                                                    editModuleInsItem.id = id
-                                                    const addObjRes = Object.assign({}, editModuleInsItem)
-                                                    editModule.resource.push(addObjRes)
-                                                    id++
-                                                }
-                                            })
+                                    })
+                                    const addObj = Object.assign({}, editModule)
+                                    module.push(addObj)
+                                } else if (os.nodeName == "UCM-MODULE-INSTANTIATION") {
+                                    os.childNodes.forEach((ucmmodul, s) => {
+                                        if (s % 2 != 0) {
+                                            if (ucmmodul.nodeName == "SHORT-NAME") {
+                                                editUCM.name = ucmmodul.childNodes[0].nodeValue
+                                            }
+                                            if (ucmmodul.nodeName == "IDENTIFIER") {
+                                                editUCM.ident = ucmmodul.childNodes[0].nodeValue
+                                            }
                                         }
-                                    }
-                                })
-                                const addObj = Object.assign({}, editModule)
-                                module.push(addObj)
+                                    })
+                                    editUCM.id = idUCM
+                                    const addObj = Object.assign({}, editUCM)
+                                    ucm.push(addObj)
+                                    idUCM++
+                                } else if (os.nodeName == "IAM-MODULE-INSTANTIATION") {
+                                    os.childNodes.forEach((iammodul, s) => {
+                                        if (s % 2 != 0) {
+                                            if (iammodul.nodeName == "SHORT-NAME") {
+                                                editIAM.name = iammodul.childNodes[0].nodeValue
+                                            }
+                                            if (iammodul.nodeName == "GRANT-REFS") {
+                                                iammodul.childNodes.forEach(data => {
+                                                    var editGrantItem = { grant: null, select: null, id: '' }
+                                                    if (data.nodeName == "GRANT-REF") {
+                                                        editGrantItem.select = data.getAttribute("DEST")
+                                                        editGrantItem.grant = data.childNodes[0].nodeValue
+                                                        editGrantItem.id = idIAM
+                                                        const addObjRes = Object.assign({}, editGrantItem)
+                                                        editIAM.grants.push(addObjRes)
+                                                        idIAM++
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                    const addObj = Object.assign({}, editIAM)
+                                    iam.push(addObj)
+                                }
                             }
                         })
                     }
@@ -1848,8 +2069,11 @@ const mutations = {
                     executable: exelaunch,
                     admin: admin,
                     functiongroup: functionG,
+                    environ: environ,
                     processor: processor,
                     moduleinstant: module,
+                    ucm: ucm,
+                    iam: iam,
                     icon: "mdi-clipboard-outline",
                     validation: false
                 })
@@ -1891,7 +2115,7 @@ const mutations = {
                                             editedItemCC.mtu = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "PATH-MTU-ENABLED") {
-                                            editedItemCC.mtuenable = data.childNodes[0].nodeValue
+                                            editedItemCC.mtuenable = data.childNodes[0].nodeValue.toLowerCase()
                                         }
                                         if (data.nodeName == "PATH-MTU-TIMEOUT") {
                                             editedItemCC.timeout = data.childNodes[0].nodeValue
@@ -2013,9 +2237,10 @@ const mutations = {
                                                                 })
                                                             }
                                                             if (channel.nodeName == "NETWORK-ENDPOINTS") {
+                                                                var idE = 0
                                                                 channel.childNodes.forEach((network, n) => {
                                                                     if (n % 2 != 0) {
-                                                                        var editNetwork = { name: '', domainname: '', ip4address: [], ip6address: [], priority: '' }
+                                                                        var editNetwork = { name: '', domainname: '', ip4address: [], ip6address: [], priority: '', id: '' }
                                                                         network.childNodes.forEach((endpoint, d) => {
                                                                             if (d % 2 != 0) {
                                                                                 if (endpoint.nodeName == "SHORT-NAME") {
@@ -2032,7 +2257,7 @@ const mutations = {
                                                                                         id6 = 0
                                                                                     endpoint.childNodes.forEach((config, f) => {
                                                                                         if (f % 2 != 0) {
-                                                                                            var editIP4Item = { gateway: '', behavior: null, address: '', addresssorce: null, mask: '', id: '' }
+                                                                                            var editIP4Item = { gateway: '', DNSAddr: '', behavior: null, address: '', addresssorce: null, mask: '', id: '', ttl: '' }
                                                                                             var editIP6Item = { priority: '', behavior: null, prelength: '', address: '', addresssource: null, id: '' }
                                                                                             if (config.nodeName == "IPV-4-CONFIGURATION") {
                                                                                                 config.childNodes.forEach((data, a) => {
@@ -2051,6 +2276,12 @@ const mutations = {
                                                                                                         }
                                                                                                         if (data.nodeName == "NETWORK-MASK") {
                                                                                                             editIP4Item.mask = data.childNodes[0].nodeValue
+                                                                                                        }
+                                                                                                        if (data.nodeName == "DNS-SERVER-ADDRESSES") {
+                                                                                                            editIP4Item.DNSAddr = data.childNodes[1].childNodes[0].nodeValue
+                                                                                                        }
+                                                                                                        if (data.nodeName == "TTL") {
+                                                                                                            editIP4Item.ttl = data.childNodes[0].nodeValue
                                                                                                         }
                                                                                                     }
                                                                                                 })
@@ -2089,8 +2320,10 @@ const mutations = {
                                                                                 }
                                                                             }
                                                                         })
+                                                                        editNetwork.id = idE
                                                                         const addObj = Object.assign({}, editNetwork)
                                                                         editChannel.endpoint.push(addObj)
+                                                                        idE++
                                                                     }
                                                                 })
                                                             }
@@ -2155,15 +2388,24 @@ const mutations = {
                         initmode = arrayMode[arrayMode.length - 1]
                     }
                     if (item.nodeName == "MODE-DECLARATIONS") {
+                        var id = 0
                         item.childNodes.forEach((modede, m) => {
                             if (m % 2 != 0) {
+                                var editItem = { name: '', value: '', id: '' }
                                 modede.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
                                         if (data.nodeName == "SHORT-NAME") {
-                                            mode.push(data.childNodes[0].nodeValue)
+                                            editItem.name = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "VALUE") {
+                                            editItem.value = data.childNodes[0].nodeValue
                                         }
                                     }
                                 })
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                mode.push(addObj)
+                                id++
                             }
                         })
                     }
@@ -2196,53 +2438,125 @@ const mutations = {
             // HW-ELEMENT
         var HWElement = payload.xmlDoc.getElementsByTagName('HW-ELEMENT')
         HWElement.forEach(ele => {
+                var Name = '',
+                    id = 0,
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path),
+                    category = null,
+                    attri = []
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "HW-CATEGORY-REFS") {
+                        category = item.childNodes[1].childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "HW-ATTRIBUTE-VALUES") {
+                        item.childNodes.forEach((value, v) => {
+                            if (v % 2 != 0) {
+                                var editAttributeItem = { attr: null, vt: null, v: '', id: '' }
+                                value.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "HW-ATTRIBUTE-DEF-REF") {
+                                            editAttributeItem.attr = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "VT") {
+                                            editAttributeItem.vt = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "V") {
+                                            editAttributeItem.v = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                editAttributeItem.id = id
+                                const addObj = Object.assign({}, editAttributeItem)
+                                attri.push(addObj)
+                                id++
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+
+                this.commit('addElementHWElement', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    category: category,
+                    attribute: attri,
+                    icon: "mdi-clipboard-outline",
+                    validation: false
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.HWElement_str })
+                EventBus.$emit('add-element', constant.Machines_str)
+                EventBus.$emit('add-element', constant.HWElement_str)
+            })
+            // HW-Category
+        var HWCategory = payload.xmlDoc.getElementsByTagName('HW-CATEGORY')
+        HWCategory.forEach(ele => {
             var Name = '',
                 id = 0,
                 path = '',
                 strPath = getEditPath(ele.parentNode.parentNode, path),
-                category = null,
-                attri = []
+                attribute = []
             ele.childNodes.forEach(item => {
                 if (item.nodeName == "SHORT-NAME") {
                     Name = item.childNodes[0].nodeValue
                 }
-                if (item.nodeName == "HW-CATEGORY-REFS") {
-                    category = item.childNodes[1].childNodes[0].nodeValue
-                }
-                if (item.nodeName == "HW-ATTRIBUTE-VALUES") {
+                if (item.nodeName == "HW-ATTRIBUTE-DEFS") {
                     item.childNodes.forEach((value, v) => {
                         if (v % 2 != 0) {
-                            var editAttributeItem = { attr: null, vt: '', v: '', id: '' }
-                            value.childNodes.forEach((data, d) => {
-                                if (d % 2 != 0) {
-                                    if (data.nodeName == "HW-ATTRIBUTE-DEF-REF") {
-                                        editAttributeItem.attr = data.childNodes[0].nodeValue
+                            var editItem = { name: '', category: '', isrequired: null, literal: '', id: '' }
+                            value.childNodes.forEach((data, a) => {
+                                if (a % 2 != 0) {
+                                    console.log(data)
+                                    if (data.nodeName == "SHORT-NAME") {
+                                        editItem.name = data.childNodes[0].nodeValue
                                     }
-                                    if (data.nodeName == "VT") {
-                                        editAttributeItem.vt = data.childNodes[0].nodeValue
+                                    if (data.nodeName == "CATEGORY") {
+                                        editItem.category = data.childNodes[0].nodeValue
                                     }
-                                    if (data.nodeName == "V") {
-                                        editAttributeItem.v = data.childNodes[0].nodeValue
+                                    if (data.nodeName == "IS-REQUIRED") {
+                                        editItem.isrequired = data.childNodes[0].nodeValue.toLowerCase()
+                                    }
+                                    if (data.nodeName == "HW-ATTRIBUTE-LITERALS") {
+                                        var editStr = ''
+                                        data.childNodes.forEach((liter, l) => {
+                                            if (l % 2 != 0) {
+                                                editStr += liter.childNodes[1].childNodes[0].nodeValue + '/'
+                                            }
+                                        })
+                                        editItem.literal = editStr
                                     }
                                 }
                             })
-                            editAttributeItem.id = id
-                            const addObj = Object.assign({}, editAttributeItem)
-                            attri.push(addObj)
+                            editItem.id = id
+                            const addObj = Object.assign({}, editItem)
+                            attribute.push(addObj)
                             id++
                         }
                     })
                 }
             })
             var UUID = ele.getAttribute("UUID")
-            var idxEle = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(data => data.uuid === UUID)
+            var idxEle = state.SAHLProject[state.openProjectIndex].Machine.HWCategory.findIndex(data => data.uuid === UUID)
             if (UUID == null || idxEle != -1) {
                 UUID = uuid.v1()
             }
             const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
             const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-            this.commit('addElementHWElement', {
+            this.commit('addElementHWCategory', {
                 name: Name,
                 input: true,
                 path: strPath,
@@ -2250,45 +2564,60 @@ const mutations = {
                 top: elementY,
                 left: elementX,
                 zindex: 2,
-                category: category,
-                attribute: attri,
+                attribute: attribute,
                 icon: "mdi-clipboard-outline",
                 validation: false
             })
-            state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.HWElement_str })
+            state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.HWCategory_str })
             EventBus.$emit('add-element', constant.Machines_str)
-            EventBus.$emit('add-element', constant.HWElement_str)
+            EventBus.$emit('add-element', constant.HWCategory_str)
         })
 
         // PROCESS-TO-MACHINE-MAPPING-SET
         var processtoMachine = payload.xmlDoc.getElementsByTagName('PROCESS-TO-MACHINE-MAPPING-SET')
         processtoMachine.forEach(ele => {
                 var Name = '',
-                    ptmmname = '',
                     path = '',
                     strPath = getEditPath(ele.parentNode.parentNode, path),
-                    machine = null,
-                    process = null
+                    mapping = [],
+                    id = 0
                 ele.childNodes.forEach(item => {
                     if (item.nodeName == "SHORT-NAME") {
                         Name = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "PROCESS-TO-MACHINE-MAPPINGS") {
-                        item.childNodes.forEach((mapping, m) => {
+                        item.childNodes.forEach((map, m) => {
                             if (m % 2 != 0) {
-                                mapping.childNodes.forEach((data, d) => {
+                                const editItem = { name: '', ptmmMachine: null, ptmmProcess: null, runon: [], id: '' }
+                                map.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
                                         if (data.nodeName == "SHORT-NAME") {
-                                            ptmmname = data.childNodes[0].nodeValue
+                                            editItem.name = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "MACHINE-REF") {
-                                            machine = data.childNodes[0].nodeValue
+                                            editItem.ptmmMachine = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "PROCESS-REF") {
-                                            process = data.childNodes[0].nodeValue
+                                            editItem.ptmmProcess = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "SHALL-RUN-ON-REFS") {
+                                            const editRunON = { shall: null, id: '' }
+                                            var idR = 0
+                                            data.nodeName.forEach((shall, s) => {
+                                                if (s % 2 != 0) {
+                                                    if (shall.nodeName == "HALL-NOT-RUN-ON-REF") {
+                                                        editRunON.shall = shall.childNodes[0].nodeValue
+                                                        editRunON.id = idR
+                                                        editItem.runon.push(editRunON)
+                                                    }
+                                                }
+                                            })
                                         }
                                     }
                                 })
+                                editItem.id = id
+                                mapping.push(editItem)
+                                id++
                             }
                         })
                     }
@@ -2311,9 +2640,7 @@ const mutations = {
                     zindex: 2,
                     icon: "mdi-clipboard-outline",
                     validation: false,
-                    ptmmname: ptmmname,
-                    ptmmMachine: machine,
-                    ptmmProcess: process,
+                    mapping: mapping,
                 })
                 state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ProcesstoMachineMapping_str })
                 EventBus.$emit('add-element', constant.AdaptiveApplication_str)
@@ -2339,7 +2666,7 @@ const mutations = {
                         item.childNodes.forEach((port, p) => {
                             if (p % 2 != 0) {
                                 if (port.nodeName == "P-PORT-PROTOTYPE") {
-                                    var editPPortItem = { name: '', selectI: null, interface: null, queued: [], field: [], id: '' }
+                                    var editPPortItem = { name: '', selectI: null, interface: null, queued: [], field: [], server: [], id: '' }
                                     port.childNodes.forEach((data, d) => {
                                         if (d % 2 != 0) {
                                             if (data.nodeName == "SHORT-NAME") {
@@ -2387,6 +2714,21 @@ const mutations = {
                                                             const addObj = Object.assign({}, editPFSC)
                                                             editPPortItem.field.push(addObj)
                                                             idPF++
+                                                        }
+                                                        if (pro.nodeName == "SERVER-COM-SPEC") {
+                                                            var editSC = { oper: null, id: '' },
+                                                                idPSC = 0
+                                                            pro.childNodes.forEach((fie, q) => {
+                                                                if (q % 2 != 0) {
+                                                                    if (fie.nodeName == "OPERATION-REF") {
+                                                                        editSC.oper = fie.childNodes[0].nodeValue
+                                                                    }
+                                                                }
+                                                            })
+                                                            editSC.id = idPSC
+                                                            const addObj = Object.assign({}, editSC)
+                                                            editPPortItem.server.push(addObj)
+                                                            idPSC++
                                                         }
                                                     }
                                                 })
@@ -2471,7 +2813,7 @@ const mutations = {
                                                             idRQ++
                                                         }
                                                         if (pro.nodeName == "CLIENT-COM-SPEC") {
-                                                            var editRCC = { operation: null, clientCapa: null, id: '' },
+                                                            var editRCC = { operation: null, clientCapa: null, getter: null, setter: null, id: '' },
                                                                 idRC = 0
                                                             pro.childNodes.forEach((cl, q) => {
                                                                 if (q % 2 != 0) {
@@ -2480,6 +2822,12 @@ const mutations = {
                                                                     }
                                                                     if (cl.nodeName == "CLIENT-CAPABILITY") {
                                                                         editRCC.clientCapa = cl.childNodes[0].nodeValue
+                                                                    }
+                                                                    if (cl.nodeName == "GETTER-REF") {
+                                                                        editRCC.getter = cl.childNodes[0].nodeValue
+                                                                    }
+                                                                    if (cl.nodeName == "SETTER-REF") {
+                                                                        editRCC.setter = cl.childNodes[0].nodeValue
                                                                     }
                                                                 }
                                                             })
@@ -2535,6 +2883,13 @@ const mutations = {
                     design = null,
                     determin = null,
                     exe = null,
+                    logLevel = null,
+                    logPath = '',
+                    logProDesc = '',
+                    logProID = '',
+                    restart = '',
+                    preMapping = null,
+                    logMode = [],
                     proname = '',
                     type = null,
                     path = '',
@@ -2552,6 +2907,31 @@ const mutations = {
                     }
                     if (item.nodeName == "EXECUTABLE-REF") {
                         exe = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "LOG-TRACE-DEFAULT-LOG-LEVEL") {
+                        logLevel = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "LOG-TRACE-FILE-PATH") {
+                        logPath = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "LOG-TRACE-LOG-MODES") {
+                        item.childNodes.forEach(mode => {
+                            if (mode.nodeName == "LOG-TRACE-LOG-MODE") {
+                                logMode.push(mode.childNodes[0].nodeValue)
+                            }
+                        })
+                    }
+                    if (item.nodeName == "LOG-TRACE-PROCESS-DESC") {
+                        logProDesc = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "LOG-TRACE-PROCESS-ID") {
+                        logProID = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "NUMBER-OF-RESTART-ATTEMPTS") {
+                        restart = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "PRE-MAPPING") {
+                        preMapping = item.childNodes[0].nodeValue.toLowerCase()
                     }
                     if (item.nodeName == "PROCESS-STATE-MACHINE") {
                         item.childNodes.forEach(machine => {
@@ -2656,6 +3036,13 @@ const mutations = {
                     prodesign: design,
                     determin: determin,
                     execut: exe,
+                    logLevel: logLevel,
+                    logPath: logPath,
+                    logProDesc: logProDesc,
+                    logProID: logProID,
+                    restart: restart,
+                    preMapping: preMapping,
+                    logMode: logMode,
                     machinname: proname,
                     machinetype: type,
                     dependent: config
@@ -2860,9 +3247,10 @@ const mutations = {
                     }
                     if (item.nodeName == "STARTUP-CONFIGS") {
                         var idS = 0,
-                            idO = 0
+                            idO = 0,
+                            idE = 0
                         item.childNodes.forEach((eve, e) => {
-                            var editItem = { configname: '', policy: null, priority: '', entertimeout: '', exittimeout: '', option: [], id: '' }
+                            var editItem = { configname: '', policy: null, priority: '', entertimeout: '', exittimeout: '', option: [], environ: [], id: '' }
                             if (e % 2 != 0) {
                                 eve.childNodes.forEach((data, d) => {
                                     if (d % 2 != 0) {
@@ -2887,7 +3275,7 @@ const mutations = {
                                         }
                                         if (data.nodeName == "STARTUP-OPTIONS") {
                                             data.childNodes.forEach((ops, v) => {
-                                                var editOption = { arg: '', kind: null, id: '' }
+                                                var editOption = { arg: '', kind: null, name: '', id: '' }
                                                 if (v % 2 != 0) {
                                                     ops.childNodes.forEach(op => {
                                                         if (op.nodeName == "OPTION-ARGUMENT") {
@@ -2896,11 +3284,33 @@ const mutations = {
                                                         if (op.nodeName == "OPTION-KIND") {
                                                             editOption.kind = op.childNodes[0].nodeValue
                                                         }
+                                                        if (op.nodeName == "OPTION-NAME") {
+                                                            editOption.name = op.childNodes[0].nodeValue
+                                                        }
                                                     })
                                                     editOption.id = idO
                                                     const addObjObj = Object.assign({}, editOption)
                                                     editItem.option.push(addObjObj)
                                                     idO++
+                                                }
+                                            })
+                                        }
+                                        if (data.nodeName == "ENVIRONMENT-VARIABLES") {
+                                            data.childNodes.forEach((env, v) => {
+                                                var editEnviron = { key: '', value: '', id: '' }
+                                                if (v % 2 != 0) {
+                                                    env.childNodes.forEach(op => {
+                                                        if (op.nodeName == "KEY") {
+                                                            editEnviron.key = op.childNodes[0].nodeValue
+                                                        }
+                                                        if (op.nodeName == "VALUE") {
+                                                            editEnviron.value = op.childNodes[0].nodeValue
+                                                        }
+                                                    })
+                                                    editEnviron.id = idE
+                                                    const addObjObj = Object.assign({}, editEnviron)
+                                                    editItem.environ.push(addObjObj)
+                                                    idE++
                                                 }
                                             })
                                         }
@@ -3298,7 +3708,7 @@ const mutations = {
                     max = '',
                     min = '',
                     namespace = '',
-                    isservice = '',
+                    isservice = null,
                     path = '',
                     strPath = getEditPath(ele.parentNode.parentNode, path),
                     events = [],
@@ -3323,7 +3733,7 @@ const mutations = {
                         })
                     }
                     if (item.nodeName == "IS-SERVICE") {
-                        isservice = item.childNodes[0].nodeValue
+                        isservice = item.childNodes[0].nodeValue.toLowerCase()
                     }
                     if (item.nodeName == "MAJOR-VERSION") {
                         max = item.childNodes[0].nodeValue
@@ -3367,13 +3777,13 @@ const mutations = {
                                             editField.type = data.childNodes[0].nodeValue
                                         }
                                         if (data.nodeName == "HAS-GETTER") {
-                                            editField.getter = data.childNodes[0].nodeValue
+                                            editField.getter = data.childNodes[0].nodeValue.toLowerCase()
                                         }
                                         if (data.nodeName == "HAS-SETTER") {
-                                            editField.setter = data.childNodes[0].nodeValue
+                                            editField.setter = data.childNodes[0].nodeValue.toLowerCase()
                                         }
                                         if (data.nodeName == "HAS-NOTIFIER") {
-                                            editField.notifier = data.childNodes[0].nodeValue
+                                            editField.notifier = data.childNodes[0].nodeValue.toLowerCase()
                                         }
                                     }
                                 })
@@ -3423,7 +3833,7 @@ const mutations = {
                                             })
                                         }
                                         if (data.nodeName == "FIRE-AND-FORGET") {
-                                            editedItem.fireforget = data.childNodes[0].nodeValue
+                                            editedItem.fireforget = data.childNodes[0].nodeValue.toLowerCase()
                                         }
                                         if (data.nodeName == "POSSIBLE-AP-ERROR-SET-REFS") {
                                             data.childNodes.forEach((err, e) => {
@@ -3831,6 +4241,7 @@ const mutations = {
                     strPath = getEditPath(ele.parentNode.parentNode, path),
                     selectPort = null,
                     porttype = null,
+                    context = null,
                     process = null,
                     selectServiceIns = null,
                     serviceIns = null
@@ -3840,8 +4251,17 @@ const mutations = {
                         Name = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "PORT-PROTOTYPE-IREF") {
-                        selectPort = item.childNodes[1].getAttribute("DEST")
-                        porttype = item.childNodes[1].childNodes[0].nodeValue
+                        item.childNodes.forEach((port, p) => {
+                            if (p % 2 != 0) {
+                                if (port.nodeName == "CONTEXT-ROOT-SW-COMPONENT-PROTOTYPE-REF") {
+                                    context = port.childNodes[0].nodeValue
+                                }
+                                if (port.nodeName == "TARGET-PORT-PROTOTYPE-REF") {
+                                    selectPort = port.getAttribute("DEST")
+                                    porttype = port.childNodes[0].nodeValue
+                                }
+                            }
+                        })
                     }
                     if (item.nodeName == "PROCESS-REF") {
                         process = item.childNodes[0].nodeValue
@@ -3871,6 +4291,7 @@ const mutations = {
                     validation: false,
                     selectPort: selectPort,
                     porttype: porttype,
+                    context: context,
                     process: process,
                     selectServiceIns: selectServiceIns,
                     serviceIns: serviceIns,
@@ -3892,7 +4313,9 @@ const mutations = {
                     clientref = null,
                     ver = null,
                     methodP = [],
-                    requiredevent = []
+                    requiredevent = [],
+                    E2EEvent = [],
+                    E2EMethod = []
                 ele.childNodes.forEach(item => {
                     if (item.nodeName == "SHORT-NAME") {
                         Name = item.childNodes[0].nodeValue
@@ -3956,6 +4379,83 @@ const mutations = {
                             }
                         })
                     }
+                    if (item.nodeName == "E-2-E-EVENT-PROTECTION-PROPSS") {
+                        var idE2EE = 0
+                        item.childNodes.forEach((prop, p) => {
+                            var editE2EEItem = { name: '', dataIds: '', dataLength: '', period: '', e2e: null, event: null, max: '', min: '', id: '' }
+                            if (p % 2 != 0) {
+                                prop.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            editE2EEItem.name = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "DATA-IDS") {
+                                            editE2EEItem.dataIds = data.childNodes[1].childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "DATA-LENGTH") {
+                                            editE2EEItem.dataLength = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "DATA-UPDATE-PERIOD") {
+                                            editE2EEItem.period = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "E-2-E-PROFILE-CONFIGURATION-REF") {
+                                            editE2EEItem.e2e = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "EVENT-REF") {
+                                            editE2EEItem.event = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MAX-DATA-LENGTH") {
+                                            editE2EEItem.max = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MIN-DATA-LENGTH") {
+                                            editE2EEItem.min = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                editE2EEItem.id = idE2EE
+                                const addObj = Object.assign({}, editE2EEItem)
+                                E2EEvent.push(addObj)
+                                idE2EE++
+                            }
+                        })
+                    }
+                    if (item.nodeName == "E-2-E-METHOD-PROTECTION-PROPSS") {
+                        var idE2EM = 0
+                        item.childNodes.forEach((prop, p) => {
+                            var editE2EMItem = { dataIds: '', dataLength: '', period: '', e2e: null, method: null, max: '', min: '', id: '' }
+                            if (p % 2 != 0) {
+                                prop.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "DATA-IDS") {
+                                            editE2EMItem.dataIds = data.childNodes[1].childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "DATA-LENGTH") {
+                                            editE2EMItem.dataLength = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "DATA-UPDATE-PERIOD") {
+                                            editE2EMItem.period = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "E-2-E-PROFILE-CONFIGURATION-REF") {
+                                            editE2EMItem.e2e = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "METHOD-REF") {
+                                            editE2EMItem.method = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MAX-DATA-LENGTH") {
+                                            editE2EMItem.max = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MIN-DATA-LENGTH") {
+                                            editE2EMItem.min = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                editE2EMItem.id = idE2EM
+                                const addObj = Object.assign({}, editE2EMItem)
+                                E2EMethod.push(addObj)
+                                idE2EM++
+                            }
+                        })
+                    }
                 })
                 var UUID = ele.getAttribute("UUID")
                 var idxEle = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === UUID)
@@ -3981,7 +4481,9 @@ const mutations = {
                     clientref: clientref,
                     ver: ver,
                     method: methodP,
-                    requiredevent: requiredevent
+                    requiredevent: requiredevent,
+                    E2EEvent: E2EEvent,
+                    E2EMethod: E2EMethod
                 })
                 state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.RequiredSomeIP_str })
                 EventBus.$emit('add-element', constant.Service_str)
@@ -3995,11 +4497,15 @@ const mutations = {
                     deployref = null,
                     someips = null,
                     id = '',
+                    loadPriority = '',
+                    loadWeight = '',
                     path = '',
                     strPath = getEditPath(ele.parentNode.parentNode, path),
                     eventP = [],
                     method = [],
-                    eventG = []
+                    eventG = [],
+                    E2EEvent = [],
+                    E2EMethod = []
 
                 ele.childNodes.forEach(item => {
                     if (item.nodeName == "SHORT-NAME") {
@@ -4089,6 +4595,83 @@ const mutations = {
                             }
                         })
                     }
+                    if (item.nodeName == "E-2-E-EVENT-PROTECTION-PROPSS") {
+                        var idE2EE = 0
+                        item.childNodes.forEach((prop, p) => {
+                            var editE2EEItem = { name: '', dataIds: '', dataLength: '', period: '', e2e: null, event: null, max: '', min: '', id: '' }
+                            if (p % 2 != 0) {
+                                prop.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            editE2EEItem.name = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "DATA-IDS") {
+                                            editE2EEItem.dataIds = data.childNodes[1].childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "DATA-LENGTH") {
+                                            editE2EEItem.dataLength = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "DATA-UPDATE-PERIOD") {
+                                            editE2EEItem.period = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "E-2-E-PROFILE-CONFIGURATION-REF") {
+                                            editE2EEItem.e2e = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "EVENT-REF") {
+                                            editE2EEItem.event = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MAX-DATA-LENGTH") {
+                                            editE2EEItem.max = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MIN-DATA-LENGTH") {
+                                            editE2EEItem.min = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                editE2EEItem.id = idE2EE
+                                const addObj = Object.assign({}, editE2EEItem)
+                                E2EEvent.push(addObj)
+                                idE2EE++
+                            }
+                        })
+                    }
+                    if (item.nodeName == "E-2-E-METHOD-PROTECTION-PROPSS") {
+                        var idE2EM = 0
+                        item.childNodes.forEach((prop, p) => {
+                            var editE2EMItem = { dataIds: '', dataLength: '', period: '', e2e: null, method: null, max: '', min: '', id: '' }
+                            if (p % 2 != 0) {
+                                prop.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "DATA-IDS") {
+                                            editE2EMItem.dataIds = data.childNodes[1].childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "DATA-LENGTH") {
+                                            editE2EMItem.dataLength = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "DATA-UPDATE-PERIOD") {
+                                            editE2EMItem.period = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "E-2-E-PROFILE-CONFIGURATION-REF") {
+                                            editE2EMItem.e2e = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "METHOD-REF") {
+                                            editE2EMItem.method = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MAX-DATA-LENGTH") {
+                                            editE2EMItem.max = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MIN-DATA-LENGTH") {
+                                            editE2EMItem.min = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                editE2EMItem.id = idE2EM
+                                const addObj = Object.assign({}, editE2EMItem)
+                                E2EMethod.push(addObj)
+                                idE2EM++
+                            }
+                        })
+                    }
                 })
                 var UUID = ele.getAttribute("UUID")
                 var idxEle = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === UUID)
@@ -4111,14 +4694,226 @@ const mutations = {
                     deployref: deployref,
                     someips: someips,
                     id: id,
+                    loadPriority: loadPriority,
+                    loadWeight: loadWeight,
                     eventP: eventP,
                     method: method,
-                    eventG: eventG
+                    eventG: eventG,
+                    E2EEvent: E2EEvent,
+                    E2EMethod: E2EMethod
                 })
                 state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ProvidedSomeIP_str })
                 EventBus.$emit('add-element', constant.Service_str)
                 EventBus.$emit('add-element', constant.ServiceInstances_str)
                 EventBus.$emit('add-element', constant.ProvidedSomeIP_str)
+            })
+            // E-2-E-PROFILE-CONFIGURATION-SET
+        var E2E = payload.xmlDoc.getElementsByTagName('E-2-E-PROFILE-CONFIGURATION-SET')
+        E2E.forEach(ele => {
+                var Name = '',
+                    profile = [],
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "E-2-E-PROFILE-CONFIGURATIONS") {
+                        var id = 0
+                        item.childNodes.forEach((eve, e) => {
+                            var editItem = {
+                                configName: '',
+                                invalid: null,
+                                IDMode: null,
+                                MaxConter: '',
+                                errorInit: '',
+                                errorInvalid: '',
+                                errorValid: '',
+                                okInit: '',
+                                okInvalid: '',
+                                okValid: '',
+                                profileName: '',
+                                sizeInit: '',
+                                sizeInvalid: '',
+                                sizeValid: '',
+                                id: ''
+                            }
+                            if (e % 2 != 0) {
+                                eve.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            editItem.configName = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "CLEAR-FROM-VALID-TO-INVALID") {
+                                            editItem.invalid = data.childNodes[0].nodeValue.toLowerCase()
+                                        }
+                                        if (data.nodeName == "DATA-ID-MODE") {
+                                            editItem.IDMode = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MAX-DELTA-COUNTER") {
+                                            editItem.MaxConter = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MAX-ERROR-STATE-INIT") {
+                                            editItem.errorInit = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MAX-ERROR-STATE-INVALID") {
+                                            editItem.errorInvalid = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MAX-ERROR-STATE-VALID") {
+                                            editItem.errorValid = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MIN-OK-STATE-INIT") {
+                                            editItem.okInit = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MIN-OK-STATE-INVALID") {
+                                            editItem.okInvalid = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "MIN-OK-STATE-VALID") {
+                                            editItem.okValid = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "PROFILE-NAME") {
+                                            editItem.profileName = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "WINDOW-SIZE-INIT") {
+                                            editItem.sizeInit = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "WINDOW-SIZE-INVALID") {
+                                            editItem.sizeInvalid = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "WINDOW-SIZE-VALID") {
+                                            editItem.sizeValid = data.childNodes[0].nodeValue
+                                        }
+                                    }
+                                })
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                profile.push(addObj)
+                                id++
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+
+                this.commit('addElementE2EProfileConfig', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    profile: profile,
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.E2EProfileConfig_str })
+                EventBus.$emit('add-element', constant.Service_str)
+                EventBus.$emit('add-element', constant.ServiceInstances_str)
+                EventBus.$emit('add-element', constant.E2EProfileConfig_str)
+            })
+            // SDG-DEF
+        var sdg = payload.xmlDoc.getElementsByTagName('SDG-DEF')
+        sdg.forEach(ele => {
+                var Name = '',
+                    sdgClass = [],
+                    path = '',
+                    strPath = getEditPath(ele.parentNode.parentNode, path)
+                ele.childNodes.forEach(item => {
+                    if (item.nodeName == "SHORT-NAME") {
+                        Name = item.childNodes[0].nodeValue
+                    }
+                    if (item.nodeName == "SDG-CLASSES") {
+                        var id = 0
+                        item.childNodes.forEach((eve, e) => {
+                            var editItem = {
+                                name: '',
+                                gid: '',
+                                metaClass: '',
+                                attriName: '',
+                                lowMulti: '',
+                                upMulti: '',
+                                atrriGid: '',
+                                pattern: '',
+                                id: ''
+                            }
+                            if (e % 2 != 0) {
+                                eve.childNodes.forEach((data, d) => {
+                                    if (d % 2 != 0) {
+                                        if (data.nodeName == "SHORT-NAME") {
+                                            editItem.name = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "GID") {
+                                            editItem.gid = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "EXTENDS-META-CLASS") {
+                                            editItem.metaClass = data.childNodes[0].nodeValue
+                                        }
+                                        if (data.nodeName == "ATTRIBUTES") {
+                                            data.childNodes.forEach((attr, a) => {
+                                                if (a % 2 != 0) {
+                                                    attr.childNodes.forEach((sdg, s) => {
+                                                        if (s % 2 != 0) {
+                                                            if (sdg.nodeName == "SHORT-NAME") {
+                                                                editItem.attriName = sdg.childNodes[0].nodeValue
+                                                            }
+                                                            if (sdg.nodeName == "LOWER-MULTIPLICITY") {
+                                                                editItem.lowMulti = sdg.childNodes[0].nodeValue
+                                                            }
+                                                            if (sdg.nodeName == "UPPER-MULTIPLICITY") {
+                                                                editItem.upMulti = sdg.childNodes[0].nodeValue
+                                                            }
+                                                            if (sdg.nodeName == "GID") {
+                                                                editItem.atrriGid = sdg.childNodes[0].nodeValue
+                                                            }
+                                                            if (sdg.nodeName == "PATTERN") {
+                                                                editItem.pattern = sdg.childNodes[0].nodeValue
+                                                            }
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    }
+                                })
+                                editItem.id = id
+                                const addObj = Object.assign({}, editItem)
+                                sdgClass.push(addObj)
+                                id++
+                            }
+                        })
+                    }
+                })
+                var UUID = ele.getAttribute("UUID")
+                var idxEle = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(data => data.uuid === UUID)
+                if (UUID == null || idxEle != -1) {
+                    UUID = uuid.v1()
+                }
+                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+
+                this.commit('addElementSDG_DEF', {
+                    name: Name,
+                    input: true,
+                    path: strPath,
+                    uuid: UUID,
+                    top: elementY,
+                    left: elementX,
+                    zindex: 2,
+                    icon: "mdi-clipboard-outline",
+                    validation: false,
+                    sdgClass: sdgClass,
+                })
+                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SDG_DEF_str })
+                EventBus.$emit('add-element', constant.Service_str)
+                EventBus.$emit('add-element', constant.ServiceInstances_str)
+                EventBus.$emit('add-element', constant.SDG_DEF_str)
             })
             // AP-APPLICATION-ERROR
         var error = payload.xmlDoc.getElementsByTagName('AP-APPLICATION-ERROR')
@@ -5053,7 +5848,7 @@ const mutations = {
         phmRecovery.forEach(ele => {
                 var Name = '',
                     reconame = '',
-                    faf = '',
+                    faf = null,
                     path = '',
                     strPath = getEditPath(ele.parentNode.parentNode, path)
 
@@ -5067,7 +5862,7 @@ const mutations = {
                                 reconame = data.childNodes[0].nodeValue
                             }
                             if (data.nodeName == "FIRE-AND-FORGET") {
-                                faf = data.childNodes[0].nodeValue
+                                faf = data.childNodes[0].nodeValue.toLowerCase()
                             }
                         })
                     }
@@ -5702,7 +6497,7 @@ const mutations = {
                         compSWPsize = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "IS-DELTA-PACKAGE") {
-                        deltaPakage = item.childNodes[0].nodeValue
+                        deltaPakage = item.childNodes[0].nodeValue.toLowerCase()
                     }
                     if (item.nodeName == "MAXIMUM-SUPPORTED-UCM-VERSION") {
                         maximunVer = item.childNodes[0].nodeValue
@@ -5714,10 +6509,10 @@ const mutations = {
                         id = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "POST-VERIFICATION-REBOOT") {
-                        postReboot = item.childNodes[0].nodeValue
+                        postReboot = item.childNodes[0].nodeValue.toLowerCase()
                     }
                     if (item.nodeName == "PRE-ACTIVATION-REBOOT") {
-                        preReboot = item.childNodes[0].nodeValue
+                        preReboot = item.childNodes[0].nodeValue.toLowerCase()
                     }
                     if (item.nodeName == "SOFTWARE-CLUSTER-REF") {
                         swcluster = item.childNodes[0].nodeValue
@@ -5764,153 +6559,13 @@ const mutations = {
             // VEHICLE-PACKAGE
         var UCMVehicle = payload.xmlDoc.getElementsByTagName('VEHICLE-PACKAGE')
         UCMVehicle.forEach(ele => {
-                var Name = '',
-                    id = 0,
-                    reposi = '',
-                    sdgs = [],
-                    driver = [],
-                    rollout = [],
-                    ucms = [],
-                    path = '',
-                    strPath = getEditPath(ele.parentNode.parentNode, path)
-
-                ele.childNodes.forEach(item => {
-                    if (item.nodeName == "SHORT-NAME") {
-                        Name = item.childNodes[0].nodeValue
-                    }
-                    if (item.nodeName == "REPOSITORY") {
-                        reposi = item.childNodes[0].nodeValue
-                    }
-                    if (item.nodeName == "ADMIN-DATA") {
-                        id = 0
-                        item.childNodes.forEach((stat, m) => {
-                            var editItem = { sd: '', id: '' }
-                            if (m % 2 != 0) {
-                                stat.childNodes.forEach((data, d) => {
-                                    if (d % 2 != 0) {
-                                        if (data.nodeName == "SDG") {
-                                            data.childNodes.forEach((sdg, s) => {
-                                                if (s % 2 != 0) {
-                                                    editItem = { sd: '', id: '' }
-                                                    if (sdg.nodeName == "SD") {
-                                                        editItem.sd = sdg.childNodes[0].nodeValue
-                                                        editItem.id = id
-                                                        const addObj = Object.assign({}, editItem)
-                                                        sdgs.push(addObj)
-                                                        id++
-                                                    }
-                                                }
-                                            })
-                                        }
-                                    }
-                                })
-                            }
-                        })
-                    }
-                    if (item.nodeName == "DRIVER-NOTIFICATIONS") {
-                        id = 0
-                        item.childNodes.forEach((stat, m) => {
-                            var editItem = { appro: null, notify: null, id: '' }
-                            if (m % 2 != 0) {
-                                stat.childNodes.forEach((data, d) => {
-                                    if (d % 2 != 0) {
-                                        if (data.nodeName == "APPROVAL-REQUIRED") {
-                                            editItem.appro = data.childNodes[0].nodeValue
-                                        }
-                                        if (data.nodeName == "NOTIFICATION-STATE") {
-                                            editItem.notify = data.childNodes[0].nodeValue
-                                        }
-                                    }
-                                })
-                                editItem.id = id
-                                const addObj = Object.assign({}, editItem)
-                                driver.push(addObj)
-                                id++
-                            }
-                        })
-                    }
-                    if (item.nodeName == "ROLLOUT-QUALIFICATIONS") {
-                        id = 0
-                        item.childNodes.forEach((stat, m) => {
-                            var editItem = { name: '', policy: '', id: '' }
-                            if (m % 2 != 0) {
-                                stat.childNodes.forEach((data, d) => {
-                                    if (d % 2 != 0) {
-                                        if (data.nodeName == "SHORT-NAME") {
-                                            editItem.name = data.childNodes[0].nodeValue
-                                        }
-                                        if (data.nodeName == "SAFETY-POLICY") {
-                                            editItem.policy = data.childNodes[0].nodeValue
-                                        }
-                                    }
-                                })
-                                editItem.id = id
-                                const addObj = Object.assign({}, editItem)
-                                rollout.push(addObj)
-                                id++
-                            }
-                        })
-                    }
-                    if (item.nodeName == "UCMS") {
-                        id = 0
-                        item.childNodes.forEach((stat, m) => {
-                            var editItem = { name: '', ident: '', module: null, id: '' }
-                            if (m % 2 != 0) {
-                                stat.childNodes.forEach((data, d) => {
-                                    if (d % 2 != 0) {
-                                        if (data.nodeName == "SHORT-NAME") {
-                                            editItem.name = data.childNodes[0].nodeValue
-                                        }
-                                        if (data.nodeName == "IDENTIFIER") {
-                                            editItem.ident = data.childNodes[0].nodeValue
-                                        }
-                                        if (data.nodeName == "UCM-MODULE-INSTANTIATION-REF") {
-                                            editItem.module = data.childNodes[0].nodeValue
-                                        }
-                                    }
-                                })
-                                editItem.id = id
-                                const addObj = Object.assign({}, editItem)
-                                ucms.push(addObj)
-                                id++
-                            }
-                        })
-                    }
-                })
-                var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(data => data.uuid === UUID)
-                if (UUID == null || idxEle != -1) {
-                    UUID = uuid.v1()
-                }
-                const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-                const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementVehiclePackage', {
-                    name: Name,
-                    input: true,
-                    path: strPath,
-                    uuid: UUID,
-                    top: elementY,
-                    left: elementX,
-                    zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
-                    reposi: reposi,
-                    sdgs: sdgs,
-                    driver: driver,
-                    rollout: rollout,
-                    ucms: ucms
-                })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.VehiclePackage_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.UCM_str)
-                EventBus.$emit('add-element', constant.VehiclePackage_str)
-            })
-            // UCM-MODULE-INSTANTIATION
-        var UCMModule = payload.xmlDoc.getElementsByTagName('UCM-MODULE-INSTANTIATION')
-        UCMModule.forEach(ele => {
             var Name = '',
-                ident = '',
+                id = 0,
+                reposi = '',
+                sdgs = [],
+                driver = [],
+                rollout = [],
+                ucms = [],
                 path = '',
                 strPath = getEditPath(ele.parentNode.parentNode, path)
 
@@ -5918,19 +6573,114 @@ const mutations = {
                 if (item.nodeName == "SHORT-NAME") {
                     Name = item.childNodes[0].nodeValue
                 }
-                if (item.nodeName == "IDENTIFIER") {
-                    ident = item.childNodes[0].nodeValue
+                if (item.nodeName == "REPOSITORY") {
+                    reposi = item.childNodes[0].nodeValue
+                }
+                if (item.nodeName == "ADMIN-DATA") {
+                    id = 0
+                    item.childNodes.forEach((stat, m) => {
+                        var editItem = { sd: '', id: '' }
+                        if (m % 2 != 0) {
+                            stat.childNodes.forEach((data, d) => {
+                                if (d % 2 != 0) {
+                                    if (data.nodeName == "SDG") {
+                                        data.childNodes.forEach((sdg, s) => {
+                                            if (s % 2 != 0) {
+                                                editItem = { sd: '', id: '' }
+                                                if (sdg.nodeName == "SD") {
+                                                    editItem.sd = sdg.childNodes[0].nodeValue
+                                                    editItem.id = id
+                                                    const addObj = Object.assign({}, editItem)
+                                                    sdgs.push(addObj)
+                                                    id++
+                                                }
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    })
+                }
+                if (item.nodeName == "DRIVER-NOTIFICATIONS") {
+                    id = 0
+                    item.childNodes.forEach((stat, m) => {
+                        var editItem = { appro: null, notify: null, id: '' }
+                        if (m % 2 != 0) {
+                            stat.childNodes.forEach((data, d) => {
+                                if (d % 2 != 0) {
+                                    if (data.nodeName == "APPROVAL-REQUIRED") {
+                                        editItem.appro = data.childNodes[0].nodeValue
+                                    }
+                                    if (data.nodeName == "NOTIFICATION-STATE") {
+                                        editItem.notify = data.childNodes[0].nodeValue
+                                    }
+                                }
+                            })
+                            editItem.id = id
+                            const addObj = Object.assign({}, editItem)
+                            driver.push(addObj)
+                            id++
+                        }
+                    })
+                }
+                if (item.nodeName == "ROLLOUT-QUALIFICATIONS") {
+                    id = 0
+                    item.childNodes.forEach((stat, m) => {
+                        var editItem = { name: '', policy: '', id: '' }
+                        if (m % 2 != 0) {
+                            stat.childNodes.forEach((data, d) => {
+                                if (d % 2 != 0) {
+                                    if (data.nodeName == "SHORT-NAME") {
+                                        editItem.name = data.childNodes[0].nodeValue
+                                    }
+                                    if (data.nodeName == "SAFETY-POLICY") {
+                                        editItem.policy = data.childNodes[0].nodeValue
+                                    }
+                                }
+                            })
+                            editItem.id = id
+                            const addObj = Object.assign({}, editItem)
+                            rollout.push(addObj)
+                            id++
+                        }
+                    })
+                }
+                if (item.nodeName == "UCMS") {
+                    id = 0
+                    item.childNodes.forEach((stat, m) => {
+                        var editItem = { name: '', ident: '', module: null, id: '' }
+                        if (m % 2 != 0) {
+                            stat.childNodes.forEach((data, d) => {
+                                if (d % 2 != 0) {
+                                    if (data.nodeName == "SHORT-NAME") {
+                                        editItem.name = data.childNodes[0].nodeValue
+                                    }
+                                    if (data.nodeName == "IDENTIFIER") {
+                                        editItem.ident = data.childNodes[0].nodeValue
+                                    }
+                                    if (data.nodeName == "UCM-MODULE-INSTANTIATION-REF") {
+                                        editItem.module = data.childNodes[0].nodeValue
+                                    }
+                                }
+                            })
+                            editItem.id = id
+                            const addObj = Object.assign({}, editItem)
+                            ucms.push(addObj)
+                            id++
+                        }
+                    })
                 }
             })
             var UUID = ele.getAttribute("UUID")
-            var idxEle = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(data => data.uuid === UUID)
+            var idxEle = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === UUID)
             if (UUID == null || idxEle != -1) {
                 UUID = uuid.v1()
             }
             const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
             const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-            this.commit('addElementModuleInstant', {
+            this.commit('addElementVehiclePackage', {
                 name: Name,
                 input: true,
                 path: strPath,
@@ -5940,14 +6690,17 @@ const mutations = {
                 zindex: 2,
                 icon: "mdi-clipboard-outline",
                 validation: false,
-                ident: ident,
+                reposi: reposi,
+                sdgs: sdgs,
+                driver: driver,
+                rollout: rollout,
+                ucms: ucms
             })
-            state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ModuleInstantiation_str })
+            state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.VehiclePackage_str })
             EventBus.$emit('add-element', constant.Platform_str)
             EventBus.$emit('add-element', constant.UCM_str)
-            EventBus.$emit('add-element', constant.ModuleInstantiation_str)
+            EventBus.$emit('add-element', constant.VehiclePackage_str)
         })
-
     },
     setInputFileComplate(state) { //바로 라인 그리면 element가 다 그려지기 전이라 선의 id값을 찾지 못한다.
         state.isInputFileComplate = false // element들이 다 그려졌다는걸 알려 주는것임
@@ -6029,13 +6782,57 @@ const mutations = {
                         }
                     })
                 }
-                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].functiongroup != null) {
+                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].functiongroup.length > 0) {
                     state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].functiongroup.forEach((data, i) => {
                         if (data.type != null) {
                             state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.forEach(item => {
                                 if (data.type == (item.path + '/' + item.name)) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/functiontable-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/functiontable', item.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].iam.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].iam.forEach((data, i) => {
+                        if (data.grants.length > 0) {
+                            data.grants.forEach(gra => {
+                                if (gra.grant != null) {
+                                    if (gra.select == "COM-EVENT-GRANT") {
+                                        state.SAHLProject[state.openProjectIndex].IamG.EventG.forEach(eve => {
+                                            if (gra.grant == (eve.path + '/' + eve.name)) {
+                                                this.commit('setConnectionline', { start: ele.uuid + '/iamM-' + gra.id + '-' + data.id, end: eve.uuid })
+                                                if (i == 0) {
+                                                    EventBus.$emit('new-line', ele.uuid + '/grandtab-' + data.id, eve.uuid)
+                                                } else {
+                                                    EventBus.$emit('new-line', ele.uuid + '/iamM', eve.uuid)
+                                                }
+                                            }
+                                        })
+                                    } else if (gra.select == "COM-FIELD-GRANT") {
+                                        state.SAHLProject[state.openProjectIndex].IamG.FieldG.forEach(eve => {
+                                            if (gra.grant == (eve.path + '/' + eve.name)) {
+                                                this.commit('setConnectionline', { start: ele.uuid + '/iamM-' + gra.id + '-' + data.id, end: eve.uuid })
+                                                if (i == 0) {
+                                                    EventBus.$emit('new-line', ele.uuid + '/grandtab-' + data.id, eve.uuid)
+                                                } else {
+                                                    EventBus.$emit('new-line', ele.uuid + '/iamM', eve.uuid)
+                                                }
+                                            }
+                                        })
+                                    } else if (gra.select == "COM-METHOD-GRANT") {
+                                        state.SAHLProject[state.openProjectIndex].IamG.MethodG.forEach(eve => {
+                                            if (gra.grant == (eve.path + '/' + eve.name)) {
+                                                this.commit('setConnectionline', { start: ele.uuid + '/iamM-' + gra.id + '-' + data.id, end: eve.uuid })
+                                                if (i == 0) {
+                                                    EventBus.$emit('new-line', ele.uuid + '/grandtab-' + data.id, eve.uuid)
+                                                } else {
+                                                    EventBus.$emit('new-line', ele.uuid + '/iamM', eve.uuid)
+                                                }
+                                            }
+                                        })
+                                    }
                                 }
                             })
                         }
@@ -6122,24 +6919,88 @@ const mutations = {
                         }
                     })
                 }
+            } else if (ele.parent == constant.HWElement_str) {
+                idxelement = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(item => item.uuid === ele.uuid)
+                if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxelement].category != null) {
+                    state.SAHLProject[state.openProjectIndex].Machine.HWCategory.forEach(item => {
+                        if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxelement].category == (item.path + '/' + item.name)) {
+                            this.commit('setConnectionline', { start: ele.uuid + '/hwcatrory', end: item.uuid })
+                            EventBus.$emit('new-line', ele.uuid + '/hwcatrory', item.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxelement].attribute.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxelement].attribute.forEach(data => {
+                        if (data.attr != null) {
+                            state.SAHLProject[state.openProjectIndex].Machine.HWCategory.forEach(item => {
+                                if (item.attribute.length > 0) {
+                                    item.attribute.forEach(attr => {
+                                        if (data.attr == (item.path + '/' + item.name + '/' + attr.name)) {
+                                            console.log('////' + data.id)
+                                            this.commit('setConnectionline', { start: ele.uuid + '/attributetable-' + data.id, end: item.uuid })
+                                            EventBus.$emit('new-line', ele.uuid + '/attributetable', item.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
             } else if (ele.parent == constant.ProcesstoMachineMapping_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(item => item.uuid === ele.uuid)
-                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].ptmmMachine != null) {
-                    state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].ptmmMachine == (item.path + '/' + item.name)) {
-                            this.commit('setConnectionline', { start: ele.uuid + '/machinefromptmm', end: item.uuid })
-                            EventBus.$emit('new-line', ele.uuid + '/machinefromptmm', item.uuid)
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].mapping.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].mapping.forEach((item, i) => {
+                        if (item.ptmmMachine != null) {
+                            state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
+                                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].ptmmMachine == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/machinefromptmm-' + item.id, end: item.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/machinefromptmm-' + item.id, item.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/proMapping', item.uuid)
+                                    }
+                                }
+                            })
+                        }
+                        if (item.ptmmProcess != null) {
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(item => {
+                                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].ptmmProcess == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/processfromptmm-' + item.id, end: item.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/processfromptmm-' + item.id, item.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/proMapping', item.uuid)
+                                    }
+                                }
+                            })
+                        }
+                        if (item.runon.length > 0) {
+                            item.runon.forEach(data => {
+                                if (data.shall != null) {
+                                    state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
+                                        if (item.processor.length > 0) {
+                                            item.processor.forEach(pro => {
+                                                if (pro.core.length > 0) {
+                                                    pro.core.forEach(co => {
+                                                        if (data.shall == (item.path + '/' + item.name + '/' + pro.name + '/' + co.name)) {
+                                                            this.commit('setConnectionline', { start: ele.uuid + '/runOn-' + data.id + '-' + item.id, end: item.uuid })
+                                                            if (i == 0) {
+                                                                EventBus.$emit('new-line', ele.uuid + '/runOn-' + data.id + '-' + item.id, item.uuid)
+                                                            } else {
+                                                                EventBus.$emit('new-line', ele.uuid + '/proMapping', item.uuid)
+                                                            }
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
                         }
                     })
                 }
-                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].ptmmProcess != null) {
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].ptmmProcess == (item.path + '/' + item.name)) {
-                            this.commit('setConnectionline', { start: ele.uuid + '/processfromptmm', end: item.uuid })
-                            EventBus.$emit('new-line', ele.uuid + '/processfromptmm', item.uuid)
-                        }
-                    })
-                }
+
             } else if (ele.parent == constant.SWComponents_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].pport.length > 0) {
@@ -6198,6 +7059,26 @@ const mutations = {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/pportFSC-' + pro.id + '-' + data.id, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/pportFSC-' + data.id, item.uuid)
+                                                    } else {
+                                                        EventBus.$emit('new-line', ele.uuid + '/pport', item.uuid)
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        if (data.server.length > 0) {
+                            data.server.forEach(pro => {
+                                if (pro.oper != null) {
+                                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
+                                        if (item.methods.length > 0) {
+                                            item.methods.forEach(el => {
+                                                if (pro.oper == (item.path + '/' + item.name + '/' + el.name)) {
+                                                    this.commit('setConnectionline', { start: ele.uuid + '/pportSC-' + pro.id + '-' + data.id, end: item.uuid })
+                                                    if (i == 0) {
+                                                        EventBus.$emit('new-line', ele.uuid + '/pportSC-' + data.id, item.uuid)
                                                     } else {
                                                         EventBus.$emit('new-line', ele.uuid + '/pport', item.uuid)
                                                     }
@@ -6355,6 +7236,38 @@ const mutations = {
                                         }
                                     })
                                 }
+                                if (cl.getter != null) {
+                                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
+                                        if (item.fields.length > 0) {
+                                            item.fields.forEach(el => {
+                                                if (cl.getter == (item.path + '/' + item.name + '/' + el.name)) {
+                                                    this.commit('setConnectionline', { start: ele.uuid + '/rportCCG-' + cl.id + '-' + data.id, end: item.uuid })
+                                                    if (i == 0) {
+                                                        EventBus.$emit('new-line', ele.uuid + '/rportCC-' + data.id, item.uuid)
+                                                    } else {
+                                                        EventBus.$emit('new-line', ele.uuid + '/rport', item.uuid)
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                                if (cl.setter != null) {
+                                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
+                                        if (item.fields.length > 0) {
+                                            item.fields.forEach(el => {
+                                                if (cl.setter == (item.path + '/' + item.name + '/' + el.name)) {
+                                                    this.commit('setConnectionline', { start: ele.uuid + '/rportCCS-' + cl.id + '-' + data.id, end: item.uuid })
+                                                    if (i == 0) {
+                                                        EventBus.$emit('new-line', ele.uuid + '/rportCC-' + data.id, item.uuid)
+                                                    } else {
+                                                        EventBus.$emit('new-line', ele.uuid + '/rport', item.uuid)
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
                             })
                         }
                     })
@@ -6440,7 +7353,7 @@ const mutations = {
                             if (exec.targetMode != null) {
                                 state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.forEach(item => {
                                     item.modedeclaration.forEach(mode => {
-                                        if (exec.targetMode == (item.path + '/' + item.name + '/' + mode)) {
+                                        if (exec.targetMode == (item.path + '/' + item.name + '/' + mode.name)) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/edtarget-' + f + '-' + i, end: item.uuid })
                                             if (i == 0) {
                                                 EventBus.$emit('new-line', ele.uuid + '/edtable' + i, item.uuid)
@@ -6472,7 +7385,7 @@ const mutations = {
                             if (func.targetMode != null) {
                                 state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.forEach(item => {
                                     item.modedeclaration.forEach(mode => {
-                                        if (func.targetMode == (item.path + '/' + item.name + '/' + mode)) {
+                                        if (func.targetMode == (item.path + '/' + item.name + '/' + mode.name)) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/fgtarget-' + f + '-' + i, end: item.uuid })
                                             if (i == 0) {
                                                 EventBus.$emit('new-line', ele.uuid + '/fgtable' + i, item.uuid)
@@ -6543,6 +7456,18 @@ const mutations = {
                                         if (item.eventD.length > 0) {
                                             item.eventD.forEach(data => {
                                                 if (group.event == (item.path + '/' + item.name + '/' + data.name)) {
+                                                    this.commit('setConnectionline', { start: ele.uuid + '/event-' + g + '-' + i, end: item.uuid })
+                                                    if (i == 0) {
+                                                        EventBus.$emit('new-line', ele.uuid + '/eventtab' + eve.id, item.uuid)
+                                                    } else {
+                                                        EventBus.$emit('new-line', ele.uuid + '/event', item.uuid)
+                                                    }
+                                                }
+                                            })
+                                        }
+                                        if (item.fieldD.length > 0) {
+                                            item.fieldD.forEach(data => {
+                                                if (group.event == (item.path + '/' + item.name + '/' + data.name + '/' + data.notname)) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/event-' + g + '-' + i, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/eventtab' + eve.id, item.uuid)
@@ -6728,6 +7653,14 @@ const mutations = {
                         }
                     })
                 }
+                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].context != null) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.forEach(item => {
+                        if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].context == (item.path + '/' + item.name + '/' + item.swname)) {
+                            this.commit('setConnectionline', { start: ele.uuid + '/toportcontext', end: item.uuid })
+                            EventBus.$emit('new-line', ele.uuid + '/toportcontext', item.uuid)
+                        }
+                    })
+                }
                 if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].process != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.forEach(item => {
                         if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].process == (item.path + '/' + item.name)) {
@@ -6783,6 +7716,15 @@ const mutations = {
                                         }
                                     })
                                 }
+                                if (item.fieldD.length > 0) {
+                                    item.fieldD.forEach(data => {
+                                        if (method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.getname) ||
+                                            method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.setname)) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/requiredMethod-' + i, end: item.uuid })
+                                            EventBus.$emit('new-line', ele.uuid + '/requiredMethod', item.uuid)
+                                        }
+                                    })
+                                }
                             })
                         }
                     })
@@ -6811,6 +7753,70 @@ const mutations = {
                                 } else {
                                     EventBus.$emit('new-line', ele.uuid + '/requiredE', item.uuid)
                                 }
+                            }
+                        })
+                    }
+                })
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].E2EEvent.forEach((data, i) => {
+                    if (data.event != null) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
+                            eve.eventD.forEach(item => {
+                                if (data.event == (eve.path + '/' + eve.name + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/e2eEvent-' + data.id, end: eve.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/e2eEvent-' + data.id, eve.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/E2EE', eve.uuid)
+                                    }
+                                }
+                            })
+                        })
+                    }
+                    if (data.e2e != null) {
+                        state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.forEach(e2e => {
+                            if (e2e.profile.length > 0) {
+                                e2e.profile.forEach(item => {
+                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName)) {
+                                        this.commit('setConnectionline', { start: ele.uuid + '/e2ePro-' + data.id, end: e2e.uuid })
+                                        if (i == 0) {
+                                            EventBus.$emit('new-line', ele.uuid + '/e2ePro-' + data.id, e2e.uuid)
+                                        } else {
+                                            EventBus.$emit('new-line', ele.uuid + '/E2EE', e2e.uuid)
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].E2EMethod.forEach((data, i) => {
+                    if (data.method != null) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
+                            eve.methodD.forEach(item => {
+                                if (data.method == (eve.path + '/' + eve.name + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/e2eMethod-' + data.id, end: eve.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/e2eMethod-' + data.id, eve.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/E2EM', eve.uuid)
+                                    }
+                                }
+                            })
+                        })
+                    }
+                    if (data.e2e != null) {
+                        state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.forEach(e2e => {
+                            if (e2e.profile.length > 0) {
+                                e2e.profile.forEach(item => {
+                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName)) {
+                                        this.commit('setConnectionline', { start: ele.uuid + '/e2eProM-' + data.id, end: e2e.uuid })
+                                        if (i == 0) {
+                                            EventBus.$emit('new-line', ele.uuid + '/e2eProM-' + data.id, e2e.uuid)
+                                        } else {
+                                            EventBus.$emit('new-line', ele.uuid + '/E2EM', e2e.uuid)
+                                        }
+                                    }
+                                })
                             }
                         })
                     }
@@ -6845,11 +7851,19 @@ const mutations = {
                                         }
                                     })
                                 }
+                                if (item.fieldD.length > 0) {
+                                    item.fieldD.forEach(data => {
+                                        if (item.event == (item.path + '/' + item.name + '/' + data.name + '/' + data.notname)) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/proviedEventP-' + i, end: item.uuid })
+                                            EventBus.$emit('new-line', ele.uuid + '/proviedEventP', item.uuid)
+                                        }
+                                    })
+                                }
                             })
                         }
                     })
                 }
-                if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].method != null) {
+                if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].method.length > 0) {
                     state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].method.forEach((method, i) => {
                         if (method.method != null) {
                             state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(item => {
@@ -6860,35 +7874,108 @@ const mutations = {
                                             EventBus.$emit('new-line', ele.uuid + '/proviedMethod', item.uuid)
                                         }
                                     })
+                                    item.fieldD.forEach(data => {
+                                        if (method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.getname) ||
+                                            method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.setname)) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/proviedMethod-' + i, end: item.uuid })
+                                            EventBus.$emit('new-line', ele.uuid + '/proviedMethod', item.uuid)
+                                        }
+                                    })
                                 }
                             })
                         }
                     })
                 }
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].eventG.forEach((data, i) => {
-                    if (data.eventG != null) {
-                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
-                            eve.eventG.forEach(item => {
-                                if (data.eventG == (eve.path + '/' + eve.name + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/providEventG-' + i, end: eve.uuid })
+                if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].eventG.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].eventG.forEach((data, i) => {
+                        if (data.eventG != null) {
+                            state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
+                                eve.eventG.forEach(item => {
+                                    if (data.eventG == (eve.path + '/' + eve.name + '/' + item.name)) {
+                                        this.commit('setConnectionline', { start: ele.uuid + '/providEventG-' + i, end: eve.uuid })
+                                        if (i == 0) {
+                                            EventBus.$emit('new-line', ele.uuid + '/providEventG' + data.id, eve.uuid)
+                                        } else {
+                                            EventBus.$emit('new-line', ele.uuid + '/providE', eve.uuid)
+                                        }
+                                    }
+                                })
+                            })
+                        }
+                        if (data.server != null) {
+                            state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.forEach(item => {
+                                if (data.server == (item.path + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/providServer-' + i, end: item.uuid })
                                     if (i == 0) {
-                                        EventBus.$emit('new-line', ele.uuid + '/providEventG' + data.id, eve.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/providServer' + data.id, item.uuid)
                                     } else {
-                                        EventBus.$emit('new-line', ele.uuid + '/providE', eve.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/providE', item.uuid)
+                                    }
+                                }
+                            })
+                        }
+                    })
+                }
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].E2EEvent.forEach((data, i) => {
+                    if (data.event != null) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
+                            eve.eventD.forEach(item => {
+                                if (data.event == (eve.path + '/' + eve.name + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/e2eEventpro-' + data.id, end: eve.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/e2eEventpro-' + data.id, eve.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/E2EEpro', eve.uuid)
                                     }
                                 }
                             })
                         })
                     }
-                    if (data.server != null) {
-                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.forEach(item => {
-                            if (data.server == (item.path + '/' + item.name)) {
-                                this.commit('setConnectionline', { start: ele.uuid + '/providServer-' + i, end: item.uuid })
-                                if (i == 0) {
-                                    EventBus.$emit('new-line', ele.uuid + '/providServer' + data.id, item.uuid)
-                                } else {
-                                    EventBus.$emit('new-line', ele.uuid + '/providE', item.uuid)
+                    if (data.e2e != null) {
+                        state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.forEach(e2e => {
+                            if (e2e.profile.length > 0) {
+                                e2e.profile.forEach(item => {
+                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName)) {
+                                        this.commit('setConnectionline', { start: ele.uuid + '/e2ePropro-' + data.id, end: e2e.uuid })
+                                        if (i == 0) {
+                                            EventBus.$emit('new-line', ele.uuid + '/e2ePropro-' + data.id, e2e.uuid)
+                                        } else {
+                                            EventBus.$emit('new-line', ele.uuid + '/E2EEpro', e2e.uuid)
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].E2EMethod.forEach((data, i) => {
+                    if (data.method != null) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
+                            eve.methodD.forEach(item => {
+                                if (data.method == (eve.path + '/' + eve.name + '/' + item.name)) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/e2eMethodpro-' + data.id, end: eve.uuid })
+                                    if (i == 0) {
+                                        EventBus.$emit('new-line', ele.uuid + '/e2eMethodpro-' + data.id, eve.uuid)
+                                    } else {
+                                        EventBus.$emit('new-line', ele.uuid + '/E2EMpro', eve.uuid)
+                                    }
                                 }
+                            })
+                        })
+                    }
+                    if (data.e2e != null) {
+                        state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.forEach(e2e => {
+                            if (e2e.profile.length > 0) {
+                                e2e.profile.forEach(item => {
+                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName)) {
+                                        this.commit('setConnectionline', { start: ele.uuid + '/e2eProMpro-' + data.id, end: e2e.uuid })
+                                        if (i == 0) {
+                                            EventBus.$emit('new-line', ele.uuid + '/e2eProMpro-' + data.id, e2e.uuid)
+                                        } else {
+                                            EventBus.$emit('new-line', ele.uuid + '/E2EMpro', e2e.uuid)
+                                        }
+                                    }
+                                })
                             }
                         })
                     }
@@ -7313,10 +8400,14 @@ const mutations = {
                 if (state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxelement].ucms.length > 0) {
                     state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxelement].ucms.forEach((data, i) => {
                         if (data.module != null) {
-                            state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.forEach(item => {
-                                if (data.module == (item.path + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/UCMModule-' + i, end: item.uuid })
-                                    EventBus.$emit('new-line', ele.uuid + '/UCMModule', item.uuid)
+                            state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
+                                if (item.ucm.length > 0) {
+                                    item.ucm.forEach(ucmM => {
+                                        if (data.module == (item.path + '/' + item.name + '/' + ucmM.name)) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/UCMModule-' + i, end: item.uuid })
+                                            EventBus.$emit('new-line', ele.uuid + '/UCMModule', item.uuid)
+                                        }
+                                    })
                                 }
                             })
                         }
@@ -7342,6 +8433,7 @@ const mutations = {
             zindex: payload.zindex,
             name: payload.name,
             category: payload.category,
+            attributeName: payload.attributeName,
             scales: payload.scales,
         })
         state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.CompuMethod_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
@@ -7350,7 +8442,7 @@ const mutations = {
         }
         EventBus.$emit('new-element', newUUid)
     },
-    editCompuMehtod(state, payload) {
+    editCompuMethod(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.findIndex(data => data.uuid === payload.uuid)
         if (payload.compo == "Name") {
             state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.CompuMethod_index].children[idxElement].name = payload.name
@@ -7398,6 +8490,40 @@ const mutations = {
                 //state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxElement].left[payload.location] = payload.left
         } else if (payload.compo == "z") {
             state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxElement].zindex = payload.zindex
+        }
+    },
+    addElementSWBaseType(state, payload) {
+        var newUUid
+        if (!payload.input) {
+            newUUid = uuid.v1()
+        } else {
+            newUUid = payload.uuid
+        }
+        state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.push({
+            uuid: newUUid,
+            path: payload.path,
+            top: payload.top,
+            left: payload.left,
+            zindex: payload.zindex,
+            name: payload.name,
+            category: payload.category,
+            encoding: payload.encoding,
+        })
+        state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.SWBaseType_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        if (!payload.input) {
+            state.activeUUID = newUUid
+        }
+        EventBus.$emit('new-element', newUUid)
+    },
+    editSWBaseType(state, payload) {
+        var idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.findIndex(data => data.uuid === payload.uuid)
+        if (payload.compo == "Name") {
+            state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.SWBaseType_index].children[idxElement].name = payload.name
+        } else if (payload.compo == "drag") {
+            Vue.set(state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[idxElement].top, payload.location, payload.top)
+            Vue.set(state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[idxElement].left, payload.location, payload.left)
+        } else if (payload.compo == "z") {
+            state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[idxElement].zindex = payload.zindex
         }
     },
     addElementApplicationArray(state, payload) {
@@ -7463,6 +8589,8 @@ const mutations = {
             typeref: payload.typeref,
             templatetype: payload.templatetype,
             desc: payload.desc,
+            traceName: payload.traceName,
+            trace: payload.trace,
             ddpc: payload.ddpc,
             idtelement: payload.idtelement,
         })
@@ -7506,8 +8634,11 @@ const mutations = {
             executable: payload.executable,
             admin: payload.admin,
             functiongroup: payload.functiongroup,
+            environ: payload.environ,
             processor: payload.processor,
             moduleinstant: payload.moduleinstant,
+            ucm: payload.ucm,
+            iam: payload.iam
         })
         state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -7564,6 +8695,40 @@ const mutations = {
                 //state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].left[payload.location] = payload.left
         } else if (payload.compo == "z") {
             state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].zindex = payload.zindex
+        }
+    },
+    addElementHWCategory(state, payload) {
+        var newUUid
+        if (!payload.input) {
+            newUUid = uuid.v1()
+        } else {
+            newUUid = payload.uuid
+        }
+        state.SAHLProject[state.openProjectIndex].Machine.HWCategory.push({
+            uuid: newUUid,
+            path: payload.path,
+            top: payload.top,
+            left: payload.left,
+            zindex: payload.zindex,
+            name: payload.name,
+            attribute: payload.attribute
+        })
+        state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWCategory_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        if (!payload.input) {
+            state.activeUUID = newUUid
+        }
+        EventBus.$emit('new-element', newUUid)
+    },
+    editHWCategory(state, payload) {
+        var idxElement = state.SAHLProject[state.openProjectIndex].Machine.HWCategory.findIndex(data => data.uuid === payload.uuid)
+
+        if (payload.compo == "Name") {
+            state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWCategory_index].children[idxElement].name = payload.name
+        } else if (payload.compo == "drag") {
+            Vue.set(state.SAHLProject[state.openProjectIndex].Machine.HWCategory[idxElement].top, payload.location, payload.top)
+            Vue.set(state.SAHLProject[state.openProjectIndex].Machine.HWCategory[idxElement].left, payload.location, payload.left)
+        } else if (payload.compo == "z") {
+            state.SAHLProject[state.openProjectIndex].Machine.HWCategory[idxElement].zindex = payload.zindex
         }
     },
 
@@ -7694,9 +8859,7 @@ const mutations = {
             left: payload.left,
             zindex: payload.zindex,
             name: payload.name,
-            ptmmname: payload.ptmmname,
-            ptmmMachine: payload.ptmmMachine,
-            ptmmProcess: payload.ptmmProcess,
+            mapping: payload.mapping,
         })
         state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -7750,8 +8913,6 @@ const mutations = {
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].left, payload.location, payload.left)
-                //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].top[payload.location] = payload.top
-                //state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].left[payload.location] = payload.left
         } else if (payload.compo == "z") {
             state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].zindex = payload.zindex
         }
@@ -7773,6 +8934,13 @@ const mutations = {
             prodesign: payload.prodesign,
             determin: payload.determin,
             execut: payload.execut,
+            logLevel: payload.logLevel,
+            logPath: payload.logPath,
+            logProDesc: payload.logProDesc,
+            logProID: payload.logProID,
+            restart: payload.restart,
+            preMapping: payload.preMapping,
+            logMode: payload.logMode,
             machinname: payload.machinname,
             machinetype: payload.machinetype,
             dependent: payload.dependent,
@@ -8233,6 +9401,7 @@ const mutations = {
             name: payload.name,
             selectPort: payload.selectPort,
             porttype: payload.porttype,
+            context: payload.context,
             process: payload.process,
             selectServiceIns: payload.selectServiceIns,
             serviceIns: payload.serviceIns,
@@ -8275,7 +9444,9 @@ const mutations = {
             someipclient: payload.clientref,
             version: payload.ver,
             method: payload.method,
-            requiredevent: payload.requiredevent
+            requiredevent: payload.requiredevent,
+            E2EEvent: payload.E2EEvent,
+            E2EMethod: payload.E2EMethod
         })
         state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -8312,9 +9483,13 @@ const mutations = {
             deployref: payload.deployref,
             someipserver: payload.someips,
             instanceid: payload.id,
+            loadPriority: payload.loadPriority,
+            loadWeight: payload.loadWeight,
             eventP: payload.eventP,
             method: payload.method,
-            eventG: payload.eventG
+            eventG: payload.eventG,
+            E2EEvent: payload.E2EEvent,
+            E2EMethod: payload.E2EMethod
         })
         state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
         if (!payload.input) {
@@ -8332,6 +9507,74 @@ const mutations = {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].left, payload.location, payload.left)
         } else if (payload.compo == "z") {
             state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].zindex = payload.zindex
+        }
+    },
+    addElementE2EProfileConfig(state, payload) {
+        var newUUid
+        if (!payload.input) {
+            newUUid = uuid.v1()
+        } else {
+            newUUid = payload.uuid
+        }
+        state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.push({
+            uuid: newUUid,
+            path: payload.path,
+            top: payload.top,
+            left: payload.left,
+            zindex: payload.zindex,
+            name: payload.name,
+            profile: payload.profile,
+        })
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.E2EProfileConfig_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        if (!payload.input) {
+            state.activeUUID = newUUid
+        }
+        EventBus.$emit('new-element', newUUid)
+    },
+    editE2EProfileConfig(state, payload) {
+        var idxElement = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(data => data.uuid === payload.uuid)
+
+        if (payload.compo == "Name") {
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.E2EProfileConfig_index].children[idxElement].name = payload.name
+        } else if (payload.compo == "drag") {
+            Vue.set(state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxElement].top, payload.location, payload.top)
+            Vue.set(state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxElement].left, payload.location, payload.left)
+        } else if (payload.compo == "z") {
+            state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxElement].zindex = payload.zindex
+        }
+    },
+    addElementSDG_DEF(state, payload) {
+        var newUUid
+        if (!payload.input) {
+            newUUid = uuid.v1()
+        } else {
+            newUUid = payload.uuid
+        }
+        state.SAHLProject[state.openProjectIndex].Service.SdgDef.push({
+            uuid: newUUid,
+            path: payload.path,
+            top: payload.top,
+            left: payload.left,
+            zindex: payload.zindex,
+            name: payload.name,
+            sdgClass: payload.sdgClass,
+        })
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SDG_DEF_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        if (!payload.input) {
+            state.activeUUID = newUUid
+        }
+        EventBus.$emit('new-element', newUUid)
+    },
+    editSDG_DEF(state, payload) {
+        var idxElement = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(data => data.uuid === payload.uuid)
+
+        if (payload.compo == "Name") {
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SDG_DEF_index].children[idxElement].name = payload.name
+        } else if (payload.compo == "drag") {
+            Vue.set(state.SAHLProject[state.openProjectIndex].Service.SdgDef[idxElement].top, payload.location, payload.top)
+            Vue.set(state.SAHLProject[state.openProjectIndex].Service.SdgDef[idxElement].left, payload.location, payload.left)
+        } else if (payload.compo == "z") {
+            state.SAHLProject[state.openProjectIndex].Service.SdgDef[idxElement].zindex = payload.zindex
         }
     },
 
@@ -9215,52 +10458,21 @@ const mutations = {
             state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].zindex = payload.zindex
         }
     },
-    addElementModuleInstant(state, payload) {
-        var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
-        state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.push({
-            uuid: newUUid,
-            path: payload.path,
-            top: payload.top,
-            left: payload.left,
-            zindex: payload.zindex,
-            name: payload.name,
-            ident: payload.ident
-        })
-        state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.ModuleInstantiation_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
-        EventBus.$emit('new-element', newUUid)
-    },
-    editModuleInstant(state, payload) {
-        var idxElement = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(data => data.uuid === payload.uuid)
-
-        if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.ModuleInstantiation_index].children[idxElement].name = payload.name
-        } else if (payload.compo == "drag") {
-            Vue.set(state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxElement].top, payload.location, payload.top)
-            Vue.set(state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxElement].left, payload.location, payload.left)
-        } else if (payload.compo == "z") {
-            state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxElement].zindex = payload.zindex
-        }
-    },
-
 
     renameElement(state, payload) {
         var idxEle, ele, editmethod
         if (payload.parent == constant.CompuMethod_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod[idxEle]
-            editmethod = 'editCompuMehtod'
+            editmethod = 'editCompuMethod'
         } else if (payload.parent == constant.DataConstr_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr[idxEle]
             editmethod = 'editDataConstr'
+        } else if (payload.parent == constant.SWBaseType_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType[idxEle]
+            editmethod = 'editSWBaseType'
         } else if (payload.parent == constant.ApplicationArray_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType[idxEle]
@@ -9289,6 +10501,10 @@ const mutations = {
             idxEle = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxEle]
             editmethod = 'editHWElement'
+        } else if (payload.parent == constant.HWCategory_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Machine.HWCategory.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].Machine.HWCategory[idxEle]
+            editmethod = 'editHWCategory'
         } else if (payload.parent == constant.ProcesstoMachineMapping_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxEle]
@@ -9357,6 +10573,14 @@ const mutations = {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxEle]
             editmethod = 'editProvidedSomeIP'
+        } else if (payload.parent == constant.E2EProfileConfig_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxEle]
+            editmethod = 'editE2EProfileConfig'
+        } else if (payload.parent == constant.SDG_DEF_str) {
+            idxEle = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(item => item.uuid === payload.uuid)
+            ele = state.SAHLProject[state.openProjectIndex].Service.SdgDef[idxEle]
+            editmethod = 'editSDG_DEF'
         } else if (payload.parent == constant.Error_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].Service.Error[idxEle]
@@ -9453,10 +10677,6 @@ const mutations = {
             idxEle = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(item => item.uuid === payload.uuid)
             ele = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxEle]
             editmethod = 'editVehiclePackage'
-        } else if (payload.parent == constant.ModuleInstantiation_str) {
-            idxEle = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(item => item.uuid === payload.uuid)
-            ele = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant[idxEle]
-            editmethod = 'editModuleInstant'
         }
 
         ele.name = payload.name
@@ -9508,11 +10728,31 @@ const mutations = {
                 state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxElement].serialization[tableLine[1]].serial = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'machinefromptmm') { // Machine 변경시 => Process to Machine Mapping set 에서 Machine ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].ptmmMachine = payload.path + '/' + payload.name
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].ptmmMachine = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'runOn') { // Machine Processor core변경시 => Process to Machine Mapping set 에서 Machine processor core ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].runon, tableLine[1])
+                if (payload.changeName == 'proCore') {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].runon[idxIDTable].shall == payload.path + '/' + payload.name + '/' + payload.tabname + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].runon[idxIDTable].shall = payload.path + '/' + payload.name + '/' + payload.tabname + '/' + payload.listname
+                    }
+                } else if (payload.changeName == 'Processor') {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].runon[idxIDTable].shall.split('/')
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].runon[idxIDTable].shall.includes(payload.path + '/' + payload.name + '/' + payload.beforename + '/' + intablename[intablename.length - 1])) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].runon[idxIDTable].shall = payload.path + '/' + payload.name + '/' + payload.listname + '/' + intablename[intablename.length - 1]
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].runon[idxIDTable].shall.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].runon[idxIDTable].shall = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                }
             } else if (tableLine[0] == 'processresorce') { //Machine 변경시 =>  Process 에서 Machine -> Module Instantiation ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'ModuleIns') {
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[1]].resourceRef = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[1]].resourceRef == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[1]].resourceRef = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[1]].resourceRef.split('/')
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[1]].resourceRef = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9520,7 +10760,9 @@ const mutations = {
             } else if (tableLine[0] == 'fgcontext') { //Machine 변경시 =>  Process 에서 Machine -> Function Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'functionG') {
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].contextMode = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].contextMode == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].contextMode = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].contextMode.split('/')
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].contextMode = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9528,7 +10770,9 @@ const mutations = {
             } else if (tableLine[0] == 'edcontext') { //Machine 변경시 =>  Process 에서 Machine -> Execution dependency ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'functionG') {
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].contextMode = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].contextMode == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].contextMode = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].contextMode.split('/')
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].contextMode = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9536,6 +10780,16 @@ const mutations = {
             } else if (tableLine[0] == 'PHMtoMachine') { // Machine 변경시 => PHMtoMachine 에서 Machine ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxElement].machine = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'UCMModule') { //machine ucm module 변경시 =>  VehiclePackage 에서 machine ucm module ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === startUUID[0])
+                if (payload.changeName == 'ucm') {
+                    if (state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].ucms[tableLine[1]].module == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].ucms[tableLine[1]].module = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].ucms[tableLine[1]].module.split('/')
+                    state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].ucms[tableLine[1]].module = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
             } else if (tableLine[0] == 'machinedesign') { //MachineDesign 변경시 =>  machin에서 machinDesign ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].machinedesign = payload.path + '/' + payload.name
@@ -9545,7 +10799,9 @@ const mutations = {
             } else if (tableLine[0] == 'comconet') { //MachineDesign 변경시 =>   EthernetCluster에서 MachineDesign -> Communication Connector ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'CommunicationC') {
-                    state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[tableLine[3]].channel[tableLine[2]].comconnect[tableLine[1]].connector = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[tableLine[3]].channel[tableLine[2]].comconnect[tableLine[1]].connector == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[tableLine[3]].channel[tableLine[2]].comconnect[tableLine[1]].connector = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[tableLine[3]].channel[tableLine[2]].comconnect[tableLine[1]].connector.split('/')
                     state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[tableLine[3]].channel[tableLine[2]].comconnect[tableLine[1]].connector = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9553,17 +10809,41 @@ const mutations = {
             } else if (tableLine[0] == 'tomachinCC') { //MachineDesign 변경시 =>   SomeIPtoMachineMapping 에서 MachineDesgin의 Communication Connected ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'CommunicationC') {
-                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].ccref = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].ccref == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].ccref = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].ccref.split('/')
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].ccref = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
                 }
             } else if (tableLine[0] == 'cctable') { //EthernetCluster 변경시 => machinDesign에서 EthernetCluster Endpoint ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channl + '/' + payload.endpoint
+                intablename = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.split('/')
+                if (payload.changeName == 'path' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.includes(payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = payload.path + '/' + intablename[intablename.length - 4] + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'name' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.includes(payload.path + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'condi' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.includes(payload.path + '/' + payload.name + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = payload.path + '/' + payload.name + '/' + payload.condi + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'channel' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'endpoint' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.endpoint
+                }
             } else if (tableLine[0] == 'sdctable') { //EthernetCluster 변경시 =>  machinDesign에서 EthernetCluster Endpoint ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channl + '/' + payload.endpoint
+                intablename = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.split('/')
+                if (payload.changeName == 'path' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.includes(payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = payload.path + '/' + intablename[intablename.length - 4] + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'name' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.includes(payload.path + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'condi' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.includes(payload.path + '/' + payload.name + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = payload.path + '/' + payload.name + '/' + payload.condi + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'channel' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'endpoint' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.endpoint
+                }
             } else if (tableLine[0] == 'functiontable') { //Mode Declaration  변경시 =>  machin에서 Mode Declaration ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].functiongroup[tableLine[1]].type = payload.path + '/' + payload.name
@@ -9572,26 +10852,58 @@ const mutations = {
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].machinetype = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'fgtarget') { //Mode Declaration  변경시 =>  Process 에서  Module Declaration-> mode Declarations ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].targetMode.split('/')
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].targetMode = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                if (payload.changeName == 'modeD') {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].targetMode == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].targetMode = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].targetMode.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].targetMode = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
             } else if (tableLine[0] == 'edtarget') { //Mode Declaration  변경시 =>  Process 에서  Module Declaration-> mode Declarations ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].targetMode.split('/')
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].targetMode = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                if (payload.changeName == 'modeD') {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].targetMode == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].targetMode = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].targetMode.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].targetMode = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
             } else if (tableLine[0] == 'hwelement') { //HW Element 변경시 =>  machin에서 HWElement ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].hwelement[tableLine[1]].hwelement = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'hwcatrory') { //HW Category 변경시 =>  hwelement에서  HWCategory ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].category = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'attributetable') { //HW Category 변경시 =>  hwelement에서  HWCategory ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(data => data.uuid === startUUID[0])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].attribute, tableLine[1])
+                if (payload.changeName == 'attribute') {
+                    if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].attribute[idxIDTable].attr == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].attribute[idxIDTable].attr = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].attribute[idxIDTable].attr.split('/')
+                    state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].attribute[idxIDTable].attr = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
             } else if (tableLine[0] == 'applicationtyperef') { //SW Component 변경시 =>  Executable 에서 SW Components ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxElement].applicationtyperef = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'toportport') { //SW Component 변경시 =>   Service Instance to port prototype 에서 SWComponent port ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'pPort' && state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].selectPort == 'P-PORT-PROTOTYPE') {
-                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else if (payload.changeName == 'prPort' && state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].selectPort == 'PR-PORT-PROTOTYPE') {
-                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else if (payload.changeName == 'rPort' && state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].selectPort == 'R-PORT-PROTOTYPE') {
-                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype.split('/')
                     state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9599,7 +10911,9 @@ const mutations = {
             } else if (tableLine[0] == 'PERArraySDG') { //SW Component 변경시 =>  PERFileArray 에서 SW Component ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'prPort') {
-                    state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxElement].sdgs[tableLine[1]].port = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxElement].sdgs[tableLine[1]].port == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxElement].sdgs[tableLine[1]].port = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else if (payload.changeName == undefined) {
                     intablename = state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxElement].sdgs[tableLine[1]].port.split('/')
                     state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxElement].sdgs[tableLine[1]].port = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9607,7 +10921,9 @@ const mutations = {
             } else if (tableLine[0] == 'PERKeyDSDG') { //SW Component 변경시 =>  PERKeyValueD 에서 SW Component ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'prPort') {
-                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].sdgs[tableLine[1]].port = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].sdgs[tableLine[1]].port == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].sdgs[tableLine[1]].port = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else if (payload.changeName == undefined) {
                     intablename = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].sdgs[tableLine[1]].port.split('/')
                     state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].sdgs[tableLine[1]].port = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9615,7 +10931,9 @@ const mutations = {
             } else if (tableLine[0] == 'PPPtoFilePRPort') { //SW Component 변경시 =>  PPP to File Array 에서 SW Component ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'prPort') {
-                    state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxElement].port = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxElement].port == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxElement].port = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else if (payload.changeName == undefined) {
                     intablename = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxElement].port.split('/')
                     state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxElement].port = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9623,7 +10941,9 @@ const mutations = {
             } else if (tableLine[0] == 'PPPtoKeyPRPort') { //SW Component 변경시 =>  PPP to Key Value 에서 SW Component ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'prPort') {
-                    state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxElement].port = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxElement].port == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxElement].port = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else if (payload.changeName == undefined) {
                     intablename = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxElement].port.split('/')
                     state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxElement].port = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9634,14 +10954,17 @@ const mutations = {
             } else if (tableLine[0] == 'PHMViaPPort') { //SW Component 변경시 =>  PHMRecoveryVia 에서 SW Component p port ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'pPort') {
-                    state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].port = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].port == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].port = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else if (payload.changeName == undefined) {
                     intablename = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].port.split('/')
                     state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].port = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
                 }
             } else if (tableLine[0] == 'processfromptmm') { //Process 변경 시  =>  Process to Machine Mapping set 에서 Process ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].ptmmProcess = payload.path + '/' + payload.name
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].ptmmProcess = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'PPPtoFileProcess') { //Process 변경시 =>  PPP to File Array 에서 Process ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxElement].process = payload.path + '/' + payload.name
@@ -9678,6 +11001,14 @@ const mutations = {
             } else if (tableLine[0] == 'SCExecutable') { //Executable 변경시 =>  Software Cluster에서 Executable ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].executable[tableLine[1]].execut = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'toportcontext') { //Executable swname 변경 시  =>   Service Instance to port prototype 에서 executable ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
+                if (payload.changeName == 'swname') {
+                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].context = payload.path + '/' + payload.name + '/' + payload.listname
+                } else if (payload.changeName == undefined) {
+                    intablename = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].context.split('/')
+                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].context = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
             } else if (tableLine[0] == 'processstartup') { // Startup Config 변경시 =>  Process 에서 Startup Config ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[1]].startupConfigRef = payload.path + '/' + payload.name
@@ -9686,54 +11017,183 @@ const mutations = {
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].determin = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'event') { //Service Deployment 변경시 =>  ServiceInterface Deploymant에서 serviceinterface Deploymant Event Deployment ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
-                if (payload.changeName == 'EventD') {
-                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event = payload.path + '/' + payload.name + '/' + payload.listname
-                } else {
-                    intablename = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event.split('/')
-                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                var strEDPath = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event.split('/')
+                if (payload.changeName == 'EventD' && payload.name == strEDPath[strEDPath.length - 2]) { //method 이면서 method table에서 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else if (payload.changeName == 'fileName' && payload.name == strEDPath[strEDPath.length - 3]) { //field이면서 file name 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event.includes(payload.path + '/' + payload.name + '/' + payload.beforename + '/' + strEDPath[strEDPath.length - 1])) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event = payload.path + '/' + payload.name + '/' + payload.listname + '/' + strEDPath[strEDPath.length - 1]
+                    }
+                } else if (payload.changeName == 'notName' && payload.name == strEDPath[strEDPath.length - 3]) { //field이면서 file setname 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event == payload.path + '/' + payload.name + '/' + strEDPath[strEDPath.length - 2] + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event = payload.path + '/' + payload.name + '/' + strEDPath[strEDPath.length - 2] + '/' + payload.listname
+                    }
+                } else if ((payload.changeName == 'Path' && payload.name == strEDPath[strEDPath.length - 3]) || (payload.changeName == 'Name' && payload.pathLength + 3 == strEDPath.length)) { //path edit notname
+                    if ((payload.changeName == 'Path' && state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event.includes(payload.beforename + '/' + payload.name + '/' + strEDPath[strEDPath.length - 2] + '/' + strEDPath[strEDPath.length - 1])) ||
+                        (payload.changeName == 'Name' && state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event.includes(payload.path + '/' + payload.beforename + '/' + strEDPath[strEDPath.length - 2] + '/' + strEDPath[strEDPath.length - 1]))) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event = payload.path + '/' + payload.name + '/' + strEDPath[strEDPath.length - 2] + '/' + strEDPath[strEDPath.length - 1]
+                    }
+                } else if ((payload.changeName == 'Path' && payload.name == strEDPath[strEDPath.length - 2]) || (payload.changeName == 'Name' && payload.pathLength + 2 == strEDPath.length)) { //path edit event table
+                    if ((payload.changeName == 'Path' && state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event.includes(payload.beforename + '/' + payload.name + '/' + strEDPath[strEDPath.length - 1])) ||
+                        (payload.changeName == 'Name' && state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event.includes(payload.path + '/' + payload.beforename + '/' + strEDPath[strEDPath.length - 1]))) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event = payload.path + '/' + payload.name + '/' + strEDPath[strEDPath.length - 1]
+                    }
                 }
             } else if (tableLine[0] == 'requiredDeploy') { //Service Deployment 변경시 => Required SomeIP Service Instance 에서 Service Deployment ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].deployref = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'requiredMethod') { //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 Service Deployment Method Deployment ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
-                if (payload.changeName == 'MethodD') {
-                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + payload.listname
-                } else {
-                    intablename = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method.split('/')
-                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                var strPath = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method.split('/')
+                var pathLength = strPath.length
+                if (payload.changeName == 'MethodD' && payload.name == strPath[pathLength - 2]) { //method 이면서 method table에서 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else if (payload.changeName == 'fileName' && payload.name == strPath[pathLength - 3]) { //field이면서 file name 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method.includes(payload.path + '/' + payload.name + '/' + payload.beforename + '/' + strPath[pathLength - 1])) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + payload.listname + '/' + strPath[pathLength - 1]
+                    }
+                } else if (payload.changeName == 'getName' && payload.name == strPath[pathLength - 3]) { //field이면서 file getname 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method == payload.path + '/' + payload.name + '/' + strPath[pathLength - 2] + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + strPath[pathLength - 2] + '/' + payload.listname
+                    }
+                } else if (payload.changeName == 'setName' && payload.name == strPath[pathLength - 3]) { //field이면서 file setname 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method == payload.path + '/' + payload.name + '/' + strPath[pathLength - 2] + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + strPath[pathLength - 2] + '/' + payload.listname
+                    }
+                } else if ((payload.changeName == 'Path' && payload.name == strPath[pathLength - 3]) || (payload.changeName == 'Name' && payload.pathLength + 3 == pathLength)) { //path edit setname,getname
+                    if ((payload.changeName == 'Path' && state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method.includes(payload.beforename + '/' + payload.name + '/' + strPath[strPath.length - 2] + '/' + strPath[strPath.length - 1])) ||
+                        (payload.changeName == 'Name' && state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method.includes(payload.path + '/' + payload.beforename + '/' + strPath[strPath.length - 2] + '/' + strPath[strPath.length - 1]))) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + strPath[strPath.length - 2] + '/' + strPath[strPath.length - 1]
+                    }
+                } else if ((payload.changeName == 'Path' && payload.name == strPath[pathLength - 2]) || (payload.changeName == 'Name' && payload.pathLength + 2 == pathLength)) { //path edit method table
+                    if ((payload.changeName == 'Path' && state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method.includes(payload.beforename + '/' + payload.name + '/' + strPath[strPath.length - 1])) ||
+                        (payload.changeName == 'Name' && state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method.includes(payload.path + '/' + payload.beforename + '/' + strPath[strPath.length - 1]))) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + strPath[strPath.length - 1]
+                    }
                 }
             } else if (tableLine[0] == 'requiredEventG') { //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'EventG') {
-                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].eventG = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].eventG == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].eventG = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].eventG.split('/')
                     state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].eventG = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'e2eEvent') { //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 Service Deployment Event ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent, tableLine[1])
+                if (payload.changeName == 'EventD') {
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].event == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].event = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].event.split('/')
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].event = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'e2eMethod') { //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 Service Deployment Method ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod, tableLine[1])
+                if (payload.changeName == 'MethodD') {
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].method == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].method = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].method.split('/')
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].method = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'e2eEventpro') { //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deployment Event ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent, tableLine[1])
+                if (payload.changeName == 'EventD') {
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].event == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].event = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].event.split('/')
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].event = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'e2eMethodpro') { //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deployment Method ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod, tableLine[1])
+                if (payload.changeName == 'MethodD') {
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].method == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].method = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].method.split('/')
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].method = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
                 }
             } else if (tableLine[0] == 'providDeploy') { //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deployment ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].deployref = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'proviedEventP') { //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의  eventD ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                if (payload.changeName == 'EventD') {
-                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event = payload.path + '/' + payload.name + '/' + payload.listname
-                } else {
-                    intablename = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event.split('/')
-                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                var strEPath = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event.split('/')
+                if (payload.changeName == 'EventD' && payload.name == strEPath[strEPath.length - 2]) { //method 이면서 method table에서 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else if (payload.changeName == 'fileName' && payload.name == strEPath[strEPath.length - 3]) { //field이면서 file name 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event.includes(payload.path + '/' + payload.name + '/' + payload.beforename + '/' + strEPath[strEPath.length - 1])) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event = payload.path + '/' + payload.name + '/' + payload.listname + '/' + strEPath[strEPath.length - 1]
+                    }
+                } else if (payload.changeName == 'notName' && payload.name == strEPath[strEPath.length - 3]) { //field이면서 file setname 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event == payload.path + '/' + payload.name + '/' + strEPath[strEPath.length - 2] + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event = payload.path + '/' + payload.name + '/' + strEPath[strEPath.length - 2] + '/' + payload.listname
+                    }
+                } else if ((payload.changeName == 'Path' && payload.name == strEPath[strEPath.length - 3]) || (payload.changeName == 'Name' && payload.pathLength + 3 == strEPath.length)) { //path edit notname
+                    if ((payload.changeName == 'Path' && state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event.includes(payload.beforename + '/' + payload.name + '/' + strEPath[strEPath.length - 2] + '/' + strEPath[strEPath.length - 1])) ||
+                        (payload.changeName == 'Name' && state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event.includes(payload.path + '/' + payload.beforename + '/' + strEPath[strEPath.length - 2] + '/' + strEPath[strEPath.length - 1]))) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event = payload.path + '/' + payload.name + '/' + strEPath[strEPath.length - 2] + '/' + strEPath[strEPath.length - 1]
+                    }
+                } else if ((payload.changeName == 'Path' && payload.name == strEPath[strEPath.length - 2]) || (payload.changeName == 'Name' && payload.pathLength + 2 == strEPath.length)) { //path edit event table
+                    if ((payload.changeName == 'Path' && state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event.includes(payload.beforename + '/' + payload.name + '/' + strEPath[strEPath.length - 1])) ||
+                        (payload.changeName == 'Name' && state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event.includes(payload.path + '/' + payload.beforename + '/' + strEPath[strEPath.length - 1]))) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event = payload.path + '/' + payload.name + '/' + strEPath[strEPath.length - 1]
+                    }
                 }
             } else if (tableLine[0] == 'proviedMethod') { //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의 MethodD ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                if (payload.changeName == 'MethodD') {
-                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + payload.listname
-                } else {
-                    intablename = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method.split('/')
-                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                var strPathP = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method.split('/')
+                if (payload.changeName == 'MethodD' && payload.name == strPathP[strPathP.length - 2]) { //method 이면서 method table에서 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else if (payload.changeName == 'fileName' && payload.name == strPathP[strPathP.length - 3]) { //field이면서 file name 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method.includes(payload.path + '/' + payload.name + '/' + payload.beforename + '/' + strPathP[strPathP.length - 1])) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + payload.listname + '/' + strPathP[strPathP.length - 1]
+                    }
+                } else if (payload.changeName == 'getName' && payload.name == strPathP[strPathP.length - 3]) { //field이면서 file getname 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method == payload.path + '/' + payload.name + '/' + strPathP[strPathP.length - 2] + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + strPathP[strPathP.length - 2] + '/' + payload.listname
+                    }
+                } else if (payload.changeName == 'setName' && payload.name == strPathP[strPathP.length - 3]) { //field이면서 file setname 고쳤을 때
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method == payload.path + '/' + payload.name + '/' + strPathP[strPathP.length - 2] + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + strPathP[strPathP.length - 2] + '/' + payload.listname
+                    }
+                } else if ((payload.changeName == 'Path' && payload.name == strPathP[strPathP.length - 3]) || (payload.changeName == 'Name' && payload.pathLength + 3 == strPathP.length)) { //path edit setname,getname
+                    if ((payload.changeName == 'Path' && state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method.includes(payload.beforename + '/' + payload.name + '/' + strPathP[strPathP.length - 2] + '/' + strPathP[strPathP.length - 1])) ||
+                        (payload.changeName == 'Name' && state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method.includes(payload.path + '/' + payload.beforename + '/' + strPathP[strPathP.length - 2] + '/' + strPathP[strPathP.length - 1]))) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + strPathP[strPathP.length - 2] + '/' + strPathP[strPathP.length - 1]
+                    }
+                } else if ((payload.changeName == 'Path' && payload.name == strPathP[strPathP.length - 2]) || (payload.changeName == 'Name' && payload.pathLength + 2 == strPathP.length)) { //path edit method table
+                    if ((payload.changeName == 'Path' && state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method.includes(payload.beforename + '/' + payload.name + '/' + strPathP[strPathP.length - 1])) ||
+                        (payload.changeName == 'Name' && state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method.includes(payload.path + '/' + payload.beforename + '/' + strPathP[strPathP.length - 1]))) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + strPathP[strPathP.length - 1]
+                    }
                 }
             } else if (tableLine[0] == 'providEventG') { //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의 eventG ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'EventG') {
-                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].eventG = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].eventG == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].eventG = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].eventG.split('/')
                     state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].eventG = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9743,7 +11203,9 @@ const mutations = {
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport, tableLine[2])
                 idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued, tableLine[1])
                 if (payload.changeName == 'serviceEventD') {
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued[idxIDTable].dataE == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued[idxIDTable].dataE.split('/')
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9753,10 +11215,24 @@ const mutations = {
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport, tableLine[2])
                 idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field, tableLine[1])
                 if (payload.changeName == 'field') {
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field[idxIDTable].dataE == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field[idxIDTable].dataE.split('/')
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'pportSC') { //ServiceInterface 변경 시 =>  SW Components의 field 에서 ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].server, tableLine[1])
+                if (payload.changeName == 'serviceMethodD') {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].server[idxIDTable].oper == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].server[idxIDTable].oper = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].server[idxIDTable].oper.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].server[idxIDTable].oper = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
                 }
             } else if (tableLine[0] == 'PPortI') { //ServiceInterface 변경 시 =>  SW Components 에서 ServiceInterface ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
@@ -9776,7 +11252,10 @@ const mutations = {
                 idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued, tableLine[1])
                 if ((payload.changeName == 'field' && state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].select == "FIELD") ||
                     (payload.changeName == 'serviceEventD' && state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].select == "VARIABLE-DATA-PROTOTYPE")) {
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                    if ((payload.changeName == 'serviceEventD' && state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].dataE == payload.path + '/' + payload.name + '/' + payload.beforename) ||
+                        (payload.changeName == 'field' && state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].dataE == payload.path + '/' + payload.name + '/' + payload.beforename)) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].dataE.split('/')
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9786,10 +11265,36 @@ const mutations = {
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport, tableLine[2])
                 idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client, tableLine[1])
                 if (payload.changeName == 'serviceMethodD') {
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].operation = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].operation == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].operation = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].operation.split('/')
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].operation = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'rportCCG') { //ServiceInterface 변경 시 =>  SW Components의 client 에서 ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client, tableLine[1])
+                if (payload.changeName == 'field') {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].getter == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].getter = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].getter.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].getter = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'rportCCS') { //ServiceInterface 변경 시 =>  SW Components의 client 에서 ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client, tableLine[1])
+                if (payload.changeName == 'field') {
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].setter == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].setter = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].setter.split('/')
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].setter = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
                 }
             } else if (tableLine[0] == 'service') { //ServiceInterface 변경 시 =>  ServiceInterface Deploymant에서 serviceInterface ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
@@ -9797,7 +11302,9 @@ const mutations = {
             } else if (tableLine[0] == 'serviceEventD') { //ServiceInterface 변경 시 =>  ServiceInterface Deploymant에서 serviceinterface Event ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'serviceEventD') {
-                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventD[tableLine[1]].event = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventD[tableLine[1]].event == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventD[tableLine[1]].event = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventD[tableLine[1]].event.split('/')
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventD[tableLine[1]].event = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9805,7 +11312,9 @@ const mutations = {
             } else if (tableLine[0] == 'serviceMethodD') { //ServiceInterface 변경 시 =>  ServiceInterface Deploymant에서 serviceinterface Method ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'serviceMethodD') {
-                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].methodD[tableLine[1]].method = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].methodD[tableLine[1]].method == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].methodD[tableLine[1]].method = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].methodD[tableLine[1]].method.split('/')
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].methodD[tableLine[1]].method = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9813,7 +11322,9 @@ const mutations = {
             } else if (tableLine[0] == 'field') { //ServiceInterface 변경 시 =>  ServiceInterface Deploymant에서 serviceinterface Field ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'field') {
-                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].fieldD[tableLine[1]].field = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].fieldD[tableLine[1]].field == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].fieldD[tableLine[1]].field = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].fieldD[tableLine[1]].field.split('/')
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].fieldD[tableLine[1]].field = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9821,7 +11332,9 @@ const mutations = {
             } else if (tableLine[0] == 'MGDserviceI') { //ServiceInterface 변경 시 =>  MethodGD에서 serviceinterface Method ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'serviceMethodD') {
-                    state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxElement].SIMethod = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxElement].SIMethod == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxElement].SIMethod = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxElement].SIMethod.split('/')
                     state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxElement].SIMethod = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9829,7 +11342,9 @@ const mutations = {
             } else if (tableLine[0] == 'EGDserviceI') { //ServiceInterface 변경 시 =>  EventGD에서 serviceinterface Event ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].IamG.EventGD.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'serviceEventD') {
-                    state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxElement].SIEvent = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxElement].SIEvent == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxElement].SIEvent = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxElement].SIEvent.split('/')
                     state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxElement].SIEvent = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9837,7 +11352,9 @@ const mutations = {
             } else if (tableLine[0] == 'FGDserviceI') { //ServiceInterface 변경 시 =>  FieldGD에서 serviceinterface Field ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].IamG.FieldGD.findIndex(data => data.uuid === startUUID[0])
                 if (payload.changeName == 'field') {
-                    state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxElement].SIField = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxElement].SIField == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxElement].SIField = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxElement].SIField.split('/')
                     state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxElement].SIField = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9879,6 +11396,50 @@ const mutations = {
             } else if (tableLine[0] == 'MGProvide') { //Provided 변경시 =>  Method Grant 에서 Provided ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxElement].provide = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'e2ePropro') { // E2E configuration변경시 => Provided 에서 E2E ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent, tableLine[1])
+                if (payload.changeName == 'E2Econfig') {
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].e2e == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].e2e = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].e2e.split('/')
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].e2e = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'e2eProMpro') { // E2E configuration변경시 => Provided 에서 E2E ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod, tableLine[1])
+                if (payload.changeName == 'E2Econfig') {
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].e2e == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].e2e = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].e2e.split('/')
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].e2e = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'e2ePro') { // E2E configuration변경시 => RequiredSomeIP 에서 E2E ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent, tableLine[1])
+                if (payload.changeName == 'E2Econfig') {
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].e2e == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].e2e = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].e2e.split('/')
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].e2e = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
+            } else if (tableLine[0] == 'e2eProM') { // E2E configuration변경시 => Provided 에서 E2E ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod, tableLine[1])
+                if (payload.changeName == 'E2Econfig') {
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].e2e == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].e2e = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
+                } else {
+                    intablename = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].e2e.split('/')
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].e2e = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                }
             } else if (tableLine[0] == 'methoderrors') { // Error 변경시 => ServiceInterface 에서 Error ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].methods[tableLine[2]].errorSet[tableLine[1]].error = payload.path + '/' + payload.name
@@ -9903,7 +11464,9 @@ const mutations = {
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport, tableLine[2])
                 idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide, tableLine[1])
                 if (payload.changeName == 'PerDataInter') {
-                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide[idxIDTable].dataE == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + payload.listname
+                    }
                 } else {
                     intablename = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide[idxIDTable].dataE.split('/')
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide[idxIDTable].dataE = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
@@ -9914,6 +11477,11 @@ const mutations = {
             } else if (tableLine[0] == 'PHMViaRecovery') { //PHMRecovery 변경시 =>  PHMRecoveryVia 에서 PHMRecovery ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].phmRecovery = payload.path + '/' + payload.name
+            } else if (tableLine[0] == 'iamM') { //Field Grant/EventG/MethodD 변경시 =>  machine module iam 에서 Field Grant등등 ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].iam, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].iam[idxIDTab].grants, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].iam[idxIDTab].grants[idxIDTable].grant = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'FieldGD') { //Field Grant Design 변경시 =>  Field Grant 에서 Field Grant Design ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].IamG.FieldG.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxElement].fieldD = payload.path + '/' + payload.name
@@ -9929,9 +11497,6 @@ const mutations = {
             } else if (tableLine[0] == 'UCMSWPSWC') { //SoftWareCluster 변경시 =>  SoftWarePackage 에서 SoftWareCluster ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxElement].swcluster = payload.path + '/' + payload.name
-            } else if (tableLine[0] == 'UCMModule') { //ModuleInstant 변경시 =>  VehiclePackage 에서 ModuleInstant ref할때
-                idxElement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].ucms[tableLine[1]].module = payload.path + '/' + payload.name
             }
         })
     },
@@ -9986,37 +11551,21 @@ const mutations = {
                         })
                     }
                 })
-            } else if (payload.deleteName == 'modeDeclar') { //Mode Declaration  변경시 =>  Process 에서  Module Declaration-> mode Declarations ref할때
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach((ele, i) => {
-                    if (ele.dependent.length > 0) {
-                        ele.dependent.forEach((data, n) => {
-                            if (data.functionItem != null) {
-                                data.functionItem.forEach((item, f) => {
-                                    if (item.targetMode == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
-                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/fgtarget-' + f + '-' + n)
+            } else if (payload.deleteName == 'Processor') { //Machine processor 변경시 =>  Process to machine mapping 에서 Machine -> Module process core ref할때
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.forEach((ele, i) => {
+                    if (ele.mapping.length > 0) {
+                        ele.mapping.forEach(data => {
+                            if (data.runon.length > 0) {
+                                data.runon.forEach(run => {
+                                    if (run.shall.includes(payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/runOn-' + run.id + '-' + data.id)
                                         if (idx != -1) {
-                                            item.targetMode = null
+                                            run.shall = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
-                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].validation = true
-                                        }
-                                    }
-                                })
-                            }
-                            if (data.exection != null) {
-                                data.exection.forEach((item, f) => {
-                                    if (item.targetMode == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
-                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/edtarget-' + f + '-' + n)
-                                        if (idx != -1) {
-                                            item.targetMode = null
-                                            EventBus.$emit('delete-line', idx)
-                                            this.commit('deletConnectionline', { startnum: idx })
-                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
                                             state.navigatorList[state.openProjectIndex].validation = true
                                         }
                                     }
@@ -10064,14 +11613,37 @@ const mutations = {
                     })
                     //ServiceInterface 변경 시 =>  SWConponent-> rport client에서  ref할때
                 state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach((ele, i) => {
-                    if (ele.rport.length > 0) {
-                        ele.rport.forEach(port => {
-                            if (port.client.length > 0) {
-                                port.client.forEach(item => {
-                                    if (item.operation == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
-                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/rportCC-' + item.id + '-' + port.id)
+                        if (ele.rport.length > 0) {
+                            ele.rport.forEach(port => {
+                                if (port.client.length > 0) {
+                                    port.client.forEach(item => {
+                                        if (item.operation == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/rportCC-' + item.id + '-' + port.id)
+                                            if (idx != -1) {
+                                                item.operation = null
+                                                EventBus.$emit('delete-line', idx)
+                                                this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                    //ServiceInterface 변경 시 =>  SWConponent-> pport server에서  ref할때
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach((ele, i) => {
+                    if (ele.pport.length > 0) {
+                        ele.pport.forEach(port => {
+                            if (port.server.length > 0) {
+                                port.server.forEach(item => {
+                                    if (item.oper == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/pportSC-' + item.id + '-' + port.id)
                                         if (idx != -1) {
-                                            item.operation = null
+                                            item.oper = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
                                             state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[i].validation = true
@@ -10118,6 +11690,90 @@ const mutations = {
                                     this.commit('deletConnectionline', { startnum: idx })
                                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
                                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].validation = true
+                                }
+                            }
+                        })
+                    }
+                })
+            } else if (payload.deleteName == 'FieldD') {
+                //Service Deployment Field 변경시 =>  ServiceD eventG table 에서 notify ref할때
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach((ele, i) => {
+                        if (ele.eventG.length > 0) {
+                            ele.eventG.forEach((item, n) => {
+                                if (item.event.length > 0) {
+                                    item.event.forEach((eve, e) => {
+                                        if (eve.event == (payload.path + '/' + payload.name + '/' + payload.tabName + '/' + payload.notname)) {
+                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/event-' + e + '-' + n)
+                                            if (idx != -1) {
+                                                eve.event = null
+                                                EventBus.$emit('delete-line', idx)
+                                                this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                    //Service Deployment Field 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의 Field Get, Set, Notify ref할때
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
+                        if (ele.eventP.length > 0) {
+                            ele.eventP.forEach((item, n) => {
+                                if (item.event == (payload.path + '/' + payload.name + '/' + payload.tabName + '/' + payload.notname)) {
+                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedEventP-' + n)
+                                    if (idx != -1) {
+                                        item.event = null
+                                        EventBus.$emit('delete-line', idx)
+                                        this.commit('deletConnectionline', { startnum: idx })
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].validation = true
+                                    }
+                                }
+                            })
+                        }
+                        if (ele.method.length > 0) {
+                            ele.method.forEach((item, n) => {
+                                if ((item.method == (payload.path + '/' + payload.name + '/' + payload.tabName + '/' + payload.setname)) ||
+                                    (item.method == (payload.path + '/' + payload.name + '/' + payload.tabName + '/' + payload.getname))) {
+                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedMethod-' + n)
+                                    if (idx != -1) {
+                                        item.method = null
+                                        EventBus.$emit('delete-line', idx)
+                                        this.commit('deletConnectionline', { startnum: idx })
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].validation = true
+                                    }
+                                }
+                            })
+                        }
+                    })
+                    //Service Deployment Field 변경시 =>  required SomeIP Service Instance 에서 Service Deploment의 Field Get, Set ref할때
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach((ele, i) => {
+                    if (ele.method.length > 0) {
+                        ele.method.forEach((item, n) => {
+                            if ((item.method == (payload.path + '/' + payload.name + '/' + payload.tabName + '/' + payload.setname)) ||
+                                (item.method == (payload.path + '/' + payload.name + '/' + payload.tabName + '/' + payload.getetname))) {
+                                var idx = this.getters.getconnectLineNum(ele.uuid + '/requiredMethod-' + n)
+                                if (idx != -1) {
+                                    item.method = null
+                                    EventBus.$emit('delete-line', idx)
+                                    this.commit('deletConnectionline', { startnum: idx })
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
                                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                     state.navigatorList[state.openProjectIndex].validation = true
@@ -10272,6 +11928,87 @@ const mutations = {
                         }
                     })
                 }
+            } else if (payload.deleteName == 'E2Econfig') { //E2EProfileConfig 변경시
+                // Provide의  e2e Event
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
+                        if (ele.E2EEvent.length > 0) {
+                            ele.E2EEvent.forEach(data => {
+                                if (data.e2e.includes(payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/e2ePropro-' + data.id)
+                                    if (idx != -1) {
+                                        data.e2e = null
+                                        EventBus.$emit('delete-line', idx)
+                                        this.commit('deletConnectionline', { startnum: idx })
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].validation = true
+                                    }
+                                }
+                            })
+                        }
+                    })
+                    // Provide의  e2e Method
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
+                        if (ele.E2EMethod.length > 0) {
+                            ele.E2EMethod.forEach(data => {
+                                if (data.e2e.includes(payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/e2eProMpro-' + data.id)
+                                    if (idx != -1) {
+                                        data.e2e = null
+                                        EventBus.$emit('delete-line', idx)
+                                        this.commit('deletConnectionline', { startnum: idx })
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].validation = true
+                                    }
+                                }
+                            })
+                        }
+                    })
+                    // Required의  e2e Event
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach((ele, i) => {
+                        if (ele.E2EEvent.length > 0) {
+                            ele.E2EEvent.forEach(data => {
+                                if (data.e2e.includes(payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/e2ePro-' + data.id)
+                                    if (idx != -1) {
+                                        data.e2e = null
+                                        EventBus.$emit('delete-line', idx)
+                                        this.commit('deletConnectionline', { startnum: idx })
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].validation = true
+                                    }
+                                }
+                            })
+                        }
+                    })
+                    // Required의  e2e Method
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach((ele, i) => {
+                    if (ele.E2EMethod.length > 0) {
+                        ele.E2EMethod.forEach(data => {
+                            if (data.e2e.includes(payload.path + '/' + payload.name + '/' + payload.tabName)) {
+                                var idx = this.getters.getconnectLineNum(ele.uuid + '/e2eProM-' + data.id)
+                                if (idx != -1) {
+                                    data.e2e = null
+                                    EventBus.$emit('delete-line', idx)
+                                    this.commit('deletConnectionline', { startnum: idx })
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].validation = true
+                                }
+                            }
+                        })
+                    }
+                })
             }
         } else {
             payload.deletItemList.forEach(deleteList => {
@@ -10312,6 +12049,29 @@ const mutations = {
                                             }
                                         }
                                     })
+                                }
+                            })
+                        }
+                    })
+                } else if (payload.deleteName == 'ModuleIns') { //Machine 변경시 =>  VehiclePackage 에서 Machine -> ucm module ref할때
+                    state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.forEach((ele, i) => {
+                        if (ele.ucms.length > 0) {
+                            ele.ucms.forEach((data, n) => {
+                                if (data.module != null) {
+                                    if (data.module == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/UCMModule-' + n)
+                                        if (idx != -1) {
+                                            data.module = null
+                                            EventBus.$emit('delete-line', idx)
+                                            this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
+
+                                        }
+                                    }
                                 }
                             })
                         }
@@ -10360,6 +12120,69 @@ const mutations = {
                                 }
                             }
                         }) //SW Component 변경시 =>   Service Instance to port prototype 에서 SWComponent port ref할때
+                } else if (payload.deleteName == 'proCore') {
+                    //Machin Processor core 변경 시 =>  process ro Machine Mapping에서 machine processor core ref할때
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.forEach((ele, i) => {
+                        if (ele.mapping.length > 0) {
+                            ele.mapping.forEach(map => {
+                                if (map.runon.length > 0) {
+                                    map.runon.forEach(item => {
+                                        if (item.shall == (payload.path + '/' + payload.name + '/' + payload.tabname + '/' + deleteList.name)) {
+                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/runOn-' + item.id + '-' + map.id)
+                                            if (idx != -1) {
+                                                item.shall = null
+                                                EventBus.$emit('delete-line', idx)
+                                                this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                } else if (payload.deleteName == 'modeDeclar') { //Mode Declaration  변경시 =>  Process 에서  Module Declaration-> mode Declarations ref할때
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach((ele, i) => {
+                        if (ele.dependent.length > 0) {
+                            ele.dependent.forEach((data, n) => {
+                                if (data.functionItem.length > 0) {
+                                    data.functionItem.forEach((item, f) => {
+                                        if (item.targetMode == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/fgtarget-' + f + '-' + n)
+                                            if (idx != -1) {
+                                                item.targetMode = null
+                                                EventBus.$emit('delete-line', idx)
+                                                this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
+                                            }
+                                        }
+                                    })
+                                }
+                                if (data.exection.length > 0) {
+                                    data.exection.forEach((item, f) => {
+                                        if (item.targetMode == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/edtarget-' + f + '-' + n)
+                                            if (idx != -1) {
+                                                item.targetMode = null
+                                                EventBus.$emit('delete-line', idx)
+                                                this.commit('deletConnectionline', { startnum: idx })
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
                 } else if (payload.deleteName == 'eventSI') {
                     //ServiceInterface 변경 시 =>  ServiceInterface Deploymant에서에서 serviceinterface Event ref할때
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach((ele, i) => {
@@ -10444,7 +12267,7 @@ const mutations = {
                         }
                     })
                 } else if (payload.deleteName == 'fieldSI') {
-                    //ServiceInterface 변경 시 =>  ServiceInterface Deploymant에서에서 serviceinterface Field ref할때
+                    //ServiceInterface 변경 시 =>  ServiceInterface Deploymant에서 serviceinterface Field ref할때
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach((ele, i) => {
                             if (ele.fieldD.length > 0) {
                                 ele.fieldD.forEach((item, n) => {
@@ -10464,7 +12287,7 @@ const mutations = {
                                 })
                             }
                         })
-                        //ServiceInterface 변경 시 =>  FieldGD에서에서 serviceinterface Field ref할때
+                        //ServiceInterface 변경 시 =>  FieldGD에서 serviceinterface Field ref할때
                     state.SAHLProject[state.openProjectIndex].IamG.FieldGD.forEach((ele, i) => {
                             if (ele.SIField == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
                                 var idx = this.getters.getconnectLineNum(ele.uuid + '/FGDserviceI')
@@ -10505,16 +12328,50 @@ const mutations = {
                         })
                         //ServiceInterface 변경 시 =>  SWConponent-> serviceinterface rport queued에서  ref할때
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach((ele, i) => {
+                            if (ele.rport.length > 0) {
+                                ele.rport.forEach(port => {
+                                    if (port.queued.length > 0) {
+                                        port.queued.forEach(item => {
+                                            if (item.select == "FIELD" && (item.dataE == (payload.path + '/' + payload.name + '/' + deleteList.name))) {
+                                                var idx = this.getters.getconnectLineNum(ele.uuid + '/rportQRC-' + item.id + '-' + port.id)
+                                                if (idx != -1) {
+                                                    item.dataE = null
+                                                    EventBus.$emit('delete-line', idx)
+                                                    this.commit('deletConnectionline', { startnum: idx })
+                                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[i].validation = true
+                                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                                                    state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                    state.navigatorList[state.openProjectIndex].validation = true
+                                                }
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        }) //ServiceInterface 변경 시 =>  SWConponent-> serviceinterface rport client에서  ref할때
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach((ele, i) => {
                         if (ele.rport.length > 0) {
                             ele.rport.forEach(port => {
-                                if (port.queued.length > 0) {
-                                    port.queued.forEach(item => {
-                                        if (item.select == "FIELD" && (item.dataE == (payload.path + '/' + payload.name + '/' + deleteList.name))) {
-                                            var idx = this.getters.getconnectLineNum(ele.uuid + '/rportQRC-' + item.id + '-' + port.id)
-                                            if (idx != -1) {
-                                                item.dataE = null
-                                                EventBus.$emit('delete-line', idx)
-                                                this.commit('deletConnectionline', { startnum: idx })
+                                if (port.client.length > 0) {
+                                    port.client.forEach(item => {
+                                        if (item.getter == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                            var idxG = this.getters.getconnectLineNum(ele.uuid + '/rportCCG-' + item.id + '-' + port.id)
+                                            if (idxG != -1) {
+                                                item.getter = null
+                                                EventBus.$emit('delete-line', idxG)
+                                                this.commit('deletConnectionline', { startnum: idxG })
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].validation = true
+                                            }
+                                        }
+                                        if (item.setter == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                            var idxS = this.getters.getconnectLineNum(ele.uuid + '/rportCCS-' + item.id + '-' + port.id)
+                                            if (idxS != -1) {
+                                                item.setter = null
+                                                EventBus.$emit('delete-line', idxS)
+                                                this.commit('deletConnectionline', { startnum: idxS })
                                                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[i].validation = true
                                                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                                                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
@@ -10553,16 +12410,56 @@ const mutations = {
                         })
                         //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의  eventD ref할때
                     state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
-                        if (ele.eventP.length > 0) {
-                            ele.eventP.forEach((item, n) => {
+                            if (ele.eventP.length > 0) {
+                                ele.eventP.forEach((item, n) => {
+                                    if (item.event == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedEventP-' + n)
+                                        if (idx != -1) {
+                                            item.event = null
+                                            EventBus.$emit('delete-line', idx)
+                                            this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                        //Service Deployment 변경시 =>  Provivded SomeIP Service Instance 에서 e2e의  eventD ref할때
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
+                            if (ele.E2EEvent.length > 0) {
+                                ele.E2EEvent.forEach(item => {
+                                    if (item.event == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/e2eEventpro-' + item.id)
+                                        if (idx != -1) {
+                                            item.event = null
+                                            EventBus.$emit('delete-line', idx)
+                                            this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                        //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 e2e의  eventD ref할때
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach((ele, i) => {
+                        if (ele.E2EEvent.length > 0) {
+                            ele.E2EEvent.forEach(item => {
                                 if (item.event == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
-                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedEventP-' + n)
+                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/e2eEvent-' + item.id)
                                     if (idx != -1) {
                                         item.event = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
                                         state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                                         state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                         state.navigatorList[state.openProjectIndex].validation = true
@@ -10592,6 +12489,46 @@ const mutations = {
                                 })
                             }
 
+                        })
+                        //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 e2e의  methodD ref할때
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach((ele, i) => {
+                            if (ele.E2EMethod.length > 0) {
+                                ele.E2EMethod.forEach(item => {
+                                    if (item.method == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/e2eMethod-' + item.id)
+                                        if (idx != -1) {
+                                            item.method = null
+                                            EventBus.$emit('delete-line', idx)
+                                            this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                        //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 e2e의  methodD ref할때
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
+                            if (ele.E2EMethod.length > 0) {
+                                ele.E2EMethod.forEach(item => {
+                                    if (item.method == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/e2eMethodpro-' + item.id)
+                                        if (idx != -1) {
+                                            item.method = null
+                                            EventBus.$emit('delete-line', idx)
+                                            this.commit('deletConnectionline', { startnum: idx })
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].validation = true
+                                        }
+                                    }
+                                })
+                            }
                         })
                         //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의 MethodD ref할때
                     state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
@@ -10637,6 +12574,26 @@ const mutations = {
                             })
                         }
                     })
+                } else if (payload.deleteName == 'attribute') {
+                    //HWCategory 변경시 =>  HW ELement에서에서 HWCategory attribute def ref할때
+                    state.SAHLProject[state.openProjectIndex].Machine.HWElement.forEach((ele, i) => {
+                        if (ele.attribute.length > 0) {
+                            ele.attribute.forEach(item => {
+                                if (item.attr == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
+                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/attributetable-' + item.id)
+                                    if (idx != -1) {
+                                        item.attr = null
+                                        EventBus.$emit('delete-line', idx)
+                                        this.commit('deletConnectionline', { startnum: idx })
+                                        state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].validation = true
+                                    }
+                                }
+                            })
+                        }
+                    })
                 }
             })
         }
@@ -10648,483 +12605,627 @@ const mutations = {
         for (let i = 0; i < indices.length; i++) {
             var startUUID = state.connectionLine[state.openProjectIndex].start[indices[i]].split('/')
             var tableLine = startUUID[1].split('-')
-            var idxIDTab = 0,
+            var idxElement = null,
+                idxIDTab = 0,
                 idxIDTable = 0
 
             if (tableLine[0] == 'ddpccompu') { // implementation 에서 compu method ref할때
-                var idxImpleCom = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxImpleCom].ddpc[tableLine[1]].compumethod = ''
-                state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxImpleCom].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc[tableLine[1]].compumethod = ''
+                state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'ddpcdata') { // implementation 에서 data constr ref할때
-                var idxImpleDa = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxImpleDa].ddpc[tableLine[1]].dataconstr = ''
-                state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxImpleDa].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc[tableLine[1]].dataconstr = ''
+                state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'typeref') { // implementation 에서 implementation ref할때
-                var idxImpletype = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
+                idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
                 if (payload.uuid != startUUID[0]) {
-                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxImpletype].typeref = null
-                    state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxImpletype].validation = true
+                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].typeref = null
+                    state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxElement].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.DateType_index].validation = true
                     state.navigatorList[state.openProjectIndex].validation = true
                 }
             } else if (tableLine[0] == 'templateType') { // implementation 에서 implementation ref할때
-                var idxImpletemp = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
+                idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
                 if (payload.uuid != startUUID[0]) {
-                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxImpletemp].templatetype = null
-                    state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxImpletemp].validation = true
+                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].templatetype = null
+                    state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxElement].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.DateType_index].validation = true
                     state.navigatorList[state.openProjectIndex].validation = true
                 }
             } else if (tableLine[0] == 'idtetable') { // implementation 에서 implementation ref할때
-                var idxImpleImple = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
+                idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
                 if (payload.uuid != startUUID[0]) {
-                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxImpleImple].idtelement[tableLine[1]].typeref = ''
-                    state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxImpleImple].validation = true
+                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].idtelement[tableLine[1]].typeref = ''
+                    state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxElement].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.DateType_index].validation = true
                     state.navigatorList[state.openProjectIndex].validation = true
                 }
             } else if (tableLine[0] == 'machinedesign') { // machin에서 machinDesign ref할때
-                var idxMachineD = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxMachineD].machinedesign = null
-                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children[idxMachineD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].machinedesign = null
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'hwelement') { // machin에서 HWElement ref할때
-                var idxMachineHWE = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxMachineHWE].hwelement[tableLine[1]].hwelement = null
-                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children[idxMachineHWE].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].hwelement[tableLine[1]].hwelement = null
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'functiontable') { // machin에서 Mode Declaration ref할때
-                var idxMachineMD = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxMachineMD].functiongroup[tableLine[1]].type = null
-                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children[idxMachineMD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].functiongroup[tableLine[1]].type = null
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'iamM') { // machin에서 ComEvent/ComField/ComMethod ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].iam, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].iam[idxIDTab].grants, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].iam[idxIDTab].grants[idxIDTable].grant = null
+                state.SAHLProject[state.openProjectIndex].Machine.Machine[idxElement].iam[idxIDTab].grants[idxIDTable].select = null
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'cctable') { // machinDesign에서 EthernetCluster Endpoint ref할때
-                var idxMachineDCC = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxMachineDCC].connector[tableLine[1]].endpoint = null
-                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].children[idxMachineDCC].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = null
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'sdctable') { // machinDesign에서 EthernetCluster Endpoint ref할때
-                var idxMachineDSDC = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxMachineDSDC].servicediscover[tableLine[1]].msia = null
-                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].children[idxMachineDSDC].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = null
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'comconet') { // EthernetCluster에서 MachineDesign -> Communication Connector ref할때
-                var idxEthernet = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxEthernet].conditional[tableLine[3]].channel[tableLine[2]].comconnect[tableLine[1]].connector = ''
-                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.EthernetCluster_index].children[idxEthernet].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxElement].conditional[tableLine[3]].channel[tableLine[2]].comconnect[tableLine[1]].connector = ''
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.EthernetCluster_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.EthernetCluster_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'hwcatrory') { // HWElement에서 HWCategory ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].category = null
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'attributetable') { // HWElement에서 HWCategory ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(data => data.uuid === startUUID[0])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].attribute, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxElement].attribute[idxIDTable].attr = null
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'machinefromptmm') { // Process to Machine Mapping set 에서 Machine ref할때
-                var idxPTMMMachine = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxPTMMMachine].ptmmMachine = ''
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].children[idxPTMMMachine].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].ptmmMachine = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'processfromptmm') { // Process to Machine Mapping set 에서 Process ref할때
-                var idxPTMMProcess = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxPTMMProcess].ptmmProcess = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].children[idxPTMMProcess].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].ptmmProcess = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'runOn') { // Process to Machine Mapping set 에서 machine processor core ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].runon, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxElement].mapping[idxIDTab].runon[idxIDTable].shall = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PPortI') { // SW Components 에서 ServiceInterface ref할때
-                var idxpport = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxpport].pport, tableLine[1])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxpport].pport[idxIDTab].interface = ''
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxpport].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].interface = ''
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'pportQSC') { // SW Components 에서 Service Interface -> events ref할때
-                var idxSWPQSC = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPQSC].pport, tableLine[2])
-                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPQSC].pport[idxIDTab].queued, tableLine[1])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPQSC].pport[idxIDTab].queued[idxIDTable].dataE = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxSWPQSC].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].queued[idxIDTable].dataE = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'pportFSC') { // SW Components 에서 Service Interface-> Fields ref할때
-                var idxSWPFSC = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPFSC].pport, tableLine[2])
-                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPFSC].pport[idxIDTab].field, tableLine[1])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWPFSC].pport[idxIDTab].field[idxIDTable].dataE = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxSWPFSC].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].field[idxIDTable].dataE = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'pportSC') { // SW Components 에서 Service Interface-> method ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].server, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport[idxIDTab].server[idxIDTable].oper = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PRPortI') { // SW Components 에서 ServiceInterface ref할때
-                var idxprport = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxprport].pport, tableLine[1])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxprport].prport[idxIDTab].interface = ''
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxprport].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].pport, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].interface = ''
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'prporttab') { // SW Components 에서 Service Interface-> Fields ref할때
-                var idxPRPro = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxPRPro].prport, tableLine[2])
-                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxPRPro].prport[idxIDTab].provide, tableLine[1])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxPRPro].prport[idxIDTab].provide[idxIDTable].dataE = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxPRPro].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].prport[idxIDTab].provide[idxIDTable].dataE = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'RPortI') { // SW Components 에서 ServiceInterface ref할때
-                var idxrport = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxrport].rport[tableLine[1]].interface = ''
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxrport].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[tableLine[1]].interface = ''
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'rportQRC') { // SW Components 에서 Service Interface -> events ref할때
-                var idxSWRQRC = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRQRC].rport, tableLine[2])
-                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRQRC].rport[idxIDTab].queued, tableLine[1])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRQRC].rport[idxIDTab].queued[idxIDTable].dataE = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxSWRQRC].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].queued[idxIDTable].dataE = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'rportCC') { // SW Components 에서 Service Interface-> method ref할때
-                var idxSWRCC = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
-                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRCC].rport, tableLine[2])
-                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRCC].rport[idxIDTab].client, tableLine[1])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxSWRCC].rport[idxIDTab].client[idxIDTable].operation = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxSWRCC].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].operation = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'rportCCG') { // SW Components 에서 Service Interface-> method ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].getter = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'rportCCS') { // SW Components 에서 Service Interface-> method ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport, tableLine[2])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxElement].rport[idxIDTab].client[idxIDTable].setter = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'applicationtyperef') { // Executable 에서 SW Components ref할때
-                var idxExecutable = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxExecutable].applicationtyperef = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Executable_index].children[idxExecutable].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxElement].applicationtyperef = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Executable_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Executable_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'prodesignexecutable') { // ProcessDesign 에서  Executable ref할때
-                var idxProDExecutable = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxProDExecutable].executableref = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcessDesign_index].children[idxProDExecutable].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxElement].executableref = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcessDesign_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcessDesign_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'processprodesign') { // Process 에서 Process Design ref할때
-                var idxProProDesign = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProProDesign].prodesign = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProProDesign].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].prodesign = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'processdetermin') { // Process 에서 Deterministric ref할때
-                var idxProDetermin = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProDetermin].determin = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProDetermin].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].determin = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'processexecut') { // Process 에서 Executable ref할때
-                var idxProExe = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProExe].execut = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProExe].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].execut = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'processmodedeclar') { // Process 에서 Mode Declaration ref할때
-                var idxProMod = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProMod].machinetype = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProMod].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].machinetype = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'processstartup') { // Process 에서 Startup Config ref할때
-                var idxProStart = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProStart].dependent[tableLine[1]].startupConfigRef = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProStart].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[1]].startupConfigRef = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'processresorce') { // Process 에서 Machine -> Module Instantiation ref할때
-                var idxProMI = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProMI].dependent[tableLine[1]].resourceRef = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProMI].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[1]].resourceRef = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'fgcontext') { // Process 에서 Machine -> Function Group ref할때
-                var idxProMachine = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProMachine].dependent[tableLine[2]].functionItem[tableLine[1]].contextMode = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProMachine].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].contextMode = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'fgtarget') { // Process 에서  Module Declaration-> mode Declarations ref할때
-                var idxProMD = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProMD].dependent[tableLine[2]].functionItem[tableLine[1]].targetMode = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProMD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].functionItem[tableLine[1]].targetMode = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'edcontext') { // Process 에서 Machine -> Function Group ref할때
-                var idxProEDC = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProEDC].dependent[tableLine[2]].exection[tableLine[1]].contextMode = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProEDC].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].contextMode = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'edtarget') { // Process 에서  Module Declaration-> mode Declarations ref할때
-                var idxProEDT = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxProEDT].dependent[tableLine[2]].exection[tableLine[1]].targetMode = null
-                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxProEDT].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxElement].dependent[tableLine[2]].exection[tableLine[1]].targetMode = null
+                state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'errordomain') { // Error 에서 Error Domain ref할때
-                var idxErrorD = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.Error[idxErrorD].errorDref = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Error_index].children[idxErrorD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].errorDref = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Error_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Error_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'error') { // Error Set 에서 Error  ref할때
-                var idxError = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(data => data.uuid === startUUID[0])
-                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxError].errorref, tableLine[1])
-                state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxError].errorref[idxIDTable].error = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].children[idxError].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(data => data.uuid === startUUID[0])
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].errorref, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].errorref[idxIDTable].error = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'service') { // ServiceInterface Deploymant에서 serviceInterface ref할때
-                var idxSIDservice = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxSIDservice].service = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxSIDservice].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].service = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'event') { // ServiceInterface Deploymant에서에서 serviceinterface Deploymant Event Deployment ref할때
-                var idxSIDeventG = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
                 if (payload.uuid != startUUID[0]) {
-                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxSIDeventG].eventG[tableLine[2]].event[tableLine[1]].event = null
-                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxSIDeventG].validation = true
+                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event = null
+                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                     state.navigatorList[state.openProjectIndex].validation = true
                 }
             } else if (tableLine[0] == 'serviceEventD') { // ServiceInterface Deploymant에서에서 serviceinterface Event ref할때
-                var idxSIDeventD = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxSIDeventD].eventD[tableLine[1]].event = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxSIDeventD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventD[tableLine[1]].event = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'serviceMethodD') { // ServiceInterface Deploymant에서에서 serviceinterface Method ref할때
-                var idxSIDMethodD = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxSIDMethodD].methodD[tableLine[1]].method = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxSIDMethodD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].methodD[tableLine[1]].method = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'field') { // ServiceInterface Deploymant에서에서 serviceinterface Field ref할때
-                var idxSIDFieldD = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxSIDFieldD].fieldD[tableLine[1]].field = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxSIDFieldD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].fieldD[tableLine[1]].field = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'Eventtable') { // ServiceInterface 에서 Implementation ref할때
-                var idxSIevent = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxSIevent].events[tableLine[1]].type = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxSIevent].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].events[tableLine[1]].type = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'Fieldtable') { // ServiceInterface 에서 Implementation ref할때
-                var idxSIfield = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxSIfield].fields[tableLine[1]].type = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxSIfield].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].fields[tableLine[1]].type = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'argtable') { // ServiceInterface 에서 Implementation ref할때
-                var idxSIImp = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxSIImp].methods[tableLine[2]].argument[tableLine[1]].type = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxSIImp].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].methods[tableLine[2]].argument[tableLine[1]].type = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'methoderrors') { // ServiceInterface 에서 Error ref할때
-                var idxSIError = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxSIError].methods[tableLine[2]].errorSet[tableLine[1]].error = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxSIError].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].methods[tableLine[2]].errorSet[tableLine[1]].error = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'methoderror') { // ServiceInterface 에서 ErrorSet ref할때
-                var idxSIErrorS = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxSIErrorS].methods[tableLine[2]].error[tableLine[1]].error = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxSIErrorS].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].methods[tableLine[2]].error[tableLine[1]].error = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'tomachinCC') { // SomeIPtoMachineMapping 에서 MachineDesgin의 Communication Connected ref할때
-                var idxSIMMCC = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxSIMMCC].ccref = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[idxSIMMCC].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].ccref = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'toMachinServiceIns') { // SomeIPtoMachineMapping 에서 Required SomeIP / Provide SomeIP ref할때
-                var idxSIRequired = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxSIRequired].serviceI[tableLine[1]].service = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[idxSIRequired].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI[tableLine[1]].service = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'toportport') { // Service Instance to port prototype 에서 SWComponent port ref할때
-                var idxtoportport = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxtoportport].selectPort = null
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxtoportport].porttype = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxtoportport].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].selectPort = null
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'toportprocess') { // Service Instance to port prototype 에서 process design ref할때
-                var idxtoportproess = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxtoportproess].process = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxtoportproess].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].process = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'toportcontext') { // Service Instance to port prototype 에서 process design ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].context = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'toportservice') { // Service Instance to port prototype 에서 provided,required ref할때
-                var idxtoportservice = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxtoportservice].selectServiceIns = null
-                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxtoportservice].serviceIns = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxtoportservice].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].selectServiceIns = null
+                state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].serviceIns = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'requiredDeploy') { // Required SomeIP Service Instance 에서 Service Deployment ref할때
-                var idxRequiredD = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxRequiredD].deployref = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxRequiredD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].deployref = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'requiredSomeIPC') { // Required SomeIP Service Instance 에서 SomeIP Client ref할때
-                var idxRequiredS = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxRequiredS].someipclient = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxRequiredS].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].someipclient = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'requiredMethod') { // Required SomeIP Service Instance 에서 Service Deployment Method Deployment ref할때
-                var idxRequiredM = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxRequiredM].method[tableLine[1]].method = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxRequiredM].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'requiredEventG') { // Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
-                var idxRequiredE = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxRequiredE].requiredevent[tableLine[1]].eventG = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxRequiredE].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].eventG = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'requiredClient') { // Required SomeIP Service Instance 에서 Client event ref할때
-                var idxRequiredC = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxRequiredC].requiredevent[tableLine[1]].client = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxRequiredC].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].client = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'e2ePro') { // Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].e2e = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'e2eEvent') { // Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].event = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'e2eProM') { // Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].e2e = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'e2eMethod') { // Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].method = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'e2ePropro') { // Provided SomeIP Service Instance 에서 Service Deployment Event Group ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].e2e = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'e2eEventpro') { // Provided SomeIP Service Instance 에서 Service Deployment Event Group ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].event = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'e2eProMpro') { // Provided SomeIP Service Instance 에서 Service Deployment Event Group ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].e2e = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
+            } else if (tableLine[0] == 'e2eMethodpro') { // Provided SomeIP Service Instance 에서 Service Deployment Event Group ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].method = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
+                state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'providDeploy') { // Provided SomeIP Service Instance 에서 Service Deployment ref할때
-                var idxProvidD = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxProvidD].deployref = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxProvidD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].deployref = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'providSomeIPS') { // Provided SomeIP Service Instance 에서 SomIP Server ref할때
-                var idxProvidSS = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxProvidSS].someipserver = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxProvidSS].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].someipserver = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'proviedEventP') { // Provided SomeIP Service Instance 에서 Service Deploment의  eventD ref할때
-                var idxProvidEP = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxProvidEP].eventP[tableLine[1]].event = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxProvidEP].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'proviedMethod') { // Provided SomeIP Service Instance 에서 Service Deploment의 MethodD ref할때
-                var idxProvidM = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxProvidM].method[tableLine[1]].method = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxProvidM].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'providEventG') { // Provided SomeIP Service Instance 에서 Service Deploment의 eventG ref할때
-                var idxProvidEG = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxProvidEG].eventG[tableLine[1]].eventG = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxProvidEG].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].eventG = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'providServer') { // Provided SomeIP Service Instance 에서 Server ref할때
-                var idxProvidS = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxProvidS].eventG[tableLine[1]].server = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxProvidS].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].server = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
@@ -11132,289 +13233,289 @@ const mutations = {
             }
             /////////
             else if (tableLine[0] == 'PERArraySDG') { // PERFileArray에서 SWComponent ref할때
-                var idxPerAsdg = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxPerAsdg].sdgs[tableLine[1]].port = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].children[idxPerAsdg].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxElement].sdgs[tableLine[1]].port = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PERKeyDSDG') { // PERKeyValueD에서 SWComponent ref할때
-                var idxPerKsdg = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxPerKsdg].sdgs[tableLine[1]].port = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children[idxPerKsdg].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].sdgs[tableLine[1]].port = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PERKeyV') { // PERKeyValueD에서 ImplementationDataType ref할때
-                var idxPerKeyV = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxPerKeyV].keyValue[tableLine[1]].datatype = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children[idxPerKeyV].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxElement].keyValue[tableLine[1]].datatype = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PERData') { // PERKeyValueDI에서 ImplementationDataType ref할때
-                var idxPerData = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxPerData].data[tableLine[1]].type = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].children[idxPerData].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxElement].data[tableLine[1]].type = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PERSerial') { // PERKeyValueDI에서 ImplementationDataType ref할때
-                var idxPERSerial = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxPERSerial].serialization[tableLine[1]].serial = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].children[idxPERSerial].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxElement].serialization[tableLine[1]].serial = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PPPtoFileArray') { // PPP to File Array에서 PERSISTENCY-FILE-ARRAY ref할때
-                var idxPPPtoFileArray = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxPPPtoFileArray].fileArray = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children[idxPPPtoFileArray].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxElement].fileArray = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PPPtoFilePRPort') { // PPP to File Array에서 PR port ref할때
-                var idxPPPtoFilePort = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxPPPtoFilePort].port = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children[idxPPPtoFilePort].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxElement].port = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PPPtoFileProcess') { // PPP to File Array에서 Process ref할때
-                var idxPPPtoFileProce = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxPPPtoFileProce].process = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children[idxPPPtoFileProce].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxElement].process = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PPPtoKeyValue') { // PPP to Key Value에서 PERSISTENCY-FILE-ARRAY ref할때
-                var idxPPPtoKeyValue = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxPPPtoKeyValue].keyValue = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children[idxPPPtoKeyValue].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxElement].keyValue = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PPPtoKeyPRPort') { // PPP to Key Value에서 PR port ref할때
-                var idxPPPtoKeyPort = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxPPPtoKeyPort].port = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children[idxPPPtoKeyPort].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxElement].port = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PPPtoKeyProcess') { // PPP to Key Value에서 Process ref할때
-                var idxPPPtoKeyProce = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxPPPtoKeyProce].process = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children[idxPPPtoKeyProce].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxElement].process = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PHMtoMachine') { // PHMtoMachine 에서 Machine ref할때
-                var idxPHMtoMachine = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxPHMtoMachine].machine = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].children[idxPHMtoMachine].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxElement].machine = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PHMContri') { // PHMtoMachine 에서 PHMContribution ref할때
-                var idxPHMContri = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxPHMContri].contri[tableLine[1]].con = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].children[idxPHMContri].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxElement].contri[tableLine[1]].con = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PHMViaPro') { // PHMRecovertVia에서 Process ref할때
-                var idxPHMViaPro = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxPHMViaPro].process = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[idxPHMViaPro].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].process = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PHMViaSWCompo') { // PHMRecovertVia에서 SW Copoment ref할때
-                var idxPHMViaSWC = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxPHMViaSWC].swcomponent = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[idxPHMViaSWC].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].swcomponent = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PHMViaPPort') { // PHMRecovertVia에서 P Port ref할때
-                var idxPHMViaPort = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxPHMViaPort].port = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[idxPHMViaPort].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].port = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'PHMViaRecovery') { // PHMRecovertVia에서 PHMRecovery ref할때
-                var idxPHMViaRe = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxPHMViaRe].phmRecovery = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[idxPHMViaRe].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxElement].phmRecovery = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'FGDproD') { // Field Grant Design에서 Process Design ref할때
-                var idxFGDPro = state.SAHLProject[state.openProjectIndex].IamG.FieldGD.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxFGDPro].processD = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].children[idxFGDPro].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.FieldGD.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxElement].processD = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'EGDproD') { // Event Grant Design에서 Process Design ref할때
-                var idxEGDPro = state.SAHLProject[state.openProjectIndex].IamG.EventGD.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxEGDPro].processD = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].children[idxEGDPro].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.EventGD.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxElement].processD = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'MGDproD') { // Method Grant Design에서 Process Design ref할때
-                var idxMGDPro = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxMGDPro].processD = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].children[idxMGDPro].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxElement].processD = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'FGDserviceI') { // Field Grant Design에서 Service Interface Field ref할때
-                var idxFGDSI = state.SAHLProject[state.openProjectIndex].IamG.FieldGD.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxFGDSI].SIField = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].children[idxFGDSI].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.FieldGD.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxElement].SIField = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'EGDserviceI') { // Event Grant Design에서 Service Interface Event ref할때
-                var idxEGDSI = state.SAHLProject[state.openProjectIndex].IamG.EventGD.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxEGDSI].SIEvent = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].children[idxEGDSI].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.EventGD.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxElement].SIEvent = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'MGDserviceI') { // Method Grant Design에서 Service Interface Method ref할때
-                var idxMGDSI = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxMGDSI].SIMethod = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].children[idxMGDSI].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxElement].SIMethod = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'FieldGD') { // Field Grant 에서 Field Grant Design ref할때
-                var idxFGD = state.SAHLProject[state.openProjectIndex].IamG.FieldG.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxFGD].fieldD = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGrant_index].children[idxFGD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.FieldG.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxElement].fieldD = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGrant_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGrant_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'EventGD') { // Event Grant 에서 Event Grant Design ref할때
-                var idxEGD = state.SAHLProject[state.openProjectIndex].IamG.EventG.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.EventG[idxEGD].eventD = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGrant_index].children[idxEGD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.EventG.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.EventG[idxElement].eventD = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGrant_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGrant_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'MethodGD') { // Method Grant 에서 Method Grant Design ref할때
-                var idxMGD = state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxMGD].methodD = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGrant_index].children[idxMGD].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxElement].methodD = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGrant_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGrant_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'FGProvide') { // Field Grant 에서 Provide SomeIP ref할때
-                var idxFGProvide = state.SAHLProject[state.openProjectIndex].IamG.FieldG.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxFGProvide].provide = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGrant_index].children[idxFGProvide].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.FieldG.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxElement].provide = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGrant_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGrant_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'EGProvide') { // Event Grant 에서 Provide SomeIP ref할때
-                var idxEGProvide = state.SAHLProject[state.openProjectIndex].IamG.EventG.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.EventG[idxEGProvide].provide = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGrant_index].children[idxEGProvide].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.EventG.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.EventG[idxElement].provide = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGrant_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGrant_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'MGProvide') { // Method Grant 에서 Provide SomeIP ref할때
-                var idxMGProvide = state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxMGProvide].provide = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGrant_index].children[idxMGProvide].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxElement].provide = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGrant_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGrant_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'SCExecutable') { // SoftWareCluster 에서 Executable ref할때
-                var idxSCE = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxSCE].executable[tableLine[1]].execut = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxSCE].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].executable[tableLine[1]].execut = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'SCMachineD') { // SoftWareCluster 에서 Server ref할때
-                var idxSCM = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxSCM].machineD[tableLine[1]].machine = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxSCM].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].machineD[tableLine[1]].machine = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'SCtoMachine') { //SoftWareCluster 에서 Server ref할때
-                var idxSCS = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxSCS].toMachine[tableLine[1]].mapping = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxSCS].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].toMachine[tableLine[1]].mapping = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'SCProcess') { // SoftWareCluster 에서 Server ref할때
-                var idxSCP = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxSCP].process[tableLine[1]].pro = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxSCP].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].process[tableLine[1]].pro = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'SCswc') { // SoftWareCluster 에서 Server ref할때
-                var idxSCSC = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxSCSC].sswc[tableLine[1]].swc = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxSCSC].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].sswc[tableLine[1]].swc = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'UCMSWPSWC') { //SoftWarePackage 에서 SoftWareCluster ref할때
-                var idxUCMSWP = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxUCMSWP].provide = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].children[idxUCMSWP].validation = true
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxElement].provide = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
-            } else if (tableLine[0] == 'UCMModule') { //VehiclePackage 에서 ModuleInstant ref할때
-                var idxUCMModule = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxUCMModule].ucms[tableLine[1]].module = null
-                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children[idxUCMModule].validation = true
+            } else if (tableLine[0] == 'UCMModule') { //VehiclePackage 에서 Machine 의 UCM ModuleInstant ref할때
+                idxElement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === startUUID[0])
+                state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage[idxElement].ucms[tableLine[1]].module = null
+                state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Platform_index].validation = true
@@ -11460,6 +13561,10 @@ const mutations = {
             idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.splice(idxElement, 1)
             state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.DataConstr_index].children.splice(idxElement, 1)
+        } else if (payload.parent == constant.SWBaseType_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.findIndex(data => data.uuid === payload.uuid)
+            state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.SWBaseType_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.ApplicationArray_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.splice(idxElement, 1)
@@ -11488,6 +13593,10 @@ const mutations = {
             idxElement = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Machine.HWElement.splice(idxElement, 1)
             state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].children.splice(idxElement, 1)
+        } else if (payload.parent == constant.HWCategory_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].Machine.HWCategory.findIndex(data => data.uuid === payload.uuid)
+            state.SAHLProject[state.openProjectIndex].Machine.HWCategory.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWCategory_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.ProcesstoMachineMapping_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.splice(idxElement, 1)
@@ -11556,6 +13665,14 @@ const mutations = {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.splice(idxElement, 1)
             state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children.splice(idxElement, 1)
+        } else if (payload.parent == constant.E2EProfileConfig_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(data => data.uuid === payload.uuid)
+            state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.E2EProfileConfig_index].children.splice(idxElement, 1)
+        } else if (payload.parent == constant.SDG_DEF_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(data => data.uuid === payload.uuid)
+            state.SAHLProject[state.openProjectIndex].Service.SdgDef.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SDG_DEF_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.Error_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.Error.splice(idxElement, 1)
@@ -11652,10 +13769,6 @@ const mutations = {
             idxElement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.splice(idxElement, 1)
             state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children.splice(idxElement, 1)
-        } else if (payload.parent == constant.ModuleInstantiation_str) {
-            idxElement = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(data => data.uuid === payload.uuid)
-            state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.ModuleInstantiation_index].children.splice(idxElement, 1)
         }
         state.detailViewerList.forEach((data, i) => {
             if (data.uuid == payload.uuid) {
@@ -11684,6 +13797,10 @@ const mutations = {
             idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.findIndex(data => data.uuid === payload.uuid)
             idxchild = constant.DateType_index
             idxchildchild = constant.DataConstr_index
+        } else if (payload.parent == constant.SWBaseType_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.findIndex(data => data.uuid === payload.uuid)
+            idxchild = constant.DateType_index
+            idxchildchild = constant.SWBaseType_index
         } else if (payload.parent == constant.ApplicationArray_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.findIndex(data => data.uuid === payload.uuid)
             idxchild = constant.DateType_index
@@ -11712,6 +13829,10 @@ const mutations = {
             idxElement = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(data => data.uuid === payload.uuid)
             idxchild = constant.Machines_index
             idxchildchild = constant.HWElement_index
+        } else if (payload.parent == constant.HWCategory_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].Machine.HWCategory.findIndex(data => data.uuid === payload.uuid)
+            idxchild = constant.Machines_index
+            idxchildchild = constant.HWCategory_index
         } else if (payload.parent == constant.ProcesstoMachineMapping_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === payload.uuid)
             idxchild = constant.AdaptiveApplication_index
@@ -11788,6 +13909,16 @@ const mutations = {
         } else if (payload.parent == constant.ProvidedSomeIP_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.ProvidedSomeIP_index
+            idxService = constant.ServiceInstances_index
+            idxParent = constant.Service_index
+        } else if (payload.parent == constant.E2EProfileConfig_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(data => data.uuid === payload.uuid)
+            idxchildchild = constant.E2EProfileConfig_index
+            idxService = constant.ServiceInstances_index
+            idxParent = constant.Service_index
+        } else if (payload.parent == constant.SDG_DEF_str) {
+            idxElement = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(data => data.uuid === payload.uuid)
+            idxchildchild = constant.SDG_DEF_index
             idxService = constant.ServiceInstances_index
             idxParent = constant.Service_index
         } else if (payload.parent == constant.Error_str) {
@@ -11908,11 +14039,6 @@ const mutations = {
         } else if (payload.parent == constant.VehiclePackage_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.VehiclePackage_index
-            idxService = constant.UCM_index
-            idxParent = constant.Platform_index
-        } else if (payload.parent == constant.ModuleInstantiation_str) {
-            idxElement = state.SAHLProject[state.openProjectIndex].UCM.ModuleInstant.findIndex(data => data.uuid === payload.uuid)
-            idxchildchild = constant.ModuleInstantiation_index
             idxService = constant.UCM_index
             idxParent = constant.Platform_index
         }
