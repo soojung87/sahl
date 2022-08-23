@@ -217,7 +217,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementProcessDesign', { //executableref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                name: this.$store.getters.getNameProcessDesign, input: false, path: '',
+                name: this.$store.getters.getNameProcessDesign, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 executableref: null, determin: [],
             })

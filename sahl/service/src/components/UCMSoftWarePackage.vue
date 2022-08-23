@@ -77,7 +77,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -205,7 +205,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementSoftWareCluster', {
-                name: this.$store.getters.getNameSoftWareCluster, input: false, path: '',
+                name: this.$store.getters.getNameSoftWareCluster, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 category: '', inVendor: '', version: '', sdgs: [], executable: [], machineD: [], toMachine: [], process: [], sswc: [],
             })

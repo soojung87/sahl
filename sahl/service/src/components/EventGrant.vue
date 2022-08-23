@@ -216,7 +216,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementEventGD', { 
-                name: this.$store.getters.getNameEventGD, input: false, path: '',
+                name: this.$store.getters.getNameEventGD, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 processD: null, SIEvent: null,
             })
@@ -242,12 +242,11 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementProvidedSomeIP', {
-                name: this.$store.getters.getNameProvidedSomeIP, input: false, path: '',
+                name: this.$store.getters.getNameProvidedSomeIP, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 deployref: null, someipserver: null, id: '', eventP: [], method: [], eventG: [],
             })
             EventBus.$emit('add-element', constant.ProvidedSomeIP_str)
-            EventBus.$emit('add-element', constant.ServiceInstances_str)
             EventBus.$emit('add-element', constant.Service_str)
             this.$store.commit('editEventG', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },

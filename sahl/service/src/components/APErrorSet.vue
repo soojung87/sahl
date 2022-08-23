@@ -117,15 +117,15 @@
                             <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px;">&#60;AP-APPLICATION-ERROR-REFS&#62;
+                            <label style="padding:10px;height: 50px;">&#60;AP-APPLICATION-ERROR-REFS&#62;
                                 <v-btn @click="newTextErrorRef()" icon color="teal darken" x-samll dark>
                                     <v-icon dense dark>mdi-plus</v-icon>
                                 </v-btn>
                             </label>
                         </v-row>
-                        <div class="text-editDialog">
+                        <div class="text-editDialog" style="height: 180px;">
                             <br>
-                            <v-row v-for="(item, i) in editARXML.errorref" :key="i" style="height: 62px;">
+                            <v-row v-for="(item, i) in editARXML.errorref" :key="i" style="height: 40px;">
                                 <label style="padding:10px;">
                                     <v-btn @click="deletTextErrorRef(i)" text x-small color="indigo">
                                         <v-icon>mdi-minus</v-icon>
@@ -318,7 +318,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/error-'+this.element.errorref[idx].id)
                 this.newLine(this.element.uuid+'/error-'+this.element.errorref[idx].id, this.element.uuid+'/error', this.editItem.error.uuid)
                 this.element.errorref[idx].error = this.editItem.error.name
-            } else if (endLine == undefined && this.editItem.error != null) {
+            } else if (endLine == undefined && this.editItem.error != null && this.editItem.error.uuid != null) {
                 this.newLine(this.element.uuid+'/error-'+this.element.errorref[idx].id, this.element.uuid+'/error', this.editItem.error.uuid)
                 this.element.errorref[idx].error = this.editItem.error.name
             }
@@ -374,12 +374,11 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementError', {
-                name: this.$store.getters.getNameError,  input: false, path: '',
+                name: this.$store.getters.getNameError, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 desc: '', errorcode: '', errorDref: null
             })
             EventBus.$emit('add-element', constant.Service_str)
-            EventBus.$emit('add-element', constant.Errors_str)
             EventBus.$emit('add-element', constant.Error_str)
             this.$store.commit('editErrorSet', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
@@ -406,26 +405,58 @@ export default {
             this.dialogText= true
         },
         saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editErrorSet', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
             this.element.name = this.editARXML.name
             
-            for(let i=0; i<this.editARXML.errorref.length; i++) {
-                var isHaveTable = false
-                for(let n=0; n<this.element.errorref.length; n++){
-                    if (this.element.errorref[n].id == this.editARXML.errorref[i].id &&
-                        this.element.errorref[n].error == this.editARXML.errorref[i].error) {
-                        isHaveTable = true
+            if (this.editARXML.errorref.length > 0) {
+                this.editARXML.errorref.forEach(item => {
+                    var isHaveTable = false
+                    for(let n=0; n<this.element.errorref.length; n++){
+                        if (this.element.errorref[n].id == item.id &&
+                            this.element.errorref[n].error == item.error) {
+                            isHaveTable = true
+                        }
                     }
-                }
-                if (!isHaveTable) {
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/error-'+this.editARXML.errorref[i].id)
-                    if (endLine != undefined) {
-                        this.deleteLine(this.element.uuid+'/error-'+this.editARXML.errorref[i].id)
+                    if (!isHaveTable) {
+                        var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/error-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/error-'+item.id)
+                        }
+                        var chandEndLine = this.$store.getters.getErrorPath(item.error)
+                        if (chandEndLine != null) {
+                            this.newLine(this.element.uuid+'/error-'+item.id, this.element.uuid+'/error', chandEndLine)
+                        }
                     }
-                    var chandEndLine = this.$store.getters.getErrorPath(this.editARXML.errorref[i].error)
-                    if (chandEndLine != null) {
-                        this.newLine(this.element.uuid+'/error-'+this.editARXML.errorref[i].id, this.element.uuid+'/error', chandEndLine)
+                })
+                this.element.errorref.forEach(item => {
+                    var isHaveTable = false
+                    this.editARXML.errorref.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/error-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/error-'+item.id)
+                        }
                     }
-                }
+                })
+            } else {
+                this.element.errorref.forEach(item => {
+                    if (item.error != null) {
+                        var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/error-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/error-'+item.id)
+                        }
+                    }
+                })
             }
             this.element.errorref = JSON.parse(JSON.stringify(this.editARXML.errorref))
             this.cancelARXML()

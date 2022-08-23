@@ -443,7 +443,7 @@ import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -720,7 +720,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/SCExecutable-'+idx)
                 this.newLine(this.element.uuid+'/SCExecutable-'+idx, this.element.uuid+'/SCExecutable', this.editExecutableItem.execut.uuid)
                 this.element.executable[idx].execut = this.editExecutableItem.execut.name
-            } else if (endLine == undefined && this.editExecutableItem.execut != null) {
+            } else if (endLine == undefined && this.editExecutableItem.execut != null && this.editExecutableItem.execut.uuid != null) {
                 this.newLine(this.element.uuid+'/SCExecutable-'+idx, this.element.uuid+'/SCExecutable', this.editExecutableItem.execut.uuid)
                 this.element.executable[idx].execut = this.editExecutableItem.execut.name
             }
@@ -774,7 +774,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementExecutable', { //applicationtyperef 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                name: this.$store.getters.getNameExecutable, input: false, path: '',
+                name: this.$store.getters.getNameExecutable, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 version: '', category:'', buildType:null, loggingBehabior:null, reportingBehabior:null, swname:'', applicationtyperef: null,
             })
@@ -837,7 +837,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/SCMachineD-'+idx)
                 this.newLine(this.element.uuid+'/SCMachineD-'+idx, this.element.uuid+'/SCMachineD', this.editMachineDItem.machine.uuid)
                 this.element.machineD[idx].machine = this.editMachineDItem.machine.name
-            } else if (endLine == undefined && this.editMachineDItem.machine != null) {
+            } else if (endLine == undefined && this.editMachineDItem.machine != null && this.editMachineDItem.machine.uuid != null) {
                 this.newLine(this.element.uuid+'/SCMachineD-'+idx, this.element.uuid+'/SCMachineD', this.editMachineDItem.machine.uuid)
                 this.element.machineD[idx].machine = this.editMachineDItem.machine.name
             }
@@ -891,9 +891,9 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementMachineDesign', {
-                name: this.$store.getters.getNameMachineDesign, input: false, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                access:null, resettimer: '', connector:[], servicediscover:[], 
+                name: this.$store.getters.getNameMachine, path: '',
+                top: elementY, left: elementX, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, admin: '',
+                functiongroup:[], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: [], icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.MachineDesigne_str)
             EventBus.$emit('add-element', constant.Machines_str)
@@ -954,7 +954,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/SCtoMachine-'+idx)
                 this.newLine(this.element.uuid+'/SCtoMachine-'+idx, this.element.uuid+'/SCtoMachine', this.editToMachineMItem.mapping.uuid)
                 this.element.toMachine[idx].mapping = this.editToMachineMItem.mapping.name
-            } else if (endLine == undefined && this.editToMachineMItem.mapping != null) {
+            } else if (endLine == undefined && this.editToMachineMItem.mapping != null && this.editToMachineMItem.mapping.uuid != null) {
                 this.newLine(this.element.uuid+'/SCtoMachine-'+idx, this.element.uuid+'/SCtoMachine', this.editToMachineMItem.mapping.uuid)
                 this.element.toMachine[idx].mapping = this.editToMachineMItem.mapping.name
             }
@@ -1008,12 +1008,11 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementSomeIPtoMachine', {
-                name: this.$store.getters.getNameSomeIPtoMachine, input: false, path: '',
+                name: this.$store.getters.getNameSomeIPtoMachine, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 ccref: null, siref: null, tcp:'', udp: '',
             })
             EventBus.$emit('add-element', constant.SomeIPToMachineMapping_str)
-            EventBus.$emit('add-element', constant.ServiceInstances_str)
             EventBus.$emit('add-element', constant.Service_str)
             this.$store.commit('editSoftWareCluster', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
@@ -1072,7 +1071,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/SCProcess-'+idx)
                 this.newLine(this.element.uuid+'/SCProcess-'+idx, this.element.uuid+'/SCProcess', this.editProcessItem.pro.uuid)
                 this.element.process[idx].pro = this.editProcessItem.pro.name
-            } else if (endLine == undefined && this.editProcessItem.pro != null) {
+            } else if (endLine == undefined && this.editProcessItem.pro != null && this.editProcessItem.pro.uuid != null) {
                 this.newLine(this.element.uuid+'/SCProcess-'+idx, this.element.uuid+'/SCProcess', this.editProcessItem.pro.uuid)
                 this.element.process[idx].pro = this.editProcessItem.pro.name
             }
@@ -1126,7 +1125,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementProcess', {
-                name: this.$store.getters.getNameProcess, input: false, path: '',
+                name: this.$store.getters.getNameProcess, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
                 prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
@@ -1190,7 +1189,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/SCswc-'+idx)
                 this.newLine(this.element.uuid+'/SCswc-'+idx, this.element.uuid+'/SCswc', this.editSWClusterItem.swc.uuid)
                 this.element.sswc[idx].swc = this.editSWClusterItem.swc.name
-            } else if (endLine == undefined && this.editSWClusterItem.swc != null) {
+            } else if (endLine == undefined && this.editSWClusterItem.swc != null && this.editSWClusterItem.swc.uuid != null) {
                 this.newLine(this.element.uuid+'/SCswc-'+idx, this.element.uuid+'/SCswc', this.editSWClusterItem.swc.uuid)
                 this.element.sswc[idx].swc = this.editSWClusterItem.swc.name
             }
@@ -1244,7 +1243,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementSoftWareCluster', {
-                name: this.$store.getters.getNameSoftWareCluster, input: false, path: '',
+                name: this.$store.getters.getNameSoftWareCluster,path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 category: '', inVendor: '', version: '', sdgs: [], executable: [], machineD: [], toMachine: [], process: [], sswc: [],
             })

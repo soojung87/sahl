@@ -16,6 +16,9 @@
                             <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
                             <v-toolbar-title>Provided SomeIP Service Instance</v-toolbar-title>
                             <v-spacer></v-spacer>
+                            <v-btn v-if="minimaptoolbar" icon @click="viewARXML">
+                                <v-icon> mdi-format-text</v-icon>
+                            </v-btn>
                         </v-toolbar>
                         <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
                             <v-toolbar-title>{{ element.name }}</v-toolbar-title>
@@ -219,7 +222,7 @@
                                                     <v-col cols="2">
                                                         <v-menu>
                                                             <template v-slot:activator="{ on, attrs }">
-                                                                <v-btn color="deep-purple accent-4" :id="element.uuid+'/providEventG'+tab.id" icon v-bind="attrs" v-on="on" @click="setEventGList()">
+                                                                <v-btn color="deep-purple accent-4" :id="element.uuid+'/providEventG-'+tab.id" icon v-bind="attrs" v-on="on" @click="setEventGList()">
                                                                     <v-icon>mdi-menu-down-outline</v-icon>
                                                                 </v-btn>
                                                             </template>
@@ -234,10 +237,10 @@
                                                         </v-menu>
                                                     </v-col>
                                                 </v-row>
-                                                <v-text-field v-model="tab.udp" label="Event Multicast UDP Port" @click="setactiveUUID" placeholder="int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.udp" label="Event Multicast UDP Port" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                                 <v-text-field v-model="tab.ipv4" label="IPV-4 Multicast IP Adderss" @click="setactiveUUID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                                 <v-text-field v-model="tab.ipv6" label="IPV-6 Multicast IP Adderss" @click="setactiveUUID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                                                <v-text-field v-model="tab.threshold" label="Multicast Threshold" @click="setactiveUUID" placeholder="int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.threshold" label="Multicast Threshold" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                                 <v-row>
                                                     <v-col cols="10">
                                                         <v-text-field v-model="tab.server" readonly @click="setServerSelect(tab)" clearable @click:clear='clearServer(tab)' label="SD Server Event Group Timing Config Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -245,7 +248,7 @@
                                                     <v-col cols="2">
                                                         <v-menu>
                                                             <template v-slot:activator="{ on, attrs }">
-                                                                <v-btn color="deep-purple accent-4" :id="element.uuid+'/providServer'+tab.id" dark icon v-bind="attrs" v-on="on" @click="setServerList()">
+                                                                <v-btn color="deep-purple accent-4" :id="element.uuid+'/providServer-'+tab.id" dark icon v-bind="attrs" v-on="on" @click="setServerList()">
                                                                     <v-icon>mdi-menu-down-outline</v-icon>
                                                                 </v-btn>
                                                             </template>
@@ -425,6 +428,320 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
+                        <v-dialog v-model="dialogText" persistent width="800">
+                <v-card >
+                    <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
+                    <v-card-text>
+                        <br>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;SERVICE-INTERFACE-DEPLOYMENT-REF&#62;</label>
+                            <v-text-field v-model="editARXML.deployref" placeholder="Path"  class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SERVICE-INTERFACE...&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;LOAD-BALANCING-PRIORITY&#62;</label>
+                            <v-text-field v-model="editARXML.loadPriority" placeholder="Int" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;LOAD-BALANCING-PRIORITY&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;LOAD-BALANCING-WEIGHT&#62;</label>
+                            <v-text-field v-model="editARXML.loadWeight" placeholder="Int" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;LOAD-BALANCING-WEIGHT&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;SD-SERVER-CONFIG-REF&#62;</label>
+                            <v-text-field v-model="editARXML.someipserver" placeholder="Path" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SD-SERVER-CONFIG-REF&#62;</label>
+                        </v-row>
+                        <v-row style="height: 20px;">
+                            <label style="padding:10px;">&#60;SERVICE-INSTANCE-ID&#62;</label>
+                            <v-text-field v-model="editARXML.instanceid" placeholder="Int" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SERVICE-INSTANCE-ID&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;E-2-E-EVENT-PROTECTION-PROPSS&#62;
+                                <v-btn @click="newTextE2EE()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 350px;">
+                            <v-row v-for="(item, i) in editARXML.E2EEvent" :key="i" style="height: 250px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                            <v-btn @click="deletTextE2EE(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;END-2-END-EVENT-PROTECTION-PROPS&#62;
+                                        </label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
+                                        <v-text-field v-model="item.name" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;DATA-IDS&#62;</label>
+                                        <v-text-field v-model="item.dataIds" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;DATA-IDS&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;DATA-LENGTH&#62;</label>
+                                        <v-text-field v-model="item.dataLength" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;DATA-LENGTH&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;DATA-UPDATE-PERIOD&#62;</label>
+                                        <v-text-field v-model="item.period" placeholder="Time" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;DATA-UPDATE-PERIOD&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <v-col cols="5">
+                                        <label style="padding:10px;margin:2px 0px 2px 70px;">&#60;E-2-E-PROFILE-CONFIGURATION-REF&#62;</label>
+                                        </v-col><v-col cols="5">
+                                        <v-text-field v-model="item.e2e" placeholder="Path" style="margin:-5px 0px 0px 25px;" class="lable-placeholer-color" dense></v-text-field>
+                                        </v-col><v-col cols="2">
+                                        <label style="padding:10px;">&#60;&#47;E-2-E-PROFILE-CONFIGURATION-REF&#62;</label>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;EVENT-REF&#62;</label>
+                                        <v-text-field v-model="item.event" placeholder="Path" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;EVENT-REF&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;MAX-DATA-LENGTH&#62;</label>
+                                        <v-text-field v-model="item.max" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;MAX-DATA-LENGTH&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;MIN-DATA-LENGTH&#62;</label>
+                                        <v-text-field v-model="item.min" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;MIN-DATA-LENGTH&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 30px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;END-2-END-EVENT-PROTECTION-PROPS&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row style="height: 20px;">
+                            <label style="padding:10px;">&#60;&#47;E-2-E-EVENT-PROTECTION-PROPSS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;E-2-E-METHOD-PROTECTION-PROPSS&#62;
+                                <v-btn @click="newTextE2EM()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 350px;">
+                            <v-row v-for="(item, i) in editARXML.E2EMethod" :key="i" style="height: 220px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                            <v-btn @click="deletTextE2EM(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;END-2-END-METHOD-PROTECTION-PROPS&#62;
+                                        </label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;DATA-IDS&#62;</label>
+                                        <v-text-field v-model="item.dataIds" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;DATA-IDS&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;DATA-LENGTH&#62;</label>
+                                        <v-text-field v-model="item.dataLength" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;DATA-LENGTH&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;DATA-UPDATE-PERIOD&#62;</label>
+                                        <v-text-field v-model="item.period" placeholder="Time" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;DATA-UPDATE-PERIOD&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <v-col cols="5">
+                                        <label style="padding:10px;margin:2px 0px 2px 70px;">&#60;E-2-E-PROFILE-CONFIGURATION-REF&#62;</label>
+                                        </v-col><v-col cols="5">
+                                        <v-text-field v-model="item.e2e" placeholder="Path" style="margin:-5px 0px 0px 25px;" class="lable-placeholer-color" dense></v-text-field>
+                                        </v-col><v-col cols="2">
+                                        <label style="padding:10px;">&#60;&#47;E-2-E-PROFILE-CONFIGURATION-REF&#62;</label>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;METHOD-REF&#62;</label>
+                                        <v-text-field v-model="item.method" placeholder="Path" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;METHOD-REF&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;MAX-DATA-LENGTH&#62;</label>
+                                        <v-text-field v-model="item.max" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;MAX-DATA-LENGTH&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;MIN-DATA-LENGTH&#62;</label>
+                                        <v-text-field v-model="item.min" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;MIN-DATA-LENGTH&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 30px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;END-2-END-METHOD-PROTECTION-PROPS&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row style="height: 20px;">
+                            <label style="padding:10px;">&#60;&#47;E-2-E-METHOD-PROTECTION-PROPSS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;EVENT-PROPSS&#62;
+                                <v-btn @click="newTextEventP()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 150px;">
+                            <v-row v-for="(item, i) in editARXML.eventP" :key="i" style="height: 70px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                            <v-btn @click="deletTextEventP(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;SOMEIP-EVENT-PROPS&#62;
+                                        </label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;EVENT-REF&#62;</label>
+                                        <v-text-field v-model="item.event" placeholder="Path" style="width: 350px;" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;EVENT-REF&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 30px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;SOMEIP-EVENT-PROPS&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row style="height: 20px;">
+                            <label style="padding:10px;">&#60;&#47;EVENT-PROPSS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;METHOD-REQUEST-PROPSS&#62;
+                                <v-btn @click="newTextMethod()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 150px;">
+                            <v-row v-for="(item, i) in editARXML.method" :key="i" style="height: 70px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                            <v-btn @click="deletTextMethod(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;SOMEIP-METHOD-PROPS&#62;
+                                        </label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;METHOD-REF&#62;</label>
+                                        <v-text-field v-model="item.method" placeholder="Path" style="width: 350px;" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;METHOD-REF&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 30px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;SOMEIP-METHOD-PROPS&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row style="height: 20px;">
+                            <label style="padding:10px;">&#60;&#47;METHOD-REQUEST-PROPSS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;PROVIDED-EVENT-GROUPS&#62;
+                                <v-btn @click="newTextEvent()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 250px;">
+                            <v-row v-for="(item, i) in editARXML.eventG" :key="i" style="height: 220px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                            <v-btn @click="deletTextEvent(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;SOMEIP-PROVIDED-EVENT-GROUP&#62;
+                                        </label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
+                                        <v-text-field v-model="item.name" placeholder="String" style="width:400px;" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;EVENT-GROUP-REF&#62;</label>
+                                        <v-text-field v-model="item.eventG" placeholder="Path"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;EVENT-GROUP-REF&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;EVENT-MULTICAST-UDP-PORT&#62;</label>
+                                        <v-text-field v-model="item.udp" placeholder="Int"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;EVENT-MULTICAST-UDP-PORT&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;IPV-4-MULTICAST-IP-ADDRESS&#62;</label>
+                                        <v-text-field v-model="item.ipv4" placeholder="String"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;IPV-4-MULTICAST-IP-ADDRESS&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;IPV-6-MULTICAST-IP-ADDRESS&#62;</label>
+                                        <v-text-field v-model="item.ipv6" placeholder="String"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;IPV-6-MULTICAST-IP-ADDRESS&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;MULTICAST-THRESHOLD&#62;</label>
+                                        <v-text-field v-model="item.threshold" placeholder="Int"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;MULTICAST-THRESHOLD&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <v-col cols="6">
+                                        <label style="padding:10px;margin:2px 0px 2px 70px;">&#60;SD-SERVER-EVENT-GROUP-TIMING-CONFIG-REF&#62;</label>
+                                        </v-col><v-col cols="4">
+                                        <v-text-field v-model="item.server" placeholder="Path" style="margin:-5px 0px 0px 25px;" class="lable-placeholer-color" dense></v-text-field>
+                                        </v-col><v-col cols="2">
+                                        <label style="padding:10px;">&#60;&#47;SD-SERVER-EVENT-GROUP-TIMING-CONFIG-REF&#62;</label>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row style="height: 30px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;SOMEIP-PROVIDED-EVENT-GROUP&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row>
+                            <label style="padding:10px;">&#60;&#47;PROVIDED-EVENT-GROUPS&#62;</label>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="saveARXML()" >
+                            Save
+                        </v-btn>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text @click="cancelARXML()">
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -508,6 +825,14 @@ export default {
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            dialogText: false,
+            editARXML: {name:'', deployref: null, loadPriority: '', instanceid: '', someipserver: null, loadWeight: '', eventP: [], method: [], eventG: [], E2EEvent: [], E2EMethod: []},
+            editTextEventP: {event: null, id: ''},
+            editTextMethod: {method: null, id: ''},
+            editTextEvent: { name: '', eventG: null, udp: '', ipv4: '', ipv6: '', threshold: '', server: null, id: ''},
+            editTextE2EE: { name: '', dataIds: '', dataLength: '', period: '', e2e: null, event: null, max: '', min: '', id: ''},
+            editTextE2EM: { dataIds: '', dataLength: '', period: '', e2e: null, method: null, max: '', min: '', id: ''},
+
             isMethodRefOpenClose: true,
             isEventPOpenClose: true,
             isProvidEventOpenClose: true,
@@ -524,7 +849,6 @@ export default {
             isdeleteMethodRef: false,
             selMethodref: this.$store.getters.getSomeIPMethodDeployment,
             isEditingMethod: true,
-            deleteMethodLine: [],
 
             selectEventP: [],
             headerEventP: [
@@ -534,7 +858,6 @@ export default {
             isdeleteEventP: false,
             selEventProp: this.$store.getters.getSomeIPEventDeployment,
             isEditingEventP: true,
-            deleteEventLine: [],
 
             eventGroupTab: 0,
             selEventG: this.$store.getters.getEventGroup,
@@ -706,12 +1029,11 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementSomeIPService', {
-                name: this.$store.getters.getNameSomeIPService, input: false, path: '',
+                name: this.$store.getters.getNameSomeIPService, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 service: null, majversion:'', minversion:'', id: '', eventG:[], eventD: [], methodD:[], fieldD:[],
             })
             EventBus.$emit('add-element', constant.Service_str)
-            EventBus.$emit('add-element', constant.ServiceInterfaces_str)
             EventBus.$emit('add-element', constant.SomeIPServiceInterfaceDeployment_str)
             this.$store.commit('editProvidedSomeIP', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
@@ -758,13 +1080,12 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementSomeIPServer', { 
-                name: this.$store.getters.getNameSomeIPServer, input: false, path: '',
+                name: this.$store.getters.getNameSomeIPServer, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 inidelaymax: '', inidelaymin: '', inibasedelay: '', inirepetimax: '', delaymax: '', delaymin: '',
                 offer: '', tiemtolive: '',
             })
             EventBus.$emit('add-element', constant.Service_str)
-            EventBus.$emit('add-element', constant.ServiceInstances_str)
             EventBus.$emit('add-element', constant.SomeIPServer_str)
             this.$store.commit('editProvidedSomeIP', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
@@ -779,34 +1100,28 @@ export default {
         },
         deletEventP() {
             if (this.isdeleteEventP == true) {
-                for(let i=0; i<this.element.eventP.length; i++){
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedEventP-'+i)
-                    if(endLine != undefined) {
-                        this.deleteEventLine.push({id:this.element.eventP[i].id, endLine:endLine})
-                        this.deleteLine(this.element.uuid+'/proviedEventP-'+i)
+                this.selectEventP.forEach(item => {
+                    for(let i=0; i<this.element.eventP.length; i++){
+                        if (item.id == this.element.eventP[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedEventP-'+this.element.eventP[i].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/proviedEventP-'+this.element.eventP[i].id)
+                            }
+                        }
                     }
-                }
+                })
 
                 this.element.eventP = this.element.eventP.filter(item => {
                         return this.selectEventP.indexOf(item) < 0 })
 
-                for(let n=0; n<this.element.eventP.length; n++) {
-                    for(let idx=0; idx<this.deleteEventLine.length; idx++) {
-                        if (this.element.eventP[n].id == this.deleteEventLine[idx].id) {
-                            this.newLine(this.element.uuid+'/proviedEventP-'+n, this.element.uuid+'/proviedEventP', this.deleteEventLine[idx].endLine)
-                        }
-                    }
-                }
-
                 this.isdeleteEventP = false
                 this.selectEventP = []
-                this.deleteEventLine = []
             } 
         },
         openEventP(idx) {
             this.selEventProp = this.$store.getters.getSomeIPEventDeployment
             if ( this.element.eventP[idx].event != null) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedEventP-'+idx)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedEventP-'+this.element.eventP[idx].id)
                 if (endLine == undefined) {
                     endLine = this.$store.getters.getSomeIPEventDeploymentPath(this.element.eventP[idx].event)
                 }
@@ -814,17 +1129,17 @@ export default {
             }
         },
         editEventP(idx) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedEventP-'+idx)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedEventP-'+this.element.eventP[idx].id)
             if (endLine != undefined && this.editEventItem.event == null) {
-                this.deleteLine(this.element.uuid+'/proviedEventP-'+idx)
+                this.deleteLine(this.element.uuid+'/proviedEventP-'+this.element.eventP[idx].id)
                 this.element.eventP[idx].event = null
             } else if (endLine != undefined && endLine != this.editEventItem.event.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                this.deleteLine(this.element.uuid+'/proviedEventP-'+idx)
-                this.newLine(this.element.uuid+'/proviedEventP-'+idx, this.element.uuid+'/proviedEventP', this.editEventItem.event.uuid)
+                this.deleteLine(this.element.uuid+'/proviedEventP-'+this.element.eventP[idx].id)
+                this.newLine(this.element.uuid+'/proviedEventP-'+this.element.eventP[idx].id, this.element.uuid+'/proviedEventP', this.editEventItem.event.uuid)
                 this.element.eventP[idx].event = this.editEventItem.event.name
-            } else if (endLine == undefined && this.editEventItem.event != null) {
-                this.newLine(this.element.uuid+'/proviedEventP-'+idx, this.element.uuid+'/proviedEventP', this.editEventItem.event.uuid)
+            } else if (endLine == undefined && this.editEventItem.event != null && this.editEventItem.event.uuid != null) {
+                this.newLine(this.element.uuid+'/proviedEventP-'+this.element.eventP[idx].id, this.element.uuid+'/proviedEventP', this.editEventItem.event.uuid)
                 this.element.eventP[idx].event = this.editEventItem.event.name
             } else if (this.editEventItem.event != null && endLine == this.editEventItem.event.uuid && this.element.eventP[idx].event != this.editEventItem.event.name) {
                 this.element.eventP[idx].event = this.editEventItem.event.name
@@ -845,8 +1160,7 @@ export default {
             this.editEventItem.id = n
 
             if( this.editEventItem.event != null) {
-                var datacount = this.element.eventP.length
-                this.newLine(this.element.uuid+'/proviedEventP-'+datacount, this.element.uuid+'/proviedEventP', this.editEventItem.event.uuid)
+                this.newLine(this.element.uuid+'/proviedEventP-'+n, this.element.uuid+'/proviedEventP', this.editEventItem.event.uuid)
                 this.editEventItem.event = this.editEventItem.event.name
             }
             const addObj = Object.assign({}, this.editEventItem)
@@ -886,34 +1200,28 @@ export default {
         },
         deletMethodRef() {
             if (this.isdeleteMethodRef == true) {
-                for(let i=0; i<this.element.method.length; i++){
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedMethod-'+i)
-                    if(endLine != undefined) {
-                        this.deleteMethodLine.push({id:this.element.method[i].id, endLine:endLine})
-                        this.deleteLine(this.element.uuid+'/proviedMethod-'+i)
+                this.selectMethodRef.forEach(item => {
+                    for(let i=0; i<this.element.method.length; i++){
+                        if (item.id == this.element.method[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedMethod-'+this.element.method[i].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/proviedMethod-'+this.element.method[i].id)
+                            }
+                        }
                     }
-                }
+                })
 
                 this.element.method = this.element.method.filter(item => {
                         return this.selectMethodRef.indexOf(item) < 0 })
 
-                for(let n=0; n<this.element.method.length; n++) {
-                    for(let idx=0; idx<this.deleteMethodLine.length; idx++) {
-                        if (this.element.method[n].id == this.deleteMethodLine[idx].id) {
-                            this.newLine(this.element.uuid+'/proviedMethod-'+n, this.element.uuid+'/proviedMethod', this.deleteMethodLine[idx].endLine)
-                        }
-                    }
-                }
-
                 this.isdeleteMethodRef = false
                 this.selectMethodRef = []
-                this.deleteMethodLine = []
             } 
         },
         openMethodRef(idx) {
             this.selMethodref = this.$store.getters.getSomeIPMethodDeployment
             if ( this.element.method[idx].method != null) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedMethod-'+idx)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedMethod-'+this.element.method[idx].id)
                 if (endLine == undefined) {
                     endLine = this.$store.getters.getSomeIPMethodDeploymentPath(this.element.method[idx].method)
                 }
@@ -921,17 +1229,17 @@ export default {
             }
         },
         editMethodRef(idx) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedMethod-'+idx)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedMethod-'+this.element.method[idx].id)
             if (endLine != undefined && this.editMethodItem.method == null) {
-                this.deleteLine(this.element.uuid+'/proviedMethod-'+idx)
+                this.deleteLine(this.element.uuid+'/proviedMethod-'+this.element.method[idx].id)
                 this.element.method[idx].method = null
             } else if (endLine != undefined && endLine != this.editMethodItem.method.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                this.deleteLine(this.element.uuid+'/proviedMethod-'+idx)
-                this.newLine(this.element.uuid+'/proviedMethod-'+idx, this.element.uuid+'/proviedMethod', this.editMethodItem.method.uuid)
+                this.deleteLine(this.element.uuid+'/proviedMethod-'+this.element.method[idx].id)
+                this.newLine(this.element.uuid+'/proviedMethod-'+this.element.method[idx].id, this.element.uuid+'/proviedMethod', this.editMethodItem.method.uuid)
                 this.element.method[idx].method = this.editMethodItem.method.name
-            } else if (endLine == undefined && this.editMethodItem.method != null) {
-                this.newLine(this.element.uuid+'/proviedMethod-'+idx, this.element.uuid+'/proviedMethod', this.editMethodItem.method.uuid)
+            } else if (endLine == undefined && this.editMethodItem.method != null && this.editMethodItem.method.uuid != null) {
+                this.newLine(this.element.uuid+'/proviedMethod-'+this.element.method[idx].id, this.element.uuid+'/proviedMethod', this.editMethodItem.method.uuid)
                 this.element.method[idx].method = this.editMethodItem.method.name
             } else if (this.editMethodItem.method != null && endLine == this.editMethodItem.method.uuid && this.element.method[idx].method != this.editMethodItem.method.name) {
                 this.element.method[idx].method = this.editMethodItem.method.name
@@ -952,8 +1260,7 @@ export default {
             this.editMethodItem.id = n
 
             if( this.editMethodItem.method != null) {
-                var datacount = this.element.method.length
-                this.newLine(this.element.uuid+'/proviedMethod-'+datacount, this.element.uuid+'/proviedMethod', this.editMethodItem.method.uuid)
+                this.newLine(this.element.uuid+'/proviedMethod-'+n, this.element.uuid+'/proviedMethod', this.editMethodItem.method.uuid)
                 this.editMethodItem.method = this.editMethodItem.method.name
             }
             const addObj = Object.assign({}, this.editMethodItem)
@@ -996,57 +1303,43 @@ export default {
             this.element.eventG.push(addObj)
             this.eventGroupTab = this.element.eventG.length-1
             if (this.location == 1) {
-                EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
+                EventBus.$emit('changeLine-someipService', 'ProvidEvent', this.element.uuid, null)
             }
         },
         clickEeventGroupTab() {
         },
         changeEeventGroupTab() {
             console.log('changeEeventGroupTab')
-            if(this.element.eventG.length > 0 && this.location == 1) {
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].id)}, 300);
+            if(this.element.eventG.length > 0 && this.location == 1 && this.eventGroupTab != undefined) {
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'ProvidEvent', this.element.uuid, this.eventGroupTab, this.element.eventG[this.eventGroupTab].id)}, 300);
             }
         },
         deleteEventGroup(idx) {
-            var endLine, endS, endE
-            console.log(this.element.eventG)
+            var endLine
             if (this.element.eventG[idx].eventG != null) {
-                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+idx)
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+this.element.eventG[idx].id)
                 if (endLine != undefined) {
-                    this.deleteLine(this.element.uuid+'/providEventG-'+idx)
+                    this.deleteLine(this.element.uuid+'/providEventG-'+this.element.eventG[idx].id)
                 }
             }
             if (this.element.eventG[idx].server != null) {
-                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+idx)
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+this.element.eventG[idx].id)
                 if (endLine != undefined) {
-                    this.deleteLine(this.element.uuid+'/providServer-'+idx)
-                }
-            }
-            for(let i=idx+1; i<this.element.eventG.length; i++){
-                endE = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+i)
-                endS = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+i)
-                if (endE != undefined) {
-                    this.deleteLine(this.element.uuid+'/providEventG-'+i)
-                    this.newLine(this.element.uuid+'/providEventG-'+(i-1), this.element.uuid+'/providE', endE)
-                }
-                if (endS != undefined) {
-                    this.deleteLine(this.element.uuid+'/providServer-'+i)
-                    this.newLine(this.element.uuid+'/providServer-'+(i-1), this.element.uuid+'/providE', endS)
+                    this.deleteLine(this.element.uuid+'/providServer-'+this.element.eventG[idx].id)
                 }
             }
 
             this.element.eventG.splice(idx, 1)
-            this.changeEeventGroupTab()
         },
         clearEventG(item) {
             item.eventG = null
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+this.eventGroupTab)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+item.id)
             if (endLine != undefined) {
-                this.deleteLine(this.element.uuid+'/providEventG-'+this.eventGroupTab)
+                this.deleteLine(this.element.uuid+'/providEventG-'+item.id)
             }
         },
         setEventGSelect(item) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+this.eventGroupTab)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+item.id)
             if (endLine == undefined) {
                 endLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.eventG, 1)
             }
@@ -1062,14 +1355,14 @@ export default {
         },
         setEventG(item, tab){
             if( tab.eventG != item.name) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+this.eventGroupTab)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+tab.id)
                 if (endLine != undefined && endLine != item.uuid) {
                     //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                    this.deleteLine(this.element.uuid+'/providEventG-'+this.eventGroupTab)
+                    this.deleteLine(this.element.uuid+'/providEventG-'+tab.id)
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/providEventG-'+this.eventGroupTab, this.element.uuid+'/providEventG'+this.element.eventG[this.eventGroupTab].id, item.uuid)
+                    this.newLine(this.element.uuid+'/providEventG-'+tab.id, this.element.uuid+'/providEventG-'+this.element.eventG[this.eventGroupTab].id, item.uuid)
                 }
                 tab.eventG = item.name
             }
@@ -1077,13 +1370,13 @@ export default {
         },
         clearServer(item) {
             item.server = null
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+this.eventGroupTab)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+item.id)
             if (endLine != undefined) {
-                this.deleteLine(this.element.uuid+'/providServer-'+this.eventGroupTab)
+                this.deleteLine(this.element.uuid+'/providServer-'+item.id)
             }
         },
         setServerSelect(item) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+this.eventGroupTab)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+item.id)
             if (endLine == undefined) {
                 endLine = this.$store.getters.getServerPath(item.server)
             }
@@ -1099,14 +1392,14 @@ export default {
         },
         setServer(item, tab){
             if( tab.server != item.name) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+this.eventGroupTab)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+tab.id)
                 if (endLine != undefined && endLine != item.uuid) {
                     //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                    this.deleteLine(this.element.uuid+'/providServer-'+this.eventGroupTab)
+                    this.deleteLine(this.element.uuid+'/providServer-'+tab.id)
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/providServer-'+this.eventGroupTab, this.element.uuid+'/providServer'+this.element.eventG[this.eventGroupTab].id, item.uuid)
+                    this.newLine(this.element.uuid+'/providServer-'+tab.id, this.element.uuid+'/providServer-'+this.element.eventG[this.eventGroupTab].id, item.uuid)
                 }
                 tab.server = item.name
             }
@@ -1117,12 +1410,11 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementServer', { 
-                name: this.$store.getters.getNameServer, input: false, path: '',
+                name: this.$store.getters.getNameServer,  path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 delaymax: '', delaymin: '',
             })
             EventBus.$emit('add-element', constant.Service_str)
-            EventBus.$emit('add-element', constant.SomeIPEvents_str)
             EventBus.$emit('add-element', constant.Server_str)
             this.$store.commit('editProvidedSomeIP', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
@@ -1146,7 +1438,7 @@ export default {
         },
         clickE2EEventTab() {},
         changeE2EEventTab() {
-            if(this.element.E2EEvent.length > 0 && this.location == 1) {
+            if(this.element.E2EEvent.length > 0 && this.location == 1 && this.E2EEventTab != null) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, this.E2EEventTab, this.element.E2EEvent[this.E2EEventTab].id)}, 300);
             }
         },
@@ -1166,7 +1458,6 @@ export default {
             }
 
             this.element.E2EEvent.splice(idx, 1)
-            this.changeE2EEventTab()
         },
         clearE2EProfile(item) {
             item.e2e = null
@@ -1178,7 +1469,7 @@ export default {
         setE2ESelect(item) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePropro-'+this.element.E2EEvent[this.E2EEventTab].id)
             if (endLine == undefined) {
-                endLine = this.$store.getters.getE2EProfileConfigPath(item.e2e, 1)
+                endLine = this.$store.getters.getE2EProfileConfigPath(item.e2e)
             }
             if (endLine != null) {
                 this.$store.commit('setDetailView', {uuid: endLine, element: constant.E2EProfileConfig_str} )
@@ -1258,7 +1549,7 @@ export default {
         },
         clickE2EMethodtTab() {},
         changeE2EMethodTab() {
-            if(this.element.E2EMethod.length > 0 && this.location == 1) {
+            if(this.element.E2EMethod.length > 0 && this.location == 1 && this.E2EMethodTab != undefined) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, this.E2EMethodTab, this.element.E2EMethod[this.E2EMethodTab].id)}, 300);
             }
         },
@@ -1278,7 +1569,6 @@ export default {
             }
 
             this.element.E2EMethod.splice(idx, 1)
-            this.changeE2EMethodTab()
         },
         clearE2EProfileM(item) {
             item.e2e = null
@@ -1290,7 +1580,7 @@ export default {
         setE2ESelectM(item) {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProMpro-'+this.element.E2EMethod[this.E2EMethodTab].id)
             if (endLine == undefined) {
-                endLine = this.$store.getters.getE2EProfileConfigPath(item.e2e, 1)
+                endLine = this.$store.getters.getE2EProfileConfigPath(item.e2e)
             }
             if (endLine != null) {
                 this.$store.commit('setDetailView', {uuid: endLine, element: constant.E2EProfileConfig_str} )
@@ -1371,6 +1661,464 @@ export default {
             EventBus.$emit('new-line', drawLine, endLine)
         },
 
+        viewARXML() {
+            this.editARXML.name = this.element.name
+            this.editARXML.deployref = this.element.deployref
+            this.editARXML.loadPriority = this.element.loadPriority
+            this.editARXML.instanceid = this.element.instanceid
+            this.editARXML.someipserver = this.element.someipserver
+            this.editARXML.loadWeight = this.element.loadWeight
+            this.editARXML.method = JSON.parse(JSON.stringify(this.element.method))
+            this.editARXML.eventP = JSON.parse(JSON.stringify(this.element.eventP))
+            this.editARXML.eventG = JSON.parse(JSON.stringify(this.element.eventG))
+            this.editARXML.E2EEvent = JSON.parse(JSON.stringify(this.element.E2EEvent))
+            this.editARXML.E2EMethod = JSON.parse(JSON.stringify(this.element.E2EMethod))
+            this.dialogText= true
+        },
+        saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editRequiredSomeIP', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name, req: true} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
+            this.element.name = this.editARXML.name
+            this.element.loadPriority = this.editARXML.loadPriority
+            this.element.instanceid = this.editARXML.instanceid
+            this.element.loadWeight = this.editARXML.loadWeight
+
+            var endLine = null, changEndLine = null
+            if (this.editARXML.deployref != this.element.deployref) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredDeploy')
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/providDeploy')
+                }
+                changEndLine = this.$store.getters.getServiceInterfaceDeploymentPath(this.editARXML.deployref, 0)
+                if (changEndLine != null) {
+                    this.newLine(this.element.uuid+'/providDeploy', this.element.uuid+'/providDeploy', changEndLine)
+                }
+            }
+            this.element.deployref = this.editARXML.deployref
+            if (this.editARXML.someipserver != this.element.someipserver) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providSomeIPS')
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/providSomeIPS')
+                }
+                changEndLine = this.$store.getters.getSomeIPServerPath(this.editARXML.someipserver)
+                if (changEndLine != null) {
+                    this.newLine(this.element.uuid+'/providSomeIPS', this.element.uuid+'/providSomeIPS', changEndLine)
+                }
+            }
+            this.element.someipserver = this.editARXML.someipserver
+
+            if (this.editARXML.eventP.length > 0) {
+                this.editARXML.eventP.forEach(item => {
+                    var isHaveTable = false
+                    for(let n=0; n<this.element.eventP.length; n++){
+                        if (this.element.eventP[n].id == item.id &&
+                            this.element.eventP[n].event == item.event ) {
+                            isHaveTable = true
+                        }
+                    }
+                    if (!isHaveTable) {
+                        var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedEventP-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/proviedEventP-'+item.id)
+                        }
+                        var changEndLine = this.$store.getters.getSomeIPEventDeploymentPath(item.event)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/proviedEventP-'+item.id, this.element.uuid+'/proviedEventP', changEndLine)
+                        }
+                    }
+                })
+                this.element.eventP.forEach(item => {
+                    var isHaveTable = false
+                    this.editARXML.eventP.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedEventP-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/proviedEventP-'+item.id)
+                        }
+                    }
+                })
+            } else {
+                if (this.element.eventP.length > 0) {
+                    this.element.eventP.forEach(item => {
+                        var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedEventP-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/proviedEventP-'+item.id)
+                        }
+                    })
+                }
+            }
+            this.element.eventP = JSON.parse(JSON.stringify(this.editARXML.eventP))
+
+            if (this.editARXML.method.length > 0) {
+                this.editARXML.method.forEach(item => {
+                    var isHaveTable = false
+                    for(let n=0; n<this.element.method.length; n++){
+                        if (this.element.method[n].id == item.id &&
+                            this.element.method[n].method == item.method ) {
+                            isHaveTable = true
+                        }
+                    }
+                    if (!isHaveTable) {
+                        var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedMethod-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/proviedMethod-'+item.id)
+                        }
+                        var changEndLine = this.$store.getters.getSomeIPMethodDeploymentPath(item.method)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/proviedMethod-'+item.id, this.element.uuid+'/proviedMethod', changEndLine)
+                        }
+                    }
+                })
+                this.element.method.forEach(item => {
+                    var isHaveTable = false
+                    this.editARXML.method.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedMethod-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/proviedMethod-'+item.id)
+                        }
+                    }
+                })
+            } else {
+                if (this.element.method.length > 0) {
+                    this.element.method.forEach(item => {
+                        var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/proviedMethod-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/proviedMethod-'+item.id)
+                        }
+                    })
+                }
+            }
+            this.element.method = JSON.parse(JSON.stringify(this.editARXML.method))
+
+            if (this.editARXML.eventG.length > 0) {
+                this.editARXML.eventG.forEach(item => {
+                    var isHaveTableE = false, isHaveTableC = false
+                    this.element.eventG.forEach(ele => {
+                        if (ele.id == item.id) {
+                            if (ele.eventG == item.eventG) {
+                                isHaveTableE = true
+                            }
+                            if (ele.server == item.server) {
+                                isHaveTableC = true
+                            }
+                        }
+                    })
+                    if (!isHaveTableE) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/providEventG-'+item.id)
+                        }
+                        changEndLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.eventG, 1)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/providEventG-'+item.id, this.element.uuid+'/providE', changEndLine)
+                        }
+                    }
+                    if (!isHaveTableC) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/providServer-'+item.id)
+                        }
+                        changEndLine = this.$store.getters.getServerPath(item.server)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/providServer-'+item.id, this.element.uuid+'/providE', changEndLine)
+                        }
+                    }
+                })
+                this.element.eventG.forEach(item => {
+                    var isHaveTable = false
+                    this.editARXML.eventG.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        if (item.eventG != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/providEventG-'+item.id)
+                            }
+                        }
+                        if (item.server != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/providServer-'+item.id)
+                            }
+                        }
+                    }
+                })
+            } else {
+                if (this.element.eventG.length > 0) {
+                    this.element.eventG.forEach(item => {
+                        if (item.eventG != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providEventG-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/providEventG-'+item.id)
+                            }
+                        }
+                        if (item.server != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/providServer-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/providServer-'+item.id)
+                            }
+                        }
+                    })
+                }
+            }
+            this.element.eventG = JSON.parse(JSON.stringify(this.editARXML.eventG))
+
+            if (this.editARXML.E2EEvent.length > 0) {
+                this.editARXML.E2EEvent.forEach(item => {
+                    var isHaveTable2 = false, isHaveTable2E = false
+                    this.element.E2EEvent.forEach(ele => {
+                        if (ele.id == item.id) {
+                            if (ele.e2e == item.e2e) {
+                                isHaveTable2 = true
+                            }
+                            if (ele.event == item.event) {
+                                isHaveTable2E = true
+                            }
+                        }
+                    })
+                    if (!isHaveTable2) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePropro-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/e2ePropro-'+item.id)
+                        }
+                        console.log(item.e2e)
+                        changEndLine = this.$store.getters.getE2EProfileConfigPath(item.e2e)
+                        console.log(changEndLine)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/e2ePropro-'+item.id, this.element.uuid+'/E2EEpro', changEndLine)
+                        }
+                    }
+                    if (!isHaveTable2E) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eEventpro-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/e2eEventpro-'+item.id)
+                        }
+                        changEndLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.event, 2)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/e2eEventpro-'+item.id, this.element.uuid+'/E2EEpro', changEndLine)
+                        }
+                    }
+                })
+                this.element.E2EEvent.forEach(item => {
+                    var isHaveTable = false
+                    this.editARXML.E2EEvent.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        if (item.e2e != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePropro-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/e2ePropro-'+item.id)
+                            }
+                        }
+                        if (item.event != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eEventpro-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/e2eEventpro-'+item.id)
+                            }
+                        }
+                    }
+                })
+            } else {
+                if (this.element.E2EEvent.length > 0) {
+                    this.element.E2EEvent.forEach(item => {
+                        if (item.e2e != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePropro-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/e2ePropro-'+item.id)
+                            }
+                        }
+                        if (item.event != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eEventpro-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/e2eEventpro-'+item.id)
+                            }
+                        }
+                    })
+                }
+            }
+            this.element.E2EEvent = JSON.parse(JSON.stringify(this.editARXML.E2EEvent))
+
+            if (this.editARXML.E2EMethod.length > 0) {
+                this.editARXML.E2EMethod.forEach(item => {
+                    var isHaveTable2 = false, isHaveTableM = 0
+                    this.element.E2EMethod.forEach(ele => {
+                        if (ele.id == item.id) {
+                            if (ele.e2e == item.e2e) {
+                                isHaveTable2 = true
+                            }
+                            if (ele.method == item.method) {
+                                isHaveTableM = true
+                            }
+                        }
+                    })
+                    if (!isHaveTable2) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProMpro-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/e2eProMpro-'+item.id)
+                        }
+                        changEndLine = this.$store.getters.getE2EProfileConfigPath(item.e2e)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/e2eProMpro-'+item.id, this.element.uuid+'/E2EMpro', changEndLine)
+                        }
+                    }
+                    if (!isHaveTableM) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eMethodpro-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/e2eMethodpro-'+item.id)
+                        }
+                        changEndLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.method, 3)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/e2eMethodpro-'+item.id, this.element.uuid+'/E2EMpro', changEndLine)
+                        }
+                    }
+                })
+                this.element.E2EMethod.forEach(item => {
+                    var isHaveTable = false
+                    this.editARXML.E2EMethod.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        if (item.e2e != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProMpro-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/e2eProMpro-'+item.id)
+                            }
+                        }
+                        if (item.method != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eMethodpro-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/e2eMethodpro-'+item.id)
+                            }
+                        }
+                    }
+                })
+            } else {
+                if (this.element.E2EMethod.length > 0) {
+                    this.element.E2EMethod.forEach(item => {
+                        if (item.e2e != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProMpro-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/e2eProMpro-'+item.id)
+                            }
+                        }
+                        if (item.method != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eMethodpro-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/e2eMethodpro-'+item.id)
+                            }
+                        }
+                    })
+                }
+            }
+            this.element.E2EMethod = JSON.parse(JSON.stringify(this.editARXML.E2EMethod))
+            this.cancelARXML()
+        },
+        cancelARXML() {
+            this.editARXML = {name:'', deployref: null, loadPriority: '', id: '', someipserver: null, loadWeight: '', eventP: [], method: [], eventG: [], E2EEvent: [], E2EMethod: []}
+            this.editTextEventP = {event: null, id: ''}
+            this.editTextMethod = {method: null, id: ''}
+            this.editTextEvent = { name: '', eventG: null, udp: '', ipv4: '', ipv6: '', threshold: '', server: null, id: ''}
+            this.editTextE2EE = { name: '', dataIds: '', dataLength: '', period: '', e2e: null, event: null, max: '', min: '', id: ''}
+            this.editTextE2EM = { dataIds: '', dataLength: '', period: '', e2e: null, method: null, max: '', min: '', id: ''}
+            this.dialogText = false
+        },
+        newTextMethod() {
+            this.editTextMethod = {method: null, id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++;
+                res = this.editARXML.method.some(item => item.id === n)
+            }
+            this.editTextMethod.id = n
+
+            const addObj = Object.assign({}, this.editTextMethod)
+            this.editARXML.method.push(addObj);
+        },
+        deletTextMethod(idx) {
+            this.editARXML.method.splice(idx,1)
+        },
+        newTextEventP() {
+            this.editTextEventP = {event: null, id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++;
+                res = this.editARXML.eventP.some(item => item.id === n)
+            }
+            this.editTextEventP.id = n
+
+            const addObj = Object.assign({}, this.editTextEventP)
+            this.editARXML.eventP.push(addObj);
+        },
+        deletTextEventP(idx) {
+            this.editARXML.eventP.splice(idx,1)
+        },
+        newTextEvent() {
+            this.editTextEvent = { name: '', eventG: null, udp: '', ipv4: '', ipv6: '', threshold: '', server: null, id: ''}
+            let res = true, n = 0
+            while (res) {
+                this.editTextEvent.name = 'Event Group_' + n++;
+                res = this.editARXML.eventG.some(item => item.id === n)
+            }
+            this.editTextEvent.id = n
+
+            const addObj = Object.assign({}, this.editTextEvent)
+            this.editARXML.eventG.push(addObj);
+        },
+        deletTextEvent(idx) {
+            this.editARXML.eventG.splice(idx,1)
+        },
+        newTextE2EE() {
+            this.editTextE2EE = { name: '', dataIds: '', dataLength: '', period: '', e2e: null, event: null, max: '', min: '', id: ''}
+            let res = true, n = 0
+            while (res) {
+                this.editTextE2EE.name = 'E2EEvtProtProps_' + n++
+                res = this.editARXML.E2EEvent.some(item => item.id === n)
+            }
+            this.editTextE2EE.id = n
+
+            const addObj = Object.assign({}, this.editTextE2EE)
+            this.editARXML.E2EEvent.push(addObj);
+        },
+        deletTextE2EE(idx) {
+            this.editARXML.E2EEvent.splice(idx,1)
+        },
+        newTextE2EM() {
+            this.editTextE2EM = {dataIds: '', dataLength: '', period: '', e2e: null, method: null, max: '', min: '', id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++;
+                res = this.editARXML.E2EMethod.some(item => item.id === n)
+            }
+            this.editTextE2EM.id = n
+
+            const addObj = Object.assign({}, this.editTextE2EM)
+            this.editARXML.E2EMethod.push(addObj);
+        },
+        deletTextE2EM(idx) {
+            this.editARXML.E2EMethod.splice(idx,1)
+        },
     },
 
 }

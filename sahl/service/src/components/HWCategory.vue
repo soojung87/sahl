@@ -96,6 +96,77 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
+            <v-dialog v-model="dialogText" persistent width="800">
+                <v-card >
+                    <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
+                    <v-card-text>
+                        <br>
+                        <v-row>
+                            <label style="padding:10px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row>
+                            <label style="padding:10px;height: 50px;">&#60;HW-ATTRIBUTE-DEFS&#62;
+                                <v-btn @click="newTextAttribute()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <v-row>
+                            <div class="text-editDialog" style="height: 300px;">
+                                <v-row v-for="(item, i) in editARXML.attribute" :key="i" style="height: 150px;">
+                                    <div>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                                <v-btn @click="deletTextAttribute(i)" text x-small color="indigo">
+                                                    <v-icon>mdi-minus</v-icon>
+                                                </v-btn>
+                                                &#60;HW-ATTRIBUTE-DEF&#62;
+                                            </label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;SHORT-NAME&#62;</label>
+                                            <v-text-field v-model="item.name" placeholder="String"  class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;CATEGORY&#62;</label>
+                                            <v-text-field v-model="item.category" placeholder="String"  class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;CATEGORY&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;IS-REQUIRED&#62;</label>
+                                            <v-text-field v-model="item.isrequired" placeholder=" true or false"  class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;IS-REQUIRED&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left: 100px;">&#60;HW-ATTRIBUTE-LITERALS&#62;</label>
+                                            <v-text-field v-model="item.literal" placeholder="String/Stirng/String/..." style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;HW-ATTRIBUTE-LITERALS&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;HW-ATTRIBUTE-DEF&#62;</label>
+                                        </v-row>
+                                    </div>
+                                </v-row>
+                            </div>
+                        </v-row>
+                        <v-row>
+                            <label style="padding:10px;height: 20px;" >&#60;&#47;HW-ATTRIBUTE-DEFS&#62;</label>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="saveARXML()" >
+                            Save
+                        </v-btn>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text @click="cancelARXML()">
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -150,6 +221,7 @@ export default {
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             dialogText: false,
             editARXML: {name:'', attribute: []},
+            editTextItem: { name : '', category: '', isrequired: '', literal: '', id: ''},
             isAttributeOpenClose: true,
             isdeleteAttribute: false,
             headerAttribute: [
@@ -260,7 +332,67 @@ export default {
             this.$store.commit('editHWCategory', {compo:"z", uuid:this.element.uuid, zindex:10} )
         },
 
-        viewARXML() {},
+        viewARXML() {
+            this.editARXML.name = this.element.name
+            this.editARXML.attribute = JSON.parse(JSON.stringify(this.element.attribute))
+            this.dialogText= true
+        },
+        saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editHWCategory', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
+            this.element.name = this.editARXML.name
+
+            if (this.editARXML.attribute.length > 0) {
+                this.element.attribute.forEach(item => {
+                    var isExistence = false
+                    this.editARXML.attribute.forEach(data => {
+                        if (data.id == item.id) {
+                            isExistence = true
+                            if (data.name != item.name) {
+                                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                        changeName: 'attribute', listname: data.name, beforename: item.name} )
+                            }
+                        }
+                    })
+                    if (!isExistence) {
+                        this.$store.commit('deleteRefTable', {deleteName:'attribute', deletItemList: item.name, path: this.element.path, name: this.element.name})
+                    }
+                })
+            } else {
+                if (this.element.attribute.length > 0) {
+                    this.element.attribute.forEach(item => {
+                        this.$store.commit('deleteRefTable', {deleteName:'attribute', deletItemList: item.name, path: this.element.path, name: this.element.name})
+                    })
+                }
+            }
+            this.element.attribute = JSON.parse(JSON.stringify(this.editARXML.attribute))
+            this.cancelARXML()
+        },
+        cancelARXML() {
+            this.editARXML = {name:'', attribute: []}
+            this.editTextItem = { name : '', category: '', isrequired: '', literal: '', id: ''}
+            this.dialogText = false
+        },
+        newTextAttribute() {
+            this.editTextItem = { name : '', category: '', isrequired: '', literal: '', id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.editARXML.attribute.some(item => item.id === n)
+            }
+            this.editTextItem.id = n
+
+            const addObj = Object.assign({}, this.editTextItem)
+            this.editARXML.attribute.push(addObj);
+        },
+        deletTextAttribute(idx) {
+            this.editARXML.attribute.splice(idx,1)
+        },
     },
 
 }

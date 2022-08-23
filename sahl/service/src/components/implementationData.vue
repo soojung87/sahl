@@ -15,6 +15,10 @@
                             </v-btn>
                             <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
                             <v-toolbar-title>Implementation Data Type</v-toolbar-title>
+                            <v-spacer></v-spacer>
+                            <v-btn v-if="minimaptoolbar" icon @click="viewARXML">
+                                <v-icon> mdi-format-text</v-icon>
+                            </v-btn>
                         </v-toolbar>
                         <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
                             <v-toolbar-title>{{ element.name }}</v-toolbar-title>
@@ -297,6 +301,214 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
+            <v-dialog v-model="dialogText" persistent width="800">
+                <v-card >
+                    <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
+                    <v-card-text>
+                        <br>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;CATEGORY&#62;</label>
+                            <v-text-field v-model="editARXML.category" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;CATEGORY&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;ARRAY-SIZE&#62;</label>
+                            <v-text-field v-model="editARXML.arraysize" placeholder="Int" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;ARRAY-SIZE&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;NAMESPACES&#62;</label>
+                            <v-text-field v-model="editARXML.namespace" placeholder="String/String/,String/String/,..." style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;NAMESPACES&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;TYPE-EMITTER&#62;</label>
+                            <v-text-field v-model="editARXML.typeemitter" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;TYPE-EMITTER&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;TYPE-REFERENCE-REF&#62;</label>
+                            <v-text-field v-model="editARXML.typeref" placeholder="Path" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;TYPE-REFERENCE-REF&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;">&#60;TEMPLATE-ARGUMENTS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;margin-left:20px;">&#60;CPP-TEMPLATE-ARGUMENT&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;margin-left:40px;">&#60;TEMPLATE-TYPE-REF&#62;</label>
+                            <v-text-field v-model="editARXML.templatetype" placeholder="Path" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;TEMPLATE-TYPE-REF&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;margin-left:20px;">&#60;&#47;CPP-TEMPLATE-ARGUMENT&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;&#47;TEMPLATE-ARGUMENTS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;DESC&#62;</label>
+                            <v-text-field v-model="editARXML.desc" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;DESC&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;">&#60;INTRODUCTION&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;margin-left:20px;">&#60;TRACE&#62;</label>
+                        </v-row>
+                        <v-row style="height: 15px;">
+                            <label style="padding:10px;margin-left:40px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.traceName" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;margin-left:40px;">&#60;TRACE-REFS&#62;
+                                <v-btn @click="newTextTrace()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 130px;">
+                            <v-row v-for="(item, i) in editARXML.trace" :key="i" style="height: 30px;">
+                                <div>
+                                    <br>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 30px;">
+                                            <v-btn @click="deletTextTrace(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;TRACE-REF&#62;</label>
+                                        <v-text-field v-model="item.traceref" placeholder="String" style="width:300px;" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;TRACE-REF&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row style="height: 15px;">
+                            <label style="padding:10px;margin-left:40px;">&#60;&#47;TRACE-REFS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 15px;">
+                            <label style="padding:10px;margin-left:20px;">&#60;&#47;TRACE&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;">&#60;&#47;INTRODUCTION&#62;</label>
+                        </v-row>
+                        <v-row style="height: 15px;">
+                            <label style="padding:10px;">&#60;SW-DATA-DEF-PROPS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;margin-left:20px;">&#60;SW-DATA-DEF-PROPS-VARIANTS&#62;
+                                <v-btn @click="newTextDDPC()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 200px;">
+                            <v-row v-for="(item, i) in editARXML.ddpc" :key="i" style="height: 100px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                            <v-btn @click="deletTextDDPC(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;SW-DATA-DEF-PROPS-CONDITIONAL&#62;
+                                        </label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;COMPU-METHOD-REF&#62;</label>
+                                        <v-text-field v-model="item.compumethod" placeholder="Path" style="width:300px;" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;COMPU-METHOD-REF&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;DATA-CONSTR-REF&#62;</label>
+                                        <v-text-field v-model="item.dataconstr" placeholder="Path"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;DATA-CONSTR-REF&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left:57px;">&#60;&#47;SW-DATA-DEF-PROPS-CONDITIONAL&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row style="height: 15px;">
+                            <label style="padding:10px;margin-left:20px;">&#60;&#47;SW-DATA-DEF-PROPS-VARIANTS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 20px;">
+                            <label style="padding:10px;">&#60;&#47;SW-DATA-DEF-PROPS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;SUB-ELEMENTS&#62;
+                                <v-btn @click="newTextIDTE()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 250px;">
+                            <v-row v-for="(item, i) in editARXML.idtelement" :key="i" style="height: 200px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                            <v-btn @click="deletTextIDTE(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;CPP-IMPLEMENTATION-DATA-TYPE-ELEMENT&#62;
+                                        </label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
+                                        <v-text-field v-model="item.name" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;DESC&#62;</label>
+                                        <v-text-field v-model="item.desc" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;DESC&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin-left:80px;">&#60;TYPE-REFERENCE&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;INPLACE&#62;</label>
+                                        <v-text-field v-model="item.inplace" placeholder="true or false" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;INPLACE&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;TYPE-REFERENCE-REF&#62;</label>
+                                        <v-text-field v-model="item.typeref" placeholder="Path" style="width:250px;" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;TYPE-REFERENCE-REF&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left:80px;">&#60;&#47;TYPE-REFERENCE&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;CPP-IMPLEMENTATION-DATA-TYPE-ELEMENT&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row>
+                            <label style="padding:10px;">&#60;&#47;SUB-ELEMENTS&#62;</label>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="saveARXML()" >
+                            Save
+                        </v-btn>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text @click="cancelARXML()">
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -307,7 +519,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: { 
         activeUUID() {
@@ -356,6 +568,12 @@ export default {
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            dialogText: false,
+            editARXML: {name:'', category:'', namespace:'', arraysize:'', typeemitter:'', 
+                    typeref: null, templatetype:null, desc:'', traceName: '', trace: [], ddpc:[], idtelement:[]},
+            editTextTrace: { traceref: '', id: ''},
+            editTextDDPC: { compumethod: null, dataconstr: null, id: ''},
+            editTextIDTE: { name: '', typeref: null, inplace: null, desc: '', id: '' },
             isEditingCompuMethod: true,
             isEditingDataConstr: true,
             isDDPCOpenClose: true,
@@ -392,8 +610,6 @@ export default {
             selectDelectIDTElementItem: [],
             defaultIDTElementItem: { name: '', typeref: null, inplace: null, desc: '', id: '' },
             editIDTElementItem: { name: '', typeref: null, inplace: null, desc: '', id: '' },
-            changeLineImp: [],
-            changeLineDDPC: [],
         }
     },
     mounted () {
@@ -519,39 +735,27 @@ export default {
         },
         deleteDDPC() {
             if (this.isdeleteDDPCItem == true) {
-                for(let i=0; i<this.element.ddpc.length; i++){
-                    var endLineCom = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+i)
-                    if(endLineCom != undefined) {
-                        this.deleteLine(this.element.uuid+'/ddpccompu-'+i)
+                var endLine
+                this.selectDelectDDPCItem.forEach(item => {
+                    for(let i=0; i<this.element.ddpc.length; i++){
+                        if (item.id == this.element.ddpc[i].id) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+this.element.ddpc[i].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/ddpccompu-'+this.element.ddpc[i].id)
+                            }
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpcdata-'+this.element.ddpc[i].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/ddpcdata-'+this.element.ddpc[i].id)
+                            }
+                        }
                     }
-                    var endLineData = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpcdata-'+i)
-                    if(endLineData != undefined) {
-                        this.deleteLine(this.element.uuid+'/ddpcdata-'+i)
-                    }
-                    if(endLineCom != undefined || endLineData != undefined) {
-                        this.changeLineDDPC.push({endLineCom:endLineCom, endLineData:endLineData, id: this.element.ddpc[i].id})
-                    }
-                }
+                })
 
                 this.element.ddpc = this.element.ddpc.filter(item => {
                          return this.selectDelectDDPCItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.element.ddpc.length; n++) {
-                    for(let idx=0; idx<this.changeLineDDPC.length; idx++) {
-                        if (this.element.ddpc[n].id == this.changeLineDDPC[idx].id) {
-                            if (this.element.ddpc[n].compumethod != null) {
-                                this.newLine(this.element.uuid+'/ddpccompu-'+n, this.element.uuid+'/DDPC', this.changeLineDDPC[idx].endLineCom)
-                            }
-                            if (this.element.ddpc[n].dataconstr != null) {
-                                this.newLine(this.element.uuid+'/ddpcdata-'+n, this.element.uuid+'/DDPC', this.changeLineDDPC[idx].endLineData)
-                            }
-                        }
-                    }
-                }
-
                 this.isdeleteDDPCItem = false
                 this.selectDelectDDPCItem = []
-                this.changeLineDDPC = []
             } 
         },
         openDDPC(idx) {
@@ -559,14 +763,14 @@ export default {
             this.selDataConstr =  this.$store.getters.getDataConstr
 
             if (this.element.ddpc[idx].compumethod != null ) {
-                var endLineC = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+idx)
+                var endLineC = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+this.element.ddpc[idx].id)
                 if (endLineC == undefined) {
                     endLineC = this.$store.getters.getCompuMethodPath(this.element.ddpc[idx].compumethod)
                 }
                 this.editDDPCItem.compumethod = { name :this.element.ddpc[idx].compumethod, uuid: endLineC }
             }
             if (this.element.ddpc[idx].dataconstr != null) {
-                var endLineD = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpcdata-'+idx)
+                var endLineD = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpcdata-'+this.element.ddpc[idx].id)
                 if (endLineD == undefined) {
                     endLineD = this.$store.getters.getDataConstrPath(this.element.ddpc[idx].dataconstr)
                 }
@@ -581,14 +785,12 @@ export default {
             }
             this.editDDPCItem.id = n
 
-            var datacount = this.element.ddpc.length
-
             if( this.editDDPCItem.compumethod != null) {
-                this.newLine(this.element.uuid+'/ddpccompu-'+datacount, this.element.uuid+'/DDPC', this.editDDPCItem.compumethod.uuid)
+                this.newLine(this.element.uuid+'/ddpccompu-'+n, this.element.uuid+'/DDPC', this.editDDPCItem.compumethod.uuid)
                 this.editDDPCItem.compumethod = this.editDDPCItem.compumethod.name
             }
             if( this.editDDPCItem.dataconstr != null) {
-                this.newLine(this.element.uuid+'/ddpcdata-'+datacount, this.element.uuid+'/DDPC', this.editDDPCItem.dataconstr.uuid)
+                this.newLine(this.element.uuid+'/ddpcdata-'+n, this.element.uuid+'/DDPC', this.editDDPCItem.dataconstr.uuid)
                 this.editDDPCItem.dataconstr = this.editDDPCItem.dataconstr.name
             }
             const addObj = Object.assign({}, this.editDDPCItem)
@@ -596,37 +798,31 @@ export default {
             this.cancelDDPC()
         },
         editDDPC(idx) {
-            var endcompuLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+idx)
+            var endcompuLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+this.element.ddpc[idx].id)
             if (endcompuLine != undefined && this.editDDPCItem.compumethod == null) {
-                this.deleteLine(this.element.uuid+'/ddpccompu-'+idx)
+                this.deleteLine(this.element.uuid+'/ddpccompu-'+this.element.ddpc[idx].id)
                 this.element.ddpc[idx].compumethod = null
             } else if (endcompuLine != undefined && endcompuLine != this.editDDPCItem.compumethod.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                this.deleteLine(this.element.uuid+'/ddpccompu-'+idx)
-                this.newLine(this.element.uuid+'/ddpccompu-'+idx, this.element.uuid+'/DDPC', this.editDDPCItem.compumethod.uuid)
+                this.deleteLine(this.element.uuid+'/ddpccompu-'+this.element.ddpc[idx].id)
+                this.newLine(this.element.uuid+'/ddpccompu-'+this.element.ddpc[idx].id, this.element.uuid+'/DDPC', this.editDDPCItem.compumethod.uuid)
                 this.element.ddpc[idx].compumethod = this.editDDPCItem.compumethod.name
-            } else if(endcompuLine == undefined && this.editDDPCItem.compumethod != null) {
-                if (this.editDDPCItem.compumethod != null) {
-                    // input으로 들어왔을 때 uuid값이 없는 경우가 있는데 compo/datcon 둘중 하나만 edit하면 한쪽이 uuid값이 없어서 에러남
-                    this.newLine(this.element.uuid+'/ddpccompu-'+idx, this.element.uuid+'/DDPC', this.editDDPCItem.compumethod.uuid)
-                }
+            } else if(endcompuLine == undefined && this.editDDPCItem.compumethod != null && this.editDDPCItem.compumethod.uuid != undefined) {
+                this.newLine(this.element.uuid+'/ddpccompu-'+this.element.ddpc[idx].id, this.element.uuid+'/DDPC', this.editDDPCItem.compumethod.uuid)
                 this.element.ddpc[idx].compumethod = this.editDDPCItem.compumethod.name
             }
 
-            var enddataLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpcdata-'+idx)
-            console.log('editDDPC      '+ enddataLine)
+            var enddataLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpcdata-'+this.element.ddpc[idx].id)
             if (enddataLine != undefined && this.editDDPCItem.dataconstr == null) {
-                this.deleteLine(this.element.uuid+'/ddpcdata-'+idx)
+                this.deleteLine(this.element.uuid+'/ddpcdata-'+this.element.ddpc[idx].id)
                 this.element.ddpc[idx].dataconstr = null
             } else if (enddataLine != undefined && enddataLine != this.editDDPCItem.dataconstr.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                this.deleteLine(this.element.uuid+'/ddpcdata-'+idx)
-                this.newLine(this.element.uuid+'/ddpcdata-'+idx, this.element.uuid+'/DDPC', this.editDDPCItem.dataconstr.uuid)
+                this.deleteLine(this.element.uuid+'/ddpcdata-'+this.element.ddpc[idx].id)
+                this.newLine(this.element.uuid+'/ddpcdata-'+this.element.ddpc[idx].id, this.element.uuid+'/DDPC', this.editDDPCItem.dataconstr.uuid)
                 this.element.ddpc[idx].dataconstr = this.editDDPCItem.dataconstr.name
-            } else if (enddataLine == undefined && this.editDDPCItem.dataconstr != undefined) {
-                if (this.editDDPCItem.dataconstr != null) {
-                    this.newLine(this.element.uuid+'/ddpcdata-'+idx, this.element.uuid+'/DDPC', this.editDDPCItem.dataconstr.uuid)
-                }
+            } else if (enddataLine == undefined && this.editDDPCItem.dataconstr != undefined && this.editDDPCItem.dataconstr.uuid != undefined) {
+                this.newLine(this.element.uuid+'/ddpcdata-'+this.element.ddpc[idx].id, this.element.uuid+'/DDPC', this.editDDPCItem.dataconstr.uuid)
                 this.element.ddpc[idx].dataconstr = this.editDDPCItem.dataconstr.name
             }
             
@@ -649,7 +845,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementCompuMehtod', {
-                    name: this.$store.getters.getNameCompuMethod,  input: false, path: '',
+                    name: this.$store.getters.getNameCompuMethod, path: '',
                     top: elementY, left: elementX, zindex: 10, category:null, attributeName:'', scales:[], icon:"mdi-clipboard-outline", validation: false
                 })
             EventBus.$emit('add-element', constant.CompuMethod_str)
@@ -662,7 +858,7 @@ export default {
 
 
             this.$store.commit('addElementDataConstr', {
-                    name: this.$store.getters.getNameDataConstr, input: false, path: '',
+                    name: this.$store.getters.getNameDataConstr, path: '',
                     top: elementY, left: elementX, zindex: 10, lowerlimit:null, upperlimit:null, icon:"mdi-clipboard-outline", validation: false })
             EventBus.$emit('add-element', constant.DataConstr_str)
             EventBus.$emit('add-element', constant.DateType_str)
@@ -719,35 +915,29 @@ export default {
         },
         deleteIDTElement() {
             if (this.isdeleteIDTElementItem == true) {
-                for(let i=0; i<this.element.idtelement.length; i++){
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+i)
-                    if(endLine != undefined) {
-                        this.changeLineImp.push({id:this.element.idtelement[i].id, endLine:endLine})
-                        this.deleteLine(this.element.uuid+'/idtetable-'+i)
+                this.selectDelectIDTElementItem.forEach(item => {
+                    for(let i=0; i<this.element.idtelement.length; i++){
+                        if (item.id == this.element.idtelement[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+this.element.idtelement[i].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/idtetable-'+this.element.idtelement[i].id)
+                            }
+                        }
                     }
-                }
+                })
 
                 this.element.idtelement = this.element.idtelement.filter(item => {
                          return this.selectDelectIDTElementItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.element.idtelement.length; n++) {
-                    for(let idx=0; idx<this.changeLineImp.length; idx++) {
-                        if (this.element.idtelement[n].id == this.changeLineImp[idx].id) {
-                            this.newLine(this.element.uuid+'/idtetable-'+n, this.element.uuid+'/idtetable', this.changeLineImp[idx].endLine)
-                        }
-                    }
-                }
-
                 this.isdeleteIDTElementItem = false
                 this.selectDelectIDTElementItem = []
-                this.changeLineImp = []
             }
         },
         openIDTElement(idx) {
             this.selTemplateType = this.$store.getters.getImplementationDataType
             this.editIDTElementItem.name = this.element.idtelement[idx].name
             if ( this.element.idtelement[idx].typeref != null) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+idx)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+this.element.idtelement[idx].id)
                 if (endLine == undefined) {
                     endLine = this.$store.getters.getImplementationPath(this.element.idtelement[idx].typeref)
                 }
@@ -765,9 +955,7 @@ export default {
             this.editIDTElementItem.id = n
 
             if( this.editIDTElementItem.typeref != null) {
-                var datacount = this.element.idtelement.length
-                
-                this.newLine(this.element.uuid+'/idtetable-'+datacount, this.element.uuid+'/idtetable', this.editIDTElementItem.typeref.uuid)
+                this.newLine(this.element.uuid+'/idtetable-'+n, this.element.uuid+'/idtetable', this.editIDTElementItem.typeref.uuid)
                 this.editIDTElementItem.typeref = this.editIDTElementItem.typeref.name
             }
             const addObj = Object.assign({}, this.editIDTElementItem);
@@ -775,17 +963,17 @@ export default {
             this.cancelIDTElement()
         },
         editIDTElement(idx) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+idx)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+this.element.idtelement[idx].id)
             if (endLine != undefined && this.editIDTElementItem.typeref == null) {
-                this.deleteLine(this.element.uuid+'/idtetable-'+idx)
+                this.deleteLine(this.element.uuid+'/idtetable-'+this.element.idtelement[idx].id)
                 this.element.idtelement[idx].typeref = null
             } else if (endLine != undefined && endLine != this.editIDTElementItem.typeref.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                this.deleteLine(this.element.uuid+'/idtetable-'+idx)
-                this.newLine(this.element.uuid+'/idtetable-'+idx, this.element.uuid+'/idtetable', this.editIDTElementItem.typeref.uuid)
+                this.deleteLine(this.element.uuid+'/idtetable-'+this.element.idtelement[idx].id)
+                this.newLine(this.element.uuid+'/idtetable-'+this.element.idtelement[idx].id, this.element.uuid+'/idtetable', this.editIDTElementItem.typeref.uuid)
                 this.element.idtelement[idx].typeref = this.editIDTElementItem.typeref.name
-            }else if (endLine == undefined && this.editIDTElementItem.typeref != null) {
-                this.newLine(this.element.uuid+'/idtetable-'+idx, this.element.uuid+'/idtetable', this.editIDTElementItem.typeref.uuid)
+            }else if (endLine == undefined && this.editIDTElementItem.typeref != null && this.editIDTElementItem.typeref.uuid != null) {
+                this.newLine(this.element.uuid+'/idtetable-'+this.element.idtelement[idx].id, this.element.uuid+'/idtetable', this.editIDTElementItem.typeref.uuid)
                 this.element.idtelement[idx].typeref = this.editIDTElementItem.typeref.name
             }
 
@@ -878,7 +1066,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementImplementation', {
-                    name: this.$store.getters.getNameImplementation,  input: false, path: '',
+                    name: this.$store.getters.getNameImplementation, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', traceName: '', trace: [],
                     typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
@@ -904,7 +1092,241 @@ export default {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
             EventBus.$emit('new-line', drawLine, endLine)
         },
-    },
 
+        viewARXML() {
+            this.editARXML.name = this.element.name
+            this.editARXML.category = this.element.category
+            this.editARXML.namespace = this.element.namespace
+            this.editARXML.arraysize = this.element.arraysize
+            this.editARXML.typeemitter = this.element.typeemitter
+            this.editARXML.typeref = this.element.typeref
+            this.editARXML.templatetype = this.element.templatetype
+            this.editARXML.desc = this.element.desc
+            this.editARXML.traceName = this.element.traceName
+            this.editARXML.trace = JSON.parse(JSON.stringify(this.element.trace))
+            this.editARXML.ddpc = JSON.parse(JSON.stringify(this.element.ddpc))
+            this.editARXML.idtelement = JSON.parse(JSON.stringify(this.element.idtelement))
+            this.dialogText= true
+        },
+        saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editImplementation', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
+            this.element.name = this.editARXML.name
+            this.element.category = this.editARXML.category
+            this.element.namespace = this.editARXML.namespace
+            this.element.arraysize = this.editARXML.arraysize
+            this.element.typeemitter = this.editARXML.typeemitter
+
+            var endLine = null, changEndLine = null, isHaveTable = false
+            if (this.element.typeref != this.editARXML.typeref) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/typeref')
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/typeref')
+                }
+                changEndLine = this.$store.getters.getImplementationPath(this.editARXML.typeref)
+                if (changEndLine != null) {
+                    this.newLine(this.element.uuid+'/typeref', this.element.uuid+'/typeref', changEndLine)
+                }
+            }
+            this.element.typeref = this.editARXML.typeref
+            if (this.element.templatetype != this.editARXML.templatetype) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/templateType')
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/templateType')
+                }
+                changEndLine = this.$store.getters.getImplementationPath(this.editARXML.typeref)
+                if (changEndLine != null) {
+                    this.newLine(this.element.uuid+'/templateType', this.element.uuid+'/templateType', changEndLine)
+                }
+            }
+            this.element.templatetype = this.editARXML.templatetype
+            this.element.desc = this.editARXML.desc
+            this.element.traceName = this.editARXML.traceName
+
+            if (this.editARXML.ddpc.length > 0) {
+                this.editARXML.ddpc.forEach(item => {
+                    var isHaveTableC = false, isHaveTableD = false
+                    for(let n=0; n<this.element.ddpc.length; n++){
+                        if (this.element.ddpc[n].id == item.id) {
+                            if (this.element.ddpc[n].compumethod == item.compumethod) {
+                                isHaveTableC = true
+                            }
+                            if (this.element.ddpc[n].dataconstr == item.dataconstr) {
+                                isHaveTableD = true
+                            }
+                        }
+                    }
+                    if (!isHaveTableC) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/ddpccompu-'+item.id)
+                        }
+                        changEndLine = this.$store.getters.getCompuMethodPath(item.compumethod)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/ddpccompu-'+item.id, this.element.uuid+'/DDPC', changEndLine)
+                        }
+                    }
+                    if (!isHaveTableD) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpcdata-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/ddpcdata-'+item.id)
+                        }
+                        changEndLine = this.$store.getters.getDataConstrPath(item.dataconstr)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/ddpcdata-'+item.id, this.element.uuid+'/DDPC', changEndLine)
+                        }
+                    }
+                })
+                this.element.ddpc.forEach(item => {
+                    isHaveTable = false
+                    this.editARXML.ddpc.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        if (item.compumethod != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/ddpccompu-'+item.id)
+                            }
+                        }
+                        if (item.dataconstr != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpcdata-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/ddpcdata-'+item.id)
+                            }
+                        }
+                    }
+                })
+            } else {
+                if (this.element.ddpc.length > 0) {
+                    this.element.ddpc.forEach(item => {
+                        if (item.compumethod != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpccompu-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/ddpccompu-'+item.id)
+                            }
+                        }
+                        if (item.dataconstr != null) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/ddpcdata-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/ddpcdata-'+item.id)
+                            }
+                        }
+                    })
+                }
+            }
+
+            if (this.editARXML.idtelement.length > 0) {
+                this.editARXML.idtelement.forEach(item => {
+                    isHaveTable = false
+                    for(let n=0; n<this.element.idtelement.length; n++){
+                        if (this.element.idtelement[n].id == item.id &&
+                            this.element.idtelement[n].typeref == item.typeref ) {
+                            isHaveTable = true
+                        }
+                    }
+                    if (!isHaveTable) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/idtetable-'+item.id)
+                        }
+                        changEndLine = this.$store.getters.getImplementationPath(item.typeref)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/idtetable-'+item.id, this.element.uuid+'/idtetable', changEndLine)
+                        }
+                    }
+                })
+                this.element.idtelement.forEach(item => {
+                    isHaveTable = false
+                    this.editARXML.idtelement.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/idtetable-'+item.id)
+                        }
+                    }
+                })
+            } else {
+                if (this.element.idtelement.length > 0) {
+                    this.element.idtelement.forEach(item => {
+                    if (item.typeref != null) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/idtetable-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/idtetable-'+item.id)
+                        }
+                    }
+                })
+                }
+            }
+            this.element.trace = JSON.parse(JSON.stringify(this.editARXML.trace))
+            this.element.ddpc = JSON.parse(JSON.stringify(this.editARXML.ddpc))
+            this.element.idtelement = JSON.parse(JSON.stringify(this.editARXML.idtelement))
+            this.cancelARXML()
+        },
+        cancelARXML() {
+            this.editARXML = {name:'', category:'', namespace:'', arraysize:'', typeemitter:'', 
+                    typeref: null, templatetype:null, desc:'', traceName: '', trace: [], ddpc:[], idtelement:[]}
+            this.editTextTrace = { traceref: '', id: ''}
+            this.editTextDDPC = { compumethod: null, dataconstr: null, id: ''}
+            this.editTextIDTE = { name: '', typeref: null, inplace: null, desc: '', id: '' }
+            this.dialogText = false
+        },
+        newTextTrace() {
+            this.editTextTrace = { traceref: null, id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.editARXML.trace.some(item => item.id === n)
+            }
+            this.editTextTrace.id = n
+
+            const addObj = Object.assign({}, this.editTextTrace)
+            this.editARXML.trace.push(addObj);
+        },
+        deletTextTrace(idx) {
+            this.editARXML.trace.splice(idx,1)
+        },
+        newTextDDPC() {
+            this.editTextDDPC = { compumethod: null, dataconstr: null, id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.editARXML.ddpc.some(item => item.id === n)
+            }
+            this.editTextDDPC.id = n
+
+            const addObj = Object.assign({}, this.editTextDDPC)
+            this.editARXML.ddpc.push(addObj);
+        },
+        deletTextDDPC(idx) {
+            this.editARXML.ddpc.splice(idx,1)
+        },
+        newTextIDTE() {
+            this.editTextIDTE = { name: '', typeref: null, inplace: null, desc: '', id: '' }
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.editARXML.idtelement.some(item => item.id === n)
+            }
+            this.editTextIDTE.id = n
+
+            const addObj = Object.assign({}, this.editTextIDTE)
+            this.editARXML.idtelement.push(addObj);
+        },
+        deletTextIDTE(idx) {
+            this.editARXML.idtelement.splice(idx,1)
+        },
+
+    },
 }
 </script>

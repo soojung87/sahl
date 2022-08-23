@@ -111,7 +111,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -238,7 +238,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementPERKeyValueD', { 
-                name: this.$store.getters.getNamePERKeyValueD, input: false, path: '',
+                name: this.$store.getters.getNamePERKeyValueD, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 
             })
@@ -324,7 +324,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementProcess', { 
-                name: this.$store.getters.getNameProcess, input: false, path: '',
+                name: this.$store.getters.getNameProcess, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
                 prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []

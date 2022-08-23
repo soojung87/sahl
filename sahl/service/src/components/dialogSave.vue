@@ -284,6 +284,7 @@ export default {
                                     (data.parent == constant.SomeIPServiceInterfaceDeployment_str || data.parent == constant.ServiceInterface_str || data.parent == constant.Client_str || data.parent == constant.Server_str ||
                                      data.parent == constant.SomeIPClient_str || data.parent == constant.SomeIPServer_str || data.parent == constant.SomeIPToMachineMapping_str || 
                                      data.parent == constant.ToPortPrototypeMapping_str || data.parent == constant.RequiredSomeIP_str || data.parent == constant.ProvidedSomeIP_str ||
+                                     data.parent == constant.E2EProfileConfig_str || data.parent == constant.SDG_DEF_str ||
                                      data.parent == constant.Error_str || data.parent == constant.Errorset_str || data.parent == constant.ErrorDomain_str )) {
                             this.tabListItem[this.listTab].select.push(data)
                         } else if (this.listTab == 2 && 
@@ -308,13 +309,13 @@ export default {
                 if (this.listTab == 0) {
                     for(let i=this.tabListItem[this.listTab].list.length-1; i>=0; i--) {
                         for(let n=this.tabListItem[this.listTab].list[i].children.length-1; n>=0; n--) {
-                            if( i == 1) {
-                                for(let l=this.tabListItem[this.listTab].list[i].children[n].children.length-1; l>=0; l--) { //service
-                                    if (this.tabListItem[this.listTab].list[i].children[n].children[l].children.length == 0) {
-                                        this.tabListItem[this.listTab].list[i].children[n].children.splice(l,1)
-                                    }
-                                }
-                            }
+                            // if( i == 1) { //service 폴더 구조를 없애서 지움 혹platform에서 쓸까봐
+                            //     for(let l=this.tabListItem[this.listTab].list[i].children[n].children.length-1; l>=0; l--) { //service
+                            //         if (this.tabListItem[this.listTab].list[i].children[n].children[l].children.length == 0) {
+                            //             this.tabListItem[this.listTab].list[i].children[n].children.splice(l,1)
+                            //         }
+                            //     }
+                            // }
                             if (this.tabListItem[this.listTab].list[i].children[n].children.length == 0) {
                                 this.tabListItem[this.listTab].list[i].children.splice(n,1)
                             }
@@ -323,7 +324,7 @@ export default {
                             this.tabListItem[this.listTab].list.splice(i,1)
                         }
                     }
-                } else if (this.listTab == 1){  //service
+                } /*else if (this.listTab == 1){  //service 폴더 구조를 없애서 지움 혹platform에서 쓸까봐
                     for(let i=this.tabListItem[this.listTab].list.length-1; i>=0; i--) {
                         for(let n=this.tabListItem[this.listTab].list[i].children.length-1; n>=0; n--) {
                             if (this.tabListItem[this.listTab].list[i].children[n].children.length == 0) {
@@ -334,7 +335,7 @@ export default {
                             this.tabListItem[this.listTab].list.splice(i,1)
                         }
                     }
-                } else {
+                } */else {
                     for(let i=this.tabListItem[this.listTab].list.length-1; i>=0; i--) {
                         if (this.tabListItem[this.listTab].list[i].children.length == 0) {
                             this.tabListItem[this.listTab].list.splice(i,1)
@@ -408,6 +409,7 @@ export default {
             if (parent == constant.SomeIPServiceInterfaceDeployment_str || parent == constant.ServiceInterface_str || parent == constant.Client_str || parent == constant.Server_str ||
                 parent == constant.SomeIPClient_str || parent == constant.SomeIPServer_str || parent == constant.SomeIPToMachineMapping_str || 
                 parent == constant.ToPortPrototypeMapping_str || parent == constant.RequiredSomeIP_str || parent == constant.ProvidedSomeIP_str ||
+                parent == constant.E2EProfileConfig_str || parent == constant.SDG_DEF_str ||
                 parent == constant.Error_str || parent == constant.Errorset_str || parent == constant.ErrorDomain_str ) {
                 this.tabListItem[1].select.push(data)
             } else if (parent == constant.ProcesstoMachineMapping_str || parent == constant.SWComponents_str || parent == constant.Process_str ||

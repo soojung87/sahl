@@ -208,6 +208,13 @@ export default {
             this.dialogText= true
         },
         saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editSomeIPClient', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
             this.element.name = this.editARXML.name
             this.element.findtime = this.editARXML.findtime
             this.element.inidelaymax = this.editARXML.inidelaymax

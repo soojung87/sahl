@@ -47,6 +47,32 @@ const mutations = {
             IamG: { FieldG: [], EventG: [], MethodG: [], FieldGD: [], EventGD: [], MethodGD: [] },
             UCM: { SoftWareCluster: [], SoftWarePackage: [], VehiclePackage: [] }
         })
+        state.editInputElemnt = {
+            DataTypes: { CompuMethod: [], DataConstr: [], ApplicationArrayDataType: [], ImplementationDataType: [], SWBaseType: [] },
+            Service: {
+                SomeIPServiceInterfaceDeployment: [],
+                ServiceInterface: [],
+                SomeIPClientEvent: [],
+                SomeIPServerEvent: [],
+                Error: [],
+                ErrorSet: [],
+                ErrorDomain: [],
+                SomeIPClientServiceInstance: [],
+                SomeIPServerServiceInstance: [],
+                SomeIPServiceInstanceToMachine: [],
+                ServiceInstanceToPortPrototype: [],
+                RequiredSomeIP: [],
+                ProvidedSomeIP: [],
+                E2EProfileConfig: [],
+                SdgDef: [],
+            },
+            Machine: { Machine: [], MachineDesign: [], EthernetCluster: [], ModeDeclarationGroup: [], HWElement: [], HWCategory: [] },
+            AdaptiveApplication: { ProtoMachineMapping: [], SWComponents: [], Process: [], Executable: [], StartupConfig: [], DeterministicClient: [], ProcessDesign: [] },
+            Per: { PERFileArray: [], PERFileProxy: [], PERKeyValueD: [], PERKeyValueDI: [], PERPPtoFileArray: [], PERPPtoKeyValue: [] },
+            Phm: { PHMContribution: [], PHMtoMachine: [], PHMHealth: [], PHMRecovery: [], PHMSupervised: [], RecoveryVia: [] },
+            IamG: { FieldG: [], EventG: [], MethodG: [], FieldGD: [], EventGD: [], MethodGD: [] },
+            UCM: { SoftWareCluster: [], SoftWarePackage: [], VehiclePackage: [] }
+        }
         state.navigatorList.push({
             uuid: newUUid,
             name: payload.name,
@@ -69,49 +95,22 @@ const mutations = {
                     name: constant.Service_str,
                     icon: "mdi-folder",
                     validation: false,
-                    children: [{
-                            uuid: constant.ServiceInterfaces_str,
-                            name: constant.ServiceInterfaces_str,
-                            icon: "mdi-folder",
-                            validation: false,
-                            children: [{ uuid: constant.SomeIPServiceInterfaceDeployment_str, name: constant.SomeIPServiceInterfaceDeployment_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.ServiceInterface_str, name: constant.ServiceInterface_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] }
-                            ]
-                        },
-                        {
-                            uuid: constant.SomeIPEvents_str,
-                            name: constant.SomeIPEvents_str,
-                            icon: "mdi-folder",
-                            validation: false,
-                            children: [{ uuid: constant.Client_str, name: constant.Client_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.Server_str, name: constant.Server_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                            ]
-                        },
-                        {
-                            uuid: constant.ServiceInstances_str,
-                            name: constant.ServiceInstances_str,
-                            icon: "mdi-folder",
-                            validation: false,
-                            children: [{ uuid: constant.SomeIPClient_str, name: constant.SomeIPClient_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.SomeIPServer_str, name: constant.SomeIPServer_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.SomeIPToMachineMapping_str, name: constant.SomeIPToMachineMapping_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.ToPortPrototypeMapping_str, name: constant.ToPortPrototypeMapping_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.RequiredSomeIP_str, name: constant.RequiredSomeIP_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.ProvidedSomeIP_str, name: constant.ProvidedSomeIP_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.E2EProfileConfig_str, name: constant.E2EProfileConfig_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.SDG_DEF_str, name: constant.SDG_DEF_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                            ]
-                        },
-                        {
-                            uuid: constant.Errors_str,
-                            name: constant.Errors_str,
-                            icon: "mdi-folder",
-                            validation: false,
-                            children: [{ uuid: constant.Error_str, name: constant.Error_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.Errorset_str, name: constant.Errorset_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                                { uuid: constant.ErrorDomain_str, name: constant.ErrorDomain_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
-                            ]
-                        },
+                    children: [
+                        { uuid: constant.SomeIPServiceInterfaceDeployment_str, name: constant.SomeIPServiceInterfaceDeployment_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.ServiceInterface_str, name: constant.ServiceInterface_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.Client_str, name: constant.Client_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.Server_str, name: constant.Server_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.SomeIPClient_str, name: constant.SomeIPClient_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.SomeIPServer_str, name: constant.SomeIPServer_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.SomeIPToMachineMapping_str, name: constant.SomeIPToMachineMapping_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.ToPortPrototypeMapping_str, name: constant.ToPortPrototypeMapping_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.RequiredSomeIP_str, name: constant.RequiredSomeIP_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.ProvidedSomeIP_str, name: constant.ProvidedSomeIP_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.E2EProfileConfig_str, name: constant.E2EProfileConfig_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.SDG_DEF_str, name: constant.SDG_DEF_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.Error_str, name: constant.Error_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.Errorset_str, name: constant.Errorset_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
+                        { uuid: constant.ErrorDomain_str, name: constant.ErrorDomain_str, icon: 'mdi-alpha-e-circle-outline', validation: false, children: [] },
                     ]
                 },
                 {
@@ -444,7 +443,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.ServiceInterface_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxEle]))
@@ -454,7 +453,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.Client_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxEle]))
@@ -464,7 +463,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Client_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Client_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.Server_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxEle]))
@@ -474,7 +473,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Server_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Server_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.SomeIPClient_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxEle]))
@@ -484,7 +483,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPClient_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPClient_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.SomeIPServer_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxEle]))
@@ -494,7 +493,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPServer_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServer_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.SomeIPToMachineMapping_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxEle]))
@@ -504,7 +503,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPToMachineMapping_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.ToPortPrototypeMapping_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxEle]))
@@ -514,7 +513,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.RequiredSomeIP_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxEle]))
@@ -524,7 +523,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.ProvidedSomeIP_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxEle]))
@@ -534,7 +533,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.E2EProfileConfig_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxEle]))
@@ -544,7 +543,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.E2EProfileConfig_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.E2EProfileConfig_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.SDG_DEF_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.SdgDef[idxEle]))
@@ -554,7 +553,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.SdgDef.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SDG_DEF_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SDG_DEF_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.Error_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.Error[idxEle]))
@@ -564,7 +563,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.Error.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Error_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Error_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.Errorset_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxEle]))
@@ -574,7 +573,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.ErrorSet.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errorset_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.ErrorDomain_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxEle]))
@@ -584,7 +583,7 @@ const mutations = {
             copyEle.left = elementX
             copyEle.top = elementY
             state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.push(copyEle)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.ErrorDomain_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ErrorDomain_index].children.push({ uuid: copyEle.uuid, name: copyEle.name, icon: "mdi-clipboard-outline", validation: false, })
         } else if (payload.parent == constant.FileArray_str) {
             idxEle = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(item => item.uuid === payload.uuid)
             copyEle = JSON.parse(JSON.stringify(state.SAHLProject[state.openProjectIndex].Per.PERFileArray[idxEle]))
@@ -1101,63 +1100,48 @@ const mutations = {
             idxchild = constant.AdaptiveApplication_index
             idxchildchild = constant.ProcessDesign_index
         } else if (payload.datatype == 'SomeIPServiceInterfaceDeployment') {
-            idxService = constant.ServiceInterfaces_index
             idxchild = constant.Service_index
             idxchildchild = constant.SomeIPServiceInterfaceDeployment_index
         } else if (payload.datatype == 'ServiceInterface') {
-            idxService = constant.ServiceInterfaces_index
             idxchild = constant.Service_index
             idxchildchild = constant.ServiceInterface_index
         } else if (payload.datatype == 'SomeIPClientEvent') {
-            idxService = constant.SomeIPEvents_index
             idxchild = constant.Service_index
             idxchildchild = constant.Client_index
         } else if (payload.datatype == 'SomeIPServerEvent') {
-            idxService = constant.SomeIPEvents_index
             idxchild = constant.Service_index
             idxchildchild = constant.Server_index
         } else if (payload.datatype == 'Error') {
-            idxService = constant.Errors_index
             idxchild = constant.Service_index
             idxchildchild = constant.Error_index
         } else if (payload.datatype == 'ErrorSet') {
-            idxService = constant.Errors_index
             idxchild = constant.Service_index
             idxchildchild = constant.Errorset_index
         } else if (payload.datatype == 'ErrorDomain') {
-            idxService = constant.Errors_index
             idxchild = constant.Service_index
             idxchildchild = constant.ErrorDomain_index
         } else if (payload.datatype == 'SomeIPClientServiceInstance') {
-            idxService = constant.ServiceInstances_index
             idxchild = constant.Service_index
             idxchildchild = constant.SomeIPClient_index
         } else if (payload.datatype == 'SomeIPServerServiceInstance') {
-            idxService = constant.ServiceInstances_index
             idxchild = constant.Service_index
             idxchildchild = constant.SomeIPServer_index
         } else if (payload.datatype == 'SomeIPServiceInstanceToMachine') {
-            idxService = constant.ServiceInstances_index
             idxchild = constant.Service_index
             idxchildchild = constant.SomeIPToMachineMapping_index
         } else if (payload.datatype == 'ServiceInstanceToPortPrototype') {
-            idxService = constant.ServiceInstances_index
             idxchild = constant.Service_index
             idxchildchild = constant.ToPortPrototypeMapping_index
         } else if (payload.datatype == 'RequiredSomeIP') {
-            idxService = constant.ServiceInstances_index
             idxchild = constant.Service_index
             idxchildchild = constant.RequiredSomeIP_index
         } else if (payload.datatype == 'ProvidedSomeIP') {
-            idxService = constant.ServiceInstances_index
             idxchild = constant.Service_index
             idxchildchild = constant.ProvidedSomeIP_index
         } else if (payload.datatype == 'E2EProfileConfig') {
-            idxService = constant.ServiceInstances_index
             idxchild = constant.Service_index
             idxchildchild = constant.E2EProfileConfig_index
         } else if (payload.datatype == 'SdgDef') {
-            idxService = constant.ServiceInstances_index
             idxchild = constant.Service_index
             idxchildchild = constant.SDG_DEF_index
         } else if (payload.datatype == 'PERFileArray') {
@@ -1246,7 +1230,7 @@ const mutations = {
             idxchildchild = constant.VehiclePackage_index
         }
 
-        if (idxchild == constant.Service_index) {
+        if (idxchild == constant.Platform_index) {
             state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].children[idxchildchild].children[payload.elidx].validation = true
             state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].children[idxchildchild].validation = true
             state.navigatorList[state.openProjectIndex].children[idxchild].children[idxService].validation = true
@@ -1464,30 +1448,51 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.DataTypes.CompuMethod.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementCompuMehtod', {
-                    input: true,
-                    path: strPath,
+                state.editInputElemnt.DataTypes.CompuMethod.push({
                     uuid: UUID,
-                    name: compuName,
+                    path: strPath,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
+                    name: compuName,
                     category: compuCate,
                     attributeName: attributeName,
                     scales: scalesItem,
-                    icon: "mdi-clipboard-outline",
-                    validation: false
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + compuName, parent: constant.CompuMethod_str })
-                EventBus.$emit('add-element', constant.DateType_str)
-                EventBus.$emit('add-element', constant.CompuMethod_str)
+                state.editInputList.push({ uuid: UUID, name: strPath + '/' + compuName, parent: constant.CompuMethod_str })
+                    /*
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+
+                    this.commit('addElementCompuMehtod', {
+                        input: true,
+                        path: strPath,
+                        uuid: UUID,
+                        name: compuName,
+                        top: elementY,
+                        left: elementX,
+                        zindex: 2,
+                        category: compuCate,
+                        attributeName: attributeName,
+                        scales: scalesItem,
+                        icon: "mdi-clipboard-outline",
+                        validation: false
+                    })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + compuName, parent: constant.CompuMethod_str })
+                    EventBus.$emit('add-element', constant.DateType_str)
+                    EventBus.$emit('add-element', constant.CompuMethod_str)
+                    */
             })
             /// Data-Constr
         var datacon = payload.xmlDoc.getElementsByTagName('DATA-CONSTR')
@@ -1515,29 +1520,49 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.DataTypes.DataConstr.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementDataConstr', {
-                    input: true,
-                    path: strPath,
+                state.editInputElemnt.DataTypes.DataConstr.push({
                     uuid: UUID,
-                    name: dataconName,
+                    path: strPath,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
+                    name: dataconName,
                     lowerlimit: dataconLow,
                     upperlimit: dataconUpper,
-                    icon: "mdi-clipboard-outline",
-                    validation: false
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + dataconName, parent: constant.DataConstr_str })
-                EventBus.$emit('add-element', constant.DateType_str)
-                EventBus.$emit('add-element', constant.DataConstr_str)
+                state.editInputList.push({ uuid: UUID, name: strPath + '/' + dataconName, parent: constant.DataConstr_str })
+                    /*
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+
+                    this.commit('addElementDataConstr', {
+                        input: true,
+                        path: strPath,
+                        uuid: UUID,
+                        name: dataconName,
+                        top: elementY,
+                        left: elementX,
+                        zindex: 2,
+                        lowerlimit: dataconLow,
+                        upperlimit: dataconUpper,
+                        icon: "mdi-clipboard-outline",
+                        validation: false
+                    })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + dataconName, parent: constant.DataConstr_str })
+                    EventBus.$emit('add-element', constant.DateType_str)
+                    EventBus.$emit('add-element', constant.DataConstr_str)
+                    */
             })
             /// SW-BASE-TYPE
         var SWBaseType = payload.xmlDoc.getElementsByTagName('SW-BASE-TYPE')
@@ -1560,29 +1585,49 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.DataTypes.SWBaseType.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementSWBaseType', {
-                    input: true,
-                    path: strPath,
+                state.editInputElemnt.DataTypes.SWBaseType.push({
                     uuid: UUID,
-                    name: swName,
+                    path: strPath,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
+                    name: swName,
                     category: category,
                     encoding: encoding,
-                    icon: "mdi-clipboard-outline",
-                    validation: false
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + swName, parent: constant.SWBaseType_str })
-                EventBus.$emit('add-element', constant.DateType_str)
-                EventBus.$emit('add-element', constant.SWBaseType_str)
+                state.editInputList.push({ uuid: UUID, name: strPath + '/' + swName, parent: constant.SWBaseType_str })
+                    /*
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+
+                    this.commit('addElementSWBaseType', {
+                        input: true,
+                        path: strPath,
+                        uuid: UUID,
+                        name: swName,
+                        top: elementY,
+                        left: elementX,
+                        zindex: 2,
+                        category: category,
+                        encoding: encoding,
+                        icon: "mdi-clipboard-outline",
+                        validation: false
+                    })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + swName, parent: constant.SWBaseType_str })
+                    EventBus.$emit('add-element', constant.DateType_str)
+                    EventBus.$emit('add-element', constant.SWBaseType_str)
+                    */
             })
             /// APPLICATION-ARRAY-DATA-TYPE
         var application = payload.xmlDoc.getElementsByTagName('APPLICATION-ARRAY-DATA-TYPE')
@@ -1625,33 +1670,57 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.DataTypes.ApplicationArrayDataType.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementApplicationArray', {
-                    input: true,
-                    path: strPath,
+                state.editInputElemnt.DataTypes.ApplicationArrayDataType.push({
                     uuid: UUID,
-                    name: appliName,
+                    path: strPath,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
+                    name: appliName,
                     category: appliCategory,
                     dynamicArrySize: appliDynamicArrySize,
                     elename: appliElename,
                     elehandling: appliElehandling,
                     elesemantics: appliElesemantics,
                     elemaxnumber: appliElemaxnumber,
-                    icon: "mdi-clipboard-outline",
-                    validation: false
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + appliName, parent: constant.ApplicationArray_str })
-                EventBus.$emit('add-element', constant.DateType_str)
-                EventBus.$emit('add-element', constant.ApplicationArray_str)
+                state.editInputList.push({ uuid: UUID, name: strPath + '/' + appliName, parent: constant.ApplicationArray_str })
+                    /*
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+
+                    this.commit('addElementApplicationArray', {
+                        input: true,
+                        path: strPath,
+                        uuid: UUID,
+                        name: appliName,
+                        top: elementY,
+                        left: elementX,
+                        zindex: 2,
+                        category: appliCategory,
+                        dynamicArrySize: appliDynamicArrySize,
+                        elename: appliElename,
+                        elehandling: appliElehandling,
+                        elesemantics: appliElesemantics,
+                        elemaxnumber: appliElemaxnumber,
+                        icon: "mdi-clipboard-outline",
+                        validation: false
+                    })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + appliName, parent: constant.ApplicationArray_str })
+                    EventBus.$emit('add-element', constant.DateType_str)
+                    EventBus.$emit('add-element', constant.ApplicationArray_str)
+                    */
             })
             //STD-CPP-IMPLEMENTATION-DATA-TYPE
         var implement = payload.xmlDoc.getElementsByTagName('STD-CPP-IMPLEMENTATION-DATA-TYPE')
@@ -1671,7 +1740,7 @@ const mutations = {
                     trace = []
                 var DDPCItem = [],
                     IDTElementItem = []
-                console.log(ele.childNodes)
+                    //console.log(ele.childNodes)
 
                 ele.childNodes.forEach(item => {
                     if (item.nodeName == "SHORT-NAME") {
@@ -1796,21 +1865,19 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.DataTypes.ImplementationDataType.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementImplementation', {
-                    input: true,
-                    path: strPath,
+                state.editInputElemnt.DataTypes.ImplementationDataType.push({
                     uuid: UUID,
-                    name: impName,
+                    path: strPath,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
+                    name: impName,
                     category: impcategory,
                     namespace: impnamespace,
                     arraysize: imparraysize,
@@ -1822,12 +1889,43 @@ const mutations = {
                     trace: trace,
                     ddpc: DDPCItem,
                     idtelement: IDTElementItem,
-                    icon: "mdi-clipboard-outline",
-                    validation: false
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + impName, parent: constant.Implementation_str })
-                EventBus.$emit('add-element', constant.DateType_str)
-                EventBus.$emit('add-element', constant.Implementation_str)
+                state.editInputList.push({ uuid: UUID, name: strPath + '/' + impName, parent: constant.Implementation_str })
+                    /*
+                    var UUID = ele.getAttribute("UUID")
+                    var idxEle = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === UUID)
+                    if (UUID == null || idxEle != -1) {
+                        UUID = uuid.v1()
+                    }
+                    const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
+                    const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
+
+                    this.commit('addElementImplementation', {
+                        input: true,
+                        path: strPath,
+                        uuid: UUID,
+                        name: impName,
+                        top: elementY,
+                        left: elementX,
+                        zindex: 2,
+                        category: impcategory,
+                        namespace: impnamespace,
+                        arraysize: imparraysize,
+                        typeemitter: imptypeemitter,
+                        typeref: imptyperef,
+                        templatetype: imptemplatetype,
+                        desc: impdesc,
+                        traceName: traceName,
+                        trace: trace,
+                        ddpc: DDPCItem,
+                        idtelement: IDTElementItem,
+                        icon: "mdi-clipboard-outline",
+                        validation: false
+                    })
+                    state.inputFileList.push({ uuid: UUID, path: strPath + '/' + impName, parent: constant.Implementation_str })
+                    EventBus.$emit('add-element', constant.DateType_str)
+                    EventBus.$emit('add-element', constant.Implementation_str)
+                    */
             })
             // MACHINE
         var machine = payload.xmlDoc.getElementsByTagName('MACHINE')
@@ -1846,7 +1944,8 @@ const mutations = {
                     processor = [],
                     module = [],
                     ucm = [],
-                    iam = []
+                    iam = [],
+                    crypto = []
 
                 ele.childNodes.forEach(item => {
                     if (item.nodeName == "SHORT-NAME") {
@@ -1963,12 +2062,15 @@ const mutations = {
                     }
                     if (item.nodeName == "MODULE-INSTANTIATIONS") {
                         id = 0
-                        var idUCM = 0,
-                            idIAM = 0
+                        var idMod = 0,
+                            idUCM = 0,
+                            idIAM = 0,
+                            idCRY = 0
                         item.childNodes.forEach((os, o) => {
                             var editModule = { name: '', resource: [] }
                             var editUCM = { name: '', ident: '', id: '' }
                             var editIAM = { name: '', grants: [], id: '' }
+                            var editCRY = { name: '', sdgs: [], id: '' }
                             if (o % 2 != 0) {
                                 if (os.nodeName == "OS-MODULE-INSTANTIATION") {
                                     os.childNodes.forEach((osmodul, s) => {
@@ -2002,8 +2104,10 @@ const mutations = {
                                             }
                                         }
                                     })
+                                    editModule.id = idMod
                                     const addObj = Object.assign({}, editModule)
                                     module.push(addObj)
+                                    idMod++
                                 } else if (os.nodeName == "UCM-MODULE-INSTANTIATION") {
                                     os.childNodes.forEach((ucmmodul, s) => {
                                         if (s % 2 != 0) {
@@ -2020,6 +2124,7 @@ const mutations = {
                                     ucm.push(addObj)
                                     idUCM++
                                 } else if (os.nodeName == "IAM-MODULE-INSTANTIATION") {
+                                    var idG = 0
                                     os.childNodes.forEach((iammodul, s) => {
                                         if (s % 2 != 0) {
                                             if (iammodul.nodeName == "SHORT-NAME") {
@@ -2031,38 +2136,247 @@ const mutations = {
                                                     if (data.nodeName == "GRANT-REF") {
                                                         editGrantItem.select = data.getAttribute("DEST")
                                                         editGrantItem.grant = data.childNodes[0].nodeValue
-                                                        editGrantItem.id = idIAM
+                                                        editGrantItem.id = idG
                                                         const addObjRes = Object.assign({}, editGrantItem)
                                                         editIAM.grants.push(addObjRes)
-                                                        idIAM++
+                                                        idG++
                                                     }
                                                 })
                                             }
                                         }
                                     })
+                                    editIAM.id = idIAM
                                     const addObj = Object.assign({}, editIAM)
                                     iam.push(addObj)
+                                    idIAM++
+                                } else if (os.nodeName == "CRYPTO-MODULE-INSTANTIATION") {
+                                    var idS = 300
+                                    os.childNodes.forEach((cry, s) => {
+                                        if (s % 2 != 0) {
+                                            if (cry.nodeName == "SHORT-NAME") {
+                                                editCRY.name = cry.childNodes[0].nodeValue
+                                            }
+                                            if (cry.nodeName == "ADMIN-DATA") {
+                                                editCRY.sdgs.push({
+                                                    name: 'SDGS',
+                                                    id: 1,
+                                                    children: [
+                                                        { name: 'SDG GID="CRYPTO-INSTANTIATION-PROVIDER"', id: 2, ele: 'SDG', gid: 'CRYPTO-INSTANTIATION-PROVIDER', item: '', children: [] },
+                                                        { name: 'SDG GID="CRYPTO-INSTANTIATION-CERTIFICATE"', id: 3, ele: 'SDG', gid: 'CRYPTO-INSTANTIATION-CERTIFICATE', item: '', children: [] }
+                                                    ]
+                                                })
+                                                console.log(editCRY)
+                                                cry.childNodes[1].childNodes.forEach(sdg => {
+                                                    if (sdg.nodeName == 'SDG' && sdg.getAttribute("GID") == 'CRYPTO-INSTANTIATION-PROVIDER') {
+                                                        sdg.childNodes.forEach(chi => {
+                                                            if (chi.nodeName == 'SDG-CAPTION') {
+                                                                chi.childNodes.forEach(cap => {
+                                                                    if (cap.nodeName == 'SHORT-NAME') {
+                                                                        editCRY.sdgs[0].children[0].children.push({
+                                                                            name: 'SDG-CAPTION ' + cap.childNodes[0].nodeValue,
+                                                                            ele: 'SDG-CAPTION',
+                                                                            gid: null,
+                                                                            item: cap.childNodes[0].nodeValue,
+                                                                            id: idS++,
+                                                                        })
+                                                                    }
+                                                                })
+                                                            }
+                                                            if (chi.nodeName == 'SD') {
+                                                                editCRY.sdgs[0].children[0].children.push({
+                                                                    name: 'SD GID="' + chi.getAttribute("GID") + '" ' + chi.childNodes[0].nodeValue,
+                                                                    ele: 'SD',
+                                                                    gid: chi.getAttribute("GID"),
+                                                                    item: chi.childNodes[0].nodeValue,
+                                                                    id: idS++,
+                                                                })
+                                                            }
+                                                            if (chi.nodeName == 'SDG') {
+                                                                editCRY.sdgs[0].children[0].children.push({
+                                                                    name: 'SDG GID="' + chi.getAttribute("GID") + '"',
+                                                                    ele: 'SDG',
+                                                                    gid: chi.getAttribute("GID"),
+                                                                    item: '',
+                                                                    children: [],
+                                                                    id: idS++,
+                                                                })
+                                                                var arr = editCRY.sdgs[0].children[0].children[editCRY.sdgs[0].children[0].children.length - 1]
+                                                                chi.childNodes.forEach(chichi => {
+                                                                    if (chichi.nodeName == 'SDG-CAPTION') {
+                                                                        chichi.childNodes.forEach(capt => {
+                                                                            if (capt.nodeName == 'SHORT-NAME') {
+                                                                                arr.children.push({
+                                                                                    name: 'SDG-CAPTION ' + capt.childNodes[0].nodeValue,
+                                                                                    ele: 'SDG-CAPTION',
+                                                                                    gid: null,
+                                                                                    item: capt.childNodes[0].nodeValue,
+                                                                                    id: idS++,
+                                                                                })
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                    if (chichi.nodeName == 'SD') {
+                                                                        arr.children.push({
+                                                                            name: 'SD GID="' + chichi.getAttribute("GID") + '" ' + chichi.childNodes[0].nodeValue,
+                                                                            ele: 'SD',
+                                                                            gid: chichi.getAttribute("GID"),
+                                                                            item: chichi.childNodes[0].nodeValue,
+                                                                            id: idS++,
+                                                                        })
+                                                                    }
+                                                                    if (chichi.nodeName == 'SDX-REF') {
+                                                                        arr.children.push({
+                                                                            name: 'SDX-REF ' + chichi.childNodes[0].nodeValue,
+                                                                            ele: 'SDX-REF',
+                                                                            gid: chichi.childNodes[0].nodeValue,
+                                                                            item: chichi.getAttribute("DEST"),
+                                                                            id: idS++,
+                                                                        })
+                                                                    }
+                                                                    if (chichi.nodeName == 'SDG') {
+                                                                        arr.children.push({
+                                                                            name: 'SDG GID="' + chichi.getAttribute("GID") + '"',
+                                                                            ele: 'SDG',
+                                                                            gid: chichi.getAttribute("GID"),
+                                                                            item: '',
+                                                                            children: [],
+                                                                            id: idS++,
+                                                                        })
+                                                                        var arrChi = arr.children[arr.children.length - 1]
+                                                                        chichi.childNodes.forEach(endN => {
+                                                                            if (endN.nodeName == 'SDG-CAPTION') {
+                                                                                endN.childNodes.forEach(capti => {
+                                                                                    if (capti.nodeName == 'SHORT-NAME') {
+                                                                                        arrChi.children.push({
+                                                                                            name: 'SDG-CAPTION ' + capti.childNodes[0].nodeValue,
+                                                                                            ele: 'SDG-CAPTION',
+                                                                                            gid: null,
+                                                                                            item: capti.childNodes[0].nodeValue,
+                                                                                            id: idS++,
+                                                                                        })
+                                                                                    }
+                                                                                })
+                                                                            }
+                                                                            if (endN.nodeName == 'SD') {
+                                                                                arrChi.children.push({
+                                                                                    name: 'SD GID="' + endN.getAttribute("GID") + '" ' + endN.childNodes[0].nodeValue,
+                                                                                    ele: 'SD',
+                                                                                    gid: endN.getAttribute("GID"),
+                                                                                    item: endN.childNodes[0].nodeValue,
+                                                                                    id: idS++,
+                                                                                })
+                                                                            }
+                                                                            if (endN.nodeName == 'SDX-REF') {
+                                                                                arrChi.children.push({
+                                                                                    name: 'SDX-REF ' + endN.childNodes[0].nodeValue,
+                                                                                    ele: 'SDX-REF',
+                                                                                    gid: endN.childNodes[0].nodeValue,
+                                                                                    item: endN.getAttribute("DEST"),
+                                                                                    id: idS++,
+                                                                                })
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                })
+                                                            }
+                                                        })
+                                                    } else if (sdg.nodeName == 'SDG' && sdg.getAttribute("GID") == 'CRYPTO-INSTANTIATION-CERTIFICATE') {
+                                                        sdg.childNodes.forEach(chi => {
+                                                            if (chi.nodeName == 'SDG-CAPTION') {
+                                                                chi.childNodes.forEach(cap => {
+                                                                    if (cap.nodeName == 'SHORT-NAME') {
+                                                                        editCRY.sdgs[0].children[1].children.push({
+                                                                            name: 'SDG-CAPTION ' + cap.childNodes[0].nodeValue,
+                                                                            ele: 'SDG-CAPTION',
+                                                                            gid: null,
+                                                                            item: cap.childNodes[0].nodeValue,
+                                                                            id: idS++,
+                                                                        })
+                                                                    }
+                                                                })
+                                                            }
+                                                            if (chi.nodeName == 'SD') {
+                                                                editCRY.sdgs[0].children[1].children.push({
+                                                                    name: 'SD GID="' + chi.getAttribute("GID") + '" ' + chi.childNodes[0].nodeValue,
+                                                                    ele: 'SD',
+                                                                    gid: chi.getAttribute("GID"),
+                                                                    item: chi.childNodes[0].nodeValue,
+                                                                    id: idS++,
+                                                                })
+                                                            }
+                                                            if (chi.nodeName == 'SDG') {
+                                                                editCRY.sdgs[0].children[1].children.push({
+                                                                    name: 'SDG GID="' + chi.getAttribute("GID") + '"',
+                                                                    ele: 'SDG',
+                                                                    gid: chi.getAttribute("GID"),
+                                                                    item: '',
+                                                                    children: [],
+                                                                    id: idS++,
+                                                                })
+                                                                var arr = editCRY.sdgs[0].children[1].children[editCRY.sdgs[0].children[1].children.length - 1]
+                                                                chi.childNodes.forEach(chichi => {
+                                                                    if (chichi.nodeName == 'SDG-CAPTION') {
+                                                                        chichi.childNodes.forEach(capt => {
+                                                                            if (capt.nodeName == 'SHORT-NAME') {
+                                                                                arr.children.push({
+                                                                                    name: 'SDG-CAPTION ' + capt.childNodes[0].nodeValue,
+                                                                                    ele: 'SDG-CAPTION',
+                                                                                    gid: null,
+                                                                                    item: capt.childNodes[0].nodeValue,
+                                                                                    id: idS++,
+                                                                                })
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                    if (chichi.nodeName == 'SD') {
+                                                                        arr.children.push({
+                                                                            name: 'SD GID="' + chichi.getAttribute("GID") + '" ' + chichi.childNodes[0].nodeValue,
+                                                                            ele: 'SD',
+                                                                            gid: chichi.getAttribute("GID"),
+                                                                            item: chichi.childNodes[0].nodeValue,
+                                                                            id: idS++,
+                                                                        })
+                                                                    }
+                                                                    if (chichi.nodeName == 'SDX-REF') {
+                                                                        arr.children.push({
+                                                                            name: 'SDX-REF ' + chichi.childNodes[0].nodeValue,
+                                                                            ele: 'SDX-REF',
+                                                                            gid: chichi.childNodes[0].nodeValue,
+                                                                            item: chichi.getAttribute("DEST"),
+                                                                            id: idS++,
+                                                                        })
+                                                                    }
+                                                                })
+                                                            }
+                                                        })
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                    editCRY.id = idCRY
+                                    const addObj = Object.assign({}, editCRY)
+                                    crypto.push(addObj)
+                                    idCRY++
                                 }
                             }
                         })
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Machine.Machine.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementMachine', {
-                    input: true,
-                    path: strPath,
+                state.editInputElemnt.Machine.Machine.push({
                     uuid: UUID,
-                    name: name,
+                    path: strPath,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
+                    name: name,
                     machinedesign: machineDesign,
                     timeout: timeout,
                     hwelement: hwele,
@@ -2074,12 +2388,9 @@ const mutations = {
                     moduleinstant: module,
                     ucm: ucm,
                     iam: iam,
-                    icon: "mdi-clipboard-outline",
-                    validation: false
+                    crypto: crypto
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + name, parent: constant.Machine_str })
-                EventBus.$emit('add-element', constant.Machines_str)
-                EventBus.$emit('add-element', constant.Machine_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + name, parent: constant.Machine_str })
             })
             // MACHINE-DESIGN
         var machineDesign = payload.xmlDoc.getElementsByTagName('MACHINE-DESIGN')
@@ -2159,31 +2470,25 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Machine.MachineDesign.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementMachineDesign', {
-                    name: Name,
-                    input: true,
-                    path: strPath,
+                state.editInputElemnt.Machine.MachineDesign.push({
                     uuid: UUID,
+                    path: strPath,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
+                    name: Name,
                     access: access,
                     resettimer: pntimer,
                     connector: communi,
                     servicediscover: service,
-                    icon: "mdi-clipboard-outline",
-                    validation: false
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.MachineDesigne_str })
-                EventBus.$emit('add-element', constant.Machines_str)
-                EventBus.$emit('add-element', constant.MachineDesigne_str)
+                state.editInputList.push({ uuid: UUID, name: strPath + '/' + Name, parent: constant.MachineDesigne_str })
             })
             // ETHERNET-CLUSTER
         var ethernetCluster = payload.xmlDoc.getElementsByTagName('ETHERNET-CLUSTER')
@@ -2347,28 +2652,22 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Machine.EthernetCluster.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementEthernetCluster', {
-                    name: Name,
-                    input: true,
-                    path: strPath,
+                state.editInputElemnt.Machine.EthernetCluster.push({
                     uuid: UUID,
+                    path: strPath,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
+                    name: Name,
                     conditional: condition,
-                    icon: "mdi-clipboard-outline",
-                    validation: false
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.EthernetCluster_str })
-                EventBus.$emit('add-element', constant.Machines_str)
-                EventBus.$emit('add-element', constant.EthernetCluster_str)
+                state.editInputList.push({ uuid: UUID, name: strPath + '/' + Name, parent: constant.EthernetCluster_str })
             })
             // MODE-DECLARATION-GROUP
         var modeDeclatation = payload.xmlDoc.getElementsByTagName('MODE-DECLARATION-GROUP')
@@ -2411,29 +2710,23 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Machine.ModeDeclarationGroup.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementModeDeclarationGroup', {
-                    name: Name,
-                    input: true,
-                    path: strPath,
+                state.editInputElemnt.Machine.ModeDeclarationGroup.push({
                     uuid: UUID,
+                    path: strPath,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
+                    name: Name,
                     modedeclaration: mode,
                     initmode: initmode,
-                    icon: "mdi-clipboard-outline",
-                    validation: false
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ModeDeclarationGroup_str })
-                EventBus.$emit('add-element', constant.Machines_str)
-                EventBus.$emit('add-element', constant.ModeDeclarationGroup_str)
+                state.editInputList.push({ uuid: UUID, name: strPath + '/' + Name, parent: constant.ModeDeclarationGroup_str })
             })
             // HW-ELEMENT
         var HWElement = payload.xmlDoc.getElementsByTagName('HW-ELEMENT')
@@ -2477,29 +2770,23 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Machine.HWElement.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementHWElement', {
-                    name: Name,
-                    input: true,
-                    path: strPath,
+                state.editInputElemnt.Machine.HWElement.push({
                     uuid: UUID,
+                    path: strPath,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
+                    name: Name,
                     category: category,
                     attribute: attri,
-                    icon: "mdi-clipboard-outline",
-                    validation: false
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.HWElement_str })
-                EventBus.$emit('add-element', constant.Machines_str)
-                EventBus.$emit('add-element', constant.HWElement_str)
+                state.editInputList.push({ uuid: UUID, name: strPath + '/' + Name, parent: constant.HWElement_str })
             })
             // HW-Category
         var HWCategory = payload.xmlDoc.getElementsByTagName('HW-CATEGORY')
@@ -2549,28 +2836,22 @@ const mutations = {
                 }
             })
             var UUID = ele.getAttribute("UUID")
-            var idxEle = state.SAHLProject[state.openProjectIndex].Machine.HWCategory.findIndex(data => data.uuid === UUID)
+            var idxEle = state.editInputElemnt.Machine.HWCategory.findIndex(data => data.uuid === UUID)
             if (UUID == null || idxEle != -1) {
                 UUID = uuid.v1()
             }
             const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
             const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-            this.commit('addElementHWCategory', {
-                name: Name,
-                input: true,
-                path: strPath,
+            state.editInputElemnt.Machine.HWCategory.push({
                 uuid: UUID,
+                path: strPath,
                 top: elementY,
                 left: elementX,
                 zindex: 2,
+                name: Name,
                 attribute: attribute,
-                icon: "mdi-clipboard-outline",
-                validation: false
             })
-            state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.HWCategory_str })
-            EventBus.$emit('add-element', constant.Machines_str)
-            EventBus.$emit('add-element', constant.HWCategory_str)
+            state.editInputList.push({ uuid: UUID, name: strPath + '/' + Name, parent: constant.HWCategory_str })
         })
 
         // PROCESS-TO-MACHINE-MAPPING-SET
@@ -2623,28 +2904,23 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-
-                this.commit('addElementProtoMachineMapping', {
-                    name: Name,
-                    input: true,
-                    path: strPath,
+                state.editInputElemnt.AdaptiveApplication.ProtoMachineMapping.push({
                     uuid: UUID,
+                    path: strPath,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
+                    name: Name,
                     validation: false,
                     mapping: mapping,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ProcesstoMachineMapping_str })
-                EventBus.$emit('add-element', constant.AdaptiveApplication_str)
-                EventBus.$emit('add-element', constant.ProcesstoMachineMapping_str)
+                state.editInputList.push({ uuid: UUID, name: strPath + '/' + Name, parent: constant.ProcesstoMachineMapping_str })
             })
             // ADAPTIVE-APPLICATION-SW-COMPONENT-TYPE
         var SWComponent = payload.xmlDoc.getElementsByTagName('ADAPTIVE-APPLICATION-SW-COMPONENT-TYPE')
@@ -2851,30 +3127,25 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.AdaptiveApplication.SWComponents.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementSWComponents', {
+                state.editInputElemnt.AdaptiveApplication.SWComponents.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     pport: pPort,
                     rport: rPort,
                     prport: prPort,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SWComponents_str })
-                EventBus.$emit('add-element', constant.AdaptiveApplication_str)
-                EventBus.$emit('add-element', constant.SWComponents_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SWComponents_str })
             })
             // PROCESS
         var process = payload.xmlDoc.getElementsByTagName('PROCESS')
@@ -3016,23 +3287,20 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.AdaptiveApplication.Process.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementProcess', {
+                state.editInputElemnt.AdaptiveApplication.Process.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     prodesign: design,
                     determin: determin,
                     execut: exe,
@@ -3047,9 +3315,7 @@ const mutations = {
                     machinetype: type,
                     dependent: config
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Process_str })
-                EventBus.$emit('add-element', constant.AdaptiveApplication_str)
-                EventBus.$emit('add-element', constant.Process_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Process_str })
             })
             // PROCESS-DESIGN
         var processDesign = payload.xmlDoc.getElementsByTagName('PROCESS-DESIGN')
@@ -3134,7 +3400,7 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.AdaptiveApplication.ProcessDesign.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
@@ -3142,22 +3408,17 @@ const mutations = {
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
 
-                this.commit('addElementProcessDesign', {
+                state.editInputElemnt.AdaptiveApplication.ProcessDesign.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     executableref: exe,
                     determin: determininistic
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ProcessDesign_str })
-                EventBus.$emit('add-element', constant.AdaptiveApplication_str)
-                EventBus.$emit('add-element', constant.ProcessDesign_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ProcessDesign_str })
             })
             // EXECUTABLE
         var executable = payload.xmlDoc.getElementsByTagName('EXECUTABLE')
@@ -3205,23 +3466,20 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.AdaptiveApplication.Executable.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementExecutable', {
+                state.editInputElemnt.AdaptiveApplication.Executable.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     version: version,
                     category: category,
                     buildType: build,
@@ -3230,9 +3488,7 @@ const mutations = {
                     swname: swname,
                     applicationtyperef: appli,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Executable_str })
-                EventBus.$emit('add-element', constant.AdaptiveApplication_str)
-                EventBus.$emit('add-element', constant.Executable_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Executable_str })
             })
             // STARTUP-CONFIG-SET
         var startup = payload.xmlDoc.getElementsByTagName('STARTUP-CONFIG-SET')
@@ -3325,28 +3581,23 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.AdaptiveApplication.StartupConfig.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementStartupConfig', {
+                state.editInputElemnt.AdaptiveApplication.StartupConfig.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     config: config,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.StartupConfig_str })
-                EventBus.$emit('add-element', constant.AdaptiveApplication_str)
-                EventBus.$emit('add-element', constant.StartupConfig_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.StartupConfig_str })
             })
             // DETERMINISTIC-CLIENT
         var deterministic = payload.xmlDoc.getElementsByTagName('DETERMINISTIC-CLIENT')
@@ -3368,29 +3619,24 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.AdaptiveApplication.DeterministicClient.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementDeterministicClien', {
+                state.editInputElemnt.AdaptiveApplication.DeterministicClient.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     cycletiem: cycle,
                     numofworkers: number,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.DeterministicClient_str })
-                EventBus.$emit('add-element', constant.AdaptiveApplication_str)
-                EventBus.$emit('add-element', constant.DeterministicClient_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.DeterministicClient_str })
             })
             // SOMEIP-SERVICE-INTERFACE-DEPLOYMENT
         var someIPService = payload.xmlDoc.getElementsByTagName('SOMEIP-SERVICE-INTERFACE-DEPLOYMENT')
@@ -3669,23 +3915,20 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementSomeIPService', {
+                state.editInputElemnt.Service.SomeIPServiceInterfaceDeployment.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     service: service,
                     majversion: majversion,
                     minversion: minversion,
@@ -3695,10 +3938,7 @@ const mutations = {
                     methodD: methodD,
                     fieldD: fieldD,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPServiceInterfaceDeployment_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.ServiceInterfaces_str)
-                EventBus.$emit('add-element', constant.SomeIPServiceInterfaceDeployment_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPServiceInterfaceDeployment_str })
             })
             // SERVICE-INTERFACE
         var serviceInterface = payload.xmlDoc.getElementsByTagName('SERVICE-INTERFACE')
@@ -3877,23 +4117,20 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.ServiceInterface.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementService', {
+                state.editInputElemnt.Service.ServiceInterface.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     versionMaj: max,
                     versionMin: min,
                     namespace: namespace,
@@ -3902,10 +4139,7 @@ const mutations = {
                     fields: fields,
                     methods: methods
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ServiceInterface_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.ServiceInterfaces_str)
-                EventBus.$emit('add-element', constant.ServiceInterface_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ServiceInterface_str })
             })
             // SOMEIP-SD-CLIENT-EVENT-GROUP-TIMING-CONFIG
         var client = payload.xmlDoc.getElementsByTagName('SOMEIP-SD-CLIENT-EVENT-GROUP-TIMING-CONFIG')
@@ -3943,33 +4177,27 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.SomeIPClientEvent.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementClient', {
+                state.editInputElemnt.Service.SomeIPClientEvent.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     delay: retryD,
                     max: retryM,
                     timetolive: time,
                     delaymax: max,
                     delaymin: min,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Client_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.SomeIPEvents_str)
-                EventBus.$emit('add-element', constant.Client_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Client_str })
             })
             // SOMEIP-SD-SERVER-EVENT-GROUP-TIMING-CONFIG
         var server = payload.xmlDoc.getElementsByTagName('SOMEIP-SD-SERVER-EVENT-GROUP-TIMING-CONFIG')
@@ -3995,30 +4223,24 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.SomeIPServerEvent.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementServer', {
+                state.editInputElemnt.Service.SomeIPServerEvent.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     delaymax: max,
                     delaymin: min,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Server_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.SomeIPEvents_str)
-                EventBus.$emit('add-element', constant.Server_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Server_str })
             })
             // SOMEIP-SD-CLIENT-SERVICE-INSTANCE-CONFIG
         var someIPClient = payload.xmlDoc.getElementsByTagName('SOMEIP-SD-CLIENT-SERVICE-INSTANCE-CONFIG')
@@ -4056,33 +4278,27 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.SomeIPClientServiceInstance.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementSomeIPClient', {
+                state.editInputElemnt.Service.SomeIPClientServiceInstance.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     findtime: time,
                     inidelaymax: delayMax,
                     inidelaymin: delayMin,
                     inibasedelay: delay,
                     inirepetimax: max,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPClient_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.ServiceInstances_str)
-                EventBus.$emit('add-element', constant.SomeIPClient_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPClient_str })
             })
             // SOMEIP-SD-SERVER-SERVICE-INSTANCE-CONFIG
         var someIPServer = payload.xmlDoc.getElementsByTagName('SOMEIP-SD-SERVER-SERVICE-INSTANCE-CONFIG')
@@ -4136,23 +4352,20 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.SomeIPServerServiceInstance.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementSomeIPServer', {
+                state.editInputElemnt.Service.SomeIPServerServiceInstance.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     inidelaymax: delayMax,
                     inidelaymin: delayMin,
                     inibasedelay: delay,
@@ -4162,10 +4375,7 @@ const mutations = {
                     offer: cyclic,
                     tiemtolive: time,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPServer_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.ServiceInstances_str)
-                EventBus.$emit('add-element', constant.SomeIPServer_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPServer_str })
             })
             // SOMEIP-SERVICE-INSTANCE-TO-MACHINE-MAPPING
         var someIPtoMachine = payload.xmlDoc.getElementsByTagName('SOMEIP-SERVICE-INSTANCE-TO-MACHINE-MAPPING')
@@ -4206,32 +4416,26 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementSomeIPtoMachine', {
+                state.editInputElemnt.Service.SomeIPServiceInstanceToMachine.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     ccref: connect,
                     udp: udp,
                     tcp: tcp,
                     serviceI: serviceI,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPToMachineMapping_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.ServiceInstances_str)
-                EventBus.$emit('add-element', constant.SomeIPToMachineMapping_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SomeIPToMachineMapping_str })
             })
             // SERVICE-INSTANCE-TO-PORT-PROTOTYPE-MAPPING
         var toProtProto = payload.xmlDoc.getElementsByTagName('SERVICE-INSTANCE-TO-PORT-PROTOTYPE-MAPPING')
@@ -4272,23 +4476,20 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementToPortPrototype', {
+                state.editInputElemnt.Service.ServiceInstanceToPortPrototype.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     selectPort: selectPort,
                     porttype: porttype,
                     context: context,
@@ -4296,10 +4497,7 @@ const mutations = {
                     selectServiceIns: selectServiceIns,
                     serviceIns: serviceIns,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ToPortPrototypeMapping_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.ServiceInstances_str)
-                EventBus.$emit('add-element', constant.ToPortPrototypeMapping_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ToPortPrototypeMapping_str })
             })
             // REQUIRED-SOMEIP-SERVICE-INSTANCE
         var required = payload.xmlDoc.getElementsByTagName('REQUIRED-SOMEIP-SERVICE-INSTANCE')
@@ -4310,7 +4508,7 @@ const mutations = {
                     id = '',
                     path = '',
                     strPath = getEditPath(ele.parentNode.parentNode, path),
-                    clientref = null,
+                    someipclient = null,
                     ver = null,
                     methodP = [],
                     requiredevent = [],
@@ -4330,7 +4528,7 @@ const mutations = {
                         id = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "SD-CLIENT-CONFIG-REF") {
-                        clientref = item.childNodes[0].nodeValue
+                        someipclient = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "VERSION-DRIVEN-FIND-BEHAVIOR") {
                         ver = item.childNodes[0].nodeValue
@@ -4458,37 +4656,31 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.RequiredSomeIP.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementRequiredSomeIP', {
+                state.editInputElemnt.Service.RequiredSomeIP.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     deployref: deployref,
                     minover: minorver,
                     id: id,
-                    clientref: clientref,
+                    someipclient: someipclient,
                     ver: ver,
                     method: methodP,
                     requiredevent: requiredevent,
                     E2EEvent: E2EEvent,
                     E2EMethod: E2EMethod
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.RequiredSomeIP_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.ServiceInstances_str)
-                EventBus.$emit('add-element', constant.RequiredSomeIP_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.RequiredSomeIP_str })
             })
             // PROVIDED-SOMEIP-SERVICE-INSTANCE
         var provided = payload.xmlDoc.getElementsByTagName('PROVIDED-SOMEIP-SERVICE-INSTANCE')
@@ -4496,7 +4688,7 @@ const mutations = {
                 var Name = '',
                     deployref = null,
                     someips = null,
-                    id = '',
+                    instanceid = '',
                     loadPriority = '',
                     loadWeight = '',
                     path = '',
@@ -4518,7 +4710,7 @@ const mutations = {
                         someips = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "SERVICE-INSTANCE-ID") {
-                        id = item.childNodes[0].nodeValue
+                        instanceid = item.childNodes[0].nodeValue
                     }
                     if (item.nodeName == "EVENT-PROPSS") {
                         var idE = 0
@@ -4674,26 +4866,23 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.ProvidedSomeIP.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementProvidedSomeIP', {
+                state.editInputElemnt.Service.ProvidedSomeIP.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     deployref: deployref,
                     someips: someips,
-                    id: id,
+                    instanceid: instanceid,
                     loadPriority: loadPriority,
                     loadWeight: loadWeight,
                     eventP: eventP,
@@ -4702,10 +4891,7 @@ const mutations = {
                     E2EEvent: E2EEvent,
                     E2EMethod: E2EMethod
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ProvidedSomeIP_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.ServiceInstances_str)
-                EventBus.$emit('add-element', constant.ProvidedSomeIP_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ProvidedSomeIP_str })
             })
             // E-2-E-PROFILE-CONFIGURATION-SET
         var E2E = payload.xmlDoc.getElementsByTagName('E-2-E-PROFILE-CONFIGURATION-SET')
@@ -4794,29 +4980,22 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.E2EProfileConfig.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementE2EProfileConfig', {
-                    name: Name,
-                    input: true,
+                state.editInputElemnt.Service.E2EProfileConfig.push({
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     profile: profile,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.E2EProfileConfig_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.ServiceInstances_str)
-                EventBus.$emit('add-element', constant.E2EProfileConfig_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.E2EProfileConfig_str })
             })
             // SDG-DEF
         var sdg = payload.xmlDoc.getElementsByTagName('SDG-DEF')
@@ -4891,29 +5070,23 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.SdgDef.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementSDG_DEF', {
+                state.editInputElemnt.Service.SdgDef.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     sdgClass: sdgClass,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SDG_DEF_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.ServiceInstances_str)
-                EventBus.$emit('add-element', constant.SDG_DEF_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SDG_DEF_str })
             })
             // AP-APPLICATION-ERROR
         var error = payload.xmlDoc.getElementsByTagName('AP-APPLICATION-ERROR')
@@ -4940,31 +5113,25 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.Error.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000)) // (max - min) + min
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementError', {
+                state.editInputElemnt.Service.Error.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     desc: desc,
                     errorcode: code,
                     errorDref: domain
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Error_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.Errors_str)
-                EventBus.$emit('add-element', constant.Error_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Error_str })
             })
             // AP-APPLICATION-ERROR-SET
         var errorSet = payload.xmlDoc.getElementsByTagName('AP-APPLICATION-ERROR-SET')
@@ -4992,29 +5159,23 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.ErrorSet.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementErrorSet', {
+                state.editInputElemnt.Service.ErrorSet.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     errorref: errorref
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Errorset_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.Errors_str)
-                EventBus.$emit('add-element', constant.Errorset_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.Errorset_str })
             })
             // AP-APPLICATION-ERROR-DOMAIN
         var errorDomain = payload.xmlDoc.getElementsByTagName('AP-APPLICATION-ERROR-DOMAIN')
@@ -5047,30 +5208,24 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Service.ErrorDomain.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementErrorDomain', {
+                state.editInputElemnt.Service.ErrorDomain.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     namespace: namespace,
                     value: value,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ErrorDomain_str })
-                EventBus.$emit('add-element', constant.Service_str)
-                EventBus.$emit('add-element', constant.Errors_str)
-                EventBus.$emit('add-element', constant.ErrorDomain_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ErrorDomain_str })
             })
             // PERSISTENCY-FILE-ARRAY
         var perFileArray = payload.xmlDoc.getElementsByTagName('PERSISTENCY-FILE-ARRAY')
@@ -5191,23 +5346,20 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Per.PERFileArray.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementPERFileArray', {
+                state.editInputElemnt.Per.PERFileArray.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     sdgs: sdgs,
                     maxSize: maxsize,
                     miniSize: minisize,
@@ -5215,10 +5367,7 @@ const mutations = {
                     uri: uri,
                     files: files,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.FileArray_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.PER_str)
-                EventBus.$emit('add-element', constant.FileArray_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.FileArray_str })
             })
             // PERSISTENCY-FILE-PROXY-INTERFACE
         var perFileProxy = payload.xmlDoc.getElementsByTagName('PERSISTENCY-FILE-PROXY-INTERFACE')
@@ -5286,23 +5435,20 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Per.PERFileProxy.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementPERFileProxy', {
+                state.editInputElemnt.Per.PERFileProxy.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     category: category,
                     minisize: minisize,
                     redundancy: redundancy,
@@ -5311,10 +5457,7 @@ const mutations = {
                     proxy: proxy,
                     maxfiles: maxfiles
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.FileProxyInterf_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.PER_str)
-                EventBus.$emit('add-element', constant.FileProxyInterf_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.FileProxyInterf_str })
             })
             // PERSISTENCY-KEY-VALUE-DATABASE 
         var perKeyValueD = payload.xmlDoc.getElementsByTagName('PERSISTENCY-KEY-VALUE-DATABASE')
@@ -5502,23 +5645,20 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Per.PERKeyValueD.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementPERKeyValueD', {
+                state.editInputElemnt.Per.PERKeyValueD.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     sdgs: sdgs,
                     maxSize: maxsize,
                     miniSize: minisize,
@@ -5527,10 +5667,7 @@ const mutations = {
                     redundancy: redundancy,
                     keyValue: keyValue
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.KeyValueData_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.PER_str)
-                EventBus.$emit('add-element', constant.KeyValueData_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.KeyValueData_str })
             })
             // PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE
         var perKeyValueDI = payload.xmlDoc.getElementsByTagName('PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE')
@@ -5598,33 +5735,27 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Per.PERKeyValueDI.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementPERKeyValueDI', {
+                state.editInputElemnt.Per.PERKeyValueDI.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     minisize: minisize,
                     redundancy: redundancy,
                     updateS: updateS,
                     data: data,
                     serialization: serialization
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.KeyValueDI_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.PER_str)
-                EventBus.$emit('add-element', constant.KeyValueDI_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.KeyValueDI_str })
             })
             // PERSISTENCY-PORT-PROTOTYPE-TO-FILE-ARRAY-MAPPING
         var perPPtoFileArray = payload.xmlDoc.getElementsByTagName('PERSISTENCY-PORT-PROTOTYPE-TO-FILE-ARRAY-MAPPING')
@@ -5651,31 +5782,25 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Per.PERPPtoFileArray.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementPERPPtoFileArray', {
+                state.editInputElemnt.Per.PERPPtoFileArray.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     fileArray: fileArray,
                     port: port,
                     process: process
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.PortProtoFileA_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.PER_str)
-                EventBus.$emit('add-element', constant.PortProtoFileA_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.PortProtoFileA_str })
             })
             // PERSISTENCY-PORT-PROTOTYPE-TO-KEY-VALUE-DATABASE-MAPPING
         var perPPtoKeyValue = payload.xmlDoc.getElementsByTagName('PERSISTENCY-PORT-PROTOTYPE-TO-KEY-VALUE-DATABASE-MAPPING')
@@ -5702,31 +5827,25 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Per.PERPPtoKeyValue.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementPERPPtoKeyValue', {
+                state.editInputElemnt.Per.PERPPtoKeyValue.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     keyValue: keyValue,
                     port: port,
                     process: process
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.PortProtoKeyV_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.PER_str)
-                EventBus.$emit('add-element', constant.PortProtoKeyV_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.PortProtoKeyV_str })
             })
             // PHM-CONTRIBUTION-TO-MACHINE-MAPPING
         var phmtoMachine = payload.xmlDoc.getElementsByTagName('PHM-CONTRIBUTION-TO-MACHINE-MAPPING')
@@ -5758,30 +5877,24 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Phm.PHMtoMachine.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementPHMtoMachine', {
+                state.editInputElemnt.Phm.PHMtoMachine.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     machine: machine,
                     contri: contri
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ContritoMachine_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.PHM_str)
-                EventBus.$emit('add-element', constant.ContritoMachine_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ContritoMachine_str })
             })
             // PHM-HEALTH-CHANNEL-INTERFACE
         var phmHealth = payload.xmlDoc.getElementsByTagName('PHM-HEALTH-CHANNEL-INTERFACE')
@@ -5819,29 +5932,23 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Phm.PHMHealth.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementPHMHealth', {
+                state.editInputElemnt.Phm.PHMHealth.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     status: status,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.HealthChannel_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.PHM_str)
-                EventBus.$emit('add-element', constant.HealthChannel_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.HealthChannel_str })
             })
             // PHM-RECOVERY-ACTION-INTERFACE
         var phmRecovery = payload.xmlDoc.getElementsByTagName('PHM-RECOVERY-ACTION-INTERFACE')
@@ -5868,31 +5975,25 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Phm.PHMRecovery.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementPHMRecovery', {
+                state.editInputElemnt.Phm.PHMRecovery.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     reconame: reconame,
                     faf: faf,
 
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.RecoveryVA_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.PHM_str)
-                EventBus.$emit('add-element', constant.RecoveryVA_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.RecoveryVA_str })
             })
             // PHM-SUPERVISED-ENTITY-INTERFACE
         var phmSupervised = payload.xmlDoc.getElementsByTagName('PHM-SUPERVISED-ENTITY-INTERFACE')
@@ -5930,29 +6031,23 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Phm.PHMSupervised.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementPHMSupervised', {
+                state.editInputElemnt.Phm.PHMSupervised.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     checkpoint: checkpoint,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.PHMSupervised_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.PHM_str)
-                EventBus.$emit('add-element', constant.PHMSupervised_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.PHMSupervised_str })
             })
             // RECOVERY-VIA-APPLICATION-ACTION-TO-CLIENT-SERVER-OPERATION-MAPPING
         var phmRecoveryVia = payload.xmlDoc.getElementsByTagName('RECOVERY-VIA-APPLICATION-ACTION-TO-CLIENT-SERVER-OPERATION-MAPPING')
@@ -5987,33 +6082,27 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.Phm.RecoveryVia.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementRecoveryVia', {
+                state.editInputElemnt.Phm.RecoveryVia.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     process: process,
                     swcomponent: swcomponent,
                     port: port,
                     phmRecovery: phmRecovery,
 
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.RecoveryActionInterf_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.PHM_str)
-                EventBus.$emit('add-element', constant.RecoveryActionInterf_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.RecoveryActionInterf_str })
             })
             // COM-FIELD-GRANT
         var fieldG = payload.xmlDoc.getElementsByTagName('COM-FIELD-GRANT')
@@ -6040,31 +6129,25 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].IamG.FieldG.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.IamG.FieldG.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementFieldG', {
+                state.editInputElemnt.IamG.FieldG.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     fieldD: designR,
                     provide: provide,
                     role: role
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComFieldGrant_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.IAM_str)
-                EventBus.$emit('add-element', constant.ComFieldGrant_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComFieldGrant_str })
             })
             // COM-EVENT-GRANT
         var eventG = payload.xmlDoc.getElementsByTagName('COM-EVENT-GRANT')
@@ -6087,29 +6170,23 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].IamG.EventG.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.IamG.EventG.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
-                this.commit('addElementEventG', {
+                state.editInputElemnt.IamG.EventG.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     eventD: designR,
                     provide: provide,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComEventGrant_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.IAM_str)
-                EventBus.$emit('add-element', constant.ComEventGrant_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComEventGrant_str })
             })
             // COM-METHOD-GRANT
         var methodG = payload.xmlDoc.getElementsByTagName('COM-METHOD-GRANT')
@@ -6132,30 +6209,24 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.IamG.MethodG.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementMethodG', {
+                state.editInputElemnt.IamG.MethodG.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     methodD: designR,
                     provide: provide,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComMethodGrant_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.IAM_str)
-                EventBus.$emit('add-element', constant.ComMethodGrant_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComMethodGrant_str })
             })
             // COM-FIELD-GRANT-DESIGN
         var fieldGD = payload.xmlDoc.getElementsByTagName('COM-FIELD-GRANT-DESIGN')
@@ -6182,31 +6253,25 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].IamG.FieldGD.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.IamG.FieldGD.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementFieldGD', {
+                state.editInputElemnt.IamG.FieldGD.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     processD: processD,
                     SIField: serviceI,
                     role: role
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComFieldGDesign_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.IAM_str)
-                EventBus.$emit('add-element', constant.ComFieldGDesign_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComFieldGDesign_str })
             })
             // COM-EVENT-GRANT-DESIGN
         var eventGD = payload.xmlDoc.getElementsByTagName('COM-EVENT-GRANT-DESIGN')
@@ -6229,30 +6294,24 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].IamG.EventGD.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.IamG.EventGD.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementEventGD', {
+                state.editInputElemnt.IamG.EventGD.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     processD: processD,
                     SIEvent: serviceI,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComEventGDesign_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.IAM_str)
-                EventBus.$emit('add-element', constant.ComEventGDesign_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComEventGDesign_str })
             })
             // COM-METHOD-GRANT-DESIGN
         var methodGD = payload.xmlDoc.getElementsByTagName('COM-METHOD-GRANT-DESIGN')
@@ -6275,30 +6334,24 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.IamG.MethodGD.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementMethodGD', {
+                state.editInputElemnt.IamG.MethodGD.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     processD: processD,
                     SIMethod: serviceI,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComMethodGDesign_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.IAM_str)
-                EventBus.$emit('add-element', constant.ComMethodGDesign_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.ComMethodGDesign_str })
             })
             // SOFTWARE-CLUSTER
         var softwareC = payload.xmlDoc.getElementsByTagName('SOFTWARE-CLUSTER')
@@ -6433,23 +6486,20 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.UCM.SoftWareCluster.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementSoftWareCluster', {
+                state.editInputElemnt.UCM.SoftWareCluster.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     category: category,
                     idVendor: idVendor,
                     version: version,
@@ -6460,10 +6510,7 @@ const mutations = {
                     process: process,
                     sswc: sswc,
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SWCluster_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.UCM_str)
-                EventBus.$emit('add-element', constant.SWCluster_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SWCluster_str })
             })
             // SOFTWARE-PACKAGE
         var softwareP = payload.xmlDoc.getElementsByTagName('SOFTWARE-PACKAGE')
@@ -6522,23 +6569,20 @@ const mutations = {
                     }
                 })
                 var UUID = ele.getAttribute("UUID")
-                var idxEle = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === UUID)
+                var idxEle = state.editInputElemnt.UCM.SoftWarePackage.findIndex(data => data.uuid === UUID)
                 if (UUID == null || idxEle != -1) {
                     UUID = uuid.v1()
                 }
                 const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
                 const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-                this.commit('addElementSoftWarePackage', {
+                state.editInputElemnt.UCM.SoftWarePackage.push({
                     name: Name,
-                    input: true,
                     path: strPath,
                     uuid: UUID,
                     top: elementY,
                     left: elementX,
                     zindex: 2,
-                    icon: "mdi-clipboard-outline",
-                    validation: false,
                     action: action,
                     activation: activation,
                     compSWPsize: compSWPsize,
@@ -6551,10 +6595,7 @@ const mutations = {
                     swcluster: swcluster,
                     uncompSWCsize: uncompSWCsize
                 })
-                state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SWPackage_str })
-                EventBus.$emit('add-element', constant.Platform_str)
-                EventBus.$emit('add-element', constant.UCM_str)
-                EventBus.$emit('add-element', constant.SWPackage_str)
+                state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.SWPackage_str })
             })
             // VEHICLE-PACKAGE
         var UCMVehicle = payload.xmlDoc.getElementsByTagName('VEHICLE-PACKAGE')
@@ -6673,47 +6714,1130 @@ const mutations = {
                 }
             })
             var UUID = ele.getAttribute("UUID")
-            var idxEle = state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === UUID)
+            var idxEle = state.editInputElemnt.UCM.VehiclePackage.findIndex(data => data.uuid === UUID)
             if (UUID == null || idxEle != -1) {
                 UUID = uuid.v1()
             }
             const elementX = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
             const elementY = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3000))
 
-            this.commit('addElementVehiclePackage', {
+            state.editInputElemnt.UCM.VehiclePackage.push({
                 name: Name,
-                input: true,
                 path: strPath,
                 uuid: UUID,
                 top: elementY,
                 left: elementX,
                 zindex: 2,
-                icon: "mdi-clipboard-outline",
-                validation: false,
                 reposi: reposi,
                 sdgs: sdgs,
                 driver: driver,
                 rollout: rollout,
                 ucms: ucms
             })
-            state.inputFileList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.VehiclePackage_str })
-            EventBus.$emit('add-element', constant.Platform_str)
-            EventBus.$emit('add-element', constant.UCM_str)
-            EventBus.$emit('add-element', constant.VehiclePackage_str)
+            state.editInputList.push({ uuid: UUID, path: strPath + '/' + Name, parent: constant.VehiclePackage_str })
         })
     },
-    setInputFileComplate(state) { //바로 라인 그리면 element가 다 그려지기 전이라 선의 id값을 찾지 못한다.
-        state.isInputFileComplate = false // element들이 다 그려졌다는걸 알려 주는것임
+    pushProjectList(state, payload) {
+        state.inputFileList.push({ uuid: payload.uuid, path: payload.path + '/' + payload.name, parent: payload.parent })
+        if (payload.indexChildFolder != undefined) {
+            state.navigatorList[state.openProjectIndex].children[payload.indexFolder].children[payload.indexChildFolder].children[payload.idxElement].children.push({ uuid: payload.uuid, name: payload.name, icon: "mdi-clipboard-outline", validation: false, })
+        } else {
+            state.navigatorList[state.openProjectIndex].children[payload.indexFolder].children[payload.idxElement].children.push({ uuid: payload.uuid, name: payload.name, icon: "mdi-clipboard-outline", validation: false, })
+        }
+        EventBus.$emit('add-element', payload.strFolder)
+        if (payload.strChildFolder != undefined) {
+            EventBus.$emit('add-element', payload.strChildFolder)
+        }
+        EventBus.$emit('add-element', payload.parent)
     },
-    checkLineInputXml(state) {
+    setEditInputItem(state, payload) {
+        if (payload.select) {
+            payload.selectList.forEach(item => {
+                if (item.parent == constant.CompuMethod_str) {
+                    state.editInputElemnt.DataTypes.CompuMethod.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.CompuMethod_str,
+                                idxElement: constant.CompuMethod_index,
+                                strFolder: constant.DateType_str,
+                                indexFolder: constant.DateType_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.DataConstr_str) {
+                    state.editInputElemnt.DataTypes.DataConstr.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.DataConstr_str,
+                                idxElement: constant.DataConstr_index,
+                                strFolder: constant.DateType_str,
+                                indexFolder: constant.DateType_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.SWBaseType_str) {
+                    state.editInputElemnt.DataTypes.SWBaseType.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.SWBaseType_str,
+                                idxElement: constant.SWBaseType_index,
+                                strFolder: constant.DateType_str,
+                                indexFolder: constant.DateType_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ApplicationArray_str) {
+                    state.editInputElemnt.DataTypes.ApplicationArrayDataType.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ApplicationArray_str,
+                                idxElement: constant.ApplicationArray_index,
+                                strFolder: constant.DateType_str,
+                                indexFolder: constant.DateType_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.Implementation_str) {
+                    state.editInputElemnt.DataTypes.ImplementationDataType.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.Implementation_str,
+                                idxElement: constant.Implementation_index,
+                                strFolder: constant.DateType_str,
+                                indexFolder: constant.DateType_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.Machine_str) {
+                    state.editInputElemnt.Machine.Machine.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Machine.Machine.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.Machine_str,
+                                idxElement: constant.Machine_index,
+                                strFolder: constant.Machines_str,
+                                indexFolder: constant.Machines_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.MachineDesigne_str) {
+                    state.editInputElemnt.Machine.MachineDesign.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.MachineDesigne_str,
+                                idxElement: constant.MachineDesigne_index,
+                                strFolder: constant.Machines_str,
+                                indexFolder: constant.Machines_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.EthernetCluster_str) {
+                    state.editInputElemnt.Machine.EthernetCluster.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.EthernetCluster_str,
+                                idxElement: constant.EthernetCluster_index,
+                                strFolder: constant.Machines_str,
+                                indexFolder: constant.Machines_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ModeDeclarationGroup_str) {
+                    state.editInputElemnt.Machine.ModeDeclarationGroup.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ModeDeclarationGroup_str,
+                                idxElement: constant.ModeDeclarationGroup_index,
+                                strFolder: constant.Machines_str,
+                                indexFolder: constant.Machines_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.HWElement_str) {
+                    state.editInputElemnt.Machine.HWElement_str.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Machine.HWElement_str.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Machine.HWElement_str.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.HWElement_str,
+                                idxElement: constant.HWElement_index,
+                                strFolder: constant.Machines_str,
+                                indexFolder: constant.Machines_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.HWCategory_str) {
+                    state.editInputElemnt.Machine.HWCategory.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Machine.HWCategory.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Machine.HWCategory.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.HWCategory_str,
+                                idxElement: constant.HWCategory_index,
+                                strFolder: constant.Machines_str,
+                                indexFolder: constant.Machines_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ProcesstoMachineMapping_str) {
+                    state.editInputElemnt.AdaptiveApplication.ProtoMachineMapping.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ProcesstoMachineMapping_str,
+                                idxElement: constant.ProcesstoMachineMapping_index,
+                                strFolder: constant.AdaptiveApplication_str,
+                                indexFolder: constant.AdaptiveApplication_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.SWComponents_str) {
+                    state.editInputElemnt.AdaptiveApplication.SWComponents.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.SWComponents_str,
+                                idxElement: constant.SWComponents_index,
+                                strFolder: constant.AdaptiveApplication_str,
+                                indexFolder: constant.AdaptiveApplication_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.Process_str) {
+                    state.editInputElemnt.AdaptiveApplication.Process.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.Process_str,
+                                idxElement: constant.Process_index,
+                                strFolder: constant.AdaptiveApplication_str,
+                                indexFolder: constant.AdaptiveApplication_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ProcessDesign_str) {
+                    state.editInputElemnt.AdaptiveApplication.ProcessDesign.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ProcessDesign_str,
+                                idxElement: constant.ProcessDesign_index,
+                                strFolder: constant.AdaptiveApplication_str,
+                                indexFolder: constant.AdaptiveApplication_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.Executable_str) {
+                    state.editInputElemnt.AdaptiveApplication.Executable.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.Executable_str,
+                                idxElement: constant.Executable_index,
+                                strFolder: constant.AdaptiveApplication_str,
+                                indexFolder: constant.AdaptiveApplication_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.StartupConfig_str) {
+                    state.editInputElemnt.AdaptiveApplication.StartupConfig.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.StartupConfig_str,
+                                idxElement: constant.StartupConfig_index,
+                                strFolder: constant.AdaptiveApplication_str,
+                                indexFolder: constant.AdaptiveApplication_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.DeterministicClient_str) {
+                    state.editInputElemnt.AdaptiveApplication.DeterministicClient.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.DeterministicClient_str,
+                                idxElement: constant.DeterministicClient_index,
+                                strFolder: constant.AdaptiveApplication_str,
+                                indexFolder: constant.AdaptiveApplication_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.SomeIPServiceInterfaceDeployment_str) {
+                    state.editInputElemnt.Service.SomeIPServiceInterfaceDeployment.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.SomeIPServiceInterfaceDeployment_str,
+                                idxElement: constant.SomeIPServiceInterfaceDeployment_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ServiceInterface_str) {
+                    state.editInputElemnt.Service.ServiceInterface.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ServiceInterface_str,
+                                idxElement: constant.ServiceInterface_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.Client_str) {
+                    state.editInputElemnt.Service.SomeIPClientEvent.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.Client_str,
+                                idxElement: constant.Client_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.Server_str) {
+                    state.editInputElemnt.Service.SomeIPServerEvent.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.Server_str,
+                                idxElement: constant.Server_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.SomeIPClient_str) {
+                    state.editInputElemnt.Service.SomeIPClientServiceInstance.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.SomeIPClient_str,
+                                idxElement: constant.SomeIPClient_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.SomeIPServer_str) {
+                    state.editInputElemnt.Service.SomeIPServerServiceInstance.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.SomeIPServer_str,
+                                idxElement: constant.SomeIPServer_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.SomeIPToMachineMapping_str) {
+                    state.editInputElemnt.Service.SomeIPServiceInstanceToMachine.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.SomeIPToMachineMapping_str,
+                                idxElement: constant.SomeIPToMachineMapping_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ToPortPrototypeMapping_str) {
+                    state.editInputElemnt.Service.ServiceInstanceToPortPrototype.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ToPortPrototypeMapping_str,
+                                idxElement: constant.ToPortPrototypeMapping_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.RequiredSomeIP_str) {
+                    state.editInputElemnt.Service.RequiredSomeIP.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.RequiredSomeIP_str,
+                                idxElement: constant.RequiredSomeIP_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ProvidedSomeIP_str) {
+                    state.editInputElemnt.Service.ProvidedSomeIP.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ProvidedSomeIP_str,
+                                idxElement: constant.ProvidedSomeIP_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.E2EProfileConfig_str) {
+                    state.editInputElemnt.Service.E2EProfileConfig.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.E2EProfileConfig_str,
+                                idxElement: constant.E2EProfileConfig_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.SDG_DEF_str) {
+                    state.editInputElemnt.Service.SdgDef.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.SdgDef.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.SDG_DEF_str,
+                                idxElement: constant.SDG_DEF_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.Error_str) {
+                    state.editInputElemnt.Service.Error.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.Error.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.Error_str,
+                                idxElement: constant.Error_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.Errorset_str) {
+                    state.editInputElemnt.Service.ErrorSet.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.ErrorSet.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.Errorset_str,
+                                idxElement: constant.Errorset_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ErrorDomain_str) {
+                    state.editInputElemnt.Service.ErrorDomain.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ErrorDomain_str,
+                                idxElement: constant.ErrorDomain_index,
+                                strFolder: constant.Service_str,
+                                indexFolder: constant.Service_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.FileArray_str) {
+                    state.editInputElemnt.Per.PERFileArray.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Per.PERFileArray.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.FileArray_str,
+                                idxElement: constant.FileArray_index,
+                                strChildFolder: constant.PER_str,
+                                indexChildFolder: constant.PER_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.FileProxyInterf_str) {
+                    state.editInputElemnt.Per.PERFileProxy.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.FileProxyInterf_str,
+                                idxElement: constant.FileProxyInterf_index,
+                                strChildFolder: constant.PER_str,
+                                indexChildFolder: constant.PER_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.KeyValueData_str) {
+                    state.editInputElemnt.Per.PERKeyValueD.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.KeyValueData_str,
+                                idxElement: constant.KeyValueData_index,
+                                strChildFolder: constant.PER_str,
+                                indexChildFolder: constant.PER_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.KeyValueDI_str) {
+                    state.editInputElemnt.Per.PERKeyValueDI.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.KeyValueDI_str,
+                                idxElement: constant.KeyValueDI_index,
+                                strChildFolder: constant.PER_str,
+                                indexChildFolder: constant.PER_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.PortProtoFileA_str) {
+                    state.editInputElemnt.Per.PERPPtoFileArray.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.PortProtoFileA_str,
+                                idxElement: constant.PortProtoFileA_index,
+                                strChildFolder: constant.PER_str,
+                                indexChildFolder: constant.PER_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.PortProtoKeyV_str) {
+                    state.editInputElemnt.Per.PERPPtoKeyValue.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.PortProtoKeyV_str,
+                                idxElement: constant.PortProtoKeyV_index,
+                                strChildFolder: constant.PER_str,
+                                indexChildFolder: constant.PER_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.PlatformHealthManagC_str) {
+                    state.editInputElemnt.Phm.PHMContribution.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Phm.PHMContribution.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Phm.PHMContribution.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.PlatformHealthManagC_str,
+                                idxElement: constant.PlatformHealthManagC_index,
+                                strChildFolder: constant.PHM_str,
+                                indexChildFolder: constant.PHM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ContritoMachine_str) {
+                    state.editInputElemnt.Phm.PHMtoMachine.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ContritoMachine_str,
+                                idxElement: constant.ContritoMachine_index,
+                                strChildFolder: constant.PHM_str,
+                                indexChildFolder: constant.PHM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.HealthChannel_str) {
+                    state.editInputElemnt.Phm.PHMHealth.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.HealthChannel_str,
+                                idxElement: constant.HealthChannel_index,
+                                strChildFolder: constant.PHM_str,
+                                indexChildFolder: constant.PHM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.RecoveryVA_str) {
+                    state.editInputElemnt.Phm.PHMRecovery.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.RecoveryVA_str,
+                                idxElement: constant.RecoveryVA_index,
+                                strChildFolder: constant.PHM_str,
+                                indexChildFolder: constant.PHM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.PHMSupervised_str) {
+                    state.editInputElemnt.Phm.PHMSupervised.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.PHMSupervised_str,
+                                idxElement: constant.PHMSupervised_index,
+                                strChildFolder: constant.PHM_str,
+                                indexChildFolder: constant.PHM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.RecoveryActionInterf_str) {
+                    state.editInputElemnt.Phm.RecoveryVia.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.RecoveryActionInterf_str,
+                                idxElement: constant.RecoveryActionInterf_index,
+                                strChildFolder: constant.PHM_str,
+                                indexChildFolder: constant.PHM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ComFieldGrant_str) {
+                    state.editInputElemnt.IamG.FieldG.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].IamG.FieldG.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].IamG.FieldG.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ComFieldGrant_str,
+                                idxElement: constant.ComFieldGrant_index,
+                                strChildFolder: constant.IAM_str,
+                                indexChildFolder: constant.IAM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ComEventGrant_str) {
+                    state.editInputElemnt.IamG.EventG.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].IamG.EventG.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].IamG.EventG.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ComEventGrant_str,
+                                idxElement: constant.ComEventGrant_index,
+                                strChildFolder: constant.IAM_str,
+                                indexChildFolder: constant.IAM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ComMethodGrant_str) {
+                    state.editInputElemnt.IamG.MethodG.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].IamG.MethodG.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ComMethodGrant_str,
+                                idxElement: constant.ComMethodGrant_index,
+                                strChildFolder: constant.IAM_str,
+                                indexChildFolder: constant.IAM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ComFieldGDesign_str) {
+                    state.editInputElemnt.IamG.FieldGD.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].IamG.FieldGD.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].IamG.FieldGD.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ComFieldGDesign_str,
+                                idxElement: constant.ComFieldGDesign_index,
+                                strChildFolder: constant.IAM_str,
+                                indexChildFolder: constant.IAM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ComEventGDesign_str) {
+                    state.editInputElemnt.IamG.EventGD.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].IamG.EventGD.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].IamG.EventGD.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ComEventGDesign_str,
+                                idxElement: constant.ComEventGDesign_index,
+                                strChildFolder: constant.IAM_str,
+                                indexChildFolder: constant.IAM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.ComMethodGDesign_str) {
+                    state.editInputElemnt.IamG.MethodGD.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].IamG.MethodGD.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.ComMethodGDesign_str,
+                                idxElement: constant.ComMethodGDesign_index,
+                                strChildFolder: constant.IAM_str,
+                                indexChildFolder: constant.IAM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.SWCluster_str) {
+                    state.editInputElemnt.UCM.SoftWareCluster.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.SWCluster_str,
+                                idxElement: constant.SWCluster_index,
+                                strChildFolder: constant.UCM_str,
+                                indexChildFolder: constant.UCM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.SWPackage_str) {
+                    state.editInputElemnt.UCM.SoftWarePackage.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.SWPackage_str,
+                                idxElement: constant.SWPackage_index,
+                                strChildFolder: constant.UCM_str,
+                                indexChildFolder: constant.UCM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                } else if (item.parent == constant.VehiclePackage_str) {
+                    state.editInputElemnt.UCM.VehiclePackage.forEach(ele => {
+                        if (item.uuid == ele.uuid) {
+                            if (state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.findIndex(data => data.uuid === item.uuid) != -1) {
+                                ele.uuid = uuid.v1()
+                            }
+                            state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.push(ele)
+                            this.commit('pushProjectList', {
+                                uuid: ele.uuid,
+                                path: ele.path,
+                                name: ele.name,
+                                parent: constant.VehiclePackage_str,
+                                idxElement: constant.VehiclePackage_index,
+                                strChildFolder: constant.UCM_str,
+                                indexChildFolder: constant.UCM_index,
+                                strFolder: constant.Platform_str,
+                                indexFolder: constant.Platform_index
+                            })
+                        }
+                    })
+                }
+            })
+            Vue.nextTick(() => {
+                this.commit('checkLineInputXml')
+            })
+        } else {
+            state.editInputList.splice(0)
+            state.editInputElemnt = {
+                DataTypes: { CompuMethod: [], DataConstr: [], ApplicationArrayDataType: [], ImplementationDataType: [], SWBaseType: [] },
+                Service: {
+                    SomeIPServiceInterfaceDeployment: [],
+                    ServiceInterface: [],
+                    SomeIPClientEvent: [],
+                    SomeIPServerEvent: [],
+                    Error: [],
+                    ErrorSet: [],
+                    ErrorDomain: [],
+                    SomeIPClientServiceInstance: [],
+                    SomeIPServerServiceInstance: [],
+                    SomeIPServiceInstanceToMachine: [],
+                    ServiceInstanceToPortPrototype: [],
+                    RequiredSomeIP: [],
+                    ProvidedSomeIP: [],
+                    E2EProfileConfig: [],
+                    SdgDef: [],
+                },
+                Machine: { Machine: [], MachineDesign: [], EthernetCluster: [], ModeDeclarationGroup: [], HWElement: [], HWCategory: [] },
+                AdaptiveApplication: { ProtoMachineMapping: [], SWComponents: [], Process: [], Executable: [], StartupConfig: [], DeterministicClient: [], ProcessDesign: [] },
+                Per: { PERFileArray: [], PERFileProxy: [], PERKeyValueD: [], PERKeyValueDI: [], PERPPtoFileArray: [], PERPPtoKeyValue: [] },
+                Phm: { PHMContribution: [], PHMtoMachine: [], PHMHealth: [], PHMRecovery: [], PHMSupervised: [], RecoveryVia: [] },
+                IamG: { FieldG: [], EventG: [], MethodG: [], FieldGD: [], EventGD: [], MethodGD: [] },
+                UCM: { SoftWareCluster: [], SoftWarePackage: [], VehiclePackage: [] }
+            }
+        }
+    },
+    checkLineInputXml(state) { //line의 start가 먼저 들어와있을 때, line의 끝이 먼저 들어와있을 때 다 생각해줘야함
         console.log(state.inputFileList)
         state.inputFileList.forEach(ele => {
             var idxelement = null
-            if (ele.parent == constant.Implementation_str) {
+            if (ele.parent == constant.CompuMethod_str) {
+                if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
+                        if (item.ddpc.length > 0) {
+                            item.ddpc.forEach(dd => {
+                                if (dd.compumethod == ele.path && this.getters.getconnectLineNum(item.uuid + '/ddpccompu-' + dd.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/ddpccompu-' + dd.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/DDPC', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.DataConstr_str) {
+                if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
+                        if (item.ddpc.length > 0) {
+                            item.ddpc.forEach(dd => {
+                                if (dd.dataconstr == ele.path && this.getters.getconnectLineNum(item.uuid + '/ddpcdata-' + dd.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/ddpcdata-' + dd.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/DDPC', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.Implementation_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].typeref != null) {
                     state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].typeref == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].typeref == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/typeref') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/typeref', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/typeref', item.uuid)
                         }
@@ -6721,27 +7845,27 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].templatetype != null) {
                     state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
-                        console.log(state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].templatetype + ' ==== ' + item.path + '/' + item.name)
-                        if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].templatetype == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].templatetype == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/templateType') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/templateType', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/templateType', item.uuid)
                         }
                     })
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].ddpc.length > 0) {
-                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].ddpc.forEach((data, i) => {
+                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].ddpc.forEach(data => {
                         if (data.compumethod != null) {
                             state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.forEach(item => {
-                                if (data.compumethod == (item.path + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/ddpccompu-' + i, end: item.uuid })
+                                if (data.compumethod == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/ddpccompu-' + data.id) == -1) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/ddpccompu-' + data.id, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/DDPC', item.uuid)
                                 }
                             })
                         }
                         if (data.dataconstr != null) {
                             state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.forEach(item => {
-                                if (data.dataconstr == (item.path + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/ddpcdata-' + i, end: item.uuid })
+                                if (data.dataconstr == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/ddpcdata-' + data.id) == -1) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/ddpcdata-' + data.id, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/DDPC', item.uuid)
                                 }
                             })
@@ -6749,22 +7873,108 @@ const mutations = {
                     })
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].idtelement.length > 0) {
-                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].idtelement.forEach((data, i) => {
+                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxelement].idtelement.forEach(data => {
                         if (data.typeref != null) {
                             state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
-                                if (data.typeref == (item.path + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/idtetable-' + i, end: item.uuid })
+                                if (data.typeref == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/idtetable-' + data.id) == -1) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/idtetable-' + data.id, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/idtetable', item.uuid)
                                 }
                             })
                         }
                     })
                 }
+                if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
+                        if (item.typeref != null && item.typeref == ele.path && this.getters.getconnectLineNum(item.uuid + '/typeref') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/typeref', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/typeref', ele.uuid)
+                        }
+                        if (item.templatetype != null && item.templatetype == ele.path && this.getters.getconnectLineNum(item.uuid + '/templateType') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/templateType', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/templateType', ele.uuid)
+                        }
+                        if (item.idtelement.length > 0) {
+                            item.idtelement.forEach(data => {
+                                if (data.typeref != null && data.typeref == ele.path && this.getters.getconnectLineNum(item.uuid + '/idtetable-' + data.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/idtetable-' + data.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/idtetable', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
+                        if (item.events.length > 0) {
+                            item.events.forEach((eve, i) => {
+                                if (eve.type == ele.path && this.getters.getconnectLineNum(item.uuid + '/Eventtable-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/Eventtable-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/Eventtable', ele.uuid)
+                                }
+                            })
+                        }
+                        if (item.fields.length > 0) {
+                            item.fields.forEach((field, i) => {
+                                if (field.type == ele.path && this.getters.getconnectLineNum(item.uuid + '/Fieldtable-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/Fieldtable-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/Fieldtable', ele.uuid)
+                                }
+                            })
+                        }
+                        if (item.methods.length > 0) {
+                            item.methods.forEach((met, i) => {
+                                if (met.argument.length > 0) {
+                                    met.argument.forEach((arg, a) => {
+                                        if (arg.thpe == ele.path && this.getters.getconnectLineNum(item.uuid + '/argtable-' + a + '-' + i) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/argtable-' + a + '-' + i, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/methods', ele.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.forEach(item => {
+                        if (item.keyValue.length > 0) {
+                            item.keyValue.forEach((key, i) => {
+                                if (key.datatype == ele.path && this.getters.getconnectLineNum(item.uuid + '/PERKeyV-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/PERKeyV-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/PERKeyV', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.forEach(item => {
+                        if (item.data.length > 0) {
+                            item.data.forEach((data, i) => {
+                                if (data.type == ele.path && this.getters.getconnectLineNum(item.uuid + '/PERData-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/PERData-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/PERData', ele.uuid)
+                                }
+                            })
+                        }
+                        if (item.serialization.length > 0) {
+                            item.serialization.forEach((ser, i) => {
+                                if (ser.serial == ele.path && this.getters.getconnectLineNum(item.uuid + '/PERSerial-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/PERSerial-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/PERSerial', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+
             } else if (ele.parent == constant.Machine_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].machinedesign != null) {
                     state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].machinedesign == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].machinedesign == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/machinedesign') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/machinedesign', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/machinedesign', item.uuid)
                         }
@@ -6774,7 +7984,8 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].hwelement.forEach((data, i) => {
                         if (data.hwelement != null) {
                             state.SAHLProject[state.openProjectIndex].Machine.HWElement.forEach(item => {
-                                if (data.hwelement == (item.path + '/' + item.name)) {
+                                if (data.hwelement == (item.path + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/hwelement-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/hwelement-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/hwelement', item.uuid)
                                 }
@@ -6786,7 +7997,8 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].functiongroup.forEach((data, i) => {
                         if (data.type != null) {
                             state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.forEach(item => {
-                                if (data.type == (item.path + '/' + item.name)) {
+                                if (data.type == (item.path + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/functiontable-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/functiontable-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/functiontable', item.uuid)
                                 }
@@ -6801,7 +8013,8 @@ const mutations = {
                                 if (gra.grant != null) {
                                     if (gra.select == "COM-EVENT-GRANT") {
                                         state.SAHLProject[state.openProjectIndex].IamG.EventG.forEach(eve => {
-                                            if (gra.grant == (eve.path + '/' + eve.name)) {
+                                            if (gra.grant == (eve.path + '/' + eve.name) &&
+                                                this.getters.getconnectLineNum(ele.uuid + '/iamM-' + gra.id + '-' + data.id) == -1) {
                                                 this.commit('setConnectionline', { start: ele.uuid + '/iamM-' + gra.id + '-' + data.id, end: eve.uuid })
                                                 if (i == 0) {
                                                     EventBus.$emit('new-line', ele.uuid + '/grandtab-' + data.id, eve.uuid)
@@ -6812,7 +8025,8 @@ const mutations = {
                                         })
                                     } else if (gra.select == "COM-FIELD-GRANT") {
                                         state.SAHLProject[state.openProjectIndex].IamG.FieldG.forEach(eve => {
-                                            if (gra.grant == (eve.path + '/' + eve.name)) {
+                                            if (gra.grant == (eve.path + '/' + eve.name) &&
+                                                this.getters.getconnectLineNum(ele.uuid + '/iamM-' + gra.id + '-' + data.id) == -1) {
                                                 this.commit('setConnectionline', { start: ele.uuid + '/iamM-' + gra.id + '-' + data.id, end: eve.uuid })
                                                 if (i == 0) {
                                                     EventBus.$emit('new-line', ele.uuid + '/grandtab-' + data.id, eve.uuid)
@@ -6823,7 +8037,8 @@ const mutations = {
                                         })
                                     } else if (gra.select == "COM-METHOD-GRANT") {
                                         state.SAHLProject[state.openProjectIndex].IamG.MethodG.forEach(eve => {
-                                            if (gra.grant == (eve.path + '/' + eve.name)) {
+                                            if (gra.grant == (eve.path + '/' + eve.name) &&
+                                                this.getters.getconnectLineNum(ele.uuid + '/iamM-' + gra.id + '-' + data.id) == -1) {
                                                 this.commit('setConnectionline', { start: ele.uuid + '/iamM-' + gra.id + '-' + data.id, end: eve.uuid })
                                                 if (i == 0) {
                                                     EventBus.$emit('new-line', ele.uuid + '/grandtab-' + data.id, eve.uuid)
@@ -6838,10 +8053,110 @@ const mutations = {
                         }
                     })
                 }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.forEach(item => {
+                        if (item.mapping.length > 0) {
+                            item.mapping.forEach(map => {
+                                if (map.ptmmMachine == ele.path &&
+                                    this.getters.getconnectLineNum(item.uuid + '/machinefromptmm-' + map.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/machinefromptmm-' + map.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/proMapping', ele.uuid)
+                                }
+                                if (map.runon.length > 0) {
+                                    map.runon.forEach(data => {
+                                        if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].processor.length > 0) {
+                                            state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].processor.forEach(pro => {
+                                                if (pro.core.length > 0) {
+                                                    pro.core.forEach(co => {
+                                                        if (data.shall == (ele.path + '/' + pro.name + '/' + co.name) &&
+                                                            this.getters.getconnectLineNum(item.uuid + '/runOn-' + data.id + '-' + map.id) == -1) {
+                                                            this.commit('setConnectionline', { start: item.uuid + '/runOn-' + data.id + '-' + map.id, end: ele.uuid })
+                                                            EventBus.$emit('new-line', item.uuid + '/proMapping', ele.uuid)
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(item => {
+                        if (item.dependent.length > 0) {
+                            item.dependent.forEach((dep, i) => {
+                                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].moduleinstant.length > 0) {
+                                    state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].moduleinstant.forEach(mod => {
+                                        if (dep.resourceRef == ele.path + '/' + mod.name &&
+                                            this.getters.getconnectLineNum(item.uuid + '/processresorce-' + i) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/processresorce-' + i, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/processStarupC', ele.uuid)
+                                        }
+                                    })
+                                }
+                                if (dep.exection != null) {
+                                    dep.exection.forEach((exec, e) => {
+                                        if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].functiongroup.length > 0) {
+                                            state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].functiongroup.forEach(fun => {
+                                                if (exec.contextMode == ele.path + '/' + fun.name &&
+                                                    this.getters.getconnectLineNum(item.uuid + '/edcontext-' + e + '-' + i) == -1) {
+                                                    this.commit('setConnectionline', { start: item.uuid + '/edcontext-' + e + '-' + i, end: ele.uuid })
+                                                    EventBus.$emit('new-line', item.uuid + '/processStarupC', ele.uuid)
+                                                }
+                                            })
+                                        }
+
+                                    })
+                                }
+                                if (dep.functionItem != null) {
+                                    dep.functionItem.forEach((fg, f) => {
+                                        if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].functiongroup.length > 0) {
+                                            state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].functiongroup.forEach(fun => {
+                                                if (fg.contextMode == ele.path + '/' + fun.name &&
+                                                    this.getters.getconnectLineNum(item.uuid + '/fgcontext-' + f + '-' + i) == -1) {
+                                                    this.commit('setConnectionline', { start: item.uuid + '/fgcontext-' + f + '-' + i, end: ele.uuid })
+                                                    EventBus.$emit('new-line', item.uuid + '/processStarupC', ele.uuid)
+                                                }
+                                            })
+                                        }
+
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.forEach(item => {
+                        if (item.machine == ele.path && this.getters.getconnectLineNum(item.uuid + '/PHMtoMachine') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/PHMtoMachine', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/PHMtoMachine', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.forEach(item => {
+                        if (item.ucms.length > 0) {
+                            item.ucms.forEach((ucm, i) => {
+                                if (state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].ucm.length > 0) {
+                                    state.SAHLProject[state.openProjectIndex].Machine.Machine[idxelement].ucm.forEach(ucmM => {
+                                        if (ucm.module == ele.path + '/' + ucmM.name &&
+                                            this.getters.getconnectLineNum(item.uuid + '/UCMModule-' + i) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/UCMModule-' + i, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/UCMModule', ele.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
             } else if (ele.parent == constant.MachineDesigne_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].connector.length > 0) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].connector.forEach((data, i) => {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].connector.forEach(data => {
                         if (data.endpoint != null) {
                             state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.forEach(item => {
                                 if (item.conditional.length > 0) {
@@ -6850,8 +8165,9 @@ const mutations = {
                                             condi.channel.forEach(channel => {
                                                 if (channel.endpoint != null) {
                                                     channel.endpoint.forEach(end => {
-                                                        if (data.endpoint == (item.path + '/' + item.name + '/' + condi.name + '/' + channel.name + '/' + end.name)) {
-                                                            this.commit('setConnectionline', { start: ele.uuid + '/cctable-' + i, end: item.uuid })
+                                                        if (data.endpoint == (item.path + '/' + item.name + '/' + condi.name + '/' + channel.name + '/' + end.name) &&
+                                                            this.getters.getconnectLineNum(ele.uuid + '/cctable-' + data.id) == -1) {
+                                                            this.commit('setConnectionline', { start: ele.uuid + '/cctable-' + data.id, end: item.uuid })
                                                             EventBus.$emit('new-line', ele.uuid + '/cctable', item.uuid)
                                                         }
                                                     })
@@ -6866,7 +8182,7 @@ const mutations = {
                     })
                 }
                 if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].servicediscover.length > 0) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].servicediscover.forEach((data, i) => {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].servicediscover.forEach(data => {
                         if (data.msia != null) {
                             state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.forEach(item => {
                                 if (item.conditional.length > 0) {
@@ -6875,8 +8191,9 @@ const mutations = {
                                             condi.channel.forEach(channel => {
                                                 if (channel.endpoint != null) {
                                                     channel.endpoint.forEach(end => {
-                                                        if (data.msia == (item.path + '/' + item.name + '/' + condi.name + '/' + channel.name + '/' + end.name)) {
-                                                            this.commit('setConnectionline', { start: ele.uuid + '/sdctable-' + i, end: item.uuid })
+                                                        if (data.msia == (item.path + '/' + item.name + '/' + condi.name + '/' + channel.name + '/' + end.name) &&
+                                                            this.getters.getconnectLineNum(ele.uuid + '/sdctable-' + data.id) == -1) {
+                                                            this.commit('setConnectionline', { start: ele.uuid + '/sdctable-' + data.id, end: item.uuid })
                                                             EventBus.$emit('new-line', ele.uuid + '/sdctable', item.uuid)
                                                         }
                                                     })
@@ -6884,6 +8201,63 @@ const mutations = {
                                             })
                                         }
                                     })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Machine.Machine.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
+                        if (item.machinedesign == ele.path && this.getters.getconnectLineNum(item.uuid + '/machinedesign') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/machinedesign', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/machinedesign', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.forEach(item => {
+                        if (item.conditional.length > 0) {
+                            item.conditional.forEach((co, c) => {
+                                if (co.channel.length > 0) {
+                                    co.channel.forEach((cha, ch) => {
+                                        if (cha.comconnect.length > 0) {
+                                            cha.comconnect.forEach((com, co) => {
+                                                if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].connector.length > 0) {
+                                                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].connector.forEach(data => {
+                                                        if (com.connector == ele.path + '/' + data.name &&
+                                                            this.getters.getconnectLineNum(item.uuid + '/comconet-' + co + '-' + ch + '-' + c) == -1) {
+                                                            this.commit('setConnectionline', { start: item.uuid + '/comconet-' + co + '-' + ch + '-' + c, end: ele.uuid })
+                                                            EventBus.$emit('new-line', item.uuid + '/conditional', ele.uuid)
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.forEach(item => {
+                        if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].connector.length > 0) {
+                            state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxelement].connector.forEach(data => {
+                                if (item.ccref == ele.path + '/' + data.name && this.getters.getconnectLineNum(item.uuid + '/tomachinCC') == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/tomachinCC', end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/tomachinCC', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.forEach(item => {
+                        if (item.machineD.length > 0) {
+                            item.machineD.forEach((ma, i) => {
+                                if (ma.machine == ele.path && this.getters.getconnectLineNum(item.uuid + '/SCMachineD-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/SCMachineD-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/SCMachineD', ele.uuid)
                                 }
                             })
                         }
@@ -6900,7 +8274,8 @@ const mutations = {
                                         if (connect.connector != null) {
                                             state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.forEach(data => {
                                                 data.connector.forEach(con => {
-                                                    if (connect.connector == (data.path + '/' + data.name + '/' + con.name)) {
+                                                    if (connect.connector == (data.path + '/' + data.name + '/' + con.name) &&
+                                                        this.getters.getconnectLineNum(ele.uuid + '/comconet-' + c + '-' + v + '-' + n) == -1) {
                                                         this.commit('setConnectionline', { start: ele.uuid + '/comconet-' + c + '-' + v + '-' + n, end: data.uuid })
                                                         if (n == 0 && v == 0) {
                                                             EventBus.$emit('new-line', ele.uuid + '/comconet-' + channel.id + '-' + condi.id, data.uuid)
@@ -6919,11 +8294,58 @@ const mutations = {
                         }
                     })
                 }
+                if (state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.forEach(item => {
+                        if (item.connector.length > 0) {
+                            item.connector.forEach(con => {
+                                if (state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxelement].conditional.length > 0) {
+                                    state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxelement].conditional.forEach(co => {
+                                        if (co.channel.length > 0) {
+                                            co.channel.forEach(cha => {
+                                                if (cha.endpoint.length > 0) {
+                                                    cha.endpoint.forEach(end => {
+                                                        if (con.endpoint == ele.path + '/' + co.name + '/' + cha.name + '/' + end.name &&
+                                                            this.getters.getconnectLineNum(item.uuid + '/cctable-' + con.id) == -1) {
+                                                            this.commit('setConnectionline', { start: item.uuid + '/cctable-' + con.id, end: ele.uuid })
+                                                            EventBus.$emit('new-line', item.uuid + '/cctable', ele.uuid)
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        if (item.servicediscover.length > 0) {
+                            item.servicediscover.forEach(ser => {
+                                if (state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxelement].conditional.length > 0) {
+                                    state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster[idxelement].conditional.forEach(co => {
+                                        if (co.channel.length > 0) {
+                                            co.channel.forEach(cha => {
+                                                if (cha.endpoint.length > 0) {
+                                                    cha.endpoint.forEach(end => {
+                                                        if (ser.msia == ele.path + '/' + co.name + '/' + cha.name + '/' + end.name &&
+                                                            this.getters.getconnectLineNum(item.uuid + '/sdctable-' + ser.id) == -1) {
+                                                            this.commit('setConnectionline', { start: item.uuid + '/sdctable-' + ser.id, end: ele.uuid })
+                                                            EventBus.$emit('new-line', item.uuid + '/sdctable', ele.uuid)
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
             } else if (ele.parent == constant.HWElement_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].Machine.HWElement.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxelement].category != null) {
                     state.SAHLProject[state.openProjectIndex].Machine.HWCategory.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxelement].category == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Machine.HWElement[idxelement].category == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/hwcatrory') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/hwcatrory', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/hwcatrory', item.uuid)
                         }
@@ -6935,7 +8357,8 @@ const mutations = {
                             state.SAHLProject[state.openProjectIndex].Machine.HWCategory.forEach(item => {
                                 if (item.attribute.length > 0) {
                                     item.attribute.forEach(attr => {
-                                        if (data.attr == (item.path + '/' + item.name + '/' + attr.name)) {
+                                        if (data.attr == (item.path + '/' + item.name + '/' + attr.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/attributetable-' + data.id) == -1) {
                                             console.log('////' + data.id)
                                             this.commit('setConnectionline', { start: ele.uuid + '/attributetable-' + data.id, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/attributetable', item.uuid)
@@ -6946,30 +8369,118 @@ const mutations = {
                         }
                     })
                 }
+                if (state.SAHLProject[state.openProjectIndex].Machine.Machine.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
+                        if (item.hwelement.length > 0) {
+                            item.hwelement.forEach((hw, i) => {
+                                if (hw.hwelement == ele.path && this.getters.getconnectLineNum(item.uuid + '/hwelement-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/hwelement-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/hwelement', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.ModeDeclarationGroup_str) {
+                if (state.SAHLProject[state.openProjectIndex].Machine.Machine.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
+                        if (item.functiongroup.length > 0) {
+                            item.functiongroup.forEach((fun, i) => {
+                                if (fun.type == ele.path && this.getters.getconnectLineNum(item.uuid + '/functiontable-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/functiontable-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/functiontable', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(item => {
+                        if (item.machinetype == ele.path && this.getters.getconnectLineNum(item.uuid + '/processmodedeclar') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/processmodedeclar', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/processmodedeclar', ele.uuid)
+                        }
+                        if (item.dependent.length > 0) {
+                            item.dependent.forEach((de, d) => {
+                                if (de.exection.length > 0) {
+                                    de.exection.forEach((ex, e) => {
+                                        if (state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxelement].modedeclaration.length > 0) {
+                                            state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxelement].modedeclaration.forEach(mo => {
+                                                if (ex.targetMode == ele.path + '/' + mo.name &&
+                                                    this.getters.getconnectLineNum(item.uuid + '/edtarget-' + e + '-' + d) == -1) {
+                                                    this.commit('setConnectionline', { start: item.uuid + '/edtarget-' + e + '-' + d, end: ele.uuid })
+                                                    EventBus.$emit('new-line', item.uuid + '/processStarupC', ele.uuid)
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                                if (de.functionItem.length > 0) {
+                                    de.functionItem.forEach((fun, f) => {
+                                        if (state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxelement].modedeclaration.length > 0) {
+                                            state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup[idxelement].modedeclaration.forEach(mo => {
+                                                if (fun.targetMode == ele.path + '/' + mo.name &&
+                                                    this.getters.getconnectLineNum(item.uuid + '/fgtarget-' + f + '-' + d) == -1) {
+                                                    this.commit('setConnectionline', { start: item.uuid + '/fgtarget-' + f + '-' + d, end: ele.uuid })
+                                                    EventBus.$emit('new-line', item.uuid + '/processStarupC', ele.uuid)
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.HWCategory_str) {
+                if (state.SAHLProject[state.openProjectIndex].Machine.HWElement.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Machine.HWElement.forEach(item => {
+                        if (item.category == ele.path && this.getters.getconnectLineNum(item.uuid + '/hwcatrory') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/hwcatrory', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/hwcatrory', ele.uuid)
+                        }
+                        if (item.attribute.length > 0) {
+                            item.attribute.forEach(at => {
+                                if (state.SAHLProject[state.openProjectIndex].Machine.HWCategory[idxelement].attribute.length > 0) {
+                                    state.SAHLProject[state.openProjectIndex].Machine.HWCategory[idxelement].attribute.forEach(attr => {
+                                        if (at.attr == ele.path + '/' + attr.name &&
+                                            this.getters.getconnectLineNum(item.uuid + '/attributetable-' + at.id) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/attributetable-' + at.id, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/attributetable', ele.uuid)
+                                        }
+                                    })
+                                }
+
+                            })
+                        }
+                    })
+                }
             } else if (ele.parent == constant.ProcesstoMachineMapping_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].mapping.length > 0) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].mapping.forEach((item, i) => {
                         if (item.ptmmMachine != null) {
-                            state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
-                                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].ptmmMachine == (item.path + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/machinefromptmm-' + item.id, end: item.uuid })
+                            state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(data => {
+                                if (item.ptmmMachine == (data.path + '/' + data.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/machinefromptmm-' + item.id) == -1) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/machinefromptmm-' + item.id, end: data.uuid })
                                     if (i == 0) {
-                                        EventBus.$emit('new-line', ele.uuid + '/machinefromptmm-' + item.id, item.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/machinefromptmm-' + item.id, data.uuid)
                                     } else {
-                                        EventBus.$emit('new-line', ele.uuid + '/proMapping', item.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/proMapping', data.uuid)
                                     }
                                 }
                             })
                         }
                         if (item.ptmmProcess != null) {
-                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(item => {
-                                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping[idxelement].ptmmProcess == (item.path + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/processfromptmm-' + item.id, end: item.uuid })
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(pro => {
+                                if (item.ptmmProcess == (pro.path + '/' + pro.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/processfromptmm-' + item.id) == -1) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/processfromptmm-' + item.id, end: pro.uuid })
                                     if (i == 0) {
-                                        EventBus.$emit('new-line', ele.uuid + '/processfromptmm-' + item.id, item.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/processfromptmm-' + item.id, pro.uuid)
                                     } else {
-                                        EventBus.$emit('new-line', ele.uuid + '/proMapping', item.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/proMapping', pro.uuid)
                                     }
                                 }
                             })
@@ -6977,17 +8488,18 @@ const mutations = {
                         if (item.runon.length > 0) {
                             item.runon.forEach(data => {
                                 if (data.shall != null) {
-                                    state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
+                                    state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(machine => {
                                         if (item.processor.length > 0) {
                                             item.processor.forEach(pro => {
                                                 if (pro.core.length > 0) {
                                                     pro.core.forEach(co => {
-                                                        if (data.shall == (item.path + '/' + item.name + '/' + pro.name + '/' + co.name)) {
-                                                            this.commit('setConnectionline', { start: ele.uuid + '/runOn-' + data.id + '-' + item.id, end: item.uuid })
+                                                        if (data.shall == (machine.path + '/' + machine.name + '/' + pro.name + '/' + co.name) &&
+                                                            this.getters.getconnectLineNum(ele.uuid + '/runOn-' + data.id + '-' + item.id) == -1) {
+                                                            this.commit('setConnectionline', { start: ele.uuid + '/runOn-' + data.id + '-' + item.id, end: machine.uuid })
                                                             if (i == 0) {
-                                                                EventBus.$emit('new-line', ele.uuid + '/runOn-' + data.id + '-' + item.id, item.uuid)
+                                                                EventBus.$emit('new-line', ele.uuid + '/runOn-' + data.id + '-' + item.id, machine.uuid)
                                                             } else {
-                                                                EventBus.$emit('new-line', ele.uuid + '/proMapping', item.uuid)
+                                                                EventBus.$emit('new-line', ele.uuid + '/proMapping', machine.uuid)
                                                             }
                                                         }
                                                     })
@@ -7008,7 +8520,8 @@ const mutations = {
                         console.log(data.selectI)
                         if (data.selectI == "SERVICE-INTERFACE") {
                             state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
-                                if (data.interface == (item.path + '/' + item.name)) {
+                                if (data.interface == (item.path + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/PPortI-' + data.id) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/PPortI-' + data.id, end: item.uuid })
                                     if (i == 0) {
                                         EventBus.$emit('new-line', ele.uuid + '/PPortI-' + data.id, item.uuid)
@@ -7019,7 +8532,8 @@ const mutations = {
                             })
                         } else if (data.selectI == "PHM-RECOVERY-ACTION-INTERFACE") {
                             state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.forEach(item => {
-                                if (data.interface == (item.path + '/' + item.name)) {
+                                if (data.interface == (item.path + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/PPortI-' + data.id) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/PPortI-' + data.id, end: item.uuid })
                                     if (i == 0) {
                                         EventBus.$emit('new-line', ele.uuid + '/PPortI-' + data.id, item.uuid)
@@ -7035,7 +8549,8 @@ const mutations = {
                                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                         if (item.events.length > 0) {
                                             item.events.forEach(el => {
-                                                if (pro.dataE == (item.path + '/' + item.name + '/' + el.name)) {
+                                                if (pro.dataE == (item.path + '/' + item.name + '/' + el.name) &&
+                                                    this.getters.getconnectLineNum(ele.uuid + '/pportQSC-' + pro.id + '-' + data.id) == -1) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/pportQSC-' + pro.id + '-' + data.id, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/pportQSC-' + data.id, item.uuid)
@@ -7055,7 +8570,8 @@ const mutations = {
                                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                         if (item.fields.length > 0) {
                                             item.fields.forEach(el => {
-                                                if (pro.dataE == (item.path + '/' + item.name + '/' + el.name)) {
+                                                if (pro.dataE == (item.path + '/' + item.name + '/' + el.name) &&
+                                                    this.getters.getconnectLineNum(ele.uuid + '/pportFSC-' + pro.id + '-' + data.id) == -1) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/pportFSC-' + pro.id + '-' + data.id, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/pportFSC-' + data.id, item.uuid)
@@ -7075,7 +8591,8 @@ const mutations = {
                                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                         if (item.methods.length > 0) {
                                             item.methods.forEach(el => {
-                                                if (pro.oper == (item.path + '/' + item.name + '/' + el.name)) {
+                                                if (pro.oper == (item.path + '/' + item.name + '/' + el.name) &&
+                                                    this.getters.getconnectLineNum(ele.uuid + '/pportSC-' + pro.id + '-' + data.id) == -1) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/pportSC-' + pro.id + '-' + data.id, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/pportSC-' + data.id, item.uuid)
@@ -7096,7 +8613,8 @@ const mutations = {
                         if (data.interface != null) {
                             if (data.selectI == "SERVICE-INTERFACE") {
                                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
-                                    if (data.interface == (item.path + '/' + item.name)) {
+                                    if (data.interface == (item.path + '/' + item.name) &&
+                                        this.getters.getconnectLineNum(ele.uuid + '/PRPortI-' + data.id) == -1) {
                                         this.commit('setConnectionline', { start: ele.uuid + '/PRPortI-' + data.id, end: item.uuid })
                                         if (i == 0) {
                                             EventBus.$emit('new-line', ele.uuid + '/PRPortI-' + data.id, item.uuid)
@@ -7107,7 +8625,8 @@ const mutations = {
                                 })
                             } else if (data.selectI == "PERSISTENCY-FILE-PROXY-INTERFACE") {
                                 state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.forEach(item => {
-                                    if (data.interface == (item.path + '/' + item.name)) {
+                                    if (data.interface == (item.path + '/' + item.name) &&
+                                        this.getters.getconnectLineNum(ele.uuid + '/PRPortI-' + data.id) == -1) {
                                         this.commit('setConnectionline', { start: ele.uuid + '/PRPortI-' + data.id, end: item.uuid })
                                         if (i == 0) {
                                             EventBus.$emit('new-line', ele.uuid + '/PRPortI-' + data.id, item.uuid)
@@ -7118,7 +8637,8 @@ const mutations = {
                                 })
                             } else if (data.selectI == "PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE") {
                                 state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.forEach(item => {
-                                    if (data.interface == (item.path + '/' + item.name)) {
+                                    if (data.interface == (item.path + '/' + item.name) &&
+                                        this.getters.getconnectLineNum(ele.uuid + '/PRPortI-' + data.id) == -1) {
                                         this.commit('setConnectionline', { start: ele.uuid + '/PRPortI-' + data.id, end: item.uuid })
                                         if (i == 0) {
                                             EventBus.$emit('new-line', ele.uuid + '/PRPortI-' + data.id, item.uuid)
@@ -7135,7 +8655,8 @@ const mutations = {
                                     state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.forEach(item => {
                                         if (item.data.length > 0) {
                                             item.data.forEach(el => {
-                                                if (pro.dataE == (item.path + '/' + item.name + '/' + el.name)) {
+                                                if (pro.dataE == (item.path + '/' + item.name + '/' + el.name) &&
+                                                    this.getters.getconnectLineNum(ele.uuid + '/prporttab-' + pro.id + '-' + data.id) == -1) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/prporttab-' + pro.id + '-' + data.id, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/prporttab-' + data.id, item.uuid)
@@ -7155,7 +8676,8 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].rport.forEach((data, i) => {
                         if (data.selectI == "SERVICE-INTERFACE") {
                             state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
-                                if (data.interface == (item.path + '/' + item.name)) {
+                                if (data.interface == (item.path + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/RPortI-' + data.id) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/RPortI-' + data.id, end: item.uuid })
                                     if (i == 0) {
                                         EventBus.$emit('new-line', ele.uuid + '/RPortI-' + data.id, item.uuid)
@@ -7166,7 +8688,8 @@ const mutations = {
                             })
                         } else if (data.selectI == "PHM-HEALTH-CHANNEL-INTERFACE") {
                             state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.forEach(item => {
-                                if (data.interface == (item.path + '/' + item.name)) {
+                                if (data.interface == (item.path + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/RPortI-' + data.id) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/RPortI-' + data.id, end: item.uuid })
                                     if (i == 0) {
                                         EventBus.$emit('new-line', ele.uuid + '/RPortI-' + data.id, item.uuid)
@@ -7177,7 +8700,8 @@ const mutations = {
                             })
                         } else if (data.selectI == "PHM-SUPERVISED-ENTITY-INTERFACE") {
                             state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.forEach(item => {
-                                if (data.interface == (item.path + '/' + item.name)) {
+                                if (data.interface == (item.path + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/RPortI-' + data.id) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/RPortI-' + data.id, end: item.uuid })
                                     if (i == 0) {
                                         EventBus.$emit('new-line', ele.uuid + '/RPortI-' + data.id, item.uuid)
@@ -7193,7 +8717,8 @@ const mutations = {
                                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                         if (item.events.length > 0 && que.select == "VARIABLE-DATA-PROTOTYPE") {
                                             item.events.forEach(el => {
-                                                if (que.dataE == (item.path + '/' + item.name + '/' + el.name)) {
+                                                if (que.dataE == (item.path + '/' + item.name + '/' + el.name) &&
+                                                    this.getters.getconnectLineNum(ele.uuid + '/rportQRC-' + que.id + '-' + data.id) == -1) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/rportQRC-' + que.id + '-' + data.id, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/rportQRC-' + data.id, item.uuid)
@@ -7204,7 +8729,8 @@ const mutations = {
                                             })
                                         } else if (item.fields.length > 0 && que.select == "FIELD") {
                                             item.fields.forEach(el => {
-                                                if (que.dataE == (item.path + '/' + item.name + '/' + el.name)) {
+                                                if (que.dataE == (item.path + '/' + item.name + '/' + el.name) &&
+                                                    this.getters.getconnectLineNum(ele.uuid + '/rportQRC-' + que.id + '-' + data.id) == -1) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/rportQRC-' + que.id + '-' + data.id, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/rportQRC-' + data.id, item.uuid)
@@ -7224,7 +8750,8 @@ const mutations = {
                                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                         if (item.methods.length > 0) {
                                             item.methods.forEach(el => {
-                                                if (cl.operation == (item.path + '/' + item.name + '/' + el.name)) {
+                                                if (cl.operation == (item.path + '/' + item.name + '/' + el.name) &&
+                                                    this.getters.getconnectLineNum(ele.uuid + '/rportCC-' + cl.id + '-' + data.id) == -1) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/rportCC-' + cl.id + '-' + data.id, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/rportCC-' + data.id, item.uuid)
@@ -7240,7 +8767,8 @@ const mutations = {
                                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                         if (item.fields.length > 0) {
                                             item.fields.forEach(el => {
-                                                if (cl.getter == (item.path + '/' + item.name + '/' + el.name)) {
+                                                if (cl.getter == (item.path + '/' + item.name + '/' + el.name) &&
+                                                    this.getters.getconnectLineNum(ele.uuid + '/rportCCG-' + cl.id + '-' + data.id) == -1) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/rportCCG-' + cl.id + '-' + data.id, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/rportCC-' + data.id, item.uuid)
@@ -7256,7 +8784,8 @@ const mutations = {
                                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                         if (item.fields.length > 0) {
                                             item.fields.forEach(el => {
-                                                if (cl.setter == (item.path + '/' + item.name + '/' + el.name)) {
+                                                if (cl.setter == (item.path + '/' + item.name + '/' + el.name) &&
+                                                    this.getters.getconnectLineNum(ele.uuid + '/rportCCS-' + cl.id + '-' + data.id) == -1) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/rportCCS-' + cl.id + '-' + data.id, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/rportCC-' + data.id, item.uuid)
@@ -7272,11 +8801,132 @@ const mutations = {
                         }
                     })
                 }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.forEach(item => {
+                        if (item.applicationtyperef == ele.path && this.getters.getconnectLineNum(item.uuid + '/applicationtyperef') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/applicationtyperef', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/applicationtyperef', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.forEach(item => {
+                        if (item.selectPort == 'P-PORT-PROTOTYPE') {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].pport.length > 0) {
+                                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].pport.forEach(pp => {
+                                    if (item.porttype == ele.path + '/' + pp.name && this.getters.getconnectLineNum(item.uuid + '/toportport') == -1) {
+                                        this.commit('setConnectionline', { start: item.uuid + '/toportport', end: ele.uuid })
+                                        EventBus.$emit('new-line', item.uuid + '/toportport', ele.uuid)
+                                    }
+                                })
+                            }
+                        } else if (item.selectPort == 'R-PORT-PROTOTYPE') {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].rport.length > 0) {
+                                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].rport.forEach(rp => {
+                                    if (item.porttype == ele.path + '/' + rp.name && this.getters.getconnectLineNum(item.uuid + '/toportport') == -1) {
+                                        this.commit('setConnectionline', { start: item.uuid + '/toportport', end: ele.uuid })
+                                        EventBus.$emit('new-line', item.uuid + '/toportport', ele.uuid)
+                                    }
+                                })
+                            }
+                        } else if (item.selectPort == 'PR-PORT-PROTOTYPE') {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.length > 0) {
+                                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.forEach(prp => {
+                                    if (item.porttype == ele.path + '/' + prp.name && this.getters.getconnectLineNum(item.uuid + '/toportport') == -1) {
+                                        this.commit('setConnectionline', { start: item.uuid + '/toportport', end: ele.uuid })
+                                        EventBus.$emit('new-line', item.uuid + '/toportport', ele.uuid)
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERFileArray.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERFileArray.forEach(item => {
+                        if (item.sdgs.length > 0) {
+                            item.sdgs.forEach((sdg, i) => {
+                                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.length > 0) {
+                                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.forEach(prp => {
+                                        if (sdg.port == ele.path + '/' + prp.name &&
+                                            this.getters.getconnectLineNum(item.uuid + '/PERArraySDG-' + i) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/PERArraySDG-' + i, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/PERArraySDG', ele.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.forEach(item => {
+                        if (item.sdgs.length > 0) {
+                            item.sdgs.forEach((sdg, i) => {
+                                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.length > 0) {
+                                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.forEach(prp => {
+                                        if (sdg.port == ele.path + '/' + prp.name &&
+                                            this.getters.getconnectLineNum(item.uuid + '/PERKeyDSDG-' + i) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/PERKeyDSDG-' + i, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/PERKeyDSDG', ele.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.forEach(item => {
+                        if (item.port != null && this.getters.getconnectLineNum(item.uuid + '/PPPtoFilePRPort') == -1) {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.length > 0) {
+                                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.forEach(prp => {
+                                    if (item.port == ele.path + '/' + prp.name) {
+                                        this.commit('setConnectionline', { start: item.uuid + '/PPPtoFilePRPort', end: ele.uuid })
+                                        EventBus.$emit('new-line', item.uuid + '/PPPtoFilePRPort', ele.uuid)
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.forEach(item => {
+                        if (item.port != null && this.getters.getconnectLineNum(item.uuid + '/PPPtoKeyPRPort') == -1) {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.length > 0) {
+                                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].prport.forEach(prp => {
+                                    if (item.port == ele.path + '/' + prp.name) {
+                                        this.commit('setConnectionline', { start: item.uuid + '/PPPtoKeyPRPort', end: ele.uuid })
+                                        EventBus.$emit('new-line', item.uuid + '/PPPtoKeyPRPort', ele.uuid)
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.forEach(item => {
+                        if (item.swcomponent == ele.path && this.getters.getconnectLineNum(item.uuid + '/PHMViaSWCompo') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/PHMViaSWCompo', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/PHMViaSWCompo', ele.uuid)
+                        }
+                        if (item.port != null && this.getters.getconnectLineNum(item.uuid + '/PHMViaPPort') == -1) {
+                            if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].pport.length > 0) {
+                                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents[idxelement].pport.forEach(prp => {
+                                    if (item.port == ele.path + '/' + prp.name) {
+                                        this.commit('setConnectionline', { start: item.uuid + '/PHMViaPPort', end: ele.uuid })
+                                        EventBus.$emit('new-line', item.uuid + '/PHMViaPPort', ele.uuid)
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
             } else if (ele.parent == constant.Process_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].prodesign != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].prodesign == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].prodesign == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/processprodesign') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/processprodesign', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/processprodesign', item.uuid)
                         }
@@ -7284,7 +8934,8 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].determin != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].determin == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].determin == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/processdetermin') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/processdetermin', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/processdetermin', item.uuid)
                         }
@@ -7292,7 +8943,8 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].execut != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].execut == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].execut == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/processexecut') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/processexecut', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/processexecut', item.uuid)
                         }
@@ -7300,112 +8952,209 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].machinetype != null) {
                     state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].machinetype == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].machinetype == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/processmodedeclar') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/processmodedeclar', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/processmodedeclar', item.uuid)
                         }
                     })
                 }
-                state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].dependent.forEach((data, i) => {
-                    if (data.resourceRef != null) {
-                        state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(machine => {
-                            machine.moduleinstant.forEach(item => {
-                                if (data.resourceRef == (machine.path + '/' + machine.name + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/processresorce-' + i, end: machine.uuid })
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].dependent.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process[idxelement].dependent.forEach((data, i) => {
+                        if (data.resourceRef != null) {
+                            state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(machine => {
+                                machine.moduleinstant.forEach(item => {
+                                    if (data.resourceRef == (machine.path + '/' + machine.name + '/' + item.name) &&
+                                        this.getters.getconnectLineNum(ele.uuid + '/processresorce-' + i) == -1) {
+                                        this.commit('setConnectionline', { start: ele.uuid + '/processresorce-' + i, end: machine.uuid })
+                                        if (i == 0) {
+                                            EventBus.$emit('new-line', ele.uuid + '/processresorce' + i, machine.uuid)
+                                        } else {
+                                            EventBus.$emit('new-line', ele.uuid + '/processStarupC', machine.uuid)
+                                        }
+                                    }
+                                })
+                            })
+                        }
+                        if (data.startupConfigRef != null) {
+                            state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.forEach(item => {
+                                if (data.startupConfigRef == (item.path + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/processstartup-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/processstartup-' + i, end: item.uuid })
                                     if (i == 0) {
-                                        EventBus.$emit('new-line', ele.uuid + '/processresorce' + i, machine.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/processstartup' + i, item.uuid)
                                     } else {
-                                        EventBus.$emit('new-line', ele.uuid + '/processStarupC', machine.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
                                     }
                                 }
                             })
-                        })
-                    }
-                    if (data.startupConfigRef != null) {
-                        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.forEach(item => {
-                            if (data.startupConfigRef == (item.path + '/' + item.name)) {
-                                this.commit('setConnectionline', { start: ele.uuid + '/processstartup-' + i, end: item.uuid })
-                                EventBus.$emit('new-line', ele.uuid + '/processstartup', item.uuid)
-                                if (i == 0) {
-                                    EventBus.$emit('new-line', ele.uuid + '/processresorce' + i, item.uuid)
-                                } else {
-                                    EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
+                        }
+                        if (data.exection != null) {
+                            data.exection.forEach((exec, f) => {
+                                if (exec.contextMode != null) {
+                                    state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
+                                        item.functiongroup.forEach(group => {
+                                            if (exec.contextMode == (item.path + '/' + item.name + '/' + group.name) &&
+                                                this.getters.getconnectLineNum(ele.uuid + '/edcontext-' + f + '-' + i) == -1) {
+                                                this.commit('setConnectionline', { start: ele.uuid + '/edcontext-' + f + '-' + i, end: item.uuid })
+                                                if (i == 0) {
+                                                    EventBus.$emit('new-line', ele.uuid + '/edtable' + i, item.uuid)
+                                                } else {
+                                                    EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
+                                                }
+                                            }
+                                        })
+                                    })
                                 }
-                            }
-                        })
-                    }
-                    if (data.exection != null) {
-                        data.exection.forEach((exec, f) => {
-                            if (exec.contextMode != null) {
-                                state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
-                                    item.functiongroup.forEach(group => {
-                                        if (exec.contextMode == (item.path + '/' + item.name + '/' + group.name)) {
-                                            this.commit('setConnectionline', { start: ele.uuid + '/edcontext-' + f + '-' + i, end: item.uuid })
-                                            if (i == 0) {
-                                                EventBus.$emit('new-line', ele.uuid + '/edtable' + i, item.uuid)
-                                            } else {
-                                                EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
+                                if (exec.targetMode != null) {
+                                    state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.forEach(item => {
+                                        item.modedeclaration.forEach(mode => {
+                                            if (exec.targetMode == (item.path + '/' + item.name + '/' + mode.name) &&
+                                                this.getters.getconnectLineNum(ele.uuid + '/edtarget-' + f + '-' + i) == -1) {
+                                                this.commit('setConnectionline', { start: ele.uuid + '/edtarget-' + f + '-' + i, end: item.uuid })
+                                                if (i == 0) {
+                                                    EventBus.$emit('new-line', ele.uuid + '/edtable' + i, item.uuid)
+                                                } else {
+                                                    EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
+                                                }
                                             }
-                                        }
+                                        })
                                     })
-                                })
-                            }
-                            if (exec.targetMode != null) {
-                                state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.forEach(item => {
-                                    item.modedeclaration.forEach(mode => {
-                                        if (exec.targetMode == (item.path + '/' + item.name + '/' + mode.name)) {
-                                            this.commit('setConnectionline', { start: ele.uuid + '/edtarget-' + f + '-' + i, end: item.uuid })
-                                            if (i == 0) {
-                                                EventBus.$emit('new-line', ele.uuid + '/edtable' + i, item.uuid)
-                                            } else {
-                                                EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
+                                }
+                            })
+                        }
+                        if (data.functionItem != null) {
+                            data.functionItem.forEach((func, f) => {
+                                if (func.contextMode != null) {
+                                    state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
+                                        item.functiongroup.forEach(group => {
+                                            if (func.contextMode == (item.path + '/' + item.name + '/' + group.name) &&
+                                                this.getters.getconnectLineNum(ele.uuid + '/fgcontext-' + f + '-' + i) == -1) {
+                                                this.commit('setConnectionline', { start: ele.uuid + '/fgcontext-' + f + '-' + i, end: item.uuid })
+                                                if (i == 0) {
+                                                    EventBus.$emit('new-line', ele.uuid + '/fgtable' + i, item.uuid)
+                                                } else {
+                                                    EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
+                                                }
                                             }
-                                        }
+                                        })
                                     })
-                                })
-                            }
-                        })
-                    }
-                    if (data.functionItem != null) {
-                        data.functionItem.forEach((func, f) => {
-                            if (func.contextMode != null) {
-                                state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
-                                    item.functiongroup.forEach(group => {
-                                        if (func.contextMode == (item.path + '/' + item.name + '/' + group.name)) {
-                                            this.commit('setConnectionline', { start: ele.uuid + '/fgcontext-' + f + '-' + i, end: item.uuid })
-                                            if (i == 0) {
-                                                EventBus.$emit('new-line', ele.uuid + '/fgtable' + i, item.uuid)
-                                            } else {
-                                                EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
+                                }
+                                if (func.targetMode != null) {
+                                    state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.forEach(item => {
+                                        item.modedeclaration.forEach(mode => {
+                                            if (func.targetMode == (item.path + '/' + item.name + '/' + mode.name) &&
+                                                this.getters.getconnectLineNum(ele.uuid + '/fgtarget-' + f + '-' + i) == -1) {
+                                                this.commit('setConnectionline', { start: ele.uuid + '/fgtarget-' + f + '-' + i, end: item.uuid })
+                                                if (i == 0) {
+                                                    EventBus.$emit('new-line', ele.uuid + '/fgtable' + i, item.uuid)
+                                                } else {
+                                                    EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
+                                                }
                                             }
-                                        }
+                                        })
                                     })
-                                })
-                            }
-                            if (func.targetMode != null) {
-                                state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.forEach(item => {
-                                    item.modedeclaration.forEach(mode => {
-                                        if (func.targetMode == (item.path + '/' + item.name + '/' + mode.name)) {
-                                            this.commit('setConnectionline', { start: ele.uuid + '/fgtarget-' + f + '-' + i, end: item.uuid })
-                                            if (i == 0) {
-                                                EventBus.$emit('new-line', ele.uuid + '/fgtable' + i, item.uuid)
-                                            } else {
-                                                EventBus.$emit('new-line', ele.uuid + '/processStarupC', item.uuid)
-                                            }
-                                        }
-                                    })
-                                })
-                            }
-                        })
-                    }
-                })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.forEach(item => {
+                        if (item.mapping.length > 0) {
+                            item.mapping.forEach(ma => {
+                                if (ma.ptmmProcess == ele.path && this.getters.getconnectLineNum(item.uuid + '/processfromptmm-' + ma.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/processfromptmm-' + ma.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/proMapping', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.forEach(item => {
+                        if (item.process == ele.path && this.getters.getconnectLineNum(item.uuid + '/PPPtoFileProcess') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/PPPtoFileProcess', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/PPPtoFileProcess', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.forEach(item => {
+                        if (item.process == ele.path && this.getters.getconnectLineNum(item.uuid + '/PPPtoKeyProcess') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/PPPtoKeyProcess', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/PPPtoKeyProcess', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.forEach(item => {
+                        if (item.process == ele.path && this.getters.getconnectLineNum(item.uuid + '/PHMViaPro') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/PHMViaPro', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/PHMViaPro', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.forEach(item => {
+                        if (item.process.length > 0) {
+                            item.process.forEach((pro, i) => {
+                                if (pro.pro == ele.path && this.getters.getconnectLineNum(item.uuid + '/SCProcess-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/SCProcess-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/SCProcess', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
             } else if (ele.parent == constant.ProcessDesign_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxelement].executableref != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxelement].executableref == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign[idxelement].executableref == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/prodesignexecutable') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/prodesignexecutable', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/prodesignexecutable', item.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(item => {
+                        if (item.prodesign == ele.path && this.getters.getconnectLineNum(item.uuid + '/processprodesign') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/processprodesign', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/processprodesign', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.forEach(item => {
+                        if (item.process == ele.path && this.getters.getconnectLineNum(item.uuid + '/toportprocess') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/toportprocess', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/toportprocess', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].IamG.FieldGD.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].IamG.FieldGD.forEach(item => {
+                        if (item.processD == ele.path && this.getters.getconnectLineNum(item.uuid + '/FGDproD') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/FGDproD', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/FGDproD', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].IamG.EventGD.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].IamG.EventGD.forEach(item => {
+                        if (item.processD == ele.path && this.getters.getconnectLineNum(item.uuid + '/EGDproD') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/EGDproD', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/EGDproD', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].IamG.MethodGD.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].IamG.MethodGD.forEach(item => {
+                        if (item.processD == ele.path && this.getters.getconnectLineNum(item.uuid + '/MGDproD') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/MGDproD', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/MGDproD', ele.uuid)
                         }
                     })
                 }
@@ -7413,9 +9162,69 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxelement].applicationtyperef != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxelement].applicationtyperef == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxelement].applicationtyperef == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/applicationtyperef') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/applicationtyperef', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/applicationtyperef', item.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(item => {
+                        if (item.execut == ele.path && this.getters.getconnectLineNum(item.uuid + '/processexecut') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/processexecut', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/processexecut', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.forEach(item => {
+                        if (item.executableref == ele.path && this.getters.getconnectLineNum(item.uuid + '/prodesignexecutable') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/prodesignexecutable', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/prodesignexecutable', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.forEach(item => {
+                        if (item.context == ele.path + '/' + state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable[idxelement].swname &&
+                            this.getters.getconnectLineNum(item.uuid + '/toportcontext') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/toportcontext', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/toportcontext', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.forEach(item => {
+                        if (item.executable.length > 0) {
+                            item.executable.forEach((ex, i) => {
+                                if (ex.execut == ele.path && this.getters.getconnectLineNum(item.uuid + '/SCExecutable-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/SCExecutable-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/SCExecutable', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.StartupConfig_str) {
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(item => {
+                        if (item.dependent.length > 0) {
+                            item.dependent.forEach((de, i) => {
+                                if (de.startupConfigRef == ele.path && this.getters.getconnectLineNum(item.uuid + '/processstartup-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/processstartup-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/processStarupC', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.DeterministicClient_str) {
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(item => {
+                        if (item.determin == ele.path && this.getters.getconnectLineNum(item.uuid + '/processdetermin') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/processdetermin', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/processdetermin', ele.uuid)
                         }
                     })
                 }
@@ -7423,7 +9232,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].service != null) {
                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].service == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].service == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/service') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/service', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/service', item.uuid)
                         }
@@ -7434,7 +9244,8 @@ const mutations = {
                         if (data.field != null) {
                             state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                 item.fields.forEach(service => {
-                                    if (data.field == (item.path + '/' + item.name + '/' + service.name)) {
+                                    if (data.field == (item.path + '/' + item.name + '/' + service.name) &&
+                                        this.getters.getconnectLineNum(ele.uuid + '/field-' + i) == -1) {
                                         this.commit('setConnectionline', { start: ele.uuid + '/field-' + i, end: item.uuid })
                                         if (i == 0) {
                                             EventBus.$emit('new-line', ele.uuid + '/fieldtab' + data.id, item.uuid)
@@ -7455,7 +9266,8 @@ const mutations = {
                                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(item => {
                                         if (item.eventD.length > 0) {
                                             item.eventD.forEach(data => {
-                                                if (group.event == (item.path + '/' + item.name + '/' + data.name)) {
+                                                if (group.event == (item.path + '/' + item.name + '/' + data.name) &&
+                                                    this.getters.getconnectLineNum(ele.uuid + '/event-' + g + '-' + i) == -1) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/event-' + g + '-' + i, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/eventtab' + eve.id, item.uuid)
@@ -7467,7 +9279,8 @@ const mutations = {
                                         }
                                         if (item.fieldD.length > 0) {
                                             item.fieldD.forEach(data => {
-                                                if (group.event == (item.path + '/' + item.name + '/' + data.name + '/' + data.notname)) {
+                                                if (group.event == (item.path + '/' + item.name + '/' + data.name + '/' + data.notname) &&
+                                                    this.getters.getconnectLineNum(ele.uuid + '/event-' + g + '-' + i) == -1) {
                                                     this.commit('setConnectionline', { start: ele.uuid + '/event-' + g + '-' + i, end: item.uuid })
                                                     if (i == 0) {
                                                         EventBus.$emit('new-line', ele.uuid + '/eventtab' + eve.id, item.uuid)
@@ -7489,7 +9302,8 @@ const mutations = {
                             state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                 if (item.events.length > 0) {
                                     item.events.forEach(data => {
-                                        if (eve.event == (item.path + '/' + item.name + '/' + data.name)) {
+                                        if (eve.event == (item.path + '/' + item.name + '/' + data.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/serviceEventD-' + i) == -1) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/serviceEventD-' + i, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/serviceEventD', item.uuid)
                                         }
@@ -7505,11 +9319,188 @@ const mutations = {
                             state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                                 if (item.methods.length > 0) {
                                     item.methods.forEach(data => {
-                                        if (method.method == (item.path + '/' + item.name + '/' + data.name)) {
+                                        if (method.method == (item.path + '/' + item.name + '/' + data.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/serviceMethodD-' + i) == -1) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/serviceMethodD-' + i, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/serviceMethodD', item.uuid)
                                         }
                                     })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach(item => {
+                        if (item.deployref == ele.path && this.getters.getconnectLineNum(item.uuid + '/requiredDeploy') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/requiredDeploy', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/requiredDeploy', ele.uuid)
+                        }
+                        if (item.method.length > 0) {
+                            item.method.forEach(me => {
+                                if (me.method != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].methodD.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].methodD.forEach(meD => {
+                                            if (me.method == ele.path + '/' + meD.name && this.getters.getconnectLineNum(item.uuid + '/requiredMethod-' + me.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/requiredMethod-' + me.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/requiredMethod', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].fieldD.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].fieldD.forEach(fie => {
+                                            if ((me.method == ele.path + '/' + fie.name + '/' + fie.getname || me.method == ele.path + '/' + fie.name + '/' + fie.setname) &&
+                                                this.getters.getconnectLineNum(item.uuid + '/requiredMethod-' + me.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/requiredMethod-' + me.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/requiredMethod', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                        if (item.requiredevent.length > 0) {
+                            item.requiredevent.forEach(re => {
+                                if (re.eventG != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].eventG.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].eventG.forEach(eve => {
+                                            if (re.eventG == ele.path + '/' + eve.name &&
+                                                this.getters.getconnectLineNum(item.uuid + '/requiredEventG-' + re.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/requiredEventG-' + re.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/requiredE', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                        if (item.E2EEvent.length > 0) {
+                            item.E2EEvent.forEach(e2e => {
+                                if (e2e.event != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].eventD.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].eventD.forEach(eve => {
+                                            if (e2e.event == ele.path + '/' + eve.name &&
+                                                this.getters.getconnectLineNum(item.uuid + '/e2eEvent-' + e2e.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/e2eEvent-' + e2e.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/E2EE', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                        if (item.E2EMethod.length > 0) {
+                            item.E2EMethod.forEach(e2e => {
+                                if (e2e.method != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].methodD.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].methodD.forEach(me => {
+                                            if (e2e.method == ele.path + '/' + me.name &&
+                                                this.getters.getconnectLineNum(item.uuid + '/e2eMethod-' + e2e.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/e2eMethod-' + e2e.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/E2EM', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach(item => {
+                        if (item.deployref == ele.path && this.getters.getconnectLineNum(item.uuid + '/providDeploy') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/providDeploy', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/providDeploy', ele.uuid)
+                        }
+                        if (item.eventP.length > 0) {
+                            item.eventP.forEach(ev => {
+                                if (ev.event != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].eventD.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].eventD.forEach(eve => {
+                                            if (ev.event == ele.path + '/' + eve.name && this.getters.getconnectLineNum(item.uuid + '/proviedEventP-' + ev.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/proviedEventP-' + ev.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/proviedEventP', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].fieldD.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].fieldD.forEach(fie => {
+                                            if (ev.event == ele.path + '/' + fie.name + '/' + fie.notname &&
+                                                this.getters.getconnectLineNum(item.uuid + '/proviedEventP-' + ev.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/proviedEventP-' + ev.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/proviedEventP', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                        if (item.method.length > 0) {
+                            item.method.forEach(me => {
+                                if (me.method != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].methodD.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].methodD.forEach(met => {
+                                            if (me.method == ele.path + '/' + met.name &&
+                                                this.getters.getconnectLineNum(item.uuid + '/proviedMethod-' + me.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/proviedMethod-' + me.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/proviedMethod', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].fieldD.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].fieldD.forEach(fie => {
+                                            if ((me.method == ele.path + '/' + fie.name + '/' + fie.getname || me.method == ele.path + '/' + fie.name + '/' + fie.setname) &&
+                                                this.getters.getconnectLineNum(item.uuid + '/proviedMethod-' + me.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/proviedMethod-' + me.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/proviedMethod', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                        if (item.eventG.length > 0) {
+                            item.eventG.forEach(ev => {
+                                if (ev.eventG != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].eventG.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].eventG.forEach(eve => {
+                                            if (ev.eventG == ele.path + '/' + eve.name &&
+                                                this.getters.getconnectLineNum(item.uuid + '/providEventG-' + ev.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/providEventG-' + ev.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/providE', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                        if (item.E2EEvent.length > 0) {
+                            item.E2EEvent.forEach(e2e => {
+                                if (e2e.event != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].eventD.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].eventD.forEach(eve => {
+                                            if (e2e.event == ele.path + '/' + eve.name &&
+                                                this.getters.getconnectLineNum(item.uuid + '/e2eEventpro-' + e2e.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/e2eEventpro-' + e2e.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/E2EEpro', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                        if (item.E2EMethod.length > 0) {
+                            item.E2EMethod.forEach(e2e => {
+                                if (e2e.method != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].methodD.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxelement].methodD.forEach(me => {
+                                            if (e2e.method == ele.path + '/' + me.name &&
+                                                this.getters.getconnectLineNum(item.uuid + '/e2eMethodpro-' + e2e.id) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/e2eMethodpro-' + e2e.id, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/E2EMpro', ele.uuid)
+                                            }
+                                        })
+                                    }
                                 }
                             })
                         }
@@ -7521,7 +9512,7 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].events.forEach((eve, i) => {
                         if (eve.type != null) {
                             state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
-                                if (eve.type == (item.path + '/' + item.name)) {
+                                if (eve.type == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/Eventtable-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/Eventtable-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/Eventtable', item.uuid)
                                 }
@@ -7533,7 +9524,7 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.forEach((data, i) => {
                         if (data.type != null) {
                             state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
-                                if (data.type == (item.path + '/' + item.name)) {
+                                if (data.type == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/Fieldtable-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/Fieldtable-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/Fieldtable', item.uuid)
                                 }
@@ -7547,7 +9538,8 @@ const mutations = {
                             data.argument.forEach((arg, a) => {
                                 if (arg.type != null) {
                                     state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
-                                        if (arg.type == (item.path + '/' + item.name)) {
+                                        if (arg.type == (item.path + '/' + item.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/argtable-' + a + '-' + i) == -1) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/argtable-' + a + '-' + i, end: item.uuid })
                                             if (i == 0) {
                                                 EventBus.$emit('new-line', ele.uuid + '/argtable' + data.id, item.uuid)
@@ -7563,7 +9555,8 @@ const mutations = {
                             data.errorSet.forEach((error, e) => {
                                 if (error.error != null) {
                                     state.SAHLProject[state.openProjectIndex].Service.ErrorSet.forEach(item => {
-                                        if (error.error == (item.path + '/' + item.name)) {
+                                        if (error.error == (item.path + '/' + item.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/methoderrors-' + e + '-' + i) == -1) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/methoderrors-' + e + '-' + i, end: item.uuid })
                                             if (i == 0) {
                                                 EventBus.$emit('new-line', ele.uuid + '/methoderrors' + data.id, item.uuid)
@@ -7579,7 +9572,8 @@ const mutations = {
                             data.error.forEach((err, e) => {
                                 if (err.error != null) {
                                     state.SAHLProject[state.openProjectIndex].Service.Error.forEach(item => {
-                                        if (err.error == (item.path + '/' + item.name)) {
+                                        if (err.error == (item.path + '/' + item.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/methoderror-' + e + '-' + i) == -1) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/methoderror-' + e + '-' + i, end: item.uuid })
                                             if (i == 0) {
                                                 EventBus.$emit('new-line', ele.uuid + '/methoderror' + data.id, item.uuid)
@@ -7593,12 +9587,296 @@ const mutations = {
                         }
                     })
                 }
+                if (state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(item => {
+                        if (item.pport.length > 0) {
+                            item.pport.forEach(pp => {
+                                if (pp.selectI == "SERVICE-INTERFACE" && pp.interface == ele.path &&
+                                    this.getters.getconnectLineNum(item.uuid + '/PPortI-' + pp.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/PPortI-' + pp.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/pport', ele.uuid)
+                                }
+                                if (pp.queued.length > 0) {
+                                    pp.queued.forEach(qu => {
+                                        if (qu.dataE != null) {
+                                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].events.length > 0) {
+                                                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].events.forEach(eve => {
+                                                    if (qu.dataE == ele.path + '/' + eve.name &&
+                                                        this.getters.getconnectLineNum(item.uuid + '/pportQSC-' + qu.id + '-' + pp.id) == -1) {
+                                                        this.commit('setConnectionline', { start: item.uuid + '/pportQSC-' + qu.id + '-' + pp.id, end: ele.uuid })
+                                                        EventBus.$emit('new-line', item.uuid + '/pport', ele.uuid)
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                }
+                                if (pp.field.length > 0) {
+                                    pp.field.forEach(ppf => {
+                                        if (ppf.dataE != null) {
+                                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.length > 0) {
+                                                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.forEach(fie => {
+                                                    if (ppf.dataE == ele.path + '/' + fie.name &&
+                                                        this.getters.getconnectLineNum(item.uuid + '/pportFSC-' + ppf.id + '-' + pp.id) == -1) {
+                                                        this.commit('setConnectionline', { start: item.uuid + '/pportFSC-' + ppf.id + '-' + pp.id, end: ele.uuid })
+                                                        EventBus.$emit('new-line', item.uuid + '/pport', ele.uuid)
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                }
+                                if (pp.server.length > 0) {
+                                    pp.server.forEach(ser => {
+                                        if (ser.oper != null) {
+                                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].methods.length > 0) {
+                                                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].methods.forEach(me => {
+                                                    if (ser.oper == ele.path + '/' + me.name &&
+                                                        this.getters.getconnectLineNum(item.uuid + '/pportSC-' + ser.id + '-' + pp.id) == -1) {
+                                                        this.commit('setConnectionline', { start: item.uuid + '/pportSC-' + ser.id + '-' + pp.id, end: ele.uuid })
+                                                        EventBus.$emit('new-line', item.uuid + '/pport', ele.uuid)
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        if (item.prport.length > 0) {
+                            item.prport.forEach(prp => {
+                                if (prp.selectI == "SERVICE-INTERFACE" && prp.interface == ele.path &&
+                                    this.getters.getconnectLineNum(item.uuid + '/PRPortI-' + prp.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/PRPortI-' + prp.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/PRPortI', ele.uuid)
+                                }
+                            })
+                        }
+                        if (item.rport.length > 0) {
+                            item.rport.forEach(rp => {
+                                if (rp.selectI == "SERVICE-INTERFACE" && rp.interface == ele.path &&
+                                    this.getters.getconnectLineNum(item.uuid + '/RPortI-' + rp.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/RPortI-' + rp.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/RPortI', ele.uuid)
+                                }
+                                if (rp.queued.length > 0) {
+                                    rp.queued.forEach(qu => {
+                                        if (qu != null) {
+                                            if (qu.select == "VARIABLE-DATA-PROTOTYPE") {
+                                                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].events.length > 0) {
+                                                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].events.forEach(eve => {
+                                                        if (qu.dataE == ele.path + '/' + eve.name &&
+                                                            this.getters.getconnectLineNum(item.uuid + '/rportQRC-' + qu.id + '-' + rp.id) == -1) {
+                                                            this.commit('setConnectionline', { start: item.uuid + '/rportQRC-' + qu.id + '-' + rp.id, end: ele.uuid })
+                                                            EventBus.$emit('new-line', item.uuid + '/rport', ele.uuid)
+                                                        }
+                                                    })
+                                                }
+                                            } else if (qu.select == "FIELD") {
+                                                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.length > 0) {
+                                                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.forEach(fie => {
+                                                        if (qu.dataE == ele.path + '/' + fie.name &&
+                                                            this.getters.getconnectLineNum(item.uuid + '/rportQRC-' + qu.id + '-' + rp.id) == -1) {
+                                                            this.commit('setConnectionline', { start: item.uuid + '/rportQRC-' + qu.id + '-' + rp.id, end: ele.uuid })
+                                                            EventBus.$emit('new-line', item.uuid + '/rport', ele.uuid)
+                                                        }
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    })
+                                }
+                                if (rp.client.length > 0) {
+                                    rp.client.forEach(cl => {
+                                        if (cl.operation != null) {
+                                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].methods.length > 0) {
+                                                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].methods.forEach(me => {
+                                                    if (cl.operation == ele.path + '/' + me.name &&
+                                                        this.getters.getconnectLineNum(item.uuid + '/rportCC-' + cl.id + '-' + rp.id) == -1) {
+                                                        this.commit('setConnectionline', { start: item.uuid + '/rportCC-' + cl.id + '-' + rp.id, end: ele.uuid })
+                                                        EventBus.$emit('new-line', item.uuid + '/rport', ele.uuid)
+                                                    }
+                                                })
+                                            }
+                                        }
+                                        if (cl.getter != null) {
+                                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.length > 0) {
+                                                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.forEach(fi => {
+                                                    if (cl.getter == ele.path + '/' + fi.name &&
+                                                        this.getters.getconnectLineNum(item.uuid + '/rportCCG-' + cl.id + '-' + rp.id) == -1) {
+                                                        this.commit('setConnectionline', { start: item.uuid + '/rportCCG-' + cl.id + '-' + rp.id, end: ele.uuid })
+                                                        EventBus.$emit('new-line', item.uuid + '/rport', ele.uuid)
+                                                    }
+                                                })
+                                            }
+                                        }
+                                        if (cl.setter != null) {
+                                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.length > 0) {
+                                                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.forEach(fi => {
+                                                    if (cl.setter == ele.path + '/' + fi.name &&
+                                                        this.getters.getconnectLineNum(item.uuid + '/rportCCS-' + cl.id + '-' + rp.id) == -1) {
+                                                        this.commit('setConnectionline', { start: item.uuid + '/rportCCS-' + cl.id + '-' + rp.id, end: ele.uuid })
+                                                        EventBus.$emit('new-line', item.uuid + '/rport', ele.uuid)
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(item => {
+                        if (item.service == ele.path && this.getters.getconnectLineNum(item.uuid + '/service') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/service', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/service', ele.uuid)
+                        }
+                        if (item.fieldD.length > 0) {
+                            item.fieldD.forEach((field, i) => {
+                                if (field.field != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.forEach(data => {
+                                            if (field.field == ele.path + '/' + data.name &&
+                                                this.getters.getconnectLineNum(item.uuid + '/field-' + i) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/field-' + i, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/field', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                        if (item.eventD.length > 0) {
+                            item.eventD.forEach((eve, i) => {
+                                if (eve.event != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].events.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].events.forEach(data => {
+                                            if (eve.event == ele.path + '/' + data.name &&
+                                                this.getters.getconnectLineNum(item.uuid + '/serviceEventD-' + i) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/serviceEventD-' + i, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/serviceEventD', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                        if (item.methodD.length > 0) {
+                            item.methodD.forEach((me, i) => {
+                                if (me.method != null) {
+                                    if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].methods.length > 0) {
+                                        state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].methods.forEach(data => {
+                                            if (me.method == ele.path + '/' + data.name &&
+                                                this.getters.getconnectLineNum(item.uuid + '/serviceMethodD-' + i) == -1) {
+                                                this.commit('setConnectionline', { start: item.uuid + '/serviceMethodD-' + i, end: ele.uuid })
+                                                EventBus.$emit('new-line', item.uuid + '/serviceMethodD', ele.uuid)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].IamG.EventGD.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].IamG.EventGD.forEach(item => {
+                        if (item.SIEvent != null) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].events.length > 0) {
+                                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].events.forEach(data => {
+                                    if (item.SIEvent == ele.path + '/' + data.name &&
+                                        this.getters.getconnectLineNum(item.uuid + '/EGDserviceI') == -1) {
+                                        this.commit('setConnectionline', { start: item.uuid + '/EGDserviceI', end: ele.uuid })
+                                        EventBus.$emit('new-line', item.uuid + '/EGDserviceI', ele.uuid)
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].IamG.MethodGD.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].IamG.MethodGD.forEach(item => {
+                        if (item.SIMethod != null) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].methods.length > 0) {
+                                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].methods.forEach(data => {
+                                    if (item.SIMethod == ele.path + '/' + data.name &&
+                                        this.getters.getconnectLineNum(item.uuid + '/MGDserviceI') == -1) {
+                                        this.commit('setConnectionline', { start: item.uuid + '/MGDserviceI', end: ele.uuid })
+                                        EventBus.$emit('new-line', item.uuid + '/MGDserviceI', ele.uuid)
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].IamG.FieldGD.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].IamG.FieldGD.forEach(item => {
+                        if (item.SIField != null) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.length > 0) {
+                                state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxelement].fields.forEach(data => {
+                                    if (item.SIField == ele.path + '/' + data.name &&
+                                        this.getters.getconnectLineNum(item.uuid + '/FGDserviceI') == -1) {
+                                        this.commit('setConnectionline', { start: item.uuid + '/FGDserviceI', end: ele.uuid })
+                                        EventBus.$emit('new-line', item.uuid + '/FGDserviceI', ele.uuid)
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.Client_str) {
+                if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach(item => {
+                        if (item.requiredevent.length > 0) {
+                            item.requiredevent.forEach(re => {
+                                if (re.client == ele.path && this.getters.getconnectLineNum(item.uuid + '/requiredClient-' + re.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/requiredClient-' + re.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/requiredE', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.Server_str) {
+                if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach(item => {
+                        if (item.eventG.length > 0) {
+                            item.eventG.forEach(eve => {
+                                if (eve.server == ele.path && this.getters.getconnectLineNum(item.uuid + '/providServer-' + eve.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/providServer-' + eve.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/providE', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.SomeIPClient_str) {
+                if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach(item => {
+                        if (item.someipclient == ele.path && this.getters.getconnectLineNum(item.uuid + '/requiredSomeIPC') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/requiredSomeIPC', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/requiredSomeIPC', ele.uuid)
+
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.SomeIPServer_str) {
+                if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach(item => {
+                        if (item.someipserver == ele.path && this.getters.getconnectLineNum(item.uuid + '/providSomeIPS') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/providSomeIPS', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/providSomeIPS', ele.uuid)
+                        }
+                    })
+                }
             } else if (ele.parent == constant.SomeIPToMachineMapping_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].ccref != null) {
                     state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.forEach(data => {
                         data.connector.forEach(item => {
-                            if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].ccref == data.path + '/' + data.name + '/' + item.name) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].ccref == data.path + '/' + data.name + '/' + item.name &&
+                                this.getters.getconnectLineNum(ele.uuid + '/tomachinCC') == -1) {
                                 this.commit('setConnectionline', { start: ele.uuid + '/tomachinCC', end: data.uuid })
                                 EventBus.$emit('new-line', ele.uuid + '/tomachinCC', data.uuid)
                             }
@@ -7606,20 +9884,32 @@ const mutations = {
                     })
                 }
                 if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].serviceI.length > 0) {
-                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].serviceI.forEach((ser, i) => {
+                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxelement].serviceI.forEach(ser => {
                         console.log(ser.ref)
                         if (ser.ref == 'PROVIDED-SOMEIP-SERVICE-INSTANCE') {
                             state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach(data => {
-                                if (ser.service == data.path + '/' + data.name) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/toMachinServiceIns-' + i, end: data.uuid })
+                                if (ser.service == data.path + '/' + data.name && this.getters.getconnectLineNum(ele.uuid + '/toMachinServiceIns-' + ser.id) == -1) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/toMachinServiceIns-' + ser.id, end: data.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/toMachinServiceIns', data.uuid)
                                 }
                             })
                         } else if (ser.ref == 'REQUIRED-SOMEIP-SERVICE-INSTANCE') {
                             state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach(data => {
-                                if (ser.service == data.path + '/' + data.name) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/toMachinServiceIns-' + i, end: data.uuid })
+                                if (ser.service == data.path + '/' + data.name && this.getters.getconnectLineNum(ele.uuid + '/toMachinServiceIns-' + ser.id) == -1) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/toMachinServiceIns-' + ser.id, end: data.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/toMachinServiceIns', data.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.forEach(item => {
+                        if (item.toMachine.length > 0) {
+                            item.toMachine.forEach((toM, i) => {
+                                if (toM.mapping == ele.path && this.getters.getconnectLineNum(item.uuid + '/SCtoMachine-' + i) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/SCtoMachine-' + i, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/SCtoMachine', ele.uuid)
                                 }
                             })
                         }
@@ -7631,21 +9921,24 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(item => {
                         if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].selectPort == 'P-PORT-PROTOTYPE') {
                             item.pport.forEach(data => {
-                                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].porttype == (item.path + '/' + item.name + '/' + data.name)) {
+                                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].porttype == (item.path + '/' + item.name + '/' + data.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/toportport') == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/toportport', end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/toportport', item.uuid)
                                 }
                             })
                         } else if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].selectPort == 'R-PORT-PROTOTYPE') {
                             item.rport.forEach(data => {
-                                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].porttype == (item.path + '/' + item.name + '/' + data.name)) {
+                                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].porttype == (item.path + '/' + item.name + '/' + data.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/toportport') == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/toportport', end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/toportport', item.uuid)
                                 }
                             })
                         } else if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].selectPort == 'PR-PORT-PROTOTYPE') {
                             item.prport.forEach(data => {
-                                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].porttype == (item.path + '/' + item.name + '/' + data.name)) {
+                                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].porttype == (item.path + '/' + item.name + '/' + data.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/toportport') == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/toportport', end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/toportport', item.uuid)
                                 }
@@ -7655,7 +9948,8 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].context != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].context == (item.path + '/' + item.name + '/' + item.swname)) {
+                        if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].context == (item.path + '/' + item.name + '/' + item.swname) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/toportcontext') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/toportcontext', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/toportcontext', item.uuid)
                         }
@@ -7663,7 +9957,8 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].process != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].process == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].process == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/toportprocess') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/toportprocess', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/toportprocess', item.uuid)
                         }
@@ -7672,14 +9967,16 @@ const mutations = {
                 if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].serviceIns != null) {
                     if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].selectServiceIns == 'PROVIDED-SOMEIP-SERVICE-INSTANCE') {
                         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach(item => {
-                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].serviceIns == (item.path + '/' + item.name)) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].serviceIns == (item.path + '/' + item.name) &&
+                                this.getters.getconnectLineNum(ele.uuid + '/toportservice') == -1) {
                                 this.commit('setConnectionline', { start: ele.uuid + '/toportservice', end: item.uuid })
                                 EventBus.$emit('new-line', ele.uuid + '/toportservice', item.uuid)
                             }
                         })
                     } else if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].selectServiceIns == 'REQUIRED-SOMEIP-SERVICE-INSTANCE') {
                         state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach(item => {
-                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].serviceIns == (item.path + '/' + item.name)) {
+                            if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxelement].serviceIns == (item.path + '/' + item.name) &&
+                                this.getters.getconnectLineNum(ele.uuid + '/toportservice') == -1) {
                                 this.commit('setConnectionline', { start: ele.uuid + '/toportservice', end: item.uuid })
                                 EventBus.$emit('new-line', ele.uuid + '/toportservice', item.uuid)
                             }
@@ -7690,7 +9987,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].deployref != null) {
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].deployref == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].deployref == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/requiredDeploy') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/requiredDeploy', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/requiredDeploy', item.uuid)
                         }
@@ -7698,29 +9996,32 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].someipclient != null) {
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].someipclient == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].someipclient == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/requiredSomeIPC') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/requiredSomeIPC', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/requiredSomeIPC', item.uuid)
                         }
                     })
                 }
                 if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].method.length > 0) {
-                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].method.forEach((method, i) => {
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxelement].method.forEach(method => {
                         if (method.method != null) {
                             state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(item => {
                                 if (item.methodD.length > 0) {
                                     item.methodD.forEach(data => {
-                                        if (method.method == (item.path + '/' + item.name + '/' + data.name)) {
-                                            this.commit('setConnectionline', { start: ele.uuid + '/requiredMethod-' + i, end: item.uuid })
+                                        if (method.method == (item.path + '/' + item.name + '/' + data.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/requiredMethod-' + method.id) == -1) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/requiredMethod-' + method.id, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/requiredMethod', item.uuid)
                                         }
                                     })
                                 }
                                 if (item.fieldD.length > 0) {
                                     item.fieldD.forEach(data => {
-                                        if (method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.getname) ||
-                                            method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.setname)) {
-                                            this.commit('setConnectionline', { start: ele.uuid + '/requiredMethod-' + i, end: item.uuid })
+                                        if ((method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.getname) ||
+                                                method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.setname)) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/requiredMethod-' + method.id) == -1) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/requiredMethod-' + method.id, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/requiredMethod', item.uuid)
                                         }
                                     })
@@ -7733,10 +10034,11 @@ const mutations = {
                     if (data.eventG != null) {
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
                             eve.eventG.forEach(item => {
-                                if (data.eventG == (eve.path + '/' + eve.name + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/requiredEventG-' + i, end: eve.uuid })
+                                if (data.eventG == (eve.path + '/' + eve.name + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/requiredEventG-' + data.id) == -1) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/requiredEventG-' + data.id, end: eve.uuid })
                                     if (i == 0) {
-                                        EventBus.$emit('new-line', ele.uuid + '/requiredEventG' + data.id, eve.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/requiredEventG-' + data.id, eve.uuid)
                                     } else {
                                         EventBus.$emit('new-line', ele.uuid + '/requiredE', eve.uuid)
                                     }
@@ -7746,10 +10048,10 @@ const mutations = {
                     }
                     if (data.client != null) {
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.forEach(item => {
-                            if (data.client == (item.path + '/' + item.name)) {
-                                this.commit('setConnectionline', { start: ele.uuid + '/requiredClient-' + i, end: item.uuid })
+                            if (data.client == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/requiredClient-' + data.id) == -1) {
+                                this.commit('setConnectionline', { start: ele.uuid + '/requiredClient-' + data.id, end: item.uuid })
                                 if (i == 0) {
-                                    EventBus.$emit('new-line', ele.uuid + '/requiredClient' + data.id, item.uuid)
+                                    EventBus.$emit('new-line', ele.uuid + '/requiredClient-' + data.id, item.uuid)
                                 } else {
                                     EventBus.$emit('new-line', ele.uuid + '/requiredE', item.uuid)
                                 }
@@ -7761,7 +10063,8 @@ const mutations = {
                     if (data.event != null) {
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
                             eve.eventD.forEach(item => {
-                                if (data.event == (eve.path + '/' + eve.name + '/' + item.name)) {
+                                if (data.event == (eve.path + '/' + eve.name + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/e2eEvent-' + data.id) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/e2eEvent-' + data.id, end: eve.uuid })
                                     if (i == 0) {
                                         EventBus.$emit('new-line', ele.uuid + '/e2eEvent-' + data.id, eve.uuid)
@@ -7776,7 +10079,8 @@ const mutations = {
                         state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.forEach(e2e => {
                             if (e2e.profile.length > 0) {
                                 e2e.profile.forEach(item => {
-                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName)) {
+                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName) &&
+                                        this.getters.getconnectLineNum(ele.uuid + '/e2ePro-' + data.id) == -1) {
                                         this.commit('setConnectionline', { start: ele.uuid + '/e2ePro-' + data.id, end: e2e.uuid })
                                         if (i == 0) {
                                             EventBus.$emit('new-line', ele.uuid + '/e2ePro-' + data.id, e2e.uuid)
@@ -7793,7 +10097,8 @@ const mutations = {
                     if (data.method != null) {
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
                             eve.methodD.forEach(item => {
-                                if (data.method == (eve.path + '/' + eve.name + '/' + item.name)) {
+                                if (data.method == (eve.path + '/' + eve.name + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/e2eMethod-' + data.id) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/e2eMethod-' + data.id, end: eve.uuid })
                                     if (i == 0) {
                                         EventBus.$emit('new-line', ele.uuid + '/e2eMethod-' + data.id, eve.uuid)
@@ -7808,7 +10113,8 @@ const mutations = {
                         state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.forEach(e2e => {
                             if (e2e.profile.length > 0) {
                                 e2e.profile.forEach(item => {
-                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName)) {
+                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName) &&
+                                        this.getters.getconnectLineNum(ele.uuid + '/e2eProM-' + data.id) == -1) {
                                         this.commit('setConnectionline', { start: ele.uuid + '/e2eProM-' + data.id, end: e2e.uuid })
                                         if (i == 0) {
                                             EventBus.$emit('new-line', ele.uuid + '/e2eProM-' + data.id, e2e.uuid)
@@ -7821,11 +10127,34 @@ const mutations = {
                         })
                     }
                 })
+                if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.forEach(item => {
+                        if (item.serviceI.length) {
+                            item.serviceI.forEach(ser => {
+                                if (ser.ref == 'REQUIRED-SOMEIP-SERVICE-INSTANCE' && ser.service == ele.path &&
+                                    this.getters.getconnectLineNum(item.uuid + '/toMachinServiceIns-' + ser.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/toMachinServiceIns-' + ser.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/toMachinServiceIns', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.forEach(item => {
+                        if (item.selectServiceIns == 'REQUIRED-SOMEIP-SERVICE-INSTANCE' && item.serviceIns == ele.path &&
+                            this.getters.getconnectLineNum(item.uuid + '/toportservice') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/toportservice', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/toportservice', ele.uuid)
+                        }
+                    })
+                }
             } else if (ele.parent == constant.ProvidedSomeIP_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].deployref != null) {
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].deployref == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].deployref == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/providDeploy') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/providDeploy', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/providDeploy', item.uuid)
                         }
@@ -7833,28 +10162,31 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].someipserver != null) {
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.forEach(item => {
-                        if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].someipserver == (item.path + '/' + item.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].someipserver == (item.path + '/' + item.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/providSomeIPS') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/providSomeIPS', end: item.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/providSomeIPS', item.uuid)
                         }
                     })
                 }
                 if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].eventP.length > 0) {
-                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].eventP.forEach((eventp, i) => {
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].eventP.forEach(eventp => {
                         if (eventp.event != null) {
                             state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(item => {
                                 if (item.eventD.length > 0) {
                                     item.eventD.forEach(data => {
-                                        if (eventp.event == (item.path + '/' + item.name + '/' + data.name)) {
-                                            this.commit('setConnectionline', { start: ele.uuid + '/proviedEventP-' + i, end: item.uuid })
+                                        if (eventp.event == (item.path + '/' + item.name + '/' + data.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/proviedEventP-' + eventp.id) == -1) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/proviedEventP-' + eventp.id, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/proviedEventP', item.uuid)
                                         }
                                     })
                                 }
                                 if (item.fieldD.length > 0) {
                                     item.fieldD.forEach(data => {
-                                        if (item.event == (item.path + '/' + item.name + '/' + data.name + '/' + data.notname)) {
-                                            this.commit('setConnectionline', { start: ele.uuid + '/proviedEventP-' + i, end: item.uuid })
+                                        if (eventp.event == (item.path + '/' + item.name + '/' + data.name + '/' + data.notname) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/proviedEventP-' + eventp.id) == -1) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/proviedEventP-' + eventp.id, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/proviedEventP', item.uuid)
                                         }
                                     })
@@ -7864,20 +10196,22 @@ const mutations = {
                     })
                 }
                 if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].method.length > 0) {
-                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].method.forEach((method, i) => {
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxelement].method.forEach(method => {
                         if (method.method != null) {
                             state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(item => {
                                 if (item.methodD.length > 0) {
                                     item.methodD.forEach(data => {
-                                        if (method.method == (item.path + '/' + item.name + '/' + data.name)) {
-                                            this.commit('setConnectionline', { start: ele.uuid + '/proviedMethod-' + i, end: item.uuid })
+                                        if (method.method == (item.path + '/' + item.name + '/' + data.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/proviedMethod-' + method.id) == -1) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/proviedMethod-' + method.id, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/proviedMethod', item.uuid)
                                         }
                                     })
                                     item.fieldD.forEach(data => {
-                                        if (method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.getname) ||
-                                            method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.setname)) {
-                                            this.commit('setConnectionline', { start: ele.uuid + '/proviedMethod-' + i, end: item.uuid })
+                                        if ((method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.getname) ||
+                                                method.method == (item.path + '/' + item.name + '/' + data.name + '/' + data.setname)) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/proviedMethod-' + method.id) == -1) {
+                                            this.commit('setConnectionline', { start: ele.uuid + '/proviedMethod-' + method.id, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/proviedMethod', item.uuid)
                                         }
                                     })
@@ -7891,10 +10225,10 @@ const mutations = {
                         if (data.eventG != null) {
                             state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
                                 eve.eventG.forEach(item => {
-                                    if (data.eventG == (eve.path + '/' + eve.name + '/' + item.name)) {
-                                        this.commit('setConnectionline', { start: ele.uuid + '/providEventG-' + i, end: eve.uuid })
+                                    if (data.eventG == (eve.path + '/' + eve.name + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/providEventG-' + data.id) == -1) {
+                                        this.commit('setConnectionline', { start: ele.uuid + '/providEventG-' + data.id, end: eve.uuid })
                                         if (i == 0) {
-                                            EventBus.$emit('new-line', ele.uuid + '/providEventG' + data.id, eve.uuid)
+                                            EventBus.$emit('new-line', ele.uuid + '/providEventG-' + data.id, eve.uuid)
                                         } else {
                                             EventBus.$emit('new-line', ele.uuid + '/providE', eve.uuid)
                                         }
@@ -7904,10 +10238,10 @@ const mutations = {
                         }
                         if (data.server != null) {
                             state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.forEach(item => {
-                                if (data.server == (item.path + '/' + item.name)) {
-                                    this.commit('setConnectionline', { start: ele.uuid + '/providServer-' + i, end: item.uuid })
+                                if (data.server == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/providServer-' + data.id) == -1) {
+                                    this.commit('setConnectionline', { start: ele.uuid + '/providServer-' + data.id, end: item.uuid })
                                     if (i == 0) {
-                                        EventBus.$emit('new-line', ele.uuid + '/providServer' + data.id, item.uuid)
+                                        EventBus.$emit('new-line', ele.uuid + '/providServer-' + data.id, item.uuid)
                                     } else {
                                         EventBus.$emit('new-line', ele.uuid + '/providE', item.uuid)
                                     }
@@ -7920,7 +10254,8 @@ const mutations = {
                     if (data.event != null) {
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
                             eve.eventD.forEach(item => {
-                                if (data.event == (eve.path + '/' + eve.name + '/' + item.name)) {
+                                if (data.event == (eve.path + '/' + eve.name + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/e2eEventpro-' + data.id) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/e2eEventpro-' + data.id, end: eve.uuid })
                                     if (i == 0) {
                                         EventBus.$emit('new-line', ele.uuid + '/e2eEventpro-' + data.id, eve.uuid)
@@ -7935,7 +10270,8 @@ const mutations = {
                         state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.forEach(e2e => {
                             if (e2e.profile.length > 0) {
                                 e2e.profile.forEach(item => {
-                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName)) {
+                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName) &&
+                                        this.getters.getconnectLineNum(ele.uuid + '/e2ePropro-' + data.id) == -1) {
                                         this.commit('setConnectionline', { start: ele.uuid + '/e2ePropro-' + data.id, end: e2e.uuid })
                                         if (i == 0) {
                                             EventBus.$emit('new-line', ele.uuid + '/e2ePropro-' + data.id, e2e.uuid)
@@ -7952,7 +10288,8 @@ const mutations = {
                     if (data.method != null) {
                         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.forEach(eve => {
                             eve.methodD.forEach(item => {
-                                if (data.method == (eve.path + '/' + eve.name + '/' + item.name)) {
+                                if (data.method == (eve.path + '/' + eve.name + '/' + item.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/e2eMethodpro-' + data.id) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/e2eMethodpro-' + data.id, end: eve.uuid })
                                     if (i == 0) {
                                         EventBus.$emit('new-line', ele.uuid + '/e2eMethodpro-' + data.id, eve.uuid)
@@ -7967,7 +10304,8 @@ const mutations = {
                         state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.forEach(e2e => {
                             if (e2e.profile.length > 0) {
                                 e2e.profile.forEach(item => {
-                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName)) {
+                                    if (data.e2e == (e2e.path + '/' + e2e.name + '/' + item.configName) &&
+                                        this.getters.getconnectLineNum(ele.uuid + '/e2eProMpro-' + data.id) == -1) {
                                         this.commit('setConnectionline', { start: ele.uuid + '/e2eProMpro-' + data.id, end: e2e.uuid })
                                         if (i == 0) {
                                             EventBus.$emit('new-line', ele.uuid + '/e2eProMpro-' + data.id, e2e.uuid)
@@ -7980,13 +10318,149 @@ const mutations = {
                         })
                     }
                 })
+                if (state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.forEach(item => {
+                        if (item.serviceI.length) {
+                            item.serviceI.forEach(ser => {
+                                if (ser.ref == 'PROVIDED-SOMEIP-SERVICE-INSTANCE' && ser.service == ele.path &&
+                                    this.getters.getconnectLineNum(item.uuid + '/toMachinServiceIns-' + ser.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/toMachinServiceIns-' + ser.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/toMachinServiceIns', ele.uuid)
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.forEach(item => {
+                        if (item.selectServiceIns == 'PROVIDED-SOMEIP-SERVICE-INSTANCE' && item.serviceIns == ele.path &&
+                            this.getters.getconnectLineNum(item.uuid + '/toportservice') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/toportservice', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/toportservice', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].IamG.FieldG.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].IamG.FieldG.forEach(item => {
+                        if (item.provide == ele.path && this.getters.getconnectLineNum(item.uuid + '/FGProvide') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/FGProvide', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/FGProvide', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].IamG.EventG.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].IamG.EventG.forEach(item => {
+                        if (item.provide == ele.path && this.getters.getconnectLineNum(item.uuid + '/EGProvide') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/EGProvide', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/EGProvide', ele.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].IamG.MethodG.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].IamG.MethodG.forEach(item => {
+                        if (item.provide == ele.path && this.getters.getconnectLineNum(item.uuid + '/MGProvide') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/MGProvide', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/MGProvide', ele.uuid)
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.E2EProfileConfig_str) {
+                if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach(item => {
+                        if (item.E2EEvent.length > 0) {
+                            item.E2EEvent.forEach(e2 => {
+                                if (state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxelement].profile.length > 0) {
+                                    state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxelement].profile.forEach(pro => {
+                                        if (e2.e2e == ele.path + '/' + pro.configName &&
+                                            this.getters.getconnectLineNum(item.uuid + '/e2ePro-' + e2.id) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/e2ePro-' + e2.id, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/E2EE', ele.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        if (item.E2EMethod.length > 0) {
+                            item.E2EMethod.forEach(e2 => {
+                                if (state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxelement].profile.length > 0) {
+                                    state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxelement].profile.forEach(pro => {
+                                        if (e2.e2e == ele.path + '/' + pro.configName &&
+                                            this.getters.getconnectLineNum(item.uuid + '/e2eProM-' + e2.id) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/e2eProM-' + e2.id, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/E2EM', ele.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach(item => {
+                        if (item.E2EEvent.length > 0) {
+                            item.E2EEvent.forEach(e2 => {
+                                if (state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxelement].profile.length > 0) {
+                                    state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxelement].profile.forEach(pro => {
+                                        if (e2.e2e == ele.path + '/' + pro.configName &&
+                                            this.getters.getconnectLineNum(item.uuid + '/e2ePropro-' + e2.id) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/e2ePropro-' + e2.id, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/E2EEpro', ele.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        if (item.E2EMethod.length > 0) {
+                            item.E2EMethod.forEach(e2 => {
+                                if (state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxelement].profile.length > 0) {
+                                    state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxelement].profile.forEach(pro => {
+                                        if (e2.e2e == ele.path + '/' + pro.configName &&
+                                            this.getters.getconnectLineNum(item.uuid + '/e2eProMpro-' + e2.id) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/e2eProMpro-' + e2.id, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/E2EMpro', ele.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
             } else if (ele.parent == constant.Error_str) {
                 idxelement = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(item => item.uuid === ele.uuid)
-                if (state.SAHLProject[state.openProjectIndex].Service.Error[idxelement].errorDref != null) {
+                if (state.SAHLProject[state.openProjectIndex].Service.Error[idxelement].errorDref != null &&
+                    this.getters.getconnectLineNum(ele.uuid + '/errordomain') == -1) {
                     state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.forEach(domain => {
                         if (state.SAHLProject[state.openProjectIndex].Service.Error[idxelement].errorDref == (domain.path + '/' + domain.name)) {
                             this.commit('setConnectionline', { start: ele.uuid + '/errordomain', end: domain.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/errordomain', domain.uuid)
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
+                        if (item.methods.length > 0) {
+                            item.methods.forEach((met, m) => {
+                                if (met.error != null) {
+                                    met.error.forEach((err, e) => {
+                                        if (err.error == ele.path && this.getters.getconnectLineNum(item.uuid + '/methoderror-' + e + '-' + m) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/methoderror-' + e + '-' + m, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/methods', ele.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ErrorSet.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ErrorSet.forEach(item => {
+                        if (item.errorref.length > 0) {
+                            item.errorref.forEach(err => {
+                                if (err.error == ele.path && this.getters.getconnectLineNum(item.uuid + '/error-' + err.id) == -1) {
+                                    this.commit('setConnectionline', { start: item.uuid + '/error-' + err.id, end: ele.uuid })
+                                    EventBus.$emit('new-line', item.uuid + '/error', ele.uuid)
+                                }
+                            })
                         }
                     })
                 }
@@ -7996,11 +10470,36 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxelement].errorref.forEach(data => {
                         if (data.error != null) {
                             state.SAHLProject[state.openProjectIndex].Service.Error.forEach(item => {
-                                if (data.error == (item.path + '/' + item.name)) {
+                                if (data.error == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/error-' + data.id) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/error-' + data.id, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/error', item.uuid)
                                 }
                             })
+                        }
+                    })
+                }
+                if (state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
+                        if (item.methods.length > 0) {
+                            item.methods.forEach((met, m) => {
+                                if (met.errorSet != null) {
+                                    met.errorSet.forEach((err, e) => {
+                                        if (err.error == ele.path && this.getters.getconnectLineNum(item.uuid + '/methoderrors-' + e + '-' + m) == -1) {
+                                            this.commit('setConnectionline', { start: item.uuid + '/methoderrors-' + e + '-' + m, end: ele.uuid })
+                                            EventBus.$emit('new-line', item.uuid + '/methods', ele.uuid)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            } else if (ele.parent == constant.ErrorDomain_str) {
+                if (state.SAHLProject[state.openProjectIndex].Service.Error.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Service.Error.forEach(item => {
+                        if (item.errorDref == ele.path && this.getters.getconnectLineNum(item.uuid + '/errordomain') == -1) {
+                            this.commit('setConnectionline', { start: item.uuid + '/errordomain', end: ele.uuid })
+                            EventBus.$emit('new-line', item.uuid + '/errordomain', ele.uuid)
                         }
                     })
                 }
@@ -8012,7 +10511,8 @@ const mutations = {
                             state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(item => {
                                 if (item.prport.length > 0) {
                                     item.prport.forEach(pr => {
-                                        if (data.port == (item.path + '/' + item.name + '/' + pr.name)) {
+                                        if (data.port == (item.path + '/' + item.name + '/' + pr.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/PERArraySDG-' + i) == -1) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/PERArraySDG-' + i, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/PERArraySDG', item.uuid)
                                         }
@@ -8028,7 +10528,7 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD[idxelement].keyValue.forEach((data, i) => {
                         if (data.datatype != null) {
                             state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
-                                if (data.datatype == (item.path + '/' + item.name)) {
+                                if (data.datatype == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/PERKeyV-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/PERKeyV-' + i, end: item.uuid })
                                     if (i == 0) {
                                         EventBus.$emit('new-line', ele.uuid + '/PERDBImple' + data.name, item.uuid)
@@ -8046,7 +10546,8 @@ const mutations = {
                             state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(item => {
                                 if (item.prport.length > 0) {
                                     item.prport.forEach(pr => {
-                                        if (data.port == (item.path + '/' + item.name + '/' + pr.name)) {
+                                        if (data.port == (item.path + '/' + item.name + '/' + pr.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/PERKeyDSDG-' + i) == -1) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/PERKeyDSDG-' + i, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/PERKeyDSDG', item.uuid)
                                         }
@@ -8062,7 +10563,7 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxelement].data.forEach((el, i) => {
                         if (el.type != null) {
                             state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
-                                if (el.type == (item.path + '/' + item.name)) {
+                                if (el.type == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/PERData-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/PERData-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/PERData', item.uuid)
                                 }
@@ -8074,7 +10575,7 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI[idxelement].serialization.forEach((data, i) => {
                         if (data.serial != null) {
                             state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.forEach(item => {
-                                if (data.serial == (item.path + '/' + item.name)) {
+                                if (data.serial == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/PERSerial-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/PERSerial-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/PERSerial', item.uuid)
                                 }
@@ -8086,7 +10587,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxelement].fileArray != null) {
                     state.SAHLProject[state.openProjectIndex].Per.PERFileArray.forEach(data => {
-                        if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxelement].fileArray == (data.path + '/' + data.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxelement].fileArray == (data.path + '/' + data.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/PPPtoFileArray') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/PPPtoFileArray', end: data.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/PPPtoFileArray', data.uuid)
                         }
@@ -8096,7 +10598,8 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(item => {
                         if (item.prport.length > 0) {
                             item.prport.forEach(data => {
-                                if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxelement].port == (item.path + '/' + item.name + '/' + data.name)) {
+                                if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxelement].port == (item.path + '/' + item.name + '/' + data.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/PPPtoFilePRPort') == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/PPPtoFilePRPort', end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/PPPtoFilePRPort', item.uuid)
                                 }
@@ -8106,7 +10609,8 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxelement].process != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(pro => {
-                        if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxelement].process == (pro.path + '/' + pro.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray[idxelement].process == (pro.path + '/' + pro.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/PPPtoFileProcess') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/PPPtoFileProcess', end: pro.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/PPPtoFileProcess', pro.uuid)
                         }
@@ -8116,7 +10620,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxelement].keyValue != null) {
                     state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.forEach(data => {
-                        if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxelement].keyValue == (data.path + '/' + data.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxelement].keyValue == (data.path + '/' + data.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/PPPtoKeyValue') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/PPPtoKeyValue', end: data.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/PPPtoKeyValue', data.uuid)
                         }
@@ -8126,7 +10631,8 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(item => {
                         if (item.prport.length > 0) {
                             item.prport.forEach(data => {
-                                if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxelement].port == (item.path + '/' + item.name + '/' + data.name)) {
+                                if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxelement].port == (item.path + '/' + item.name + '/' + data.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/PPPtoKeyPRPort') == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/PPPtoKeyPRPort', end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/PPPtoKeyPRPort', item.uuid)
                                 }
@@ -8136,7 +10642,8 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxelement].process != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(pro => {
-                        if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxelement].process == (pro.path + '/' + pro.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue[idxelement].process == (pro.path + '/' + pro.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/PPPtoKeyProcess') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/PPPtoKeyProcess', end: pro.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/PPPtoKeyProcess', pro.uuid)
                         }
@@ -8146,7 +10653,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxelement].machine != null) {
                     state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(data => {
-                        if (state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxelement].machine == (data.path + '/' + data.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxelement].machine == (data.path + '/' + data.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/PHMtoMachine') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/PHMtoMachine', end: data.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/PHMtoMachine', data.uuid)
                         }
@@ -8156,7 +10664,7 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine[idxelement].contri.forEach((data, i) => {
                         if (data.con != null) {
                             state.SAHLProject[state.openProjectIndex].Phm.PHMContribution.forEach(item => {
-                                if (data.con == (item.path + '/' + item.name)) {
+                                if (data.con == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/PHMContri-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/PHMContri-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/PHMContri', item.uuid)
                                 }
@@ -8168,7 +10676,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxelement].process != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(data => {
-                        if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxelement].process == (data.path + '/' + data.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxelement].process == (data.path + '/' + data.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/PHMViaPro') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/PHMViaPro', end: data.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/PHMViaPro', data.uuid)
                         }
@@ -8176,7 +10685,8 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxelement].swcomponent != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(pro => {
-                        if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxelement].swcomponent == (pro.path + '/' + pro.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxelement].swcomponent == (pro.path + '/' + pro.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/PHMViaSWCompo') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/PHMViaSWCompo', end: pro.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/PHMViaSWCompo', pro.uuid)
                         }
@@ -8187,7 +10697,8 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(item => {
                         if (item.pport.length > 0) {
                             item.pport.forEach(data => {
-                                if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxelement].port == (item.path + '/' + item.name + '/' + data.name)) {
+                                if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxelement].port == (item.path + '/' + item.name + '/' + data.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/PHMViaPPort') == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/PHMViaPPort', end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/PHMViaPPort', item.uuid)
                                 }
@@ -8197,7 +10708,8 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxelement].phmRecovery != null) {
                     state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.forEach(pro => {
-                        if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxelement].phmRecovery == (pro.path + '/' + pro.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia[idxelement].phmRecovery == (pro.path + '/' + pro.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/PHMViaRecovery') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/PHMViaRecovery', end: pro.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/PHMViaRecovery', pro.uuid)
                         }
@@ -8207,7 +10719,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].IamG.FieldG.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxelement].fieldD != null) {
                     state.SAHLProject[state.openProjectIndex].IamG.FieldGD.forEach(design => {
-                        if (state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxelement].fieldD == (design.path + '/' + design.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxelement].fieldD == (design.path + '/' + design.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/FieldGD') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/FieldGD', end: design.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/FieldGD', design.uuid)
                         }
@@ -8215,7 +10728,8 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxelement].provide != null) {
                     state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach(pro => {
-                        if (state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxelement].provide == (pro.path + '/' + pro.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxelement].provide == (pro.path + '/' + pro.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/FGProvide') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/FGProvide', end: pro.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/FGProvide', pro.uuid)
                         }
@@ -8225,7 +10739,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].IamG.EventG.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].IamG.EventG[idxelement].eventD != null) {
                     state.SAHLProject[state.openProjectIndex].IamG.EventGD.forEach(design => {
-                        if (state.SAHLProject[state.openProjectIndex].IamG.EventG[idxelement].eventD == (design.path + '/' + design.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].IamG.EventG[idxelement].eventD == (design.path + '/' + design.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/EventGD') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/EventGD', end: design.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/EventGD', design.uuid)
                         }
@@ -8233,7 +10748,8 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].IamG.EventG[idxelement].provide != null) {
                     state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach(pro => {
-                        if (state.SAHLProject[state.openProjectIndex].IamG.EventG[idxelement].provide == (pro.path + '/' + pro.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].IamG.EventG[idxelement].provide == (pro.path + '/' + pro.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/EGProvide') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/EGProvide', end: pro.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/EGProvide', pro.uuid)
                         }
@@ -8243,7 +10759,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].IamG.MethodG.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxelement].methodD != null) {
                     state.SAHLProject[state.openProjectIndex].IamG.MethodGD.forEach(design => {
-                        if (state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxelement].methodD == (design.path + '/' + design.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxelement].methodD == (design.path + '/' + design.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/MethodGD') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/MethodGD', end: design.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/MethodGD', design.uuid)
                         }
@@ -8251,7 +10768,8 @@ const mutations = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxelement].provide != null) {
                     state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach(pro => {
-                        if (state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxelement].provide == (pro.path + '/' + pro.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].IamG.MethodG[idxelement].provide == (pro.path + '/' + pro.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/MGProvide') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/MGProvide', end: pro.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/MGProvide', pro.uuid)
                         }
@@ -8261,7 +10779,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].IamG.FieldGD.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxelement].processD != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.forEach(proce => {
-                        if (state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxelement].processD == (proce.path + '/' + proce.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxelement].processD == (proce.path + '/' + proce.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/FGDproD') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/FGDproD', end: proce.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/FGDproD', proce.uuid)
                         }
@@ -8271,7 +10790,8 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                         if (item.fields.length > 0) {
                             item.fields.forEach(service => {
-                                if (state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxelement].SIField == (item.path + '/' + item.name + '/' + service.name)) {
+                                if (state.SAHLProject[state.openProjectIndex].IamG.FieldGD[idxelement].SIField == (item.path + '/' + item.name + '/' + service.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/FGDserviceI') == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/FGDserviceI', end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/FGDserviceI', item.uuid)
                                 }
@@ -8283,7 +10803,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].IamG.EventGD.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxelement].processD != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.forEach(proce => {
-                        if (state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxelement].processD == (proce.path + '/' + proce.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxelement].processD == (proce.path + '/' + proce.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/EGDproD') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/EGDproD', end: proce.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/EGDproD', proce.uuid)
                         }
@@ -8293,7 +10814,8 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                         if (item.events.length > 0) {
                             item.events.forEach(service => {
-                                if (state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxelement].SIEvent == (item.path + '/' + item.name + '/' + service.name)) {
+                                if (state.SAHLProject[state.openProjectIndex].IamG.EventGD[idxelement].SIEvent == (item.path + '/' + item.name + '/' + service.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/EGDserviceI') == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/EGDserviceI', end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/EGDserviceI', item.uuid)
                                 }
@@ -8305,7 +10827,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].IamG.MethodGD.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxelement].processD != null) {
                     state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.forEach(proce => {
-                        if (state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxelement].processD == (proce.path + '/' + proce.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxelement].processD == (proce.path + '/' + proce.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/MGDproD') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/MGDproD', end: proce.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/MGDproD', proce.uuid)
                         }
@@ -8315,7 +10838,8 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.forEach(item => {
                         if (item.methods.length > 0) {
                             item.methods.forEach(service => {
-                                if (state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxelement].SIMethod == (item.path + '/' + item.name + '/' + service.name)) {
+                                if (state.SAHLProject[state.openProjectIndex].IamG.MethodGD[idxelement].SIMethod == (item.path + '/' + item.name + '/' + service.name) &&
+                                    this.getters.getconnectLineNum(ele.uuid + '/MGDserviceI') == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/MGDserviceI', end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/MGDserviceI', item.uuid)
                                 }
@@ -8329,7 +10853,7 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].executable.forEach((data, i) => {
                         if (data.execut != null) {
                             state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.forEach(item => {
-                                if (data.execut == (item.path + '/' + item.name)) {
+                                if (data.execut == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/SCExecutable-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/SCExecutable-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/SCExecutable', item.uuid)
                                 }
@@ -8341,7 +10865,7 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].machineD.forEach((data, i) => {
                         if (data.machine != null) {
                             state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.forEach(item => {
-                                if (data.machine == (item.path + '/' + item.name)) {
+                                if (data.machine == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/SCMachineD-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/SCMachineD-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/SCMachineD', item.uuid)
                                 }
@@ -8353,7 +10877,7 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].toMachine.forEach((data, i) => {
                         if (data.mapping != null) {
                             state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.forEach(item => {
-                                if (data.mapping == (item.path + '/' + item.name)) {
+                                if (data.mapping == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/SCtoMachine-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/SCtoMachine-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/SCtoMachine', item.uuid)
                                 }
@@ -8365,7 +10889,7 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].process.forEach((data, i) => {
                         if (data.pro != null) {
                             state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(item => {
-                                if (data.pro == (item.path + '/' + item.name)) {
+                                if (data.pro == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/SCProcess-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/SCProcess-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/SCProcess', item.uuid)
                                 }
@@ -8377,7 +10901,7 @@ const mutations = {
                     state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxelement].sswc.forEach((data, i) => {
                         if (data.swc != null) {
                             state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.forEach(item => {
-                                if (data.swc == (item.path + '/' + item.name)) {
+                                if (data.swc == (item.path + '/' + item.name) && this.getters.getconnectLineNum(ele.uuid + '/SCswc-' + i) == -1) {
                                     this.commit('setConnectionline', { start: ele.uuid + '/SCswc-' + i, end: item.uuid })
                                     EventBus.$emit('new-line', ele.uuid + '/SCswc', item.uuid)
                                 }
@@ -8389,7 +10913,8 @@ const mutations = {
                 idxelement = state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.findIndex(item => item.uuid === ele.uuid)
                 if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxelement].swcluster != null) {
                     state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.forEach(swc => {
-                        if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxelement].swcluster == (swc.path + '/' + swc.name)) {
+                        if (state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage[idxelement].swcluster == (swc.path + '/' + swc.name) &&
+                            this.getters.getconnectLineNum(ele.uuid + '/UCMSWPSWC') == -1) {
                             this.commit('setConnectionline', { start: ele.uuid + '/UCMSWPSWC', end: swc.uuid })
                             EventBus.$emit('new-line', ele.uuid + '/UCMSWPSWC', swc.uuid)
                         }
@@ -8403,7 +10928,8 @@ const mutations = {
                             state.SAHLProject[state.openProjectIndex].Machine.Machine.forEach(item => {
                                 if (item.ucm.length > 0) {
                                     item.ucm.forEach(ucmM => {
-                                        if (data.module == (item.path + '/' + item.name + '/' + ucmM.name)) {
+                                        if (data.module == (item.path + '/' + item.name + '/' + ucmM.name) &&
+                                            this.getters.getconnectLineNum(ele.uuid + '/UCMModule-' + i) == -1) {
                                             this.commit('setConnectionline', { start: ele.uuid + '/UCMModule-' + i, end: item.uuid })
                                             EventBus.$emit('new-line', ele.uuid + '/UCMModule', item.uuid)
                                         }
@@ -8416,15 +10942,16 @@ const mutations = {
             }
         })
         state.inputFileList = []
+        EventBus.$emit('endinputFile') //이거없이는 minimap이 updata를 안함
     },
 
     addElementCompuMehtod(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+            //if (!payload.input) {
+        newUUid = uuid.v1()
+            //} else {
+            //    newUUid = payload.uuid
+            //}
         state.SAHLProject[state.openProjectIndex].DataTypes.CompuMethod.push({
             uuid: newUUid,
             path: payload.path,
@@ -8437,9 +10964,7 @@ const mutations = {
             scales: payload.scales,
         })
         state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.CompuMethod_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editCompuMethod(state, payload) {
@@ -8458,11 +10983,11 @@ const mutations = {
     },
     addElementDataConstr(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+            //if (!payload.input) {
+        newUUid = uuid.v1()
+            //} else {
+            //    newUUid = payload.uuid
+            //}
         state.SAHLProject[state.openProjectIndex].DataTypes.DataConstr.push({
             uuid: newUUid,
             path: payload.path,
@@ -8474,9 +10999,7 @@ const mutations = {
             upperlimit: payload.upperlimit,
         })
         state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.DataConstr_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editDataConstr(state, payload) {
@@ -8494,11 +11017,11 @@ const mutations = {
     },
     addElementSWBaseType(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+            //if (!payload.input) {
+        newUUid = uuid.v1()
+            //} else {
+            //    newUUid = payload.uuid
+            //}
         state.SAHLProject[state.openProjectIndex].DataTypes.SWBaseType.push({
             uuid: newUUid,
             path: payload.path,
@@ -8510,9 +11033,7 @@ const mutations = {
             encoding: payload.encoding,
         })
         state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.SWBaseType_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editSWBaseType(state, payload) {
@@ -8528,11 +11049,7 @@ const mutations = {
     },
     addElementApplicationArray(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].DataTypes.ApplicationArrayDataType.push({
             uuid: newUUid,
             path: payload.path,
@@ -8548,9 +11065,7 @@ const mutations = {
             elemaxnumber: payload.elemaxnumber,
         })
         state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.ApplicationArray_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editApplicationArray(state, payload) {
@@ -8569,12 +11084,7 @@ const mutations = {
     },
     addElementImplementation(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
-        //console.log('!!! UUID !!!' + newUUid)
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.push({
             uuid: newUUid,
             path: payload.path,
@@ -8595,9 +11105,7 @@ const mutations = {
             idtelement: payload.idtelement,
         })
         state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editImplementation(state, payload) {
@@ -8616,11 +11124,7 @@ const mutations = {
     },
     addElementMachine(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Machine.Machine.push({
             uuid: newUUid,
             path: payload.path,
@@ -8638,12 +11142,11 @@ const mutations = {
             processor: payload.processor,
             moduleinstant: payload.moduleinstant,
             ucm: payload.ucm,
-            iam: payload.iam
+            iam: payload.iam,
+            crypto: payload.crypto,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.Machine_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editMachine(state, payload) {
@@ -8662,11 +11165,7 @@ const mutations = {
     },
     addElementHWElement(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Machine.HWElement.push({
             uuid: newUUid,
             path: payload.path,
@@ -8678,9 +11177,7 @@ const mutations = {
             attribute: payload.attribute,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWElement_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editHWElement(state, payload) {
@@ -8699,11 +11196,7 @@ const mutations = {
     },
     addElementHWCategory(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Machine.HWCategory.push({
             uuid: newUUid,
             path: payload.path,
@@ -8714,9 +11207,7 @@ const mutations = {
             attribute: payload.attribute
         })
         state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.HWCategory_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editHWCategory(state, payload) {
@@ -8734,11 +11225,7 @@ const mutations = {
 
     addElementMachineDesign(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.push({
             uuid: newUUid,
             path: payload.path,
@@ -8752,9 +11239,7 @@ const mutations = {
             servicediscover: payload.servicediscover
         })
         state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editMachineDesign(state, payload) {
@@ -8773,11 +11258,7 @@ const mutations = {
     },
     addElementModeDeclarationGroup(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Machine.ModeDeclarationGroup.push({
             uuid: newUUid,
             path: payload.path,
@@ -8789,9 +11270,7 @@ const mutations = {
             initmode: payload.initmode,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.ModeDeclarationGroup_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editModeDeclarationGroup(state, payload) {
@@ -8810,11 +11289,7 @@ const mutations = {
     },
     addElementEthernetCluster(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Machine.EthernetCluster.push({
             uuid: newUUid,
             path: payload.path,
@@ -8825,9 +11300,7 @@ const mutations = {
             conditional: payload.conditional,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.EthernetCluster_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editEthernetCluster(state, payload) {
@@ -8847,11 +11320,7 @@ const mutations = {
     },
     addElementProtoMachineMapping(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProtoMachineMapping.push({
             uuid: newUUid,
             path: payload.path,
@@ -8862,9 +11331,7 @@ const mutations = {
             mapping: payload.mapping,
         })
         state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcesstoMachineMapping_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editProtoMachineMapping(state, payload) {
@@ -8883,11 +11350,7 @@ const mutations = {
     },
     addElementSWComponents(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.push({
             uuid: newUUid,
             path: payload.path,
@@ -8900,9 +11363,7 @@ const mutations = {
             prport: payload.prport,
         })
         state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.SWComponents_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editSWComponents(state, payload) {
@@ -8919,11 +11380,7 @@ const mutations = {
     },
     addElementProcess(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.push({
             uuid: newUUid,
             path: payload.path,
@@ -8946,9 +11403,7 @@ const mutations = {
             dependent: payload.dependent,
         })
         state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Process_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editProcess(state, payload) {
@@ -8967,11 +11422,7 @@ const mutations = {
     },
     addElementProcessDesign(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.push({
             uuid: newUUid,
             path: payload.path,
@@ -8983,9 +11434,7 @@ const mutations = {
             determin: payload.determin
         })
         state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.ProcessDesign_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editProcessDesign(state, payload) {
@@ -9004,11 +11453,7 @@ const mutations = {
     },
     addElementExecutable(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Executable.push({
             uuid: newUUid,
             path: payload.path,
@@ -9026,9 +11471,7 @@ const mutations = {
 
         })
         state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.Executable_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editExecutable(state, payload) {
@@ -9047,11 +11490,7 @@ const mutations = {
     },
     addElementStartupConfig(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.StartupConfig.push({
             uuid: newUUid,
             path: payload.path,
@@ -9062,9 +11501,7 @@ const mutations = {
             config: payload.config,
         })
         state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.StartupConfig_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editStartupConfig(state, payload) {
@@ -9081,11 +11518,7 @@ const mutations = {
     },
     addElementDeterministicClien(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].AdaptiveApplication.DeterministicClient.push({
             uuid: newUUid,
             path: payload.path,
@@ -9097,9 +11530,7 @@ const mutations = {
             numofworkers: payload.numofworkers,
         })
         state.navigatorList[state.openProjectIndex].children[constant.AdaptiveApplication_index].children[constant.DeterministicClient_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editDeterministicClien(state, payload) {
@@ -9117,11 +11548,7 @@ const mutations = {
     },
     addElementSomeIPService(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.push({
             uuid: newUUid,
             path: payload.path,
@@ -9138,17 +11565,15 @@ const mutations = {
             methodD: payload.methodD,
             fieldD: payload.fieldD,
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editSomeIPService(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].left, payload.location, payload.left)
@@ -9158,11 +11583,7 @@ const mutations = {
     },
     addElementService(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.push({
             uuid: newUUid,
             path: payload.path,
@@ -9178,17 +11599,15 @@ const mutations = {
             fields: payload.fields,
             methods: payload.methods
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editServiceInterface(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].left, payload.location, payload.left)
@@ -9198,11 +11617,7 @@ const mutations = {
     },
     addElementClient(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.push({
             uuid: newUUid,
             path: payload.path,
@@ -9216,17 +11631,15 @@ const mutations = {
             delaymax: payload.delaymax,
             delaymin: payload.delaymin,
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Client_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Client_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editClient(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Client_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Client_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent[idxElement].left, payload.location, payload.left)
@@ -9236,11 +11649,7 @@ const mutations = {
     },
     addElementServer(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.push({
             uuid: newUUid,
             path: payload.path,
@@ -9251,17 +11660,15 @@ const mutations = {
             delaymax: payload.delaymax,
             delaymin: payload.delaymin,
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Server_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Server_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editServer(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Server_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Server_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent[idxElement].left, payload.location, payload.left)
@@ -9271,11 +11678,7 @@ const mutations = {
     },
     addElementSomeIPClient(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.push({
             uuid: newUUid,
             path: payload.path,
@@ -9289,17 +11692,15 @@ const mutations = {
             inibasedelay: payload.inibasedelay,
             inirepetimax: payload.inirepetimax,
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPClient_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPClient_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editSomeIPClient(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPClient_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPClient_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance[idxElement].left, payload.location, payload.left)
@@ -9309,11 +11710,7 @@ const mutations = {
     },
     addElementSomeIPServer(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.push({
             uuid: newUUid,
             path: payload.path,
@@ -9330,17 +11727,15 @@ const mutations = {
             offer: payload.offer,
             timetolive: payload.tiemtolive,
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPServer_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServer_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editSomeIPServer(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPServer_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServer_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance[idxElement].left, payload.location, payload.left)
@@ -9350,11 +11745,7 @@ const mutations = {
     },
     addElementSomeIPtoMachine(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.push({
             uuid: newUUid,
             path: payload.path,
@@ -9367,17 +11758,15 @@ const mutations = {
             tcp: payload.tcp,
             serviceI: payload.serviceI,
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPToMachineMapping_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editSomeIPtoMachine(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPToMachineMapping_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].left, payload.location, payload.left)
@@ -9387,11 +11776,7 @@ const mutations = {
     },
     addElementToPortPrototype(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.push({
             uuid: newUUid,
             path: payload.path,
@@ -9406,17 +11791,15 @@ const mutations = {
             selectServiceIns: payload.selectServiceIns,
             serviceIns: payload.serviceIns,
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editToPortPrototype(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].left, payload.location, payload.left)
@@ -9426,11 +11809,7 @@ const mutations = {
     },
     addElementRequiredSomeIP(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.push({
             uuid: newUUid,
             path: payload.path,
@@ -9441,24 +11820,22 @@ const mutations = {
             deployref: payload.deployref,
             minorver: payload.minover,
             serviceInsid: payload.id,
-            someipclient: payload.clientref,
+            someipclient: payload.someipclient,
             version: payload.ver,
             method: payload.method,
             requiredevent: payload.requiredevent,
             E2EEvent: payload.E2EEvent,
             E2EMethod: payload.E2EMethod
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editRequiredSomeIP(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].left, payload.location, payload.left)
@@ -9468,11 +11845,7 @@ const mutations = {
     },
     addElementProvidedSomeIP(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.push({
             uuid: newUUid,
             path: payload.path,
@@ -9482,7 +11855,7 @@ const mutations = {
             name: payload.name,
             deployref: payload.deployref,
             someipserver: payload.someips,
-            instanceid: payload.id,
+            instanceid: payload.instanceid,
             loadPriority: payload.loadPriority,
             loadWeight: payload.loadWeight,
             eventP: payload.eventP,
@@ -9491,17 +11864,15 @@ const mutations = {
             E2EEvent: payload.E2EEvent,
             E2EMethod: payload.E2EMethod
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editProvidedSomeIP(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].left, payload.location, payload.left)
@@ -9511,11 +11882,7 @@ const mutations = {
     },
     addElementE2EProfileConfig(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.push({
             uuid: newUUid,
             path: payload.path,
@@ -9525,17 +11892,15 @@ const mutations = {
             name: payload.name,
             profile: payload.profile,
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.E2EProfileConfig_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.E2EProfileConfig_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editE2EProfileConfig(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.E2EProfileConfig_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.E2EProfileConfig_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig[idxElement].left, payload.location, payload.left)
@@ -9545,11 +11910,7 @@ const mutations = {
     },
     addElementSDG_DEF(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.SdgDef.push({
             uuid: newUUid,
             path: payload.path,
@@ -9559,17 +11920,15 @@ const mutations = {
             name: payload.name,
             sdgClass: payload.sdgClass,
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SDG_DEF_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SDG_DEF_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editSDG_DEF(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SDG_DEF_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SDG_DEF_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SdgDef[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.SdgDef[idxElement].left, payload.location, payload.left)
@@ -9580,11 +11939,7 @@ const mutations = {
 
     addElementError(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.Error.push({
             uuid: newUUid,
             path: payload.path,
@@ -9596,17 +11951,15 @@ const mutations = {
             errorcode: payload.errorcode,
             errorDref: payload.errorDref
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Error_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Error_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editError(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Error_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Error_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].left, payload.location, payload.left)
@@ -9616,11 +11969,7 @@ const mutations = {
     },
     addElementErrorSet(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.ErrorSet.push({
             uuid: newUUid,
             path: payload.path,
@@ -9630,17 +11979,15 @@ const mutations = {
             name: payload.name,
             errorref: payload.errorref
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errorset_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editErrorSet(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errorset_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].left, payload.location, payload.left)
@@ -9650,11 +11997,7 @@ const mutations = {
     },
     addElementErrorDomain(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.push({
             uuid: newUUid,
             path: payload.path,
@@ -9665,17 +12008,15 @@ const mutations = {
             namespace: payload.namespace,
             value: payload.value,
         })
-        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.ErrorDomain_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ErrorDomain_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editErrorDomain(state, payload) {
         var idxElement = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.findIndex(data => data.uuid === payload.uuid)
 
         if (payload.compo == "Name") {
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.ErrorDomain_index].children[idxElement].name = payload.name
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ErrorDomain_index].children[idxElement].name = payload.name
         } else if (payload.compo == "drag") {
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxElement].top, payload.location, payload.top)
             Vue.set(state.SAHLProject[state.openProjectIndex].Service.ErrorDomain[idxElement].left, payload.location, payload.left)
@@ -9686,11 +12027,7 @@ const mutations = {
     ////////////////////////////////////
     addElementPERFileArray(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Per.PERFileArray.push({
             uuid: newUUid,
             path: payload.path,
@@ -9706,9 +12043,7 @@ const mutations = {
             files: payload.files,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileArray_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPERFileArray(state, payload) {
@@ -9725,11 +12060,7 @@ const mutations = {
     },
     addElementPERFileProxy(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Per.PERFileProxy.push({
             uuid: newUUid,
             path: payload.path,
@@ -9746,9 +12077,7 @@ const mutations = {
             maxfiles: payload.maxfiles
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.FileProxyInterf_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPERFileProxy(state, payload) {
@@ -9765,11 +12094,7 @@ const mutations = {
     },
     addElementPERKeyValueD(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Per.PERKeyValueD.push({
             uuid: newUUid,
             path: payload.path,
@@ -9786,9 +12111,7 @@ const mutations = {
             keyValue: payload.keyValue
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueData_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPERKeyValueD(state, payload) {
@@ -9805,11 +12128,7 @@ const mutations = {
     },
     addElementPERKeyValueDI(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Per.PERKeyValueDI.push({
             uuid: newUUid,
             path: payload.path,
@@ -9824,9 +12143,7 @@ const mutations = {
             serialization: payload.serialization
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.KeyValueDI_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPERKeyValueDI(state, payload) {
@@ -9843,11 +12160,7 @@ const mutations = {
     },
     addElementPERPPtoFileArray(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Per.PERPPtoFileArray.push({
             uuid: newUUid,
             path: payload.path,
@@ -9860,9 +12173,7 @@ const mutations = {
             process: payload.process
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoFileA_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPERPPtoFileArray(state, payload) {
@@ -9879,11 +12190,7 @@ const mutations = {
     },
     addElementPERPPtoKeyValue(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Per.PERPPtoKeyValue.push({
             uuid: newUUid,
             path: payload.path,
@@ -9896,9 +12203,7 @@ const mutations = {
             process: payload.process
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PER_index].children[constant.PortProtoKeyV_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPERPPtoKeyValue(state, payload) {
@@ -9915,11 +12220,7 @@ const mutations = {
     },
     addElementPHMContribution(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Phm.PHMContribution.push({
             uuid: newUUid,
             path: payload.path,
@@ -9929,9 +12230,7 @@ const mutations = {
             name: payload.name,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.PlatformHealthManagC_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPHMContribution(state, payload) {
@@ -9948,11 +12247,7 @@ const mutations = {
     },
     addElementPHMtoMachine(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Phm.PHMtoMachine.push({
             uuid: newUUid,
             path: payload.path,
@@ -9964,9 +12259,7 @@ const mutations = {
             contri: payload.contri
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.ContritoMachine_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPHMtoMachine(state, payload) {
@@ -9983,11 +12276,7 @@ const mutations = {
     },
     addElementPHMHealth(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Phm.PHMHealth.push({
             uuid: newUUid,
             path: payload.path,
@@ -9998,9 +12287,7 @@ const mutations = {
             status: payload.status
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.HealthChannel_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPHMHealth(state, payload) {
@@ -10017,11 +12304,7 @@ const mutations = {
     },
     addElementPHMRecovery(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Phm.PHMRecovery.push({
             uuid: newUUid,
             path: payload.path,
@@ -10033,9 +12316,7 @@ const mutations = {
             faf: payload.faf,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryVA_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPHMRecovery(state, payload) {
@@ -10052,11 +12333,7 @@ const mutations = {
     },
     addElementPHMSupervised(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Phm.PHMSupervised.push({
             uuid: newUUid,
             path: payload.path,
@@ -10067,9 +12344,7 @@ const mutations = {
             checkpoint: payload.checkpoint
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.PHMSupervised_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPHMSupervised(state, payload) {
@@ -10087,11 +12362,7 @@ const mutations = {
 
     addElementRecoveryVia(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].Phm.RecoveryVia.push({
             uuid: newUUid,
             path: payload.path,
@@ -10105,9 +12376,7 @@ const mutations = {
             phmRecovery: payload.phmRecovery,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.PHM_index].children[constant.RecoveryActionInterf_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editPHMRecoveryVia(state, payload) {
@@ -10124,11 +12393,7 @@ const mutations = {
     },
     addElementMethodGD(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].IamG.MethodGD.push({
             uuid: newUUid,
             path: payload.path,
@@ -10140,9 +12405,7 @@ const mutations = {
             SIMethod: payload.SIMethod,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGDesign_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editMethodGD(state, payload) {
@@ -10159,11 +12422,7 @@ const mutations = {
     },
     addElementEventGD(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].IamG.EventGD.push({
             uuid: newUUid,
             path: payload.path,
@@ -10175,9 +12434,7 @@ const mutations = {
             SIEvent: payload.SIEvent,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGDesign_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editEventGD(state, payload) {
@@ -10194,11 +12451,7 @@ const mutations = {
     },
     addElementFieldGD(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].IamG.FieldGD.push({
             uuid: newUUid,
             path: payload.path,
@@ -10211,9 +12464,7 @@ const mutations = {
             role: payload.role
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGDesign_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editFieldGD(state, payload) {
@@ -10230,11 +12481,7 @@ const mutations = {
     },
     addElementMethodG(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].IamG.MethodG.push({
             uuid: newUUid,
             path: payload.path,
@@ -10246,9 +12493,7 @@ const mutations = {
             provide: payload.provide,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComMethodGrant_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editMethodG(state, payload) {
@@ -10265,11 +12510,7 @@ const mutations = {
     },
     addElementEventG(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].IamG.EventG.push({
             uuid: newUUid,
             path: payload.path,
@@ -10281,9 +12522,7 @@ const mutations = {
             provide: payload.provide,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComEventGrant_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editEventG(state, payload) {
@@ -10300,11 +12539,7 @@ const mutations = {
     },
     addElementFieldG(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].IamG.FieldG.push({
             uuid: newUUid,
             path: payload.path,
@@ -10317,9 +12552,7 @@ const mutations = {
             role: payload.role
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.IAM_index].children[constant.ComFieldGrant_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editFieldG(state, payload) {
@@ -10336,11 +12569,7 @@ const mutations = {
     },
     addElementSoftWareCluster(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster.push({
             uuid: newUUid,
             path: payload.path,
@@ -10359,9 +12588,7 @@ const mutations = {
             sswc: payload.sswc
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWCluster_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editSoftWareCluster(state, payload) {
@@ -10378,11 +12605,7 @@ const mutations = {
     },
     addElementSoftWarePackage(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].UCM.SoftWarePackage.push({
             uuid: newUUid,
             path: payload.path,
@@ -10403,9 +12626,7 @@ const mutations = {
             uncompSWCsize: payload.uncompSWCsize
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.SWPackage_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editSoftWarePackage(state, payload) {
@@ -10422,11 +12643,7 @@ const mutations = {
     },
     addElementVehiclePackage(state, payload) {
         var newUUid
-        if (!payload.input) {
-            newUUid = uuid.v1()
-        } else {
-            newUUid = payload.uuid
-        }
+        newUUid = uuid.v1()
         state.SAHLProject[state.openProjectIndex].UCM.VehiclePackage.push({
             uuid: newUUid,
             path: payload.path,
@@ -10441,9 +12658,7 @@ const mutations = {
             ucms: payload.ucms,
         })
         state.navigatorList[state.openProjectIndex].children[constant.Platform_index].children[constant.UCM_index].children[constant.VehiclePackage_index].children.push({ uuid: newUUid, name: payload.name, icon: payload.icon, validation: false, })
-        if (!payload.input) {
-            state.activeUUID = newUUid
-        }
+        state.activeUUID = newUUid
         EventBus.$emit('new-element', newUUid)
     },
     editVehiclePackage(state, payload) {
@@ -10694,10 +12909,12 @@ const mutations = {
                 idxIDTable = null
             if (tableLine[0] == 'ddpccompu') { // compu method 변경시 => implementation 에서 compu method ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc[tableLine[1]].compumethod = payload.path + '/' + payload.name
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc[idxIDTable].compumethod = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'ddpcdata') { // data constr변경시 => implementation 에서 data constr ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc[tableLine[1]].dataconstr = payload.path + '/' + payload.name
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc[idxIDTable].dataconstr = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'typeref') { //implementation 변경시 =>  implementation 에서 implementation ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].typeref = payload.path + '/' + payload.name
@@ -10706,7 +12923,8 @@ const mutations = {
                 state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].templatetype = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'idtetable') { //implementation 변경시 =>   implementation 에서 implementation ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].idtelement[tableLine[1]].typeref = payload.path + '/' + payload.name
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].typeref, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].idtelement[idxIDTable].typeref = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'Eventtable') { //implementation 변경시 =>   ServiceInterface 에서 Implementation ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].events[tableLine[1]].type = payload.path + '/' + payload.name
@@ -10818,31 +13036,33 @@ const mutations = {
                 }
             } else if (tableLine[0] == 'cctable') { //EthernetCluster 변경시 => machinDesign에서 EthernetCluster Endpoint ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === startUUID[0])
-                intablename = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.split('/')
-                if (payload.changeName == 'path' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.includes(payload.beforename)) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = payload.path + '/' + intablename[intablename.length - 4] + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
-                } else if (payload.changeName == 'name' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.includes(payload.path + '/' + payload.beforename)) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
-                } else if (payload.changeName == 'condi' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.includes(payload.path + '/' + payload.name + '/' + payload.beforename)) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = payload.path + '/' + payload.name + '/' + payload.condi + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
-                } else if (payload.changeName == 'channel' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.beforename)) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + intablename[intablename.length - 1]
-                } else if (payload.changeName == 'endpoint' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.beforename)) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.endpoint
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector, tableLine[1])
+                intablename = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint.split('/')
+                if (payload.changeName == 'path' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint.includes(payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint = payload.path + '/' + intablename[intablename.length - 4] + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'name' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint.includes(payload.path + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'condi' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint.includes(payload.path + '/' + payload.name + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint = payload.path + '/' + payload.name + '/' + payload.condi + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'channel' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'endpoint' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.endpoint
                 }
             } else if (tableLine[0] == 'sdctable') { //EthernetCluster 변경시 =>  machinDesign에서 EthernetCluster Endpoint ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === startUUID[0])
-                intablename = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.split('/')
-                if (payload.changeName == 'path' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.includes(payload.beforename)) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = payload.path + '/' + intablename[intablename.length - 4] + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
-                } else if (payload.changeName == 'name' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.includes(payload.path + '/' + payload.beforename)) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
-                } else if (payload.changeName == 'condi' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.includes(payload.path + '/' + payload.name + '/' + payload.beforename)) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = payload.path + '/' + payload.name + '/' + payload.condi + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
-                } else if (payload.changeName == 'channel' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.beforename)) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + intablename[intablename.length - 1]
-                } else if (payload.changeName == 'endpoint' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.beforename)) {
-                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.endpoint
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover, tableLine[1])
+                intablename = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia.split('/')
+                if (payload.changeName == 'path' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia.includes(payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia = payload.path + '/' + intablename[intablename.length - 4] + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'name' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia.includes(payload.path + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 3] + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'condi' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia.includes(payload.path + '/' + payload.name + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia = payload.path + '/' + payload.name + '/' + payload.condi + '/' + intablename[intablename.length - 2] + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'channel' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + intablename[intablename.length - 1]
+                } else if (payload.changeName == 'endpoint' && state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia.includes(payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.beforename)) {
+                    state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia = payload.path + '/' + payload.name + '/' + payload.condi + '/' + payload.channel + '/' + payload.endpoint
                 }
             } else if (tableLine[0] == 'functiontable') { //Mode Declaration  변경시 =>  machin에서 Mode Declaration ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.Machine.findIndex(data => data.uuid === startUUID[0])
@@ -11046,7 +13266,8 @@ const mutations = {
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].deployref = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'requiredMethod') { //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 Service Deployment Method Deployment ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
-                var strPath = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method.split('/')
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method, tableLine[1])
+                var strPath = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[idxIDTable].method.split('/')
                 var pathLength = strPath.length
                 if (payload.changeName == 'MethodD' && payload.name == strPath[pathLength - 2]) { //method 이면서 method table에서 고쳤을 때
                     if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method == payload.path + '/' + payload.name + '/' + payload.beforename) {
@@ -11077,13 +13298,14 @@ const mutations = {
                 }
             } else if (tableLine[0] == 'requiredEventG') { //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent, tableLine[1])
                 if (payload.changeName == 'EventG') {
-                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].eventG == payload.path + '/' + payload.name + '/' + payload.beforename) {
-                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].eventG = payload.path + '/' + payload.name + '/' + payload.listname
+                    if (state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[idxIDTab].eventG == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                        state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[idxIDTab].eventG = payload.path + '/' + payload.name + '/' + payload.listname
                     }
                 } else {
-                    intablename = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].eventG.split('/')
-                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].eventG = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
+                    intablename = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[idxIDTab].eventG.split('/')
+                    state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[idxIDTab].eventG = payload.path + '/' + payload.name + '/' + intablename[intablename.length - 1]
                 }
             } else if (tableLine[0] == 'e2eEvent') { //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 Service Deployment Event ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
@@ -11134,7 +13356,8 @@ const mutations = {
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].deployref = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'proviedEventP') { //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의  eventD ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                var strEPath = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event.split('/')
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP, tableLine[1])
+                var strEPath = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[idxIDTable].event.split('/')
                 if (payload.changeName == 'EventD' && payload.name == strEPath[strEPath.length - 2]) { //method 이면서 method table에서 고쳤을 때
                     if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event == payload.path + '/' + payload.name + '/' + payload.beforename) {
                         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event = payload.path + '/' + payload.name + '/' + payload.listname
@@ -11160,7 +13383,8 @@ const mutations = {
                 }
             } else if (tableLine[0] == 'proviedMethod') { //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의 MethodD ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                var strPathP = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method.split('/')
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method, tableLine[1])
+                var strPathP = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[idxIDTable].method.split('/')
                 if (payload.changeName == 'MethodD' && payload.name == strPathP[strPathP.length - 2]) { //method 이면서 method table에서 고쳤을 때
                     if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method == payload.path + '/' + payload.name + '/' + payload.beforename) {
                         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method = payload.path + '/' + payload.name + '/' + payload.listname
@@ -11190,8 +13414,9 @@ const mutations = {
                 }
             } else if (tableLine[0] == 'providEventG') { //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의 eventG ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG, tableLine[1])
                 if (payload.changeName == 'EventG') {
-                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].eventG == payload.path + '/' + payload.name + '/' + payload.beforename) {
+                    if (state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[idxIDTab].eventG == payload.path + '/' + payload.name + '/' + payload.beforename) {
                         state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].eventG = payload.path + '/' + payload.name + '/' + payload.listname
                     }
                 } else {
@@ -11361,10 +13586,12 @@ const mutations = {
                 }
             } else if (tableLine[0] == 'requiredClient') { //Client event 변경시 => Required SomeIP Service Instance 에서 Client event ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].client = payload.path + '/' + payload.name
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[idxIDTab].client = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'providServer') { //Server event 변경시 =>  Provided SomeIP Service Instance 에서 Server ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].server = payload.path + '/' + payload.name
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[idxIDTab].server = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'requiredSomeIPC') { //SomeIP Client 변경시 => Required SomeIP Service Instance 에서 SomeIP Client ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].someipclient = payload.path + '/' + payload.name
@@ -11376,7 +13603,8 @@ const mutations = {
                 state.SAHLProject[state.openProjectIndex].UCM.SoftWareCluster[idxElement].toMachine[tableLine[1]].mapping = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'toMachinServiceIns') { //Required SomeIP 변경시 =>  SomeIPtoMachineMapping 에서 Required SomeIP ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI[tableLine[1]].service = payload.path + '/' + payload.name
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI[idxIDTable].service = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'toportservice') { //Required Provided 변경시 => Service Instance to port prototype 에서 provided,required ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
                 if (state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].selectServiceIns == "PROVIDED-SOMEIP-SERVICE-INSTANCE" && payload.req == false) {
@@ -11386,7 +13614,8 @@ const mutations = {
                 }
             } else if (tableLine[0] == 'toMachinServiceIns') { //Provided SomeIP 변경시 =>  SomeIPtoMachineMapping 에서 Provided SomeIP ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI[tableLine[1]].service = payload.path + '/' + payload.name
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI[idxIDTable].service = payload.path + '/' + payload.name
             } else if (tableLine[0] == 'FGProvide') { //Provided 변경시 =>  Field Grant 에서 Provided ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].IamG.FieldG.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].IamG.FieldG[idxElement].provide = payload.path + '/' + payload.name
@@ -11585,9 +13814,8 @@ const mutations = {
                                         item.method = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                                         state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                         state.navigatorList[state.openProjectIndex].validation = true
                                     }
@@ -11661,16 +13889,15 @@ const mutations = {
                 //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach((ele, i) => {
                         if (ele.requiredevent.length > 0) {
-                            ele.requiredevent.forEach((item, n) => {
+                            ele.requiredevent.forEach(item => {
                                 if (item.eventG == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
-                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/requiredEventG-' + n)
+                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/requiredEventG-' + item.id)
                                     if (idx != -1) {
                                         item.eventG = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                                         state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                         state.navigatorList[state.openProjectIndex].validation = true
                                     }
@@ -11681,16 +13908,15 @@ const mutations = {
                     //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의 eventG ref할때
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
                     if (ele.eventG.length > 0) {
-                        ele.eventG.forEach((item, n) => {
+                        ele.eventG.forEach(item => {
                             if (item.eventG == (payload.path + '/' + payload.name + '/' + payload.tabName)) {
-                                var idx = this.getters.getconnectLineNum(ele.uuid + '/providEventG-' + n)
+                                var idx = this.getters.getconnectLineNum(ele.uuid + '/providEventG-' + item.id)
                                 if (idx != -1) {
                                     item.eventG = null
                                     EventBus.$emit('delete-line', idx)
                                     this.commit('deletConnectionline', { startnum: idx })
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                     state.navigatorList[state.openProjectIndex].validation = true
                                 }
@@ -11711,9 +13937,8 @@ const mutations = {
                                                 eve.event = null
                                                 EventBus.$emit('delete-line', idx)
                                                 this.commit('deletConnectionline', { startnum: idx })
-                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
+                                                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                                                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                                 state.navigatorList[state.openProjectIndex].validation = true
                                             }
@@ -11726,16 +13951,15 @@ const mutations = {
                     //Service Deployment Field 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의 Field Get, Set, Notify ref할때
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
                         if (ele.eventP.length > 0) {
-                            ele.eventP.forEach((item, n) => {
+                            ele.eventP.forEach(item => {
                                 if (item.event == (payload.path + '/' + payload.name + '/' + payload.tabName + '/' + payload.notname)) {
-                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedEventP-' + n)
+                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedEventP-' + item.id)
                                     if (idx != -1) {
                                         item.event = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                                         state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                         state.navigatorList[state.openProjectIndex].validation = true
                                     }
@@ -11743,17 +13967,16 @@ const mutations = {
                             })
                         }
                         if (ele.method.length > 0) {
-                            ele.method.forEach((item, n) => {
+                            ele.method.forEach(item => {
                                 if ((item.method == (payload.path + '/' + payload.name + '/' + payload.tabName + '/' + payload.setname)) ||
                                     (item.method == (payload.path + '/' + payload.name + '/' + payload.tabName + '/' + payload.getname))) {
-                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedMethod-' + n)
+                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedMethod-' + item.id)
                                     if (idx != -1) {
                                         item.method = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                                         state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                         state.navigatorList[state.openProjectIndex].validation = true
                                     }
@@ -11764,17 +13987,16 @@ const mutations = {
                     //Service Deployment Field 변경시 =>  required SomeIP Service Instance 에서 Service Deploment의 Field Get, Set ref할때
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach((ele, i) => {
                     if (ele.method.length > 0) {
-                        ele.method.forEach((item, n) => {
+                        ele.method.forEach(item => {
                             if ((item.method == (payload.path + '/' + payload.name + '/' + payload.tabName + '/' + payload.setname)) ||
                                 (item.method == (payload.path + '/' + payload.name + '/' + payload.tabName + '/' + payload.getetname))) {
-                                var idx = this.getters.getconnectLineNum(ele.uuid + '/requiredMethod-' + n)
+                                var idx = this.getters.getconnectLineNum(ele.uuid + '/requiredMethod-' + item.id)
                                 if (idx != -1) {
                                     item.method = null
                                     EventBus.$emit('delete-line', idx)
                                     this.commit('deletConnectionline', { startnum: idx })
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                     state.navigatorList[state.openProjectIndex].validation = true
                                 }
@@ -11827,9 +14049,8 @@ const mutations = {
                             ele.porttype = null
                             EventBus.$emit('delete-line', idx)
                             this.commit('deletConnectionline', { startnum: idx })
-                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[i].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
-                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].children[i].validation = true
+                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].validation = true
                             state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                             state.navigatorList[state.openProjectIndex].validation = true
                         }
@@ -11939,9 +14160,8 @@ const mutations = {
                                         data.e2e = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                                         state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                         state.navigatorList[state.openProjectIndex].validation = true
                                     }
@@ -11959,9 +14179,8 @@ const mutations = {
                                         data.e2e = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                                         state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                         state.navigatorList[state.openProjectIndex].validation = true
                                     }
@@ -11979,9 +14198,8 @@ const mutations = {
                                         data.e2e = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                                         state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                         state.navigatorList[state.openProjectIndex].validation = true
                                     }
@@ -11999,9 +14217,8 @@ const mutations = {
                                     data.e2e = null
                                     EventBus.$emit('delete-line', idx)
                                     this.commit('deletConnectionline', { startnum: idx })
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                     state.navigatorList[state.openProjectIndex].validation = true
                                 }
@@ -12112,9 +14329,8 @@ const mutations = {
                                     ele.ccref = null
                                     EventBus.$emit('delete-line', idx)
                                     this.commit('deletConnectionline', { startnum: idx })
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[i].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].validation = true
-                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPToMachineMapping_index].children[i].validation = true
+                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPToMachineMapping_index].validation = true
                                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                     state.navigatorList[state.openProjectIndex].validation = true
                                 }
@@ -12194,9 +14410,8 @@ const mutations = {
                                             item.event = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                                             state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                             state.navigatorList[state.openProjectIndex].validation = true
                                         }
@@ -12277,9 +14492,8 @@ const mutations = {
                                             item.field = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                                             state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                             state.navigatorList[state.openProjectIndex].validation = true
                                         }
@@ -12396,9 +14610,8 @@ const mutations = {
                                                     data.event = null
                                                     EventBus.$emit('delete-line', idx)
                                                     this.commit('deletConnectionline', { startnum: idx })
-                                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
-                                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[i].validation = true
+                                                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                                                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                                     state.navigatorList[state.openProjectIndex].validation = true
                                                 }
@@ -12411,16 +14624,15 @@ const mutations = {
                         //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의  eventD ref할때
                     state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
                             if (ele.eventP.length > 0) {
-                                ele.eventP.forEach((item, n) => {
+                                ele.eventP.forEach(item => {
                                     if (item.event == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
-                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedEventP-' + n)
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedEventP-' + item.id)
                                         if (idx != -1) {
                                             item.event = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                                             state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                             state.navigatorList[state.openProjectIndex].validation = true
                                         }
@@ -12438,9 +14650,8 @@ const mutations = {
                                             item.event = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                                             state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                             state.navigatorList[state.openProjectIndex].validation = true
                                         }
@@ -12458,9 +14669,8 @@ const mutations = {
                                         item.event = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                                         state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                         state.navigatorList[state.openProjectIndex].validation = true
                                     }
@@ -12472,16 +14682,15 @@ const mutations = {
                     //Service Deployment 변경시 =>  Required SomeIP Service Instance 에서 Service Deployment Method Deployment ref할때
                     state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.forEach((ele, i) => {
                             if (ele.method.length > 0) {
-                                ele.method.forEach((item, n) => {
+                                ele.method.forEach(item => {
                                     if (item.method == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
-                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/requiredMethod-' + n)
+                                        var idx = this.getters.getconnectLineNum(ele.uuid + '/requiredMethod-' + item.id)
                                         if (idx != -1) {
                                             item.method = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                                             state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                             state.navigatorList[state.openProjectIndex].validation = true
                                         }
@@ -12500,9 +14709,8 @@ const mutations = {
                                             item.method = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                                             state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                             state.navigatorList[state.openProjectIndex].validation = true
                                         }
@@ -12520,9 +14728,8 @@ const mutations = {
                                             item.method = null
                                             EventBus.$emit('delete-line', idx)
                                             this.commit('deletConnectionline', { startnum: idx })
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                                             state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                             state.navigatorList[state.openProjectIndex].validation = true
                                         }
@@ -12533,16 +14740,15 @@ const mutations = {
                         //Service Deployment 변경시 =>  Provided SomeIP Service Instance 에서 Service Deploment의 MethodD ref할때
                     state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.forEach((ele, i) => {
                         if (ele.method != null) {
-                            ele.method.forEach((item, n) => {
+                            ele.method.forEach(item => {
                                 if (item.method == (payload.path + '/' + payload.name + '/' + deleteList.name)) {
-                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedMethod-' + n)
+                                    var idx = this.getters.getconnectLineNum(ele.uuid + '/proviedMethod-' + item.id)
                                     if (idx != -1) {
                                         item.method = null
                                         EventBus.$emit('delete-line', idx)
                                         this.commit('deletConnectionline', { startnum: idx })
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[i].validation = true
+                                        state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                                         state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                                         state.navigatorList[state.openProjectIndex].validation = true
                                     }
@@ -12611,14 +14817,16 @@ const mutations = {
 
             if (tableLine[0] == 'ddpccompu') { // implementation 에서 compu method ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc[tableLine[1]].compumethod = ''
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc[idxIDTable].compumethod = ''
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'ddpcdata') { // implementation 에서 data constr ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc[tableLine[1]].dataconstr = ''
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].ddpc[idxIDTable].dataconstr = ''
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.DateType_index].validation = true
@@ -12644,7 +14852,8 @@ const mutations = {
             } else if (tableLine[0] == 'idtetable') { // implementation 에서 implementation ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType.findIndex(data => data.uuid === startUUID[0])
                 if (payload.uuid != startUUID[0]) {
-                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].idtelement[tableLine[1]].typeref = ''
+                    idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].typeref, tableLine[1])
+                    state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[idxElement].idtelement[idxIDTable].typeref = ''
                     state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].children[idxElement].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.DateType_index].children[constant.Implementation_index].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.DateType_index].validation = true
@@ -12683,14 +14892,16 @@ const mutations = {
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'cctable') { // machinDesign에서 EthernetCluster Endpoint ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[tableLine[1]].endpoint = null
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].connector[idxIDTable].endpoint = null
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'sdctable') { // machinDesign에서 EthernetCluster Endpoint ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Machine.MachineDesign.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[tableLine[1]].msia = null
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Machine.MachineDesign[idxElement].servicediscover[idxIDTable].msia = null
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].children[idxElement].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].children[constant.MachineDesigne_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Machines_index].validation = true
@@ -12924,310 +15135,281 @@ const mutations = {
             } else if (tableLine[0] == 'errordomain') { // Error 에서 Error Domain ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.Error[idxElement].errorDref = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Error_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Error_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Error_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Error_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'error') { // Error Set 에서 Error  ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(data => data.uuid === startUUID[0])
                 idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].errorref, tableLine[1])
                 state.SAHLProject[state.openProjectIndex].Service.ErrorSet[idxElement].errorref[idxIDTable].error = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errorset_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errorset_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'service') { // ServiceInterface Deploymant에서 serviceInterface ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].service = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'event') { // ServiceInterface Deploymant에서에서 serviceinterface Deploymant Event Deployment ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
                 if (payload.uuid != startUUID[0]) {
                     state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventG[tableLine[2]].event[tableLine[1]].event = null
-                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
-                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
+                    state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                     state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                     state.navigatorList[state.openProjectIndex].validation = true
                 }
             } else if (tableLine[0] == 'serviceEventD') { // ServiceInterface Deploymant에서에서 serviceinterface Event ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].eventD[tableLine[1]].event = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'serviceMethodD') { // ServiceInterface Deploymant에서에서 serviceinterface Method ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].methodD[tableLine[1]].method = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'field') { // ServiceInterface Deploymant에서에서 serviceinterface Field ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment[idxElement].fieldD[tableLine[1]].field = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'Eventtable') { // ServiceInterface 에서 Implementation ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].events[tableLine[1]].type = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'Fieldtable') { // ServiceInterface 에서 Implementation ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].fields[tableLine[1]].type = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'argtable') { // ServiceInterface 에서 Implementation ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].methods[tableLine[2]].argument[tableLine[1]].type = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'methoderrors') { // ServiceInterface 에서 Error ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].methods[tableLine[2]].errorSet[tableLine[1]].error = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'methoderror') { // ServiceInterface 에서 ErrorSet ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInterface[idxElement].methods[tableLine[2]].error[tableLine[1]].error = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'tomachinCC') { // SomeIPtoMachineMapping 에서 MachineDesgin의 Communication Connected ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].ccref = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPToMachineMapping_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPToMachineMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'toMachinServiceIns') { // SomeIPtoMachineMapping 에서 Required SomeIP / Provide SomeIP ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI[tableLine[1]].service = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine[idxElement].serviceI[idxIDTable].service = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPToMachineMapping_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPToMachineMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'toportport') { // Service Instance to port prototype 에서 SWComponent port ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].selectPort = null
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].porttype = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'toportprocess') { // Service Instance to port prototype 에서 process design ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].process = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'toportcontext') { // Service Instance to port prototype 에서 process design ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].context = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'toportservice') { // Service Instance to port prototype 에서 provided,required ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].selectServiceIns = null
                 state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype[idxElement].serviceIns = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'requiredDeploy') { // Required SomeIP Service Instance 에서 Service Deployment ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].deployref = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'requiredSomeIPC') { // Required SomeIP Service Instance 에서 SomeIP Client ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].someipclient = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'requiredMethod') { // Required SomeIP Service Instance 에서 Service Deployment Method Deployment ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[tableLine[1]].method = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].method[idxIDTable].method = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'requiredEventG') { // Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].eventG = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[idxIDTab].eventG = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'requiredClient') { // Required SomeIP Service Instance 에서 Client event ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[tableLine[1]].client = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].requiredevent[idxIDTab].client = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'e2ePro') { // Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent, tableLine[1])
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].e2e = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'e2eEvent') { // Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent, tableLine[1])
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EEvent[idxIDTab].event = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'e2eProM') { // Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod, tableLine[1])
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].e2e = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'e2eMethod') { // Required SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === startUUID[0])
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod, tableLine[1])
                 state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP[idxElement].E2EMethod[idxIDTab].method = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'e2ePropro') { // Provided SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent, tableLine[1])
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].e2e = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'e2eEventpro') { // Provided SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent, tableLine[1])
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EEvent[idxIDTab].event = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'e2eProMpro') { // Provided SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod, tableLine[1])
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].e2e = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'e2eMethodpro') { // Provided SomeIP Service Instance 에서 Service Deployment Event Group ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
                 idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod, tableLine[1])
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].E2EMethod[idxIDTab].method = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'providDeploy') { // Provided SomeIP Service Instance 에서 Service Deployment ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].deployref = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'providSomeIPS') { // Provided SomeIP Service Instance 에서 SomIP Server ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
                 state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].someipserver = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'proviedEventP') { // Provided SomeIP Service Instance 에서 Service Deploment의  eventD ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[tableLine[1]].event = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventP[idxIDTable].event = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'proviedMethod') { // Provided SomeIP Service Instance 에서 Service Deploment의 MethodD ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[tableLine[1]].method = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                idxIDTable = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].method[idxIDTable].method = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'providEventG') { // Provided SomeIP Service Instance 에서 Service Deploment의 eventG ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].eventG = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[idxIDTab].eventG = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             } else if (tableLine[0] == 'providServer') { // Provided SomeIP Service Instance 에서 Server ref할때
                 idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === startUUID[0])
-                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[tableLine[1]].server = null
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].validation = true
-                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].validation = true
+                idxIDTab = this.getters.getTableNum(state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG, tableLine[1])
+                state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP[idxElement].eventG[idxIDTab].server = null
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children[idxElement].validation = true
+                state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].validation = true
                 state.navigatorList[state.openProjectIndex].children[constant.Service_index].validation = true
                 state.navigatorList[state.openProjectIndex].validation = true
             }
@@ -13628,63 +15810,63 @@ const mutations = {
         } else if (payload.parent == constant.SomeIPServiceInterfaceDeployment_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.SomeIPServiceInterfaceDeployment_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServiceInterfaceDeployment_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.ServiceInterface_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterfaces_index].children[constant.ServiceInterface_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInterface_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.Client_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Client_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Client_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.Server_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPEvents_index].children[constant.Server_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Server_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.SomeIPClient_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPClient_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPClient_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.SomeIPServer_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPServer_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPServer_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.SomeIPToMachineMapping_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SomeIPToMachineMapping_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SomeIPToMachineMapping_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.ToPortPrototypeMapping_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ToPortPrototypeMapping_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ToPortPrototypeMapping_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.RequiredSomeIP_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.RequiredSomeIP_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.RequiredSomeIP_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.ProvidedSomeIP_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.ProvidedSomeIP_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ProvidedSomeIP_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.E2EProfileConfig_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.E2EProfileConfig_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.E2EProfileConfig_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.SDG_DEF_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.SdgDef.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ServiceInstances_index].children[constant.SDG_DEF_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.SDG_DEF_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.Error_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.Error.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Error_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Error_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.Errorset_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.ErrorSet.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.Errorset_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errorset_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.ErrorDomain_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.splice(idxElement, 1)
-            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.Errors_index].children[constant.ErrorDomain_index].children.splice(idxElement, 1)
+            state.navigatorList[state.openProjectIndex].children[constant.Service_index].children[constant.ErrorDomain_index].children.splice(idxElement, 1)
         } else if (payload.parent == constant.FileArray_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === payload.uuid)
             state.SAHLProject[state.openProjectIndex].Per.PERFileArray.splice(idxElement, 1)
@@ -13864,78 +16046,63 @@ const mutations = {
         } else if (payload.parent == constant.SomeIPServiceInterfaceDeployment_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInterfaceDeployment.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.SomeIPServiceInterfaceDeployment_index
-            idxService = constant.ServiceInterfaces_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.ServiceInterface_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInterface.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.ServiceInterface_index
-            idxService = constant.ServiceInterfaces_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.Client_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientEvent.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.Client_index
-            idxService = constant.SomeIPEvents_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.Server_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerEvent.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.Server_index
-            idxService = constant.SomeIPEvents_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.SomeIPClient_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPClientServiceInstance.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.SomeIPClient_index
-            idxService = constant.ServiceInstances_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.SomeIPServer_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServerServiceInstance.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.SomeIPServer_index
-            idxService = constant.ServiceInstances_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.SomeIPToMachineMapping_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SomeIPServiceInstanceToMachine.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.SomeIPToMachineMapping_index
-            idxService = constant.ServiceInstances_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.ToPortPrototypeMapping_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ServiceInstanceToPortPrototype.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.ToPortPrototypeMapping_index
-            idxService = constant.ServiceInstances_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.RequiredSomeIP_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.RequiredSomeIP.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.RequiredSomeIP_index
-            idxService = constant.ServiceInstances_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.ProvidedSomeIP_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ProvidedSomeIP.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.ProvidedSomeIP_index
-            idxService = constant.ServiceInstances_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.E2EProfileConfig_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.E2EProfileConfig_index
-            idxService = constant.ServiceInstances_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.SDG_DEF_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.SdgDef.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.SDG_DEF_index
-            idxService = constant.ServiceInstances_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.Error_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.Error.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.Error_index
-            idxService = constant.Errors_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.Errorset_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ErrorSet.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.Errorset_index
-            idxService = constant.Errors_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.ErrorDomain_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Service.ErrorDomain.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.ErrorDomain_index
-            idxService = constant.Errors_index
-            idxParent = constant.Service_index
+            idxchild = constant.Service_index
         } else if (payload.parent == constant.FileArray_str) {
             idxElement = state.SAHLProject[state.openProjectIndex].Per.PERFileArray.findIndex(data => data.uuid === payload.uuid)
             idxchildchild = constant.FileArray_index
@@ -14124,13 +16291,11 @@ const mutations = {
 
     uploadFileprocess(state, payload) {
         var parser, xmlDoc
-        console.log(payload.fileInfo)
+            //console.log(payload.fileInfo)
         parser = new DOMParser()
         xmlDoc = parser.parseFromString(payload.fileInfo, "text/xml")
         this.commit('saveInputfile', { xmlDoc: xmlDoc })
-        Vue.nextTick(() => { //mainview에만 넣으니 tab이 늦게 그려져서 선이 안그려짐
-            state.isInputFileComplate = true
-        })
+        EventBus.$emit('inputFile-element', )
     },
     initialiseStore(state) {
         // if (localStorage.getItem("SAHLProject")) {

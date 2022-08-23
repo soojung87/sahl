@@ -695,7 +695,7 @@ export default {
             this.selectDelectEvent = []
         },
         changeEventGTab() {
-            if(this.element.eventG.length > 0 && this.location == 1) {
+            if(this.element.eventG.length > 0 && this.location == 1 && this.eventGTab != undefined) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'event', this.element.uuid, this.eventGTab, this.element.eventG[this.eventGTab].id)}, 300);
             }
         },
@@ -718,7 +718,6 @@ export default {
             }
 
             this.element.eventG.splice(idx, 1)
-            this.changeEventGTab()
         },
         isCheckEvent() {
             if (this.isdeleteEvent == true) {
@@ -776,7 +775,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/event-'+idx+'-'+this.eventGTab)
                 this.newLine(this.element.uuid+'/event-'+idx+'-'+this.eventGTab, this.element.uuid+'/eventtab'+this.element.eventG[this.eventGTab].id, this.editEvent.event.uuid)
                 this.element.eventG[this.eventGTab].event[idx].event = this.editEvent.event.name
-            } else if (endLine == undefined && this.editEvent.event != null) {
+            } else if (endLine == undefined && this.editEvent.event != null && this.editEvent.event.uuid != null) {
                 this.newLine(this.element.uuid+'/event-'+idx+'-'+this.eventGTab, this.element.uuid+'/eventtab'+this.element.eventG[this.eventGTab].id, this.editEvent.event.uuid)
                 this.element.eventG[this.eventGTab].event[idx].event = this.editEvent.event.name
             } else if (this.editEvent.event != null && endLine == this.editEvent.event.uuid && this.element.eventG[this.eventGTab].event[idx].event != this.editEvent.event.name) {
@@ -870,12 +869,11 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementService', {
-                name: this.$store.getters.getNameServiceInterface, input: false, path: '',
+                name: this.$store.getters.getNameServiceInterface, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: null,
             })
             EventBus.$emit('add-element', constant.Service_str)
-            EventBus.$emit('add-element', constant.ServiceInterfaces_str)
             EventBus.$emit('add-element', constant.ServiceInterface_str)
             this.$store.commit('editSomeIPService', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
@@ -941,7 +939,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/serviceEventD-'+idx)
                 this.newLine(this.element.uuid+'/serviceEventD-'+idx, this.element.uuid+'/serviceEventD', this.editEventD.event.uuid)
                 this.element.eventD[idx].event = this.editEventD.event.name
-            } else if (endLine == undefined && this.editEventD.event != null) {
+            } else if (endLine == undefined && this.editEventD.event != null && this.editEventD.event.uuid != null) {
                 this.newLine(this.element.uuid+'/serviceEventD-'+idx, this.element.uuid+'/serviceEventD', this.editEventD.event.uuid)
                 this.element.eventD[idx].event = this.editEventD.event.name
             } else if (this.editEventD.event != null && endLine == this.editEventD.event.uuid && this.element.eventD[idx].event != this.editEventD.event.name) {
@@ -1069,7 +1067,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/serviceMethodD-'+idx)
                 this.newLine(this.element.uuid+'/serviceMethodD-'+idx, this.element.uuid+'/serviceMethodD', this.editMethodD.method.uuid)
                 this.element.methodD[idx].method = this.editMethodD.method.name
-            } else if (endLine == undefined && this.editMethodD.method != null) {
+            } else if (endLine == undefined && this.editMethodD.method != null && this.editMethodD.method.uuid != null) {
                 this.newLine(this.element.uuid+'/serviceMethodD-'+idx, this.element.uuid+'/serviceMethodD', this.editMethodD.method.uuid)
                 this.element.methodD[idx].method = this.editMethodD.method.name
             } else if (this.editMethodD.method != null && endLine == this.editMethodD.method.uuid && this.element.methodD[idx].method != this.editMethodD.method.name) {
@@ -1195,7 +1193,7 @@ export default {
         changeFieldTab() {
             //console.log('change'+' / ')
             //이렇게 해줘야지 tab에 있는것을 다 그린다음에 선을 다시 그려줄수있다.
-            if(this.element.fieldD.length > 0 && this.location == 1){
+            if(this.element.fieldD.length > 0 && this.location == 1 && this.fieldTab != undefined){
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'field', this.element.uuid, this.fieldTab, this.element.fieldD[this.fieldTab].id)}, 300);
             }
         },
@@ -1215,7 +1213,6 @@ export default {
                                                     getname: this.element.fieldD[idx].getname, setname: this.element.fieldD[idx].setname, notname: this.element.fieldD[idx].notname})
 
             this.element.fieldD.splice(idx, 1)
-            this.changeFieldTab()
         },
         setFieldSelect() {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/field-'+this.fieldTab)

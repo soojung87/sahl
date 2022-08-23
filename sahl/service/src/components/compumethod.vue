@@ -100,19 +100,19 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
-            <v-dialog v-model="dialogText" persistent scrollable width="800">
+            <v-dialog v-model="dialogText" persistent width="800">
                 <v-card >
                     <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
                     <v-card-text>
                         <br>
-                        <v-row>
+                        <v-row style="height: 30px;">
                             <label style="padding:10px;">&#60;SHORT-NAME&#62;</label>
                             <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
                             <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
                         </v-row>
-                        <v-row>
+                        <v-row style="height: 30px;">
                             <label style="padding:10px;">&#60;CATEGORY&#62;</label>
-                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <v-text-field v-model="editARXML.category" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
                             <label style="padding:10px;">&#60;&#47;CATEGORY&#62;</label>
                         </v-row>
                         <v-row>
@@ -121,31 +121,30 @@
                         <v-row>
                             <label style="padding:10px;margin-left: 30px;height: 25px;">&#60;BLUEPRINT-POLICY-NOT-MODIFIABLE&#62;</label>
                         </v-row>
-                        <v-row>
+                        <v-row style="height: 30px;">
                             <label style="padding:10px;margin-left: 60px;">&#60;ATTRIBUTE-NAME&#62;</label>
-                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <v-text-field v-model="editARXML.attributeName" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
                             <label style="padding:10px;">&#60;&#47;ATTRIBUTE-NAME&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px;margin-left: 30px;height: 25px;">&#60;&#47;BLUEPRINT-POLICY-NOT-MODIFIABLE&#62;</label>
-                            </v-row>
-                        <v-row>
+                            <label style="padding:10px;margin-left: 30px;height: 20px;">&#60;&#47;BLUEPRINT-POLICY-NOT-MODIFIABLE&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
                             <label style="padding:10px;height: 35px;">&#60;&#47;BLUEPRINT-POLICYS&#62;</label>
                         </v-row>
                         <v-row>
                             <label style="padding:10px;height: 15px;">&#60;COMPU-INTERNAL-TO-PHYS&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px;margin-left: 30px;height: 20px;">&#60;COMPU-SCALES&#62;
+                            <label style="padding:10px;margin-left: 30px;height: 50px;">&#60;COMPU-SCALES&#62;
                                 <v-btn @click="newTextCompu()" icon color="teal darken" x-samll dark>
                                     <v-icon dense dark>mdi-plus</v-icon>
                                 </v-btn>
                             </label>
                         </v-row>
                         <v-row>
-                            <div class="text-editDialog">
-                                <br>
-                                <v-row v-for="(item, i) in editARXML.scales" :key="i" style="height: 190px;">
+                            <div class="text-editDialog" style="height: 200px;">
+                                <v-row v-for="(item, i) in editARXML.scales" :key="i" style="height: 170px;">
                                     <div>
                                         <v-row style="height: 25px;margin:0px;">
                                             <label style="padding:10px;margin:2px 0px 2px 30px;">
@@ -377,6 +376,13 @@ export default {
             this.dialogText= true
         },
         saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editCompuMethod', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
             this.element.name = this.editARXML.name
             this.element.category = this.editARXML.category
             this.element.scales = JSON.parse(JSON.stringify(this.editARXML.scales))

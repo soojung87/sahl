@@ -232,6 +232,12 @@ tr.v-data-table__selected {
 .text-editDialog {
     white-space: nowrap;
     overflow-X: auto;
-    overflow-Y: hidden;
-    width: 700px;
+    overflow-Y: auto;
+    width: 750px;
+}
+
+.text-Inner-editDialog {
+    white-space: nowrap;
+    overflow-X: hidden;
+    overflow-Y: auto;
 }

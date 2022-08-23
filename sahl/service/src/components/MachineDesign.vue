@@ -16,6 +16,9 @@
                             <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
                             <v-toolbar-title>Machine Design</v-toolbar-title>
                             <v-spacer></v-spacer>
+                            <v-btn v-if="minimaptoolbar" icon @click="viewARXML">
+                                <v-icon> mdi-format-text</v-icon>
+                            </v-btn>
                         </v-toolbar>
                         <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
                             <v-toolbar-title>{{ element.name }}</v-toolbar-title>
@@ -164,6 +167,148 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
+            <v-dialog v-model="dialogText" persistent width="800">
+                <v-card >
+                    <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
+                    <v-card-text>
+                        <br>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;ACCESS-CONTROL&#62;</label>
+                            <v-text-field v-model="editARXML.access" placeholder="MODELED or CUSTOM" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;ACCESS-CONTROL&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;">&#60;PN-RESET-TIMER&#62;</label>
+                            <v-text-field v-model="editARXML.resettimer" placeholder="Time" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;PN-RESET-TIMER&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;COMMUNICATION-CONNECTORS&#62;
+                                <v-btn @click="newTextConnector()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 250px;">
+                            <v-row v-for="(item, i) in editARXML.connector" :key="i" style="height: 210px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 30px;">
+                                            <v-btn @click="deletTextConnector(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;ETHERNET-COMMUNICATION-CONNECTOR&#62;
+                                        </label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;SHORT-NAME&#62;</label>
+                                        <v-text-field v-model="item.name" placeholder="String"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:2px 0px 2px 100px;">
+                                        <v-col cols="5">
+                                        <label>&#60;MAXIMUM-TRANSMISSION-UNIT&#62;</label>
+                                        </v-col><v-col cols="2">
+                                        <v-text-field v-model="item.mtu" placeholder="Int" style="margin:-5px 0px 0px 0px;" class="lable-placeholer-color" dense></v-text-field>
+                                        </v-col><v-col cols="5">
+                                        <label style="padding:10px;">&#60;&#47;MAXIMUM-TRANSMISSION-UNIT&#62;</label>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;PATH-MTU-TIMEOUT&#62;</label>
+                                        <v-text-field v-model="item.timeout" placeholder="String"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;PATH-MTU-TIMEOUT&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;PNC-FILTER-DATA-MASK&#62;</label>
+                                        <v-text-field v-model="item.mask" placeholder="Int"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;PNC-FILTER-DATA-MASK&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;PATH-MTU-ENABLED&#62;</label>
+                                        <v-text-field v-model="item.mtuenable" placeholder="true or false"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;PATH-MTU-ENABLED&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:2px 0px 2px 100px;">
+                                        <v-col cols="5">
+                                        <label>&#60;UNICAST-NETWORK-ENDPOINT-REF&#62;</label>
+                                        </v-col><v-col cols="4">
+                                        <v-text-field v-model="item.endpoint" placeholder="Path" style="margin:-5px 0px 0px 0px;" class="lable-placeholer-color" dense></v-text-field>
+                                        </v-col><v-col cols="3">
+                                        <label style="padding:10px;">&#60;&#47;UNICAST-NETWORK-ENDPOINT-REF&#62;</label>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left:80px;">&#60;&#47;ETHERNET-COMMUNICATION-CONNECTOR&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row style="height: 15px;">
+                            <label style="padding:10px;">&#60;&#47;COMMUNICATION-CONNECTORS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;SERVICE-DISCOVER-CONFIGS&#62;
+                                <v-btn @click="newTextService()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 200px;">
+                            <v-row v-for="(item, i) in editARXML.servicediscover" :key="i" style="height: 100px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                            <v-btn @click="deletTextService(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;SOMEIP-SERVICE-DISCOVERY&#62;
+                                        </label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <v-col cols="5">
+                                        <label style="padding:10px;margin:2px 0px 2px 60px;">&#60;MULTICAST-SD-IP-ADDRESS-REF&#62;</label>
+                                        </v-col><v-col cols="3">
+                                        <v-text-field v-model="item.msia" placeholder="Path" style="margin:-5px 0px 0px 0px;" class="lable-placeholer-color" dense></v-text-field>
+                                        </v-col><v-col cols="4">
+                                        <label style="padding:10px;">&#60;&#47;MULTICAST-SD-IP-ADDRESS-REF&#62;</label>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <v-col cols="5">
+                                        <label style="padding:10px;margin:2px 0px 2px 60px;">&#60;SOMEIP-SERVICE-DISCOVERY-PORT&#62;</label>
+                                        </v-col><v-col cols="3">
+                                        <v-text-field v-model="item.ssdp" placeholder="Integer" style="margin:-5px 0px 0px 15px;" class="lable-placeholer-color" dense></v-text-field>
+                                        </v-col><v-col cols="4">
+                                        <label style="padding:10px;">&#60;&#47;SOMEIP-SERVICE-DISCOVERY-PORT&#62;</label>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;SOMEIP-SERVICE-DISCOVERY&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row>
+                            <label style="padding:10px;">&#60;&#47;SERVICE-DISCOVER-CONFIGS&#62;</label>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="saveARXML()" >
+                            Save
+                        </v-btn>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text @click="cancelARXML()">
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -177,7 +322,7 @@ import Sortable from 'sortablejs';
 
 export default {
 //    components: {draggable},
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting, draggable},
     computed: { 
         activeUUID() {
@@ -231,6 +376,10 @@ export default {
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
             iselementOpenClose: this.minimaptoolbar,
+            dialogText: false,
+            editARXML: {name:'', access: '', resettimer: '', connector: [], servicediscover: []},
+            editTextConnector: { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: '', id:''},
+            editTextSer: {msia: null, ssdp: '', id: ''},
             isCCOpenClose: true,
             isSDCOpenClose: true,
             accessControl: ['MODELED', 'CUSTOM'],
@@ -252,13 +401,7 @@ export default {
             editedItemCC: { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: '', id:''},
             defaultItemCC: { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: '', id:''},
             selectEndpointItem: [],
-            headersEndpoint: [
-                { text: 'name', align: 'start', sortable: false, value: 'fullname' },
-                { text: 'Domain name',  sortable: false, value: 'domainname' },
-            ],
             selectIPAdderssItem: [],
-            deleteChangeLineCC: [],
-            deleteChangeLineSDC: [],
 
             isdeleteSDCItem: false,
             selectdeleteSDCItem: [],
@@ -348,25 +491,20 @@ export default {
         },
         deleteCCItem() {
             if (this.isdeleteCCItem == true) {
-                for(let i=0; i<this.element.connector.length; i++){
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+i)
-                    if(endLine != undefined) {
-                        this.deleteChangeLineCC.push({id:this.element.connector[i].id, endLine:endLine})
-                        this.deleteLine(this.element.uuid+'/cctable-'+i)
+                this.selectdeleteCCItem.forEach(item => {
+                    for(let i=0; i<this.element.connector.length; i++){
+                        if (item.id == this.element.connector[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+this.element.connector[i].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/cctable-'+this.element.connector[i].id)
+                            }
+                        }
                     }
-                }
-
+                })
+                
                 this.$store.commit('deleteRefTable', {deleteName:'CommunicationC', deletItemList: this.selectdeleteCCItem, path: this.element.path, name: this.element.name})
                 this.element.connector = this.element.connector.filter(item => {
                          return this.selectdeleteCCItem.indexOf(item) < 0 })
-
-                for(let n=0; n<this.element.connector.length; n++) {
-                    for(let idx=0; idx<this.deleteChangeLineCC.length; idx++) {
-                        if (this.element.connector[n].id == this.deleteChangeLineCC[idx].id) {
-                            this.newLine(this.element.uuid+'/cctable-'+n, this.element.uuid+'/cctable', this.deleteChangeLineCC[idx].endLine)
-                        }
-                    }
-                }
 
                 this.isdeleteCCItem = false
                 this.selectdeleteCCItem = []
@@ -380,7 +518,7 @@ export default {
             this.editedItemCC.timeout = this.element.connector[idx].timeout
             this.editedItemCC.mask = this.element.connector[idx].mask
             if ( this.element.connector[idx].endpoint != null) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+idx)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+this.element.connector[idx].id)
                 if (endLine == undefined) {
                     endLine = this.$store.getters.getEthernetClusterPath(this.element.connector[idx].endpoint)
                 }
@@ -401,8 +539,7 @@ export default {
             this.editedItemCC.id = n
 
             if(this.editedItemCC.endpoint != null) {
-                var datacount = this.element.connector.length
-                this.newLine(this.element.uuid+'/cctable-'+datacount, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
+                this.newLine(this.element.uuid+'/cctable-'+n, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
                 this.editedItemCC.endpoint = this.editedItemCC.endpoint.name
             }
             const addObj = Object.assign({}, this.editedItemCC);
@@ -411,15 +548,15 @@ export default {
             //this.initSortable()
         },
         editCC(idx) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+idx)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+this.element.connector[idx].id)
             if (endLine != undefined && this.editedItemCC.endpoint == null) {
-                this.deleteLine(this.element.uuid+'/cctable-'+idx)
+                this.deleteLine(this.element.uuid+'/cctable-'+this.element.connector[idx].id)
                 this.element.connector[idx].endpoint = null
             } else if (endLine != undefined && endLine != this.editedItemCC.endpoint.uuid) {
-                this.deleteLine(this.element.uuid+'/cctable-'+idx)
-                this.newLine(this.element.uuid+'/cctable-'+idx, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
-            } else if (endLine == undefined && this.editedItemCC.endpoint != null) {
-                this.newLine(this.element.uuid+'/cctable-'+idx, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
+                this.deleteLine(this.element.uuid+'/cctable-'+this.element.connector[idx].id)
+                this.newLine(this.element.uuid+'/cctable-'+this.element.connector[idx].id, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
+            } else if (endLine == undefined && this.editedItemCC.endpoint != null && this.editedItemCC.endpoint.uuid != null) {
+                this.newLine(this.element.uuid+'/cctable-'+this.element.connector[idx].id, this.element.uuid+'/cctable', this.editedItemCC.endpoint.uuid)
                 this.element.connector[idx].endpoint = this.editedItemCC.endpoint.name
             } else if (this.editedItemCC.endpoint != null && endLine == this.editedItemCC.endpoint.uuid && this.element.connector[idx].endpoint != this.editedItemCC.endpoint.name) {
                 this.element.connector[idx].endpoint = this.editedItemCC.endpoint.name
@@ -451,6 +588,7 @@ export default {
         setMDEndpointSelect() {
             if (this.isEditingMDEndpoint == true) {
                 if (this.editedItemCC.endpoint != null && this.editedItemCC.endpoint.uuid != null) {
+                                    console.log(this.editedItemCC.endpoint.uuid)
                     this.infoEthernetCluster()
                     this.$store.commit('setDetailView', {uuid: this.editedItemCC.endpoint.uuid, element: constant.EthernetCluster_str} )
                     document.getElementById(this.editedItemCC.endpoint.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -477,35 +615,29 @@ export default {
         },
         deleteSDC() {
             if (this.isdeleteSDCItem == true) {
-                for(let i=0; i<this.element.servicediscover.length; i++){
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+i)
-                    if(endLine != undefined) {
-                        this.deleteChangeLineSDC.push({id:this.element.servicediscover[i].id, endLine:endLine})
-                        this.deleteLine(this.element.uuid+'/sdctable-'+i)
+                this.selectdeleteSDCItem.forEach(item => {
+                    for(let i=0; i<this.element.servicediscover.length; i++){
+                        if (item.id == this.element.servicediscover[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+this.element.servicediscover[i].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/sdctable-'+this.element.servicediscover[i].id)
+                            }
+                        }
                     }
-                }
-
+                })
+                
                 this.element.servicediscover = this.element.servicediscover.filter(item => {
                          return this.selectdeleteSDCItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.element.servicediscover.length; n++) {
-                    for(let idx=0; idx<this.deleteChangeLineSDC.length; idx++) {
-                        if (this.element.servicediscover[n].id == this.deleteChangeLineSDC[idx].id) {
-                            this.newLine(this.element.uuid+'/sdctable-'+n, this.element.uuid+'/sdctable', this.deleteChangeLineSDC[idx].endLine)
-                        }
-                    }
-                }
-
                 this.isdeleteSDCItem = false
                 this.selectdeleteSDCItem = []
-                this.deleteChangeLineSDC = []
             } 
         },
         openSDC(idx) {
             this.selNetworkEndpoint = this.$store.getters.getNetworkEndPoint
             this.editedItemSDC.ssdp = this.element.servicediscover[idx].ssdp
             if ( this.element.servicediscover[idx].msia != null) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+idx)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+this.element.servicediscover[idx].id)
                 if (endLine == undefined) {
                     endLine = this.$store.getters.getEthernetClusterPath(this.element.servicediscover[idx].msia)
                 }
@@ -518,15 +650,15 @@ export default {
             this.setlistEthernetCluster()
         },
         editSDC(idx) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+idx)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+this.element.servicediscover[idx].id)
             if (endLine != undefined && this.editedItemSDC.msia == null) {
-                this.deleteLine(this.element.uuid+'/sdctable-'+idx)
+                this.deleteLine(this.element.uuid+'/sdctable-'+this.element.servicediscover[idx].id)
                 this.element.servicediscover[idx].msia = null
             } else if (endLine != undefined && endLine != this.editedItemSDC.msia.uuid) {
-                this.deleteLine(this.element.uuid+'/sdctable-'+idx)
-                this.newLine(this.element.uuid+'/sdctable-'+idx, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)
-            } else if (endLine == undefined && this.editedItemSDC.msia != null) {
-                this.newLine(this.element.uuid+'/sdctable-'+idx, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)
+                this.deleteLine(this.element.uuid+'/sdctable-'+this.element.servicediscover[idx].id)
+                this.newLine(this.element.uuid+'/sdctable-'+this.element.servicediscover[idx].id, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)
+            } else if (endLine == undefined && this.editedItemSDC.msia != null && this.editedItemSDC.msia.uuid != null) {
+                this.newLine(this.element.uuid+'/sdctable-'+this.element.servicediscover[idx].id, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)
                 this.element.servicediscover[idx].msia = this.editedItemSDC.msia.name
             } else if (this.editedItemSDC.msia != null && endLine == this.editedItemSDC.msia.uuid && this.element.servicediscover[idx].msia != this.editedItemSDC.msia.name) {
                 this.element.servicediscover[idx].msia = this.editedItemSDC.msia.name
@@ -553,8 +685,7 @@ export default {
             this.editedItemSDC.id = n
 
             if(this.editedItemSDC.msia != null) {
-                var datacount = this.element.servicediscover.length
-                this.newLine(this.element.uuid+'/sdctable-'+datacount, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)
+                this.newLine(this.element.uuid+'/sdctable-'+n, this.element.uuid+'/sdctable', this.editedItemSDC.msia.uuid)
                 this.editedItemSDC.msia = this.editedItemSDC.msia.name
             }
             const addObj = Object.assign({}, this.editedItemSDC);
@@ -614,6 +745,184 @@ export default {
         newLine(startLine, drawLine, endLine) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
             EventBus.$emit('new-line', drawLine, endLine)
+        },
+
+        viewARXML() {
+            this.editARXML.name = this.element.name
+            this.editARXML.access = this.element.access
+            this.editARXML.resettimer = this.element.resettimer
+            this.editARXML.connector = JSON.parse(JSON.stringify(this.element.connector))
+            this.editARXML.servicediscover = JSON.parse(JSON.stringify(this.element.servicediscover))
+            this.dialogText= true
+        },
+        saveARXML() {
+            var isHaveTable
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editMachineDesign', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
+            this.element.name = this.editARXML.name
+            this.element.access = this.editARXML.access
+            this.element.resettimer = this.editARXML.resettimer
+
+            if (this.editARXML.connector.length > 0) {
+                this.element.connector.forEach(item => {
+                    var isExistence = false
+                    this.editARXML.connector.forEach(data => {
+                        if (data.id == item.id) {
+                            isExistence = true
+                            if (data.name != item.name) {
+                                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                        changeName: 'CommunicationC', listname: data.name, beforename: item.name} )
+                            }
+                        }
+                    })
+                    if (!isExistence) {
+                        this.$store.commit('deleteRefTable', {deleteName:'CommunicationC', deletItemList: item.name, path: this.element.path, name: this.element.name})
+                    }
+                })
+            } else {
+                if (this.element.connector.length > 0) {
+                    this.element.connector.forEach(item => {
+                        this.$store.commit('deleteRefTable', {deleteName:'CommunicationC', deletItemList: item.name, path: this.element.path, name: this.element.name})
+                    })
+                }
+            }
+
+            if (this.editARXML.connector.length > 0) {
+                this.editARXML.connector.forEach(item => {
+                    isHaveTable = false
+                    for(let n=0; n<this.element.connector.length; n++){
+                        if (this.element.connector[n].id == item.id &&
+                            this.element.connector[n].endpoint == item.endpoint ) {
+                            isHaveTable = true
+                        }
+                    }
+                    if (!isHaveTable) {
+                        var endLineC = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+item.id)
+                        if (endLineC != undefined) {
+                            this.deleteLine(this.element.uuid+'/cctable-'+item.id)
+                        }
+                        var changEndLineC = this.$store.getters.getEthernetClusterPath(item.endpoint)
+                        console.log(changEndLineC)
+                        if (changEndLineC != null) {
+                            this.newLine(this.element.uuid+'/cctable-'+item.id, this.element.uuid+'/cctable', changEndLineC)
+                        }
+                    }
+                })
+                this.element.connector.forEach(item => {
+                    isHaveTable = false
+                    this.editARXML.connector.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        var endLineC = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+item.id)
+                        if (endLineC != undefined) {
+                            this.deleteLine(this.element.uuid+'/cctable-'+item.id)
+                        }
+                    }
+                })
+            } else {
+                if (this.element.connector.length > 0) {
+                    this.element.connector.forEach(item => {
+                        var endLineC = this.$store.getters.getChangeEndLine(this.element.uuid+'/cctable-'+item.id)
+                        if (endLineC != undefined) {
+                            this.deleteLine(this.element.uuid+'/cctable-'+item.id)
+                        }
+                    })
+                }
+            }
+
+            if (this.editARXML.servicediscover.length > 0) {
+                this.editARXML.servicediscover.forEach(item => {
+                    isHaveTable = false
+                    for(let n=0; n<this.element.servicediscover.length; n++){
+                        if (this.element.servicediscover[n].id == item.id && 
+                            this.element.servicediscover[n].msia == item.msia) {
+                            isHaveTable = true
+                        }
+                    }
+                    if (!isHaveTable) {
+                        var endLineS = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+item.id)
+                        if (endLineS != undefined) {
+                            this.deleteLine(this.element.uuid+'/sdctable-'+item.id)
+                        }
+                        var changEndLineS = this.$store.getters.getEthernetClusterPath(item.msia)
+                        if (changEndLineS != null) {
+                            this.newLine(this.element.uuid+'/sdctable-'+item.id, this.element.uuid+'/sdctable', changEndLineS)
+                        }
+                    }
+                })
+                this.element.servicediscover.forEach(item => {
+                    isHaveTable = false
+                    this.editARXML.servicediscover.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        var endLineS = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+item.id)
+                        if (endLineS != undefined) {
+                            this.deleteLine(this.element.uuid+'/sdctable-'+item.id)
+                        }
+                    }
+                })
+            } else {
+                if (this.element.servicediscover.length > 0) {
+                    this.element.servicediscover.forEach(item => {
+                        if (item.msia != null) {
+                            var endLineS = this.$store.getters.getChangeEndLine(this.element.uuid+'/sdctable-'+item.id)
+                            if (endLineS != undefined) {
+                                this.deleteLine(this.element.uuid+'/sdctable-'+item.id)
+                            }
+                        }
+                    })
+                }
+            }
+            this.element.connector = JSON.parse(JSON.stringify(this.editARXML.connector))
+            this.element.servicediscover = JSON.parse(JSON.stringify(this.editARXML.servicediscover))
+            this.cancelARXML()
+        },
+        cancelARXML() {
+            this.editARXML = {name:'', access: '', resettimer: '', connector: [], servicediscover: []}
+            this.editTextConnector = { name: '', mtu: '', mtuenable: null, timeout: '', endpoint: null, mask: '', id:''}
+            this.editTextSer = {msia: null, ssdp: '', id: ''}
+            this.dialogText = false
+        },
+        newTextConnector() {
+            this.editTextConnector = { const : '', symbol: '', lowerlimit: '', upperlimit: '', desc: '', id: ''} 
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.editARXML.connector.some(item => item.id === n)
+            }
+            this.editTextConnector.id = n
+
+            const addObj = Object.assign({}, this.editTextConnector)
+            this.editARXML.connector.push(addObj);
+        },
+        deletTextConnector(idx) {
+            this.editARXML.connector.splice(idx,1)
+        },
+        newTextService() {
+            this.editTextSer = { msia : null, ssdp: '', id: ''} 
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.editARXML.servicediscover.some(item => item.id === n)
+            }
+            this.editTextSer.id = n
+
+            const addObj = Object.assign({}, this.editTextSer)
+            this.editARXML.servicediscover.push(addObj);
+        },
+        deletTextService(idx) {
+            this.editARXML.servicediscover.splice(idx,1)
         },
     }
 }

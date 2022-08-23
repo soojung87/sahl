@@ -188,7 +188,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -363,7 +363,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/PERData-'+idx)
                 this.newLine(this.element.uuid+'/PERData-'+idx, this.element.uuid+'/PERData', this.editItem.type.uuid)
                 this.element.data[idx].type = this.editItem.type.name
-            } else if (endLine == undefined && this.editItem.type != null) {
+            } else if (endLine == undefined && this.editItem.type != null && this.editItem.type.uuid != null) {
                 this.newLine(this.element.uuid+'/PERData-'+idx, this.element.uuid+'/PERData', this.editItem.type.uuid)
                 this.element.data[idx].type = this.editItem.type.name
             }
@@ -473,7 +473,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/PERSerial-'+idx)
                 this.newLine(this.element.uuid+'/PERSerial-'+idx, this.element.uuid+'/PERSerial', this.editSerialItem.serial.uuid)
                 this.element.serialization[idx].serial = this.editSerialItem.serial.name
-            } else if (endLine == undefined && this.editSerialItem.serial != null) {
+            } else if (endLine == undefined && this.editSerialItem.serial != null && this.editSerialItem.serial.uuid != null) {
                 this.newLine(this.element.uuid+'/PERSerial-'+idx, this.element.uuid+'/PERSerial', this.editSerialItem.serial.uuid)
                 this.element.serialization[idx].serial = this.editSerialItem.serial.name
             }
@@ -528,7 +528,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementImplementation', {
-                    name: this.$store.getters.getNameImplementation, input: false, path: '',
+                    name: this.$store.getters.getNameImplementation, path: '',
                     top: elementY, left: elementX,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', traceName: '', trace: [],
                     typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],

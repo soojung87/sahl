@@ -93,7 +93,7 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
-            <v-dialog v-model="dialogText" persistent scrollable width="800">
+            <v-dialog v-model="dialogText" persistent width="800">
                 <v-card >
                     <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
                     <v-card-text>
@@ -109,16 +109,15 @@
                             <label style="padding:10px;">&#60;&#47;INITIAL-MODE-REF&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px;height:15px;">&#60;MODE-DECLARATIONS&#62;
+                            <label style="padding:10px;height:50px;">&#60;MODE-DECLARATIONS&#62;
                                 <v-btn @click="newTextMD()" icon color="teal darken" x-samll dark>
                                     <v-icon dense dark>mdi-plus</v-icon>
                                 </v-btn>
                             </label>
                         </v-row>
                         <v-row>
-                            <div class="text-editDialog">
-                                <br>
-                                <v-row v-for="(item, i) in editARXML.modedeclaration" :key="i" style="height: 90px;">
+                            <div class="text-editDialog" style="height: 300px;">
+                                <v-row v-for="(item, i) in editARXML.modedeclaration" :key="i" style="height: 80px;">
                                     <div>
                                         <v-row style="height: 25px;margin:0px;">
                                             <label style="padding:10px;margin:2px 0px 2px 30px;">
@@ -208,8 +207,8 @@ export default {
             iselementOpenClose: this.minimaptoolbar,
             dialogText: false,
             editARXML: {name:'', initmode: null, modedeclaration: []},
+            editTextItem: { name: '', value: '', id: ''},
             isModeDeclarationOpenClose: true,
-            editmodeDeclaration: '',
 
             isdeleteModeDeclaration: false,
             headerModeDeclaration: [
@@ -322,27 +321,68 @@ export default {
             this.dialogText= true
         },
         saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editModeDeclarationGroup', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
             this.element.name = this.editARXML.name
-            if (this.editARXML.initmode == null ) {
+
+            if (this.editARXML.initmode == null) {
                 this.element.initmode = this.editARXML.initmode
             } else {
                 this.editARXML.modedeclaration.forEach(element => {
-                    if (element == this.editARXML.initmode) {
+                    if (element.name == this.editARXML.initmode) {
                         this.element.initmode = this.editARXML.initmode
                     }
                 })
+            }
+
+            if (this.editARXML.modedeclaration.length > 0) {
+                this.element.modedeclaration.forEach(item => {
+                    var isExistence = false
+                    this.editARXML.modedeclaration.forEach(data => {
+                        if (data.id == item.id) {
+                            isExistence = true
+                            if (data.name != item.name) {
+                                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                        changeName: 'modeD', listname: data.name, beforename: item.name} )
+                            }
+                        }
+                    })
+                    if (!isExistence) {
+                        this.$store.commit('deleteRefTable', {deleteName:'modeDeclar', deletItemList: item.name, path: this.element.path, name: this.element.name})
+                    }
+                })
+            } else {
+                if (this.element.modedeclaration.length > 0) {
+                    this.element.modedeclaration.forEach(item => {
+                        this.$store.commit('deleteRefTable', {deleteName:'modeDeclar', deletItemList: item.name, path: this.element.path, name: this.element.name})
+                    })
+                }
             }
             this.element.modedeclaration = JSON.parse(JSON.stringify(this.editARXML.modedeclaration))
             this.cancelARXML()
         },
         cancelARXML() {
             this.editARXML = {name:'', initmode: null, modedeclaration: []}
-            this.editmodeDeclaration = ''
+            this.editTextItem = { name: '', value: '', id: ''}
             this.dialogText = false
         },
         newTextMD() {
-            this.editARXML.modedeclaration.push(this.editmodeDeclaration);
-            this.editmodeDeclaration = ''
+            this.editTextItem = { name: '', value: '', id: ''}
+
+            let res = true, n = 0
+            while (res) {
+                n++;
+                res = this.editARXML.modedeclaration.some(item => item.id === n)
+            }
+            this.editTextItem.id = n
+
+            const addObj = Object.assign({}, this.editTextItem)
+            this.editARXML.modedeclaration.push(addObj);
         },
         deletTextMD(idx) {
             this.editARXML.modedeclaration.splice(idx,1)

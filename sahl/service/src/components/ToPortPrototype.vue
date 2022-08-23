@@ -16,6 +16,9 @@
                             <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
                             <v-toolbar-title>Service Instance To Port Prototype Mapping</v-toolbar-title>
                             <v-spacer></v-spacer>
+                            <v-btn v-if="minimaptoolbar" icon @click="viewARXML">
+                                <v-icon> mdi-format-text</v-icon>
+                            </v-btn>
                         </v-toolbar>
                         <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
                             <v-toolbar-title>{{ element.name }}</v-toolbar-title>
@@ -155,6 +158,58 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
+            <v-dialog v-model="dialogText" persistent width="800">
+                <v-card >
+                    <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
+                    <v-card-text>
+                        <br>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;">&#60;PORT-PROTOTYPE-IREF&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;margin:2px 0px 2px 30px;">&#60;TARGET-PORT-PROTOTYPE-REF&#62;</label>
+                            <v-text-field v-model="editARXML.porttype" placeholder="Path" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;TARGET-PORT-PROTOTYPE-REF&#62;</label>
+                        </v-row>
+                        <v-row style="height: 35px;">
+                            <label style="padding:10px;margin:2px 0px 2px 30px;">&#60;CONTEXT-ROOT-SW-COMPONENT-PROTOTYPE-REF&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <v-text-field v-model="editARXML.context" placeholder="Path" style="margin:2px 0px 2px 80px" class="lable-placeholer-color" dense></v-text-field>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;margin:2px 0px 2px 30px;">&#60;&#47;CONTEXT-ROOT-SW-COMPONENT-PROTOTYPE-REF&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;&#47;PORT-PROTOTYPE-IREF&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;PROCESS-REF&#62;</label>
+                            <v-text-field v-model="editARXML.process" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;PROCESS-REF&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;SERVICE-INSTANCE-REF&#62;</label>
+                            <v-text-field v-model="editARXML.serviceIns" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SERVICE-INSTANCE-REF&#62;</label>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="saveARXML()" >
+                            Save
+                        </v-btn>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text @click="cancelARXML()">
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -166,7 +221,7 @@ import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -215,6 +270,8 @@ export default {
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            dialogText: false,
+            editARXML: {name:'', selectPort:null, porttype: null, context: null, process:null, selectServiceIns: null, serviceIns: null},
             isPortOpenClose: true,
             isServiceInsOpenClose: true,
             selectPortList: ['P-PORT-PROTOTYPE','R-PORT-PROTOTYPE', 'PR-PORT-PROTOTYPE'],
@@ -408,7 +465,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementProcessDesign', {
-                name: this.$store.getters.getNameProcessDesign, input: false, path: '',
+                name: this.$store.getters.getNameProcessDesign, path: '',
                 top: elementY, left: elementX, zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
                 executableref: null, determin: [],
             })
@@ -479,20 +536,19 @@ export default {
 
             if (this.element.selectServiceIns == "PROVIDED-SOMEIP-SERVICE-INSTANCE") {
                 this.$store.commit('addElementProvidedSomeIP', {
-                    name: this.$store.getters.getNameProvidedSomeIP, input: false, path: '',
+                    name: this.$store.getters.getNameProvidedSomeIP, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     deployref: null, someipserver: null, id: '', eventP: [], method: [], eventG: [],
                 })
                 EventBus.$emit('add-element', constant.ProvidedSomeIP_str)
             } else if (this.element.selectServiceIns == "REQUIRED-SOMEIP-SERVICE-INSTANCE") {
                 this.$store.commit('addElementRequiredSomeIP', {  //deployref, clientref,ver는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameRequiredSomeIP, input: false, path: '',
+                    name: this.$store.getters.getNameRequiredSomeIP, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     deployref: null, minover: '', id: '', clientref: null, ver: null, method: [], requiredevent: [],
                 })
                 EventBus.$emit('add-element', constant.RequiredSomeIP_str)
             }
-            EventBus.$emit('add-element', constant.ServiceInstances_str)
             this.$store.commit('editToPortPrototype', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
 
@@ -510,6 +566,99 @@ export default {
         newLine(startLine, drawLine, endLine) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
             EventBus.$emit('new-line', drawLine, endLine)
+        },
+
+        viewARXML() {
+            this.editARXML.name = this.element.name
+            this.editARXML.porttype = this.element.porttype
+            this.editARXML.context = this.element.context
+            this.editARXML.process = this.element.process
+            this.editARXML.serviceIns = this.element.serviceIns
+            this.dialogText= true
+        },
+        saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editToPortPrototype', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
+            this.element.name = this.editARXML.name
+
+            var endLine = null, changEndLine = null
+            if (this.editARXML.porttype != this.element.porttype) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toportport')
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/toportport')
+                }
+                changEndLine = this.$store.getters.getSWComponentPath(this.editARXML.porttype,1)
+                if (changEndLine != null) {
+                    this.element.selectPort = "P-PORT-PROTOTYPE"
+                    this.newLine(this.element.uuid+'/toportport', this.element.uuid+'/toportport', changEndLine)
+                } else {
+                    changEndLine = this.$store.getters.getSWComponentPath(this.editARXML.porttype,2)
+                    if (changEndLine != null) {
+                        this.element.selectPort = "R-PORT-PROTOTYPE"
+                        this.newLine(this.element.uuid+'/toportport', this.element.uuid+'/toportport', changEndLine)
+                    } else {
+                        changEndLine = this.$store.getters.getSWComponentPath(this.editARXML.porttype,3)
+                        if (changEndLine != null) {
+                            this.element.selectPort = "PR-PORT-PROTOTYPE"
+                            this.newLine(this.element.uuid+'/toportport', this.element.uuid+'/toportport', changEndLine)
+                        } 
+                    }
+                }
+            }
+            this.element.porttype = this.editARXML.porttype
+
+            if (this.editARXML.context != this.element.context) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toportcontext')
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/toportcontext')
+                }
+                changEndLine = this.$store.getters.getRootSWComponentPrototypePath(this.editARXML.context)
+                if (changEndLine != null) {
+                    this.newLine(this.element.uuid+'/toportcontext', this.element.uuid+'/toportcontext', changEndLine)
+                }
+            }
+            this.element.context = this.editARXML.context
+
+            if (this.editARXML.process != this.element.process) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toportprocess')
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/toportprocess')
+                }
+                changEndLine = this.$store.getters.getProcessDesignPath(this.editARXML.process)
+                if (changEndLine != null) {
+                    this.newLine(this.element.uuid+'/toportprocess', this.element.uuid+'/toportprocess', changEndLine)
+                }
+            }
+            this.element.process = this.editARXML.process
+
+            if (this.editARXML.serviceIns != this.element.serviceIns) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toportservice')
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/toportservice')
+                }
+                changEndLine = this.$store.getters.getProvidedSomeIPPath(this.editARXML.serviceIns)
+                if (changEndLine != null) {
+                    this.element.selectServiceIns = "PROVIDED-SOMEIP-SERVICE-INSTANCE"
+                    this.newLine(this.element.uuid+'/toportservice', this.element.uuid+'/toportservice', changEndLine)
+                } else {
+                    changEndLine = this.$store.getters.getRequiredSomeIPPath(this.editARXML.serviceIns)
+                    if (changEndLine != null) {
+                        this.element.selectServiceIns = "REQUIRED-SOMEIP-SERVICE-INSTANCE"
+                        this.newLine(this.element.uuid+'/toportservice', this.element.uuid+'/toportservice', changEndLine)
+                    }
+                }
+            }
+            this.element.serviceIns = this.editARXML.serviceIns
+
+            this.cancelARXML()
+        },
+        cancelARXML() {
+            this.editARXML = {name:'', selectPort:null, porttype: null, context: null, process:null, selectServiceIns: null, serviceIns: null}
+            this.dialogText = false
         },
 
     },

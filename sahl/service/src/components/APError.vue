@@ -247,12 +247,11 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementErrorDomain', {
-                name: this.$store.getters.getNameErrorDomain,  input: false, path: '',
+                name: this.$store.getters.getNameErrorDomain, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 namespace:'', value:'',
             })
             EventBus.$emit('add-element', constant.Service_str)
-            EventBus.$emit('add-element', constant.Errors_str)
             EventBus.$emit('add-element', constant.ErrorDomain_str)
             this.$store.commit('editError', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
@@ -281,6 +280,13 @@ export default {
             this.dialogText= true
         },
         saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editError', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
             this.element.name = this.editARXML.name
             this.element.desc = this.editARXML.desc
             this.element.errorcode = this.editARXML.errorcode
@@ -289,9 +295,9 @@ export default {
                 if (endLine != undefined) {
                     this.deleteLine(this.element.uuid+'/errordomain')
                 }
-                var chandEndLine = this.$store.getters.getErrorDomainPath(this.editARXML.errorDref)
-                if (chandEndLine != null) {
-                    this.newLine(this.element.uuid+'/errordomain', this.element.uuid+'/errordomain', chandEndLine)
+                var changEndLine = this.$store.getters.getErrorDomainPath(this.editARXML.errorDref)
+                if (changEndLine != null) {
+                    this.newLine(this.element.uuid+'/errordomain', this.element.uuid+'/errordomain', changEndLine)
                 }
             }
             this.element.errorDref = this.editARXML.errorDref

@@ -66,7 +66,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Implementation')"
                 @resizing="changeElementSize()">
-                <ImplementationDataType :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <ImplementationDataType :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
 
             <vue-draggable-resizable :id="element.uuid+location"
@@ -93,7 +93,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'HW Element')"
                 @resizing="changeElementSize()">
-                <HWElement :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <HWElement :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -119,7 +119,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Machine Designs')"
                 @resizing="changeElementSize()">
-                <MachineDesign :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <MachineDesign :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -198,7 +198,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Process Design')"
                 @resizing="changeElementSize()">
-                <ProcessDesign :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <ProcessDesign :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -211,7 +211,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Executable')"
                 @resizing="changeElementSize()">
-                <Executable :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <Executable :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -329,7 +329,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SomeIP To Machine Mapping')"
                 @resizing="changeElementSize()">
-                <SomeIPtoMachine :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <SomeIPtoMachine :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -342,7 +342,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'To Port Prototype Mapping')"
                 @resizing="changeElementSize()">
-                <ToPortPrototype :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <ToPortPrototype :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -448,7 +448,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'File Array')"
                 @resizing="changeElementSize()">
-                <PerFileArray :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <PerFileArray :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -487,7 +487,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'KeyV Database Interface')"
                 @resizing="changeElementSize()">
-                <PerKeyValueDI :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <PerKeyValueDI :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -500,7 +500,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'PP To File Array Mapping')"
                 @resizing="changeElementSize()">
-                <PPPtoFileArray :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <PPPtoFileArray :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -513,7 +513,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'PP To Key Value Database Mapping')"
                 @resizing="changeElementSize()">
-                <PPPtoKeyValue :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <PPPtoKeyValue :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -539,7 +539,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Contribution To Machine Mapping')"
                 @resizing="changeElementSize()">
-                <PHMtoMachine :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <PHMtoMachine :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -591,7 +591,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Recovery VIA Application')"
                 @resizing="changeElementSize()">
-                <PHMRecoveryVia :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <PHMRecoveryVia :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' :location='location'/> 
             </vue-draggable-resizable>
 
             <vue-draggable-resizable :id="element.uuid+location"
@@ -683,7 +683,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SoftWare Cluster')"
                 @resizing="changeElementSize()">
-                <SoftwareCluster :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <SoftwareCluster :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -696,7 +696,7 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'SoftWare Package')"
                 @resizing="changeElementSize()">
-                <SoftwarePackage :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <SoftwarePackage :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' location='location'/> 
             </vue-draggable-resizable>
             <vue-draggable-resizable :id="element.uuid+location"
                 class-name-active="my-active-class"
@@ -709,9 +709,42 @@
                 @activated="onActivated(element.uuid)" @deactivated="onDeactivated(element.uuid)"
                 @dragging="(left, top) => onElementDrag(element.uuid, left, top, 'Vehicle Package')"
                 @resizing="changeElementSize()">
-                <VehiclePackage :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar'/> 
+                <VehiclePackage :element='element' :isDatailView="false" :minimaptoolbar='minimaptoolbar' location='location'/> 
             </vue-draggable-resizable>
         </v-main>
+        <v-dialog v-model='dialogSelectElement' width="600" persistent scrollable>
+            <v-card>
+                <v-card-title class="text-h6 green accent-1"> 
+                    Select Input Element  
+                </v-card-title>
+                <v-card-text>
+                    <br>
+                    <v-list flat>
+                         <v-list-item-group v-model="selectElement" multiple>
+                            <v-list-item v-for="(item,idx) in editInputList" :key="idx" :value="item">
+                                <template v-slot:default="{ active }">
+                                    <v-list-item-action>
+                                        <v-checkbox :input-value="active"></v-checkbox>
+                                    </v-list-item-action>
+                                    <v-list-item-content>
+                                        <v-list-item-title v-text="item.path"></v-list-item-title>
+                                    </v-list-item-content>
+                                </template>
+                            </v-list-item>
+                        </v-list-item-group>
+                    </v-list>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" text  @click="selectInputElement">
+                        Select
+                    </v-btn>
+                    <v-btn color="primary" text @click="cancelInputElement">
+                        Cancel
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -775,6 +808,7 @@ import { EventBus } from '../main'
 import LeaderLine from 'leader-line-vue'
 import constant from "../store/constants.js"
 
+
 export default{
     props: ['minimaptoolbar', 'location'],
     components:{CompuMethod, DataConstr, SWBaseType, ApplicationArrayDate, ImplementationDataType, 
@@ -806,9 +840,6 @@ export default{
         setting() {
             return this.$store.state.setting
         },
-        isInputFileComplate() {
-            return this.$store.state.isInputFileComplate
-        },
         visibleDetailView() {
             return this.$store.state.visibleDetailView
         },
@@ -827,6 +858,9 @@ export default{
         isDraggable() {
             return this.$store.state.isDraggable
         },
+        editInputList () {
+            return this.$store.state.editInputList
+        },
     },
     data() {
         return {
@@ -839,6 +873,8 @@ export default{
             drag: true, //true: 배경 움직임, false: diagram움직임
             connections: [],
             appendLine: [],
+            dialogSelectElement: false,
+            selectElement: [],
         }
     },
     watch: {
@@ -850,18 +886,6 @@ export default{
                 //console.log('wheel')
                 setTimeout(() => {this.moveline()}, 200) //선이 똑바로 그려지지가 않아서 한타이밍 늦게 느려주게 구현
             })
-        },
-        isInputFileComplate(value) {
-            //Input file한뒤에 그림이 그려지기 전에 선을 그리려고 하니 에러 
-            //console.log(this.connections)
-            console.log(value)
-            if (value) {
-                this.$nextTick(() => {
-                    console.log('updata')
-                    this.$store.commit('checkLineInputXml')
-                    this.$store.commit('setInputFileComplate')
-                })
-            }
         },
         visibleLine(val) {
             //console.log('visibleLine   '+val)
@@ -980,6 +1004,12 @@ export default{
             EventBus.$emit('active-element', id)
             this.$store.commit( 'setSelectScreen', {num: 1})
         })
+        EventBus.$off('inputFile-element');
+        EventBus.$on('inputFile-element', () => {
+            console.log('3222')
+            console.log(this.$store.state.editInputList)
+            this.dialogSelectElement=true})
+        EventBus.$on('endinputFile', () => {this.changeMinimapView()})
     },
     methods: {
         onActivated(uuid) {
@@ -1384,8 +1414,8 @@ export default{
                     } else if (tableLine[0] == 'requiredEventG' && item == 'requiredEvent') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
-                        if(idx == tableLine[1]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredEventG'+tabID)
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredEventG-'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredE')
                         }
@@ -1393,8 +1423,8 @@ export default{
                     } else if (tableLine[0] == 'requiredClient' && item == 'requiredEvent') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
-                        if(idx == tableLine[1]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredClient'+tabID)
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredClient-'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/requiredE')
                         }
@@ -1474,8 +1504,8 @@ export default{
                     } else if (tableLine[0] == 'providEventG' && item == 'ProvidEvent') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
-                        if(idx == tableLine[1]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providEventG'+tabID)
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providEventG-'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/providE')
                         }
@@ -1483,8 +1513,8 @@ export default{
                     } else if (tableLine[0] == 'providServer' && item == 'ProvidEvent') {
                         document.body.appendChild(this.appendLine[activeLine[i]])
                         this.connections[activeLine[i]].remove()
-                        if(idx == tableLine[1]) {
-                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providServer'+tabID)
+                        if(tabID == tableLine[1]) {
+                            this.changeConnectionLineSplic(activeLine[i], uuid+'/providServer-'+tabID)
                         } else {
                             this.changeConnectionLineSplic(activeLine[i], uuid+'/providE')
                         }
@@ -1709,6 +1739,17 @@ export default{
                     this.moveline()
                 })
             }
+        },
+
+        selectInputElement() {
+            console.log(this.selectElement)
+            this.$store.commit('setEditInputItem', {selectList: this.selectElement, select: true})
+            this.cancelInputElement()
+        },
+        cancelInputElement() {
+            this.$store.commit('setEditInputItem', {select: false})
+            this.dialogSelectElement = false  
+            this.selectElement = []
         },
     },
 }

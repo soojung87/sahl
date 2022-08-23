@@ -16,6 +16,9 @@
                             <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
                             <v-toolbar-title>SDG-DEF</v-toolbar-title>
                             <v-spacer></v-spacer>
+                            <v-btn v-if="minimaptoolbar" icon @click="viewARXML">
+                                <v-icon> mdi-format-text</v-icon>
+                            </v-btn>
                         </v-toolbar>
                         <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
                             <v-toolbar-title>{{ element.name }}</v-toolbar-title>
@@ -81,6 +84,111 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
+            <v-dialog v-model="dialogText" persistent scrollable width="800">
+                <v-card >
+                    <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
+                    <v-card-text>
+                        <br>
+                        <v-row>
+                            <label style="padding:10px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row>
+                            <label style="padding:10px;height: 20px;">&#60;SDG-CLASSESS&#62;
+                                <v-btn @click="newTextSDG()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <v-row>
+                            <div class="text-editDialog">
+                                <br>
+                                <v-row v-for="(item, i) in editARXML.sdgClass" :key="i" style="height: 380px;">
+                                    <div>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                                <v-btn @click="deletTextSDG(i)" text x-small color="indigo">
+                                                    <v-icon>mdi-minus</v-icon>
+                                                </v-btn>
+                                                &#60;SDG-CLASS&#62;
+                                            </label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
+                                            <v-text-field v-model="item.name" placeholder="String"  class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;GID&#62;</label>
+                                            <v-text-field v-model="item.gid" placeholder="String"  class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;GID&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;EXTENDS-META-CLASS&#62;</label>
+                                            <v-text-field v-model="item.metaClass" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;EXTENDS-META-CLASS&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;ATTRIBUTES&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;SDG-PRIMITIVE-ATTRIBUTE&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left: 120px;">&#60;SHORT-NAME&#62;</label>
+                                            <v-text-field v-model="item.attriName" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left: 120px;">&#60;LOWER-MULTIPLICITY&#62;</label>
+                                            <v-text-field v-model="item.lowMulti" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;LOWER-MULTIPLICITY&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left: 120px;">&#60;UPPER-MULTIPLICITY&#62;</label>
+                                            <v-text-field v-model="item.upMulti" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;UPPER-MULTIPLICITY&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left: 120px;">&#60;GID&#62;</label>
+                                            <v-text-field v-model="item.atrriGid" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;GID&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left: 120px;">&#60;PATTERN&#62;</label>
+                                            <v-text-field v-model="item.pattern" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;PATTERN&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;&#47;SDG-PRIMITIVE-ATTRIBUTE&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;&#47;ATTRIBUTES&#62;</label>
+                                        </v-row>
+
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left:50px;">&#60;&#47;SDG-CLASS&#62;</label>
+                                        </v-row>
+                                    </div>
+                                </v-row>
+                            </div>
+                        </v-row>
+                        <v-row>
+                            <label style="padding:10px;height: 20px;" >&#60;&#47;SDG-CLASSES&#62;</label>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="saveARXML()" >
+                            Save
+                        </v-btn>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text @click="cancelARXML()">
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -132,6 +240,10 @@ export default {
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            dialogText: false,
+            editARXML: {name:'', sdgClass: []},
+            editTextItem: {name: '', gid: '', metaClass: '', 
+                              attriName: '', lowMulti: '', upMulti: '', atrriGid: '', pattern: '', id: ''},
             isSDGClassOpenClose : true,
             SDGClassTab: null,
         }
@@ -203,6 +315,45 @@ export default {
         setactiveUUID() {
             this.$store.commit('setuuid', {uuid: this.element.uuid} )
             this.$store.commit('editSDG_DEF', {compo:"z", uuid:this.element.uuid, zindex:10} )
+        },
+
+        viewARXML() {
+            this.editARXML.name = this.element.name
+            this.editARXML.sdgClass = JSON.parse(JSON.stringify(this.element.sdgClass))
+            this.dialogText= true
+        },
+        saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editSDG_DEF', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
+            this.element.name = this.editARXML.name
+            this.element.sdgClass = JSON.parse(JSON.stringify(this.editARXML.sdgClass))
+            this.cancelARXML()
+        },
+        cancelARXML() {
+            this.editARXML = {name:'', sdgClass: []}
+            this.editTextItem = {name: '', gid: '', metaClass: '', 
+                              attriName: '', lowMulti: '', upMulti: '', atrriGid: '', pattern: '', id: ''}
+            this.dialogText = false
+        },
+        newTextSDG() {
+            this.editTextItem = {name: '', gid: '', metaClass: '', 
+                              attriName: '', lowMulti: '', upMulti: '', atrriGid: '', pattern: '', id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.editARXML.sdgClass.some(item => item.id === n)
+            }
+            this.editTextItem.id = n
+
+            const addObj = Object.assign({}, this.editTextItem)
+            this.editARXML.sdgClass.push(addObj);
+        },
+        deletTextSDG(idx) {
+            this.editARXML.sdgClass.splice(idx,1)
         },
     },
 }

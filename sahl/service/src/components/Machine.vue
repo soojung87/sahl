@@ -561,6 +561,84 @@
                                         </v-tabs-items>
                                     </v-card-text>
                                 </v-card>
+                                <v-card outlined class="mx-auto" v-if="isModuleInsOpenClose">
+                                    <div class="subtitle-2" style="height:20px">
+                                        <v-hover v-slot="{ hover }">
+                                            <v-btn text @click="showCrypto" x-small color="indigo"  style="margin-left:15px">
+                                                <v-icon>{{ isCryptoOpenClose? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
+                                            </v-btn>
+                                        </v-hover>
+                                        Crypto Module Instantiation
+                                        <v-btn v-if="isCryptoOpenClose" @click="addCrypto()" text x-small color="indigo">
+                                            <v-icon>mdi-plus</v-icon>
+                                        </v-btn>
+                                    </div>
+                                    <v-card-text v-show="isCryptoOpenClose">
+                                        <v-tabs v-model='CryptoTab' height="30px" show-arrows @change="changeCryptoTab()">
+                                            <v-tab v-for="(tab, idx) in element.crypto" :key="idx" @click="clickCryptoTab()"> 
+                                                {{tab.name}}
+                                                <v-btn text x-small @click="deleteCrypto(idx)"><v-icon x-small>mdi-close</v-icon></v-btn></v-tab>
+                                        </v-tabs>
+                                        <v-tabs-items v-model="CryptoTab">
+                                            <v-tab-item v-for="(tab, idx) in element.crypto" :key="idx">
+                                                <v-card flat>
+                                                    <v-card-text>
+                                                        <v-text-field v-model="tab.name" :rules="rules.name" label="Name" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-card outlined class="mx-auto">
+                                                            <div class="subtitle-2" style="height:20px" >
+                                                                <v-btn color="indigo" text x-small @click="dialogEditSDG=true">
+                                                                    <v-icon>mdi-pencil</v-icon>
+                                                                </v-btn>
+                                                                Admin Data
+                                                                <v-dialog v-model='dialogEditSDG' width="600" persistent scrollable>
+                                                                    <v-card>
+                                                                        <v-card-title class="text-h7 green accent-1"> 
+                                                                            Edit SDGS  
+                                                                            <v-btn :disabled="isAddItem==false ? true : false" @click="addSDGItem()" text x-small color="indigo">
+                                                                                <v-icon>mdi-plus</v-icon>
+                                                                            </v-btn>
+                                                                            <v-btn :disabled="isDeletItem==false ? true : false" @click="deleteSDGItem()" text x-small color="indigo">
+                                                                                <v-icon>mdi-minus</v-icon>
+                                                                            </v-btn>
+                                                                        </v-card-title>
+                                                                        <v-card-text>
+                                                                            <br>
+                                                                            <v-row>
+                                                                                <v-col cols="4">
+                                                                                    <v-select v-model="editSDGItem.ele" :disabled="selectSDG[0] == null ? true : false" :items="selSDGEleItem" @input="inputSDGEle()" clearable @click:clear="clearSDGEle()" label="Element Select" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                                                </v-col>
+                                                                                <v-col cols="4">
+                                                                                    <v-select v-model="editSDGItem.gid" :disabled="editSDGItem.ele == null ? true : false" :items="selSDGGidItem"  @input="inputSDGGid()" clearable @click:clear="clearSDGGid()" label="GID Select" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                                                                                </v-col>
+                                                                                <v-col cols="4">
+                                                                                    <v-text-field v-model="editSDGItem.item" :disabled="isSDGItem==true? false : true" label="Item" @input="inputSDGItem(editSDGItem.item)" @click="setactiveUUID" outlined dense style="height: 45px;"></v-text-field>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-treeview :items="tab.sdgs" item-key="id" activatable :open-on-click="false" return-object dense @update:active="activeElement">
+                                                                                </v-treeview>
+                                                                            </v-row>
+                                                                        </v-card-text>
+                                                                        <v-card-actions>
+                                                                            <v-spacer></v-spacer>
+                                                                            <v-btn color="primary" text @click="closdSDGS()">
+                                                                                Close
+                                                                            </v-btn>
+                                                                        </v-card-actions>
+                                                                    </v-card>
+                                                                </v-dialog>
+                                                            </div>
+                                                            <v-card-text>
+                                                                <v-treeview :items="tab.sdgs" activatable return-object :open-on-click="true" dense @update:active="activeElement" class="caption">
+                                                                </v-treeview>
+                                                            </v-card-text>
+                                                        </v-card>
+                                                    </v-card-text>
+                                                </v-card>
+                                            </v-tab-item>
+                                        </v-tabs-items>
+                                    </v-card-text>
+                                </v-card>
                             </v-card>
                         </v-card-text>
                         <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
@@ -726,6 +804,28 @@ export default {
             selGrant:this.$store.getters.getEventGrant,
             isEditingGrant: true,
 
+            isCryptoOpenClose: true,
+            CryptoTab: 0,
+            idCrypto: 4,
+            selectSDG: [],
+            editSDGItem: { ele: null, gid: null, item: null},
+            selProvider: ["RELATED-PROCESS", "RELATED-PORT", "CRYPTO-INSTANTIATION-KEY-SLOT", ],
+            selCerification: ["RELATED-PROCESS", "RELATED-PORT", "CRYPTO-CERTIFICATE-KEY-SLOT"],
+            selKeySlot: ["RELATED-PROCESS", "RELATED-PORT", "CRYPTO-KEY-SLOT-CONTENT-ALLOWED-USAGE", "CRYPTO-KEY-SLOT-ALLOWED-MODIFICATION"],
+            selSDKeySlot: ["SHORT-NAME", "CRYPTO-KEY-SLOT-ALG-ID", "CRYPTO-KEY-SLOT-OBJECT-TYPE", "CRYPTO-KEY-SLOT-SLOT-TYPE", "CRYPTO-KEY-SLOT-SLOT-CAPACITY"],
+            selSDUsage: ["CRYPTO-KEY-SLOT-CONTENT-ALLOWED-USAGE", "CRYPTO-KEY-SLOT-CONTENT-ALLOWED-USAGE"],
+            selSDModification: ["CRYPTO-KEY-SLOT-ALLOW-CONTENT-TYPE-CHANGE", "CRYPTO-KEY-SLOT-EXPORT-ABILITY", "CRYPTO-KEY-SLOT-MAX-NUMBER-OF-ALLOWED-UPDATES", "CRYPTO-KEY-SLOT-RESTRICT-UPDATE"],
+            selFirstSDG: ['SDG-CAPTION', 'SDG', 'SD'],
+            selFirstSD: ['SHORT-NAME'],
+            selRef: ['SDX-REF', 'SDG-CAPTION'],
+            selKeySlotAllowed: ['SD'],
+            selSDGEleItem: [],
+            selSDGGidItem: [],
+            isSDGItem: false,
+            isAddItem: false,
+            isDeletItem: false,
+            dialogEditSDG: false,
+
             beforeProcess: '',
             beforeModule: ''
         }
@@ -827,6 +927,9 @@ export default {
                 EventBus.$emit('changeLine-someipService', 'module', this.element.uuid, this.IamModuleTab, this.element.iam[this.IamModuleTab].id, this.isIamModuleOpenClose)
             }
         },
+        showCrypto() {
+            this.isCryptoOpenClose = this.isCryptoOpenClose ? false : true
+            },
         showGrantRef() {
             this.isGrantRefOpenClose = this.isGrantRefOpenClose ? false : true 
         },
@@ -918,7 +1021,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementMachineDesign', {
-                name: this.$store.getters.getNameMachineDesign, input: false, path: '',
+                name: this.$store.getters.getNameMachineDesign, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 access:null, resettimer: '', connector:[], servicediscover:[], 
             })
@@ -932,7 +1035,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementHWElement', { //category 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                name: this.$store.getters.getNameHWElement, input: false, path: '',
+                name: this.$store.getters.getNameHWElement, path: '',
                 top: elementY, left: elementX, zindex: 10, category:null, attribute:[], icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.HWElement_str)
@@ -944,7 +1047,7 @@ export default {
             const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             this.$store.commit('addElementModeDeclarationGroup', {
-                name: this.$store.getters.getNameModeDeclarationGroup, input: false, path: '',
+                name: this.$store.getters.getNameModeDeclarationGroup, path: '',
                 top: elementY, left: elementX, zindex: 10, modedeclaration:[], initmode:null, icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.ModeDeclarationGroup_str)
@@ -1003,7 +1106,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/hwelement-'+idx)
                 this.newLine(this.element.uuid+'/hwelement-'+idx, this.element.uuid+'/hwelement', this.editHWItem.hwelement.uuid)
                 this.element.hwelement[idx].hwelement = this.editHWItem.hwelement.name
-            } else if (endLine == undefined && this.editHWItem.hwelement != null) {
+            } else if (endLine == undefined && this.editHWItem.hwelement != null && this.editHWItem.hwelement.uuid != null) {
                 this.newLine(this.element.uuid+'/hwelement-'+idx, this.element.uuid+'/hwelement', this.editHWItem.hwelement.uuid)
                 this.element.hwelement[idx].hwelement = this.editHWItem.hwelement.name
             }
@@ -1107,7 +1210,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/functiontable-'+idx)
                 this.newLine(this.element.uuid+'/functiontable-'+idx, this.element.uuid+'/functiontable', this.editFunctionItem.type.uuid)
                 this.element.functiongroup[idx].type = this.editFunctionItem.type.name
-            } else if (endLine == undefined && this.editFunctionItem.type != null) {
+            } else if (endLine == undefined && this.editFunctionItem.type != null && this.editFunctionItem.type.uuid != null) {
                 this.newLine(this.element.uuid+'/functiontable-'+idx, this.element.uuid+'/functiontable', this.editFunctionItem.type.uuid)
                 this.element.functiongroup[idx].type = this.editFunctionItem.type.name
             }
@@ -1255,9 +1358,15 @@ export default {
         },
 
         addModuleIns() {
-            const editItem = {name: '', resource: []}
+            const editItem = {name: '', resource: [], id: ''}
             const addObj = new Object(editItem)
-            addObj.name = 'Module Instance_'+(this.element.moduleinstant.length+1)
+            let res = true, n = 0
+
+            while (res) {
+                addObj.name = 'Module Instance_' + n++;
+                res = this.element.eventG.some(ele => ele.name === addObj.name)
+            }
+            addObj.id = n
             this.element.moduleinstant.push(addObj)
             this.ModuleInstab = this.element.moduleinstant.length-1
             this.isdeleteResourceGItem = false
@@ -1383,7 +1492,7 @@ export default {
             this.selectDelectGrantRef = []
         },
         changeIamModuleTab() {
-            if(this.element.iam.length > 0 && this.location == 1) {
+            if(this.element.iam.length > 0 && this.location == 1 && this.IamModuleTab != undefined) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'module', this.element.uuid, this.IamModuleTab, this.element.iam[this.IamModuleTab].id, true)}, 300);
             }
         },
@@ -1396,7 +1505,6 @@ export default {
                 }
             }
             this.element.iam.splice(idx, 1)
-            this.changeIamModuleTab()
         },
         isCheckGrantRef() {
             if (this.isdeleteGrantRef == true) {
@@ -1471,7 +1579,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[idx].id+'-'+this.element.iam[this.IamModuleTab].id)
                 this.newLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[idx].id+'-'+this.element.iam[this.IamModuleTab].id, this.element.uuid+'/grandtab-'+this.element.iam[this.IamModuleTab].id, this.editGrant.grant.uuid)
                 this.element.iam[this.IamModuleTab].grants[idx].grant = this.editGrant.grant.name
-            } else if (endLine == undefined && this.editGrant.grant != null) {
+            } else if (endLine == undefined && this.editGrant.grant != null && this.editGrant.grant.uuid != null) {
                 this.newLine(this.element.uuid+'/iamM-'+this.element.iam[this.IamModuleTab].grants[idx].id+'-'+this.element.iam[this.IamModuleTab].id, this.element.uuid+'/grandtab-'+this.element.iam[this.IamModuleTab].id, this.editGrant.grant.uuid)
                 this.element.iam[this.IamModuleTab].grants[idx].grant = this.editGrant.grant.name
             }
@@ -1542,21 +1650,21 @@ export default {
 
             if (this.editGrant.select == "COM-EVENT-GRANT") {
                 this.$store.commit('addElementEventG', {
-                    name: this.$store.getters.getNameEventG, input: false, path: '',
+                    name: this.$store.getters.getNameEventG, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     eventD: null, provide: null,
                 })
                 EventBus.$emit('add-element', constant.ComEventGrant_str)
             } else if (this.editGrant.select == "COM-FIELD-GRANT") {
                 this.$store.commit('addElementFieldG', {
-                    name: this.$store.getters.getNameFieldG, input: false, path: '',
+                    name: this.$store.getters.getNameFieldG, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     fieldD: null, provide: null, role: null
                 })
                 EventBus.$emit('add-element', constant.ComFieldGrant_str)
             } else if (this.editGrant.select == "COM-METHOD-GRANT") {
                 this.$store.commit('addElementMethodG', {
-                    name: this.$store.getters.getNameMethodG, input: false, path: '',
+                    name: this.$store.getters.getNameMethodG, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     methodD: null, provide: null,
                 })
@@ -1565,6 +1673,201 @@ export default {
             EventBus.$emit('add-element', constant.IAM_str)
             EventBus.$emit('add-element', constant.Platform_str)
             this.$store.commit('editMachine', {compo:"z", uuid:this.element.uuid, zindex:2} )
+        },
+
+        addCrypto() {
+            const editItem = {name: '', id: '', sdgs: []}
+            const addObj = new Object(editItem)
+            let res = true, n = 0
+
+            while (res) {
+                addObj.name = 'crypto_' + n++;
+                res = this.element.crypto.some(ele => ele.name === addObj.name)
+            }
+            addObj.id = n
+            this.element.crypto.push(addObj)
+            this.CryptoTab = this.element.crypto.length-1
+            this.element.crypto[this.CryptoTab].sdgs.push({
+                name : 'SDGS',
+                id : 1,
+                children: [
+                    {name: 'SDG GID="CRYPTO-INSTANTIATION-PROVIDER"', id : 2, ele:'SDG', gid:'CRYPTO-INSTANTIATION-PROVIDER', item: '', children: []},
+                    {name: 'SDG GID="CRYPTO-INSTANTIATION-CERTIFICATE"', id : 3, ele:'SDG', gid:'CRYPTO-INSTANTIATION-CERTIFICATE', item: '', children: []}
+                ]
+            })
+        },
+        changeCryptoTab() {},
+        clickCryptoTab() {},
+        deleteCrypto(idx) {
+            this.element.crypto.splice(idx, 1)
+        },
+        closdSDGS() {
+            this.dialogEditSDG = false
+            this.initSDGS()
+        },
+        initSDGS() {
+            if (this.selectSDG[0] == null) {
+                this.isDeletItem = false
+            }
+            this.isSDGItem = false
+            this.isAddItem = false
+            this.selSDGGidItem = []
+            this.editSDGItem = { ele: null, gid: null, item: ''}
+        },
+        addSDGItem() {
+            console.log()
+            if (this.editSDGItem.ele == 'SDG') {
+                this.selectSDG[0].children.push(
+                    { name: this.editSDGItem.ele+' GID='+this.editSDGItem.gid,
+                        ele: this.editSDGItem.ele, gid: this.editSDGItem.gid, item: this.editSDGItem.item, id : this.idCrypto++, children: []}
+                )
+            } else if (this.editSDGItem.ele == 'SD'){
+                this.selectSDG[0].children.push(
+                    { name: this.editSDGItem.ele+' GID='+this.editSDGItem.gid + ' '+ this.editSDGItem.item,
+                        ele: this.editSDGItem.ele, gid: this.editSDGItem.gid, item: this.editSDGItem.item, id : this.idCrypto++, }
+                )
+            } else if (this.editSDGItem.ele == 'SDX-REF'){
+                if (this.selectSDG[0].gid == 'RELATED-PROCESS') {
+                    this.editSDGItem.item = 'PROCESS'
+                } else if (this.selectSDG[0].gid == 'RELATED-PORT') {
+                    this.editSDGItem.item = 'R-PORT-PROTOTYPE'
+                } else if (this.selectSDG[0].gid == 'CRYPTO-CERTIFICATE-KEY-SLOT') {
+                    this.editSDGItem.item = 'SDG-CAPTION'
+                }
+                this.selectSDG[0].children.push(
+                    { name: this.editSDGItem.ele+' '+ this.editSDGItem.gid,
+                        ele: this.editSDGItem.ele, gid: this.editSDGItem.gid, item: this.editSDGItem.item, id : this.idCrypto++, }
+                )
+            } else if (this.editSDGItem.ele == 'SDG-CAPTION'){
+                this.selectSDG[0].children.push(
+                    { name: this.editSDGItem.ele+' '+ this.editSDGItem.item,
+                        ele: this.editSDGItem.ele, gid: this.editSDGItem.gid, item: this.editSDGItem.item, id : this.idCrypto++, }
+                )
+            }
+            this.initSDGS()
+        },
+        deleteSDGItem() {
+            this.initSDGS()
+            this.deleteNodeFromTree(this.element.crypto[this.CryptoTab].sdgs[0], this.selectSDG[0].id)            
+            this.selectSDG[0] = []
+        },
+        deleteNodeFromTree(node, nodeId) {
+            if (node.children != null) {
+                for (let i = 0; i < node.children.length; i++) {
+                    let filtered = node.children.filter(f => f.id == nodeId);
+                    if (filtered && filtered.length > 0) {
+                        node.children = node.children.filter(f => f.id != nodeId);
+                        return;
+                    }
+                    this.deleteNodeFromTree(node.children[i], nodeId,);
+                }
+            }
+        },
+        activeElement(node) {
+            this.selectSDG = node
+            this.selSDGEleItem = []
+            if (this.selectSDG[0] == null || this.selectSDG[0].name == 'SDGS') {
+                this.selSDGEleItem = []
+            } else if (this.selectSDG[0].gid == 'CRYPTO-INSTANTIATION-PROVIDER' || 
+                        this.selectSDG[0].gid == 'CRYPTO-INSTANTIATION-CERTIFICATE' || 
+                        this.selectSDG[0].gid == 'CRYPTO-INSTANTIATION-KEY-SLOT') {
+                this.selSDGEleItem = this.selFirstSDG
+            } else if (this.selectSDG[0].gid == 'RELATED-PROCESS' || this.selectSDG[0].gid == 'RELATED-PORT' 
+                        || this.selectSDG[0].gid == 'CRYPTO-CERTIFICATE-KEY-SLOT') {
+                this.selSDGEleItem = this.selRef
+            } else if (this.selectSDG[0].gid == 'CRYPTO-KEY-SLOT-CONTENT-ALLOWED-USAGE' ||
+                        this.selectSDG[0].gid == 'CRYPTO-KEY-SLOT-ALLOWED-MODIFICATION') {
+                this.selSDGEleItem = this.selKeySlotAllowed
+            }
+
+            if (this.selectSDG[0].gid == 'CRYPTO-INSTANTIATION-PROVIDER' || 
+                this.selectSDG[0].gid == 'CRYPTO-INSTANTIATION-CERTIFICATE' ||
+                this.selectSDG[0].name == 'SDGS') {
+                this.isDeletItem = false
+            } else {
+                this.isDeletItem = true
+            }
+            this.isSDGItem = false
+        },
+        inputSDGEle() {
+            this.selSDGGidItem = []
+            if (this.editSDGItem.ele != null && this.selectSDG[0].ele == 'SDG') {
+                if (this.editSDGItem.ele == 'SD') {
+                    if (this.selectSDG[0].gid == 'CRYPTO-INSTANTIATION-PROVIDER' || 
+                        this.selectSDG[0].gid == 'CRYPTO-INSTANTIATION-CERTIFICATE') {
+                            this.selSDGGidItem = this.selFirstSD
+                    }  else if (this.selectSDG[0].gid == 'CRYPTO-INSTANTIATION-KEY-SLOT') {
+                        this.selSDGGidItem = this.selSDKeySlot
+                    } else if (this.selectSDG[0].gid == 'CRYPTO-KEY-SLOT-CONTENT-ALLOWED-USAGE'){
+                        this.selSDGGidItem = this.selSDUsage
+                    } else if (this.selectSDG[0].gid == 'CRYPTO-KEY-SLOT-ALLOWED-MODIFICATION') {
+                        this.selSDGGidItem = this.selSDModification
+                    }
+                } else if (this.editSDGItem.ele == 'SDG') {
+                    if (this.selectSDG[0].gid == 'CRYPTO-INSTANTIATION-PROVIDER') {
+                        this.selSDGGidItem = this.selProvider
+                    } else if (this.selectSDG[0].gid == 'CRYPTO-INSTANTIATION-CERTIFICATE') {
+                        this.selSDGGidItem = this.selCerification
+                    } else if (this.selectSDG[0].gid == 'CRYPTO-INSTANTIATION-KEY-SLOT') {
+                        this.selSDGGidItem = this.selKeySlot
+                    } else if (this.selectSDG[0].gid == 'CRYPTO-CERTIFICATE-KEY-SLOT') {
+                        this.selSDGGidItem = this.selSDModification
+                    } 
+                } else if (this.editSDGItem.ele == 'SDG-CAPTION') {
+                    this.isSDGItem = true
+                } else if (this.editSDGItem.ele == 'SDX-REF') {
+                    if (this.selectSDG[0].gid == 'RELATED-PROCESS') {
+                        this.selSDGGidItem = this.$store.getters.getProcessSDG
+                    } else if (this.selectSDG[0].gid == 'RELATED-PORT') {
+                        this.selSDGGidItem = this.$store.getters.getRPortPrototypeSDG
+                    } else if (this.selectSDG[0].gid == 'CRYPTO-CERTIFICATE-KEY-SLOT') {
+                        console.log(this.element.crypto[this.CryptoTab].sdgs)
+                        this.element.crypto[this.CryptoTab].sdgs.forEach(sdg => {
+                            sdg.children.forEach(sdgC => {
+                                if (sdgC.gid == 'CRYPTO-INSTANTIATION-PROVIDER') {
+                                    sdgC.children.forEach(item => {
+                                        if (item.ele == 'SDG' && item.gid == 'CRYPTO-INSTANTIATION-KEY-SLOT') {
+                                            item.children.forEach(slot => {
+                                                if (slot.ele == 'SDG-CAPTION') {
+                                                    this.selSDGGidItem.push(slot.item)
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        })
+                    }
+                }
+            }
+        },
+        inputSDGGid() {
+            if (this.editSDGItem.ele == 'SDG') {
+                this.isSDGItem = false
+            } else if (this.editSDGItem.gid != null) {
+                this.isSDGItem = true
+            }
+
+            if (this.editSDGItem.gid != null 
+                && (this.editSDGItem.ele == 'SDG'  || this.editSDGItem.ele == 'SDX-REF')) {
+                    this.isAddItem = true
+            }
+        },
+        inputSDGItem(str) {
+            if (str != '') {
+                if (this.editSDGItem.ele == 'SD' ||  this.editSDGItem.ele == 'SDG-CAPTION') {
+                    this.isAddItem = true
+                }
+            } else {
+                this.isAddItem = false
+            }
+        },
+        clearSDGEle() {
+            this.isSDGItem = false
+            this.selSDGGidItem = []
+        },
+        clearSDGGid() {
+            this.isSDGItem = false
         },
 
         setactiveUUID() {

@@ -135,7 +135,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -273,9 +273,9 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementMachine', {
-                name: this.$store.getters.getNameMachine, input: false, path: '',
-                top: elementY, left: elementX, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, 
-                admin: '', functiongroup:[], processor: [], moduleinstant: [], icon:"mdi-clipboard-outline", validation: false
+                name: this.$store.getters.getNameMachine, path: '',
+                top: elementY, left: elementX, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, admin: '',
+                functiongroup:[], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: [], icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.Machine_str)
             EventBus.$emit('add-element', constant.Machines_str)
@@ -336,7 +336,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/PHMContri-'+idx)
                 this.newLine(this.element.uuid+'/PHMContri-'+idx, this.element.uuid+'/PHMContri', this.editItem.con.uuid)
                 this.element.contri[idx].con = this.editItem.con.name
-            } else if (endLine == undefined && this.editItem.con != null) {
+            } else if (endLine == undefined && this.editItem.con != null && this.editItem.con.uuid != null) {
                 this.newLine(this.element.uuid+'/PHMContri-'+idx, this.element.uuid+'/PHMContri', this.editItem.con.uuid)
                 this.element.contri[idx].con = this.editItem.con.name
             }
@@ -390,7 +390,7 @@ export default {
             const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             this.$store.commit('addElementPHMContribution', {
-                name: this.$store.getters.getNamePHMContribution,  input: false, path: '',
+                name: this.$store.getters.getNamePHMContribution, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
             })
             EventBus.$emit('add-element', constant.Platform_str)

@@ -882,7 +882,7 @@ export default {
             this.conditionalTab = 0
             this.channelTab[this.conditionalTab] = 0
             this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]] = 0
-            this.changeConditionalTab()
+            //this.changeConditionalTab() /*delete하면 자동적으로 tab이 바뀌기 때문에 따로 안불러도 불려진다*/
         },
         addPhysicalChannel() {
             //this.endpointTab.push([this.conditionalTab,0]) //2차원 배열로 초기화 해줘야지 안그러면 tab이 안생김
@@ -935,7 +935,9 @@ export default {
             this.element.conditional[this.conditionalTab].channel.splice(idx, 1)
             this.channelTab[this.conditionalTab] = 0
             this.endpointTab[this.conditionalTab][this.channelTab[this.conditionalTab]] = 0
-            this.changeChannelTab()
+            //this.changeChannelTab()
+            console.log('22222222222222222222')
+            console.log(this.element)
         },
 
         isCommConnect() {
@@ -1009,7 +1011,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/comconet-'+idx+'-'+this.channelTab[this.conditionalTab]+'-'+this.conditionalTab)
                 this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.channelTab[this.conditionalTab]+'-'+this.conditionalTab, this.element.uuid+'/comconet-'+this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].id+'-'+this.element.conditional[this.conditionalTab].id, this.editCCItem.connector.uuid)
                 this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].comconnect[idx].connector = this.editCCItem.connector.name
-            } else if (endLine == undefined && this.editCCItem.connector != null) {
+            } else if (endLine == undefined && this.editCCItem.connector != null && this.editCCItem.connector.uuid != null) {
                 this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.channelTab[this.conditionalTab]+'-'+this.conditionalTab, this.element.uuid+'/comconet-'+this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].id+'-'+this.element.conditional[this.conditionalTab].id, this.editCCItem.connector.uuid)
                 this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].comconnect[idx].connector = this.editCCItem.connector.name
             } else if (this.editCCItem.connector != null && endLine == this.editCCItem.connector.uuid && this.element.conditional[this.conditionalTab].channel[this.channelTab[this.conditionalTab]].comconnect[idx].connector != this.editCCItem.connector.name) {
@@ -1301,7 +1303,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/comconet-'+idx+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional)
                 this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional, this.element.uuid+'/comconet-'+this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].id+'-'+this.element.conditional[this.viewInfo.idxConditional].id, this.editCCItem.connector.uuid)
                 this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].comconnect[idx].connector = this.editCCItem.connector.name
-            } else if (endLine == undefined && this.editCCItem.connector != null) {
+            } else if (endLine == undefined && this.editCCItem.connector != null && this.editCCItem.connector.uuid != null) {
                 this.newLine(this.element.uuid+'/comconet-'+idx+'-'+this.viewInfo.idxChannel+'-'+this.viewInfo.idxConditional, this.element.uuid+'/comconet-'+this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].id+'-'+this.element.conditional[this.viewInfo.idxConditional].id, this.editCCItem.connector.uuid)
                 this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].comconnect[idx].connector = this.editCCItem.connector.name
             } else if (this.editCCItem.connector != null && endLine == this.editCCItem.connector.uuid && this.element.conditional[this.viewInfo.idxConditional].channel[this.viewInfo.idxChannel].comconnect[idx].connector != this.editCCItem.connector.name) {

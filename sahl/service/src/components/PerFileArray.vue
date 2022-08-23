@@ -173,7 +173,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from './dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -348,7 +348,7 @@ export default {
                     this.deleteLine(this.element.uuid+'/PERArraySDG-'+idx)
                     this.newLine(this.element.uuid+'/PERArraySDG-'+idx, this.element.uuid+'/PERArraySDG', this.editSDGSItem.port.uuid)
                     this.element.sdgs[idx].port = this.editSDGSItem.port.name
-                } else if (endLine == undefined && this.editSDGSItem.port != null) {
+                } else if (endLine == undefined && this.editSDGSItem.port != null && this.editSDGSItem.port.uuid != null) {
                     this.newLine(this.element.uuid+'/PERArraySDG-'+idx, this.element.uuid+'/PERArraySDG', this.editSDGSItem.port.uuid)
                     this.element.sdgs[idx].port = this.editSDGSItem.port.name
                 }

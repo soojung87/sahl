@@ -864,6 +864,17 @@ const getters = {
         })
         return datatype
     },
+    getRPortPrototypeSDG(state) { //SWComponent안에 PR Port
+        var datatype = []
+        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.SWComponents.forEach(ele => {
+            if (ele.rport.length > 0) {
+                ele.rport.forEach(item => {
+                    datatype.push(ele.path + '/' + ele.name + '/' + item.name)
+                })
+            }
+        })
+        return datatype
+    },
     getProcess(state) {
         var datatype = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.map(ele => {
             var returnObj = {}
@@ -873,6 +884,13 @@ const getters = {
         })
         return datatype
 
+    },
+    getProcessSDG(state) {
+        var datatype = []
+        state.SAHLProject[state.openProjectIndex].AdaptiveApplication.Process.forEach(ele => {
+            datatype.push(ele.path + '/' + ele.name)
+        })
+        return datatype
     },
     getProcessDesign(state) {
         var datatype = state.SAHLProject[state.openProjectIndex].AdaptiveApplication.ProcessDesign.map(ele => {
@@ -1747,10 +1765,12 @@ const getters = {
     getE2EProfileConfigPath: (state) => (config) => {
         var uuidRef = null
         state.SAHLProject[state.openProjectIndex].Service.E2EProfileConfig.forEach(data => {
-            var strPath = data.path + '/' + data.name
-            if (strPath === config) {
-                uuidRef = data.uuid
-            }
+            data.profile.forEach(item => {
+                var strPath = data.path + '/' + data.name + '/' + item.configName
+                if (strPath == config) {
+                    uuidRef = data.uuid
+                }
+            })
         })
         return uuidRef
     },
@@ -2001,12 +2021,20 @@ const getters = {
         })
         return uuidRef
     },
-    getHWCategoryPath: (state) => (deter) => {
+    getHWCategoryPath: (state) => (deter, idx) => { //idx=0 : element전체  1: Attribute
         var uuidRef = null
         state.SAHLProject[state.openProjectIndex].Machine.HWCategory.forEach(data => {
             var strPath = data.path + '/' + data.name
-            if (strPath === deter) {
+            if (strPath === deter && idx == 0) {
                 uuidRef = data.uuid
+            } else if (idx == 1) {
+                data.attribute.forEach(item => {
+                    strPath = data.path + '/' + data.name + '/' + item.name
+                        //strPath = data.name + '/' + item
+                    if (deter == strPath) {
+                        uuidRef = data.uuid
+                    }
+                })
             }
         })
         return uuidRef
@@ -2959,150 +2987,150 @@ const getters = {
                 elementTab = enterLine + 1
                 saveStr += '<STD-CPP-IMPLEMENTATION-DATA-TYPE UUID="' + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].uuid + '">'
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].name != '') {
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].name + "</SHORT-NAME>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].category != '') {
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<CATEGORY>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].category + "</CATEGORY>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].traceName != '' ||
                     state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].trace.length > 0) {
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<INTRODUCTION>"
-                    saveStr += getters.getEndterStr(enterLine + 1)
+                    saveStr += getters.getEndterStr(elementTab + 1)
                     saveStr += "<TRACE>"
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].traceName != '') {
-                        saveStr += getters.getEndterStr(enterLine + 2)
+                        saveStr += getters.getEndterStr(elementTab + 2)
                         saveStr += "<SHORT-NAME>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].traceName + "</SHORT-NAME>"
                     }
                     if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].trace.length > 0) {
-                        saveStr += getters.getEndterStr(enterLine + 2)
+                        saveStr += getters.getEndterStr(elementTab + 2)
                         saveStr += "<TRACE-REFS>"
                         state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].trace.forEach(trace => {
-                            saveStr += getters.getEndterStr(enterLine + 3)
+                            saveStr += getters.getEndterStr(elementTab + 3)
                             saveStr += '<TRACE-REF DEST="TRACEABLE">' + trace.traceref + "</TRACE-REF>"
                         })
-                        saveStr += getters.getEndterStr(enterLine + 2)
+                        saveStr += getters.getEndterStr(elementTab + 2)
                         saveStr += "</TRACE-REFS>"
                     }
-                    saveStr += getters.getEndterStr(enterLine + 1)
+                    saveStr += getters.getEndterStr(elementTab + 1)
                     saveStr += "</TRACE>"
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</INTRODUCTION>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].namespace != '') {
                     namespace = state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].namespace.split(',')
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<NAMESPACES>"
                     namespace.forEach((ele, e) => {
                         if (!(ele == '' && e == namespace.length - 1)) {
                             var symbol = ele.split('/')
-                            saveStr += getters.getEndterStr(enterLine + 1)
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "<SYMBOL-PROPS>"
-                            saveStr += getters.getEndterStr(enterLine + 2)
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<SHORT-NAME>" + symbol[0] + "</SHORT-NAME>"
-                            saveStr += getters.getEndterStr(enterLine + 2)
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<SYMBOL>" + symbol[1] + "</SYMBOL>"
-                            saveStr += getters.getEndterStr(enterLine + 1)
+                            saveStr += getters.getEndterStr(elementTab + 1)
                             saveStr += "</SYMBOL-PROPS>"
                         }
                     })
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</NAMESPACES>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].arraysize != '') {
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<ARRAY-SIZE>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].arraysize + "</ARRAY-SIZE>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].typeemitter != '') {
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<TYPE-EMITTER>" + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].typeemitter + "</TYPE-EMITTER>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].typeref != null) {
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += '<TYPE-REFERENCE-REF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].typeref + "</TYPE-REFERENCE-REF>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].templatetype != null) {
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += '<TEMPLATE-ARGUMENTS>'
-                    saveStr += getters.getEndterStr(enterLine + 1)
+                    saveStr += getters.getEndterStr(elementTab + 1)
                     saveStr += '<CPP-TEMPLATE-ARGUMENT>'
-                    saveStr += getters.getEndterStr(enterLine + 2)
+                    saveStr += getters.getEndterStr(elementTab + 2)
                     saveStr += '<TEMPLATE-TYPE-REF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].templatetype + "</TEMPLATE-TYPE-REF>"
-                    saveStr += getters.getEndterStr(enterLine + 1)
+                    saveStr += getters.getEndterStr(elementTab + 1)
                     saveStr += '</CPP-TEMPLATE-ARGUMENT>'
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</TEMPLATE-ARGUMENTS>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].desc != '') {
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += '<DESC>'
-                    saveStr += getters.getEndterStr(enterLine + 1)
+                    saveStr += getters.getEndterStr(elementTab + 1)
                     saveStr += '<L-2 L="EN">' + state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].desc + "</L-2>"
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</DESC>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].ddpc.length > 0) {
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<SW-DATA-DEF-PROPS>"
-                    saveStr += getters.getEndterStr(enterLine + 1)
+                    saveStr += getters.getEndterStr(elementTab + 1)
                     saveStr += "<SW-DATA-DEF-PROPS-VARIANTS>"
                     state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].ddpc.forEach(ele => {
-                        saveStr += getters.getEndterStr(enterLine + 2)
+                        saveStr += getters.getEndterStr(elementTab + 2)
                         saveStr += '<SW-DATA-DEF-PROPS-CONDITIONAL>'
                         if (ele.compumethod != null) {
-                            saveStr += getters.getEndterStr(enterLine + 3)
+                            saveStr += getters.getEndterStr(elementTab + 3)
                             saveStr += '<COMPU-METHOD-REF DEST="COMPU-METHOD">' + ele.compumethod + '</COMPU-METHOD-REF>'
                         }
                         if (ele.dataconstr != null) {
-                            saveStr += getters.getEndterStr(enterLine + 3)
+                            saveStr += getters.getEndterStr(elementTab + 3)
                             saveStr += '<DATA-CONSTR-REF DEST="DATA-CONSTR">' + ele.dataconstr + '</DATA-CONSTR-REF>'
                         }
-                        saveStr += getters.getEndterStr(enterLine + 2)
+                        saveStr += getters.getEndterStr(elementTab + 2)
                         saveStr += '</SW-DATA-DEF-PROPS-CONDITIONAL>'
                     })
-                    saveStr += getters.getEndterStr(enterLine + 1)
+                    saveStr += getters.getEndterStr(elementTab + 1)
                     saveStr += "</SW-DATA-DEF-PROPS-VARIANTS>"
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</SW-DATA-DEF-PROPS>"
                 }
                 if (state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].idtelement.length > 0) {
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<SUB-ELEMENTS>"
                     state.SAHLProject[state.openProjectIndex].DataTypes.ImplementationDataType[data.idx].idtelement.forEach(ele => {
-                        saveStr += getters.getEndterStr(enterLine + 1)
+                        saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += "<CPP-IMPLEMENTATION-DATA-TYPE-ELEMENT>"
                         if (ele.name != '') {
-                            saveStr += getters.getEndterStr(enterLine + 2)
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
                         }
                         if (ele.desc != '') {
-                            saveStr += getters.getEndterStr(enterLine + 2)
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += '<DESC>'
-                            saveStr += getters.getEndterStr(enterLine + 3)
+                            saveStr += getters.getEndterStr(elementTab + 3)
                             saveStr += '<L-2 L="EN">' + ele.desc + "</L-2>"
-                            saveStr += getters.getEndterStr(enterLine + 2)
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "</DESC>"
                         }
                         if (ele.typeref != null || ele.inplace != null) {
-                            saveStr += getters.getEndterStr(enterLine + 2)
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "<TYPE-REFERENCE>"
                             if (ele.inplace != null) {
-                                saveStr += getters.getEndterStr(enterLine + 3)
+                                saveStr += getters.getEndterStr(elementTab + 3)
                                 saveStr += "<INPLACE>" + ele.inplace.toUpperCase() + "</INPLACE>"
                             }
                             if (ele.typeref != null) {
-                                saveStr += getters.getEndterStr(enterLine + 3)
+                                saveStr += getters.getEndterStr(elementTab + 3)
                                 saveStr += '<TYPE-REFERENCE-REF DEST="STD-CPP-IMPLEMENTATION-DATA-TYPE">' + ele.typeref + "</TYPE-REFERENCE-REF>"
                             }
-                            saveStr += getters.getEndterStr(enterLine + 2)
+                            saveStr += getters.getEndterStr(elementTab + 2)
                             saveStr += "</TYPE-REFERENCE>"
                         }
-                        saveStr += getters.getEndterStr(enterLine + 1)
+                        saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += "</CPP-IMPLEMENTATION-DATA-TYPE-ELEMENT>"
                     })
-                    saveStr += getters.getEndterStr(enterLine)
+                    saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</SUB-ELEMENTS>"
                 }
                 saveStr += getters.getEndterStr(enterLine)
@@ -3237,7 +3265,8 @@ const getters = {
                 }
                 if (state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].moduleinstant.length > 0 ||
                     state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].ucm.length > 0 ||
-                    state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].iam.length > 0) {
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].iam.length > 0 ||
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].crypto.length > 0) {
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "<MODULE-INSTANTIATIONS>"
                     state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].moduleinstant.forEach(ele => {
@@ -3307,6 +3336,100 @@ const getters = {
                         }
                         saveStr += getters.getEndterStr(elementTab + 1)
                         saveStr += "</IAM-MODULE-INSTANTIATION>"
+                    })
+                    state.SAHLProject[state.openProjectIndex].Machine.Machine[data.idx].crypto.forEach(ele => {
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "<CRYPTO-MODULE-INSTANTIATION>"
+                        if (ele.name != '') {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<SHORT-NAME>" + ele.name + "</SHORT-NAME>"
+                        }
+                        if (ele.sdgs[0].children[0].children.length > 0 || ele.sdgs[0].children[1].children.length > 0) {
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "<ADMIN-DATA>"
+                            saveStr += getters.getEndterStr(elementTab + 3)
+                            saveStr += "<SDGS>"
+                            ele.sdgs[0].children.forEach(item => {
+                                if (item.children.length > 0) {
+                                    saveStr += getters.getEndterStr(elementTab + 4)
+                                    saveStr += '<SDG GID="' + item.gid + '">'
+                                    item.children.forEach(sdg => {
+                                        if (sdg.ele == 'SDG-CAPTION') {
+                                            saveStr += getters.getEndterStr(elementTab + 5)
+                                            saveStr += '<SDG-CAPTION>'
+                                            saveStr += getters.getEndterStr(elementTab + 6)
+                                            saveStr += "<SHORT-NAME>" + sdg.item + "</SHORT-NAME>"
+                                            saveStr += getters.getEndterStr(elementTab + 5)
+                                            saveStr += '</SDG-CAPTION>'
+                                        }
+                                        if (sdg.ele == 'SD') {
+                                            saveStr += getters.getEndterStr(elementTab + 5)
+                                            saveStr += '<SD GID="' + sdg.gid + '">' + sdg.item + '</SD>'
+                                        }
+                                        if (sdg.ele == 'SDG') {
+                                            saveStr += getters.getEndterStr(elementTab + 5)
+                                            saveStr += '<SDG GID="' + sdg.gid + '">'
+                                            if (sdg.children.length > 0) {
+                                                sdg.children.forEach(chi => {
+                                                    if (chi.ele == 'SDG-CAPTION') {
+                                                        saveStr += getters.getEndterStr(elementTab + 6)
+                                                        saveStr += '<SDG-CAPTION>'
+                                                        saveStr += getters.getEndterStr(elementTab + 7)
+                                                        saveStr += "<SHORT-NAME>" + chi.item + "</SHORT-NAME>"
+                                                        saveStr += getters.getEndterStr(elementTab + 6)
+                                                        saveStr += '</SDG-CAPTION>'
+                                                    }
+                                                    if (chi.ele == 'SD') {
+                                                        saveStr += getters.getEndterStr(elementTab + 6)
+                                                        saveStr += '<SD GID="' + chi.gid + '">' + chi.item + '</SD>'
+                                                    }
+                                                    if (chi.ele == 'SDX-REF' && (sdg.gid == "RELATED-PORT" || sdg.gid == "RELATED-PROCESS" || sdg.gid == "CRYPTO-CERTIFICATE-KEY-SLOT")) {
+                                                        saveStr += getters.getEndterStr(elementTab + 6)
+                                                        saveStr += '<SDX-REF DEST="' + chi.item + '">' + chi.gid + '</SDX-REF>'
+                                                    }
+                                                    if (chi.ele == 'SDG') {
+                                                        saveStr += getters.getEndterStr(elementTab + 6)
+                                                        saveStr += '<SDG GID="' + chi.gid + '">'
+                                                        if (chi.children.length > 0) {
+                                                            chi.children.forEach(chichi => {
+                                                                if (chichi.ele == 'SDG-CAPTION') {
+                                                                    saveStr += getters.getEndterStr(elementTab + 7)
+                                                                    saveStr += '<SDG-CAPTION>'
+                                                                    saveStr += getters.getEndterStr(elementTab + 8)
+                                                                    saveStr += "<SHORT-NAME>" + chichi.item + "</SHORT-NAME>"
+                                                                    saveStr += getters.getEndterStr(elementTab + 7)
+                                                                    saveStr += '</SDG-CAPTION>'
+                                                                }
+                                                                if (chichi.ele == 'SD') {
+                                                                    saveStr += getters.getEndterStr(elementTab + 7)
+                                                                    saveStr += '<SD GID="' + chichi.gid + '">' + chichi.item + '</SD>'
+                                                                }
+                                                                if (chichi.ele == 'SDX-REF' && (chi.gid == "RELATED-PORT" || chi.gid == "RELATED-PROCESS")) {
+                                                                    saveStr += getters.getEndterStr(elementTab + 7)
+                                                                    saveStr += '<SDX-REF DEST="' + chichi.item + '">' + chichi.gid + '</SDX-REF>'
+                                                                }
+                                                            })
+                                                        }
+                                                        saveStr += getters.getEndterStr(elementTab + 6)
+                                                        saveStr += '</SDG>'
+                                                    }
+                                                })
+                                            }
+                                            saveStr += getters.getEndterStr(elementTab + 5)
+                                            saveStr += '</SDG>'
+                                        }
+                                    })
+                                    saveStr += getters.getEndterStr(elementTab + 4)
+                                    saveStr += "</SDG>"
+                                }
+                            })
+                            saveStr += getters.getEndterStr(elementTab + 3)
+                            saveStr += "</SDGS>"
+                            saveStr += getters.getEndterStr(elementTab + 2)
+                            saveStr += "</ADMIN-DATA>"
+                        }
+                        saveStr += getters.getEndterStr(elementTab + 1)
+                        saveStr += "</CRYPTO-MODULE-INSTANTIATION>"
                     })
                     saveStr += getters.getEndterStr(elementTab)
                     saveStr += "</MODULE-INSTANTIATIONS>"

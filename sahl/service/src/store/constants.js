@@ -10,30 +10,22 @@ export default {
     ApplicationArray_index: 2,
     Implementation_index: 3,
     SWBaseType_index: 4,
-    //Service
-    ServiceInterfaces_index: 0,
-    SomeIPEvents_index: 1,
-    ServiceInstances_index: 2,
-    Errors_index: 3,
-    //Service Interfaces
+    //Service 
     SomeIPServiceInterfaceDeployment_index: 0,
     ServiceInterface_index: 1,
-    //SomeIPEvents
-    Client_index: 0,
-    Server_index: 1,
-    //Service Instances
-    SomeIPClient_index: 0,
-    SomeIPServer_index: 1,
-    SomeIPToMachineMapping_index: 2,
-    ToPortPrototypeMapping_index: 3,
-    RequiredSomeIP_index: 4,
-    ProvidedSomeIP_index: 5,
-    E2EProfileConfig_index: 6,
-    SDG_DEF_index: 7,
-    // //Errors
-    Error_index: 0,
-    Errorset_index: 1,
-    ErrorDomain_index: 2,
+    Client_index: 2,
+    Server_index: 3,
+    SomeIPClient_index: 4,
+    SomeIPServer_index: 5,
+    SomeIPToMachineMapping_index: 6,
+    ToPortPrototypeMapping_index: 7,
+    RequiredSomeIP_index: 8,
+    ProvidedSomeIP_index: 9,
+    E2EProfileConfig_index: 10,
+    SDG_DEF_index: 11,
+    Error_index: 12,
+    Errorset_index: 13,
+    ErrorDomain_index: 14,
     //Adaptive Application
     ProcesstoMachineMapping_index: 0,
     SWComponents_index: 1,
@@ -107,17 +99,10 @@ export default {
     Implementation_str: 'Implementation',
     SWBaseType_str: 'SW Base Type',
     //Service
-    ServiceInterfaces_str: 'Service Interfaces',
-    SomeIPEvents_str: 'SomeIP Events',
-    ServiceInstances_str: 'Service Instances',
-    Errors_str: 'Errors',
-    //Service Interfaces
     SomeIPServiceInterfaceDeployment_str: 'SomeIP Service Interface Deployment',
     ServiceInterface_str: 'Service Interface',
-    //SomeIPEvents
     Client_str: 'Client',
     Server_str: 'Server',
-    //Service Instances
     SomeIPClient_str: 'SomeIP Client',
     SomeIPServer_str: 'SomeIP Server',
     SomeIPToMachineMapping_str: 'SomeIP To Machine Mapping',
@@ -126,7 +111,6 @@ export default {
     ProvidedSomeIP_str: 'Provided SomeIP',
     E2EProfileConfig_str: 'E2E Profile Configuration Set',
     SDG_DEF_str: 'SDG DEF',
-    // //Errors
     Error_str: 'Error',
     Errorset_str: 'Error Set',
     ErrorDomain_str: 'Error Domain',

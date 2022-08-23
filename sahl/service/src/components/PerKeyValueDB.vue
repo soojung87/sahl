@@ -546,7 +546,7 @@ export default {
                     this.deleteLine(this.element.uuid+'/PERKeyDSDG-'+idx)
                     this.newLine(this.element.uuid+'/PERKeyDSDG-'+idx, this.element.uuid+'/PERKeyDSDG', this.editSDGSItem.port.uuid)
                     this.element.sdgs[idx].port = this.editSDGSItem.port.name
-                } else if (endLine == undefined && this.editSDGSItem.port != null) {
+                } else if (endLine == undefined && this.editSDGSItem.port != null && this.editSDGSItem.port.uuid != null) {
                     this.newLine(this.element.uuid+'/PERKeyDSDG-'+idx, this.element.uuid+'/PERKeyDSDG', this.editSDGSItem.port.uuid)
                     this.element.sdgs[idx].port = this.editSDGSItem.port.name
                 }
@@ -686,7 +686,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementImplementation', {
-                    name: this.$store.getters.getNameImplementation, input: false, path: '',
+                    name: this.$store.getters.getNameImplementation, path: '',
                     top: elementY, left: elementX,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', traceName: '', trace: [],
                     typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
@@ -834,7 +834,7 @@ export default {
             this.isNumericalOpenClose = true
         },
         changeKeyValueTab() {
-            if(this.element.keyValue.length > 0 && this.location == 1) {
+            if(this.element.keyValue.length > 0 && this.location == 1 && this.keyValueTab != undefined) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'PERKeyV', this.element.uuid, this.keyValueTab, this.element.keyValue[this.keyValueTab].name)}, 300);
             }
         },
@@ -852,7 +852,6 @@ export default {
             }
 
             this.element.keyValue.splice(idx, 1)
-            this.changeMethodTab()
         },
         inputKeyValueName(/*name*/) {
             /*this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,

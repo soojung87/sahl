@@ -143,7 +143,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -271,7 +271,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementProcess', {
-                name: this.$store.getters.getNameProcess, input: false, path: '',
+                name: this.$store.getters.getNameProcess, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
                 prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
@@ -320,7 +320,7 @@ export default {
             const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             this.$store.commit('addElementSWComponents', {
-                    name: this.$store.getters.getNameSWComponents,  input: false, path: '',
+                    name: this.$store.getters.getNameSWComponents, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     pport: [], rport: [], prport: [],
                 })
@@ -407,7 +407,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementPHMRecovery', {
-                name: this.$store.getters.getNamePHMRecovery, input: false, path: '',
+                name: this.$store.getters.getNamePHMRecovery, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 reconame: '', faf: null
             })

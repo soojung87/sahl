@@ -98,17 +98,17 @@
                         </v-row>
                         <v-row>
                             <label style="padding:10px;">&#60;BUILD-TYPE&#62;</label>
-                            <v-text-field v-model="editARXML.buildType" placeholder="Enum" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <v-text-field v-model="editARXML.buildType" placeholder="BUILD-TYPE-DEBUG or BUILD-TYPE-RELEASE" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
                             <label style="padding:10px;">&#60;&#47;BUILD-TYPE&#62;</label>
                         </v-row>
                         <v-row>
                             <label style="padding:10px;">&#60;LOGGING-BEHAVIOR&#62;</label>
-                            <v-text-field v-model="editARXML.loggingBehabior" placeholder="Enum" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <v-text-field v-model="editARXML.loggingBehabior" placeholder="USES-LOGGING or DOES-NOT-USE-LOGGUNG" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
                             <label style="padding:10px;">&#60;&#47;LOGGING-BEHAVIOR&#62;</label>
                         </v-row>
                         <v-row>
                             <label style="padding:10px;">&#60;REPORTING-BEHAVIOR&#62;</label>
-                            <v-text-field v-model="editARXML.reportingBehabior" placeholder="Enum" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <v-text-field v-model="editARXML.reportingBehabior" placeholder="REPORTS-EXECUTION-STATE or DOES-NOT-REPORT-EXECUTION-STATE" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
                             <label style="padding:10px;">&#60;&#47;REPORTING-BEHAVIOR&#62;</label>
                         </v-row>
                         <v-row>
@@ -154,7 +154,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -301,7 +301,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementSWComponents', {
-                    name: this.$store.getters.getNameSWComponents,  input: false, path: '',
+                    name: this.$store.getters.getNameSWComponents, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     pport: [], rport: [], prport: [],
                 })
@@ -337,6 +337,13 @@ export default {
             this.dialogText= true
         },
         saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editExecutable', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
             this.element.name = this.editARXML.name
             this.element.category = this.editARXML.category
             if (this.editARXML.buildType == 'BUILD-TYPE-DEBUG' || this.editARXML.buildType == 'BUILD-TYPE-RELEASE' || this.editARXML.buildType == '') {
@@ -360,7 +367,13 @@ export default {
                     this.element.reportingBehabior = this.editARXML.reportingBehabior
                 }
             }
+
             this.element.version = this.editARXML.version
+            if (this.element.swname != this.editARXML.swname) {
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                changeName: 'swname', listname: this.editARXML.swname} )
+
+            }
             this.element.swname = this.editARXML.swname
             if (this.element.applicationtyperef != this.editARXML.applicationtyperef) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/applicationtyperef')

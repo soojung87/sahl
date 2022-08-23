@@ -14,14 +14,14 @@
                                 <v-icon> mdi-routes</v-icon>
                             </v-btn>
                             <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
-                            <v-toolbar-title>Software Package</v-toolbar-title>
+                            <v-toolbar-title>Vehicle Package</v-toolbar-title>
                             <v-spacer></v-spacer>
                         </v-toolbar>
                         <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
                             <v-toolbar-title>{{ element.name }}</v-toolbar-title>
                         </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
-                            <v-toolbar-title>Software Package</v-toolbar-title>
+                            <v-toolbar-title>Vehicle Package</v-toolbar-title>
                         </v-toolbar>
                         <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
@@ -268,7 +268,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -597,7 +597,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/UCMModule-'+idx)
                 this.newLine(this.element.uuid+'/UCMModule-'+idx, this.element.uuid+'/UCMModule', this.editUCMSItem.module.uuid)
                 this.element.ucms[idx].module = this.editUCMSItem.module.name
-            } else if (endLine == undefined && this.editUCMSItem.module != null) {
+            } else if (endLine == undefined && this.editUCMSItem.module != null && this.editUCMSItem.module.uuid != null) {
                 this.newLine(this.element.uuid+'/UCMModule-'+idx, this.element.uuid+'/UCMModule', this.editUCMSItem.module.uuid)
                 this.element.ucms[idx].module = this.editUCMSItem.module.name
             }

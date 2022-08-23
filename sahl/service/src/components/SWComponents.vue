@@ -953,7 +953,7 @@ export default {
                 this.newServiceInterface()
             } else if (this.element.pport[this.PportTab].selectI == "PHM-RECOVERY-ACTION-INTERFACE") {
                 this.$store.commit('addElementPHMRecovery', {
-                    name: this.$store.getters.getNamePHMRecovery, input: false, path: '',
+                    name: this.$store.getters.getNamePHMRecovery, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     reconame: '', faf: null
                 })                
@@ -991,7 +991,7 @@ export default {
             this.selectDelectSC = []
         },
         changePportTab() {
-            if(this.element.pport.length > 0 && this.location == 1) {
+            if(this.element.pport.length > 0 && this.location == 1 && this.PportTab != undefined) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'pport', this.element.uuid, this.PportTab, this.element.pport[this.PportTab].id)}, 300);
             }
         },
@@ -1024,7 +1024,6 @@ export default {
             }
 
             this.element.pport.splice(idx, 1)
-            this.changePportTab()
         },
         isCheckPQSC() {
             if (this.isdeletePQSC == true) {
@@ -1075,7 +1074,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/pportQSC-'+this.element.pport[this.PportTab].queued[idx].id+'-'+this.element.pport[this.PportTab].id)
                 this.newLine(this.element.uuid+'/pportQSC-'+this.element.pport[this.PportTab].queued[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportQSC-'+this.element.pport[this.PportTab].id, this.editPQSC.dataE.uuid)
                 this.element.pport[this.PportTab].queued[idx].dataE = this.editPQSC.dataE.name
-            } else if (endLine == undefined && this.editPQSC.dataE != null) {
+            } else if (endLine == undefined && this.editPQSC.dataE != null && this.editPQSC.dataE.uuid != null) {
                 this.newLine(this.element.uuid+'/pportQSC-'+this.element.pport[this.PportTab].queued[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportQSC-'+this.element.pport[this.PportTab].id, this.editPQSC.dataE.uuid)
                 this.element.pport[this.PportTab].queued[idx].dataE = this.editPQSC.dataE.name
             } else if (this.editPQSC.dataE != null && endLine == this.editPQSC.dataE.uuid && this.element.pport[this.PportTab].queued[idx].dataE != this.editPQSC.dataE.name) {
@@ -1176,7 +1175,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/pportFSC-'+this.element.pport[this.PportTab].field[idx].id+'-'+this.element.pport[this.PportTab].id)
                 this.newLine(this.element.uuid+'/pportFSC-'+this.element.pport[this.PportTab].field[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportFSC-'+this.element.pport[this.PportTab].id, this.editPFSC.dataE.uuid)
                 this.element.pport[this.PportTab].field[idx].dataE = this.editPFSC.dataE.name
-            } else if (endLine == undefined && this.editPFSC.dataE != null) {
+            } else if (endLine == undefined && this.editPFSC.dataE != null && this.editPFSC.dataE.uuid != null) {
                 this.newLine(this.element.uuid+'/pportFSC-'+this.element.pport[this.PportTab].field[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportFSC-'+this.element.pport[this.PportTab].id, this.editPFSC.dataE.uuid)
                 this.element.pport[this.PportTab].field[idx].dataE = this.editPFSC.dataE.name
             } else if (this.editPFSC.dataE != null && endLine == this.editPFSC.dataE.uuid && this.element.pport[this.PportTab].field[idx].dataE != this.editPFSC.dataE.name) {
@@ -1276,7 +1275,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].server[idx].id+'-'+this.element.pport[this.PportTab].id)
                 this.newLine(this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].server[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].id, this.editSC.oper.uuid)
                 this.element.pport[this.PportTab].server[idx].oper = this.editSC.oper.name
-            } else if (endLine == undefined && this.editSC.oper != null) {
+            } else if (endLine == undefined && this.editSC.oper != null && this.editSC.oper.uuid != null) {
                 this.newLine(this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].server[idx].id+'-'+this.element.pport[this.PportTab].id, this.element.uuid+'/pportSC-'+this.element.pport[this.PportTab].id, this.editSC.oper.uuid)
                 this.element.pport[this.PportTab].server[idx].oper = this.editSC.oper.name
             } else if (this.editSC.oper != null && endLine == this.editSC.oper.uuid && this.element.pport[this.PportTab].server[idx].oper != this.editSC.oper.name) {
@@ -1395,7 +1394,7 @@ export default {
                 this.newServiceInterface()
             } else if (this.element.prport[this.PRportTab].selectI == "PERSISTENCY-FILE-PROXY-INTERFACE") {
                 this.$store.commit('addElementPERFileProxy', {
-                    name: this.$store.getters.getNamePERFileProxy, input: false, path: '',
+                    name: this.$store.getters.getNamePERFileProxy, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     category: '', minisize: '', redundancy: null, updateS: null, encoding: '', proxy: [], maxfiles: ''
                 })
@@ -1405,7 +1404,7 @@ export default {
 
             } else if (this.element.prport[this.PRportTab].selectI == "PERSISTENCY-KEY-VALUE-DATABASE-INTERFACE") {
                 this.$store.commit('addElementPERKeyValueDI', {
-                    name: this.$store.getters.getNamePERKeyValueDI, input: false, path: '',
+                    name: this.$store.getters.getNamePERKeyValueDI, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     minisize: '', redundancy: null, updateS: null, data: [], serialization: []
                 })
@@ -1438,7 +1437,7 @@ export default {
             this.selectDelectPRProvide = []
         },
         changePRportTab() {
-            if(this.element.prport.length > 0 && this.location == 1) {
+            if(this.element.prport.length > 0 && this.location == 1 && this.PRportTab != undefined) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'prport', this.element.uuid, this.PRportTab, this.element.prport[this.PRportTab].id)}, 300);
             }
         },
@@ -1459,7 +1458,6 @@ export default {
             }
 
             this.element.prport.splice(idx, 1)
-            this.changePRportTab()
         },
         isCheckPRProvide() {
             if (this.isdeletePRProvide == true) {
@@ -1509,7 +1507,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/prporttab-'+this.element.prport[this.PRportTab].provide[idx].id+'-'+this.element.prport[this.PRportTab].id)
                 this.newLine(this.element.uuid+'/prporttab-'+this.element.prport[this.PRportTab].provide[idx].id+'-'+this.element.prport[this.PRportTab].id, this.element.uuid+'/prporttab'+this.element.prport[this.PRportTab].id, this.editPRProvide.dataE.uuid)
                 this.element.prport[this.PRportTab].provide[idx].dataE = this.editPRProvide.dataE.name
-            } else if (endLine == undefined && this.editPRProvide.dataE != null) {
+            } else if (endLine == undefined && this.editPRProvide.dataE != null && this.editPRProvide.dataE.uuid != null) {
                 this.newLine(this.element.uuid+'/prporttab-'+this.element.prport[this.PRportTab].provide[idx].id+'-'+this.element.prport[this.PRportTab].id, this.element.uuid+'/prporttab'+this.element.prport[this.PRportTab].id, this.editPRProvide.dataE.uuid)
                 this.element.prport[this.PRportTab].provide[idx].dataE = this.editPRProvide.dataE.name
             } else if (this.editPRProvide.dataE != null && endLine == this.editPRProvide.dataE.uuid && this.element.prport[this.PRportTab].provide[idx].dataE != this.editPRProvide.dataE.name) {
@@ -1629,7 +1627,7 @@ export default {
                 this.newServiceInterface()
             } else if (this.element.rport[this.RportTab].selectI == "PHM-HEALTH-CHANNEL-INTERFACE") {
                 this.$store.commit('addElementPHMHealth', {
-                    name: this.$store.getters.getNamePHMHealth, input: false, path: '',
+                    name: this.$store.getters.getNamePHMHealth, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     status: []
                 })
@@ -1638,7 +1636,7 @@ export default {
                 EventBus.$emit('add-element', constant.Platform_str)
             } else if (this.element.rport[this.RportTab].selectI == "PHM-SUPERVISED-ENTITY-INTERFACE") {
                 this.$store.commit('addElementPHMSupervised', {
-                    name: this.$store.getters.getNamePHMSupervised, input: false, path: '',
+                    name: this.$store.getters.getNamePHMSupervised, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     checkpoint: []
                 })              
@@ -1673,7 +1671,7 @@ export default {
             this.selectDelectRCC = []
         },
         changeRportTab() {
-            if(this.element.rport.length > 0 && this.location == 1) {
+            if(this.element.rport.length > 0 && this.location == 1 && this.RportTab != undefined) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', 'rport', this.element.uuid, this.RportTab, this.element.rport[this.RportTab].id)}, 300);
             }
         },
@@ -1700,7 +1698,6 @@ export default {
             }
 
             this.element.rport.splice(idx, 1)
-            this.changeRportTab()
         },
         isCheckRQRC() {
             if (this.isdeleteRQRC == true) {
@@ -1765,7 +1762,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/rportQRC-'+this.element.rport[this.RportTab].queued[idx].id+'-'+this.element.rport[this.RportTab].id)
                 this.newLine(this.element.uuid+'/rportQRC-'+this.element.rport[this.RportTab].queued[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportQRC-'+this.element.rport[this.RportTab].id, this.editRQRC.dataE.uuid)
                 this.element.rport[this.RportTab].queued[idx].dataE = this.editRQRC.dataE.name
-            } else if (endLine == undefined && this.editRQRC.dataE != null) {
+            } else if (endLine == undefined && this.editRQRC.dataE != null && this.editRQRC.dataE.uuid != null) {
                 this.newLine(this.element.uuid+'/rportQRC-'+this.element.rport[this.RportTab].queued[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportQRC-'+this.element.rport[this.RportTab].id, this.editRQRC.dataE.uuid)
                 this.element.rport[this.RportTab].queued[idx].dataE = this.editRQRC.dataE.name
             } else if (this.editRQRC.dataE != null && endLine == this.editRQRC.dataE.uuid && this.element.rport[this.RportTab].queued[idx].dataE != this.editRQRC.dataE.name) {
@@ -1899,7 +1896,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id)
                 this.newLine(this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].id, this.editRCC.operation.uuid)
                 this.element.rport[this.RportTab].client[idx].operation = this.editRCC.operation.name
-            } else if (endLine == undefined && this.editRCC.operation != null) {
+            } else if (endLine == undefined && this.editRCC.operation != null && this.editRCC.operation.uuid != null) {
                 this.newLine(this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].client[idx].id+'-'+this.element.rport[this.RportTab].id, this.element.uuid+'/rportCC-'+this.element.rport[this.RportTab].id, this.editRCC.operation.uuid)
                 this.element.rport[this.RportTab].client[idx].operation = this.editRCC.operation.name
             } else if (this.editRCC.operation != null && endLine == this.editRCC.operation.uuid && this.element.rport[this.RportTab].client[idx].operation != this.editRCC.operation.name) {
@@ -2030,12 +2027,11 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementService', {
-                    name: this.$store.getters.getNameServiceInterface, input: false, path: '',
+                    name: this.$store.getters.getNameServiceInterface, path: '',
                     top: elementY, left: elementX, zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
                     versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: null,
                 })
             EventBus.$emit('add-element', constant.ServiceInterface_str)
-            EventBus.$emit('add-element', constant.ServiceInterfaces_str)
             EventBus.$emit('add-element', constant.Service_str)
             this.$store.commit('editSWComponents', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },

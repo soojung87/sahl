@@ -805,7 +805,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/Eventtable-'+idx)
                 this.newLine(this.element.uuid+'/Eventtable-'+idx, this.element.uuid+'/Eventtable', this.editEventsItem.type.uuid)
                 this.element.events[idx].type = this.editEventsItem.type.name
-            } else if (endLine == undefined && this.editEventsItem.type != null) {
+            } else if (endLine == undefined && this.editEventsItem.type != null && this.editEventsItem.type.uuid != null) {
                 this.newLine(this.element.uuid+'/Eventtable-'+idx, this.element.uuid+'/Eventtable', this.editEventsItem.type.uuid)
                 this.element.events[idx].type = this.editEventsItem.type.name
             }
@@ -827,7 +827,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/Fieldtable-'+idx)
                 this.newLine(this.element.uuid+'/Fieldtable-'+idx, this.element.uuid+'/Fieldtable', this.editFieldsItem.type.uuid)
                 this.element.fields[idx].type = this.editFieldsItem.type.name
-            }else if (endLine == undefined && this.editFieldsItem.type != null) {
+            }else if (endLine == undefined && this.editFieldsItem.type != null && this.editFieldsItem.type.uuid != null) {
                 this.newLine(this.element.uuid+'/Fieldtable-'+idx, this.element.uuid+'/Fieldtable', this.editFieldsItem.type.uuid)
                 this.element.fields[idx].type = this.editFieldsItem.type.name
             }
@@ -863,7 +863,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementImplementation', {
-                    name: this.$store.getters.getNameImplementation, input: false, path: '',
+                    name: this.$store.getters.getNameImplementation, path: '',
                     top: elementY, left: elementX,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', traceName: '', trace: [],
                     typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
@@ -950,7 +950,7 @@ export default {
             this.isdeleteError = false
         },
         changeMethodTab() {
-            if(this.element.methods.length > 0 && this.location == 1) {
+            if(this.element.methods.length > 0 && this.location == 1 && this.methodTab != undefined) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.element.methods[this.methodTab].id)}, 300);
             }
         },
@@ -1001,7 +1001,6 @@ export default {
                 }
             }
             this.element.methods.splice(idx, 1)
-            this.changeMethodTab()
         },
         clickMethodName(name) {
             this.beforeName = name
@@ -1069,7 +1068,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab)
                 this.newLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab, this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, this.editArgItem.type.uuid)
                 this.element.methods[this.methodTab].argument[idx].type = this.editArgItem.type.name
-            }else if (endLine == undefined && this.editArgItem.type != null) {
+            }else if (endLine == undefined && this.editArgItem.type != null && this.editArgItem.type.uuid != null) {
                 this.newLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab, this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, this.editArgItem.type.uuid)
                 this.element.methods[this.methodTab].argument[idx].type = this.editArgItem.type.name
             }
@@ -1193,7 +1192,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab)
                 this.newLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, this.editErrorSetItem.error.uuid)
                 this.element.methods[this.methodTab].errorSet[idx].error = this.editErrorSetItem.error.name
-            } else if (endLine == undefined && this.editErrorSetItem.error != null) {
+            } else if (endLine == undefined && this.editErrorSetItem.error != null && this.editErrorSetItem.error.uuid != null) {
                 this.newLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, this.editErrorSetItem.error.uuid)
                 this.element.methods[this.methodTab].errorSet[idx].error = this.editErrorSetItem.error.name
             }
@@ -1227,12 +1226,11 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementErrorSet', {
-                name: this.$store.getters.getNameErrorSet, input: false, path: '',
+                name: this.$store.getters.getNameErrorSet, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 errorref: [],
             })
             EventBus.$emit('add-element', constant.Service_str)
-            EventBus.$emit('add-element', constant.Errors_str)
             EventBus.$emit('add-element', constant.Errorset_str)
             this.$store.commit('editServiceInterface', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
@@ -1313,7 +1311,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab)
                 this.newLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, this.editErrorItem.error.uuid)
                 this.element.methods[this.methodTab].error[idx].error = this.editErrorItem.error.name
-            } else if (endLine == undefined && this.editErrorItem.error != null) {
+            } else if (endLine == undefined && this.editErrorItem.error != null && this.editErrorItem.error.uuid != null) {
                 this.newLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, this.editErrorItem.error.uuid)
                 this.element.methods[this.methodTab].error[idx].error = this.editErrorItem.error.name
             }
@@ -1347,12 +1345,11 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementError', {
-                name: this.$store.getters.getNameError, input: false, path: '',
+                name: this.$store.getters.getNameError, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 desc: '', errorcode: '', errorDref: null
             })
             EventBus.$emit('add-element', constant.Service_str)
-            EventBus.$emit('add-element', constant.Errors_str)
             EventBus.$emit('add-element', constant.Error_str)
             this.$store.commit('editServiceInterface', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },

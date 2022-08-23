@@ -571,7 +571,7 @@ export default {
             const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             this.$store.commit('addElementProcessDesign', { //executableref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                name: this.$store.getters.getNameProcessDesign, input: false, path: '',
+                name: this.$store.getters.getNameProcessDesign, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 executableref: null, determin: [],
             })
@@ -620,7 +620,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementDeterministicClien', {
-                name: this.$store.getters.getNameDeterministicClient, input: false, path: '',
+                name: this.$store.getters.getNameDeterministicClient, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 cycletiem: '', numofworkers: '',
             })
@@ -669,7 +669,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementExecutable', { //applicationtyperef 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                name: this.$store.getters.getNameExecutable, input: false, path: '',
+                name: this.$store.getters.getNameExecutable, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 version: '', category:'', buildType:null, loggingBehabior:null, reportingBehabior:null, swname:'', applicationtyperef: null,
             })
@@ -718,7 +718,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementModeDeclarationGroup', {
-                name: this.$store.getters.getNameModeDeclarationGroup, input: false, path: '',
+                name: this.$store.getters.getNameModeDeclarationGroup, path: '',
                 top: elementY, left: elementX, zindex: 10, 
                 modedeclaration:[], initmode:null, icon:"mdi-clipboard-outline", validation: false
             })
@@ -745,7 +745,7 @@ export default {
         },
         changeDependentStartupTab() {
             //console.log('changeDependentStartupTab' +this.dependentStartupTab)
-            if(this.element.dependent.length > 0 && this.location == 1) {
+            if(this.element.dependent.length > 0 && this.location == 1 && this.dependentStartupTab != undefined) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.dependentStartupTab, this.dependentStartupTab)}, 300);
             }
         },
@@ -818,7 +818,6 @@ export default {
             }
 
             this.element.dependent.splice(idx, 1)
-            this.changeDependentStartupTab()
         },
         isCheckFunctionG() {
             if (this.isdeleteFunctionG == true) {
@@ -894,7 +893,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/fgcontext-'+idx+'-'+this.dependentStartupTab)
                 this.newLine(this.element.uuid+'/fgcontext-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.editFunctionGItem.contextMode.uuid)
                 this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode = this.editFunctionGItem.contextMode.name
-            } else if(endcontextMLine == undefined && this.editFunctionGItem.contextMode != null) {
+            } else if(endcontextMLine == undefined && this.editFunctionGItem.contextMode != null && this.editFunctionGItem.contextMode.uuid != null) {
                 this.newLine(this.element.uuid+'/fgcontext-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.editFunctionGItem.contextMode.uuid)
                 this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode = this.editFunctionGItem.contextMode.name
             } else if (this.editFunctionGItem.contextMode != null && endcontextMLine == this.editFunctionGItem.contextMode.uuid && this.element.dependent[this.dependentStartupTab].functionItem[idx].contextMode != this.editFunctionGItem.contextMode.name) {
@@ -910,7 +909,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/fgtarget-'+idx+'-'+this.dependentStartupTab)
                 this.newLine(this.element.uuid+'/fgtarget-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.editFunctionGItem.targetMode.uuid)
                 this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode = this.editFunctionGItem.targetMode.name
-            } else if (endtargetMLine == undefined && this.editFunctionGItem.targetMode != undefined) {
+            } else if (endtargetMLine == undefined && this.editFunctionGItem.targetMode != undefined && this.editFunctionGItem.targetMode.uuid != undefined) {
                 this.newLine(this.element.uuid+'/fgtarget-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/fgtable'+this.dependentStartupTab, this.editFunctionGItem.targetMode.uuid)
                 this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode = this.editFunctionGItem.targetMode.name
             } else if (this.editFunctionGItem.targetMode != undefined && endtargetMLine == this.editFunctionGItem.targetMode.uuid && this.element.dependent[this.dependentStartupTab].functionItem[idx].targetMode != this.editFunctionGItem.targetMode.name) {
@@ -1073,7 +1072,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementStartupConfig', {
-                name: this.$store.getters.getNameStartupConfig, input: false, path: '',
+                name: this.$store.getters.getNameStartupConfig, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 config: []
             })
@@ -1157,7 +1156,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/edcontext-'+idx+'-'+this.dependentStartupTab)
                 this.newLine(this.element.uuid+'/edcontext-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.contextMode.uuid)
                 this.element.dependent[this.dependentStartupTab].exection[idx].contextMode = this.editExecutionDItem.contextMode.name
-            } else if(endcontextMLine == undefined && this.editExecutionDItem.contextMode != null) {
+            } else if(endcontextMLine == undefined && this.editExecutionDItem.contextMode != null && this.editExecutionDItem.contextMode.uuid != null) {
                 this.newLine(this.element.uuid+'/edcontext-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.contextMode.uuid)
                 this.element.dependent[this.dependentStartupTab].exection[idx].contextMode = this.editExecutionDItem.contextMode.name
             } else if (this.editExecutionDItem.contextMode!= null && endcontextMLine == this.editExecutionDItem.contextMode.uuid && this.element.dependent[this.dependentStartupTab].exection[idx].contextMode != this.editExecutionDItem.contextMode.name) {
@@ -1173,7 +1172,7 @@ export default {
                 this.deleteLine(this.element.uuid+'/edtarget-'+idx+'-'+this.dependentStartupTab)
                 this.newLine(this.element.uuid+'/edtarget-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.targetMode.uuid)
                 this.element.dependent[this.dependentStartupTab].exection[idx].targetMode = this.editExecutionDItem.targetMode.name
-            } else if (endtargetMLine == undefined && this.editExecutionDItem.targetMode != undefined) {
+            } else if (endtargetMLine == undefined && this.editExecutionDItem.targetMode != undefined && this.editExecutionDItem.targetMode.uuid != null) {
                 this.newLine(this.element.uuid+'/edtarget-'+idx+'-'+this.dependentStartupTab, this.element.uuid+'/edtable'+this.dependentStartupTab, this.editExecutionDItem.targetMode.uuid)
                 this.element.dependent[this.dependentStartupTab].exection[idx].targetMode = this.editExecutionDItem.targetMode.name
             } else if (this.editExecutionDItem.targetMode != null && endtargetMLine == this.editExecutionDItem.targetMode.uuid && this.element.dependent[this.dependentStartupTab].exection[idx].targetMode != this.editExecutionDItem.targetMode.name) {

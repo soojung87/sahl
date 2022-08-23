@@ -16,6 +16,9 @@
                             <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
                             <v-toolbar-title>Startup Config Set</v-toolbar-title>
                             <v-spacer></v-spacer>
+                            <v-btn v-if="minimaptoolbar" icon @click="viewARXML">
+                                <v-icon> mdi-format-text</v-icon>
+                            </v-btn>
                         </v-toolbar>
                         <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
                             <v-toolbar-title>{{ element.name }}</v-toolbar-title>
@@ -178,6 +181,165 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
+            <v-dialog v-model="dialogText" persistent scrollable width="800">
+                <v-card >
+                    <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
+                    <v-card-text>
+                        <br>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;STARTUP-CONFIGS&#62;
+                                <v-btn @click="newTextStartup()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 600px;">
+                            <v-row v-for="(item, i) in editARXML.config" :key="i" style="height: 550px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                            <v-btn @click="deletTextStartup(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;STARTUP-CONFIG&#62;
+                                        </label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
+                                        <v-text-field v-model="item.configname" placeholder="String"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SCHEDULING-POLICY&#62;</label>
+                                        <v-text-field v-model="item.schedulingPolicy" placeholder="SCHEDULING-POLICY-FIFO or SCHEDULING-POLICY-ROUND-ROBIN"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;SCHEDULING-POLICY&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 15px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SCHEDULING-PRIORITY&#62;</label>
+                                        <v-text-field v-model="item.priority" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;SCHEDULING-PRIORITY&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 50px;">
+                                        <label style="padding:10px;margin-left:90px;">&#60;ENVIRONMENT-VARIABLES&#62;
+                                            <v-btn @click="newTextEnviro(i)" icon color="teal darken" x-samll dark>
+                                                <v-icon dense dark>mdi-plus</v-icon>
+                                            </v-btn>
+                                        </label>
+                                    </v-row>
+                                    <div class="text-Inner-editDialog" style="height: 120px;">
+                                        <v-row v-for="(en, e) in item.environ" :key="e" style="height: 100px;">
+                                            <div>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <label style="padding:10px;margin:2px 0px 2px 80px;">
+                                                        <v-btn @click="deletTextEnviro(e,i)" text x-small color="indigo">
+                                                            <v-icon>mdi-minus</v-icon>
+                                                        </v-btn>
+                                                        &#60;TAG-WITH-OPTIONAL-VALUE&#62;
+                                                    </label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <label style="padding:10px;margin:2px 0px 2px 140px;">&#60;KEY&#62;</label>
+                                                    <v-text-field v-model="en.key" placeholder="Path" class="lable-placeholer-color" dense></v-text-field>
+                                                    <label style="padding:10px;">&#60;&#47;KEY&#62;</label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <label style="padding:10px;margin:2px 0px 2px 140px;">&#60;VALUE&#62;</label>
+                                                    <v-text-field v-model="en.value" placeholder="Integer" class="lable-placeholer-color" dense></v-text-field>
+                                                    <label style="padding:10px;">&#60;&#47;VALUE&#62;</label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                        <label style="padding:10px;margin-left:125px;">&#60;&#47;TAG-WITH-OPTIONAL-VALUE&#62;</label>
+                                                </v-row>
+                                            </div>
+                                        </v-row>
+                                    </div> 
+                                    <v-row style="height: 15px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 90px;">&#60;&#47;ENVIRONMENT-VARIABLES&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 50px;">
+                                        <label style="padding:10px;margin-left:90px;">&#60;STARTUP-OPTIONS&#62;
+                                            <v-btn @click="newTextOption(i)" icon color="teal darken" x-samll dark>
+                                                <v-icon dense dark>mdi-plus</v-icon>
+                                            </v-btn>
+                                        </label>
+                                    </v-row>
+                                    <div class="text-Inner-editDialog" style="height: 120px;">
+                                        <v-row v-for="(op, o) in item.option" :key="o" style="height: 120px;">
+                                            <div>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <label style="padding:10px;margin:2px 0px 2px 80px;">
+                                                        <v-btn @click="deletTextOption(o,i)" text x-small color="indigo">
+                                                            <v-icon>mdi-minus</v-icon>
+                                                        </v-btn>
+                                                        &#60;STARTUP-OPTION&#62;
+                                                    </label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <label style="padding:10px;margin:2px 0px 2px 140px;">&#60;OPTION-ARGUMENT&#62;</label>
+                                                    <v-text-field v-model="op.arg" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                                    <label style="padding:10px;">&#60;&#47;OPTION-ARGUMENT&#62;</label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <label style="padding:10px;margin:2px 0px 2px 140px;">&#60;OPTION-KIND&#62;</label>
+                                                    <v-text-field v-model="op.kind" placeholder="COMMAND-LINE-SIMPLE-FORM or COMMAND-LINE-SHORT-FORM or COMMAND-LINE-LONG-FORM" class="lable-placeholer-color" dense></v-text-field>
+                                                    <label style="padding:10px;">&#60;&#47;OPTION-KIND&#62;</label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <label style="padding:10px;margin:2px 0px 2px 140px;">&#60;OPTION-NAME&#62;</label>
+                                                    <v-text-field v-model="op.name" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                                    <label style="padding:10px;">&#60;&#47;OPTION-NAME&#62;</label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                        <label style="padding:10px;margin-left:125px;">&#60;&#47;STARTUP-OPTION&#62;</label>
+                                                </v-row>
+                                            </div>
+                                        </v-row>
+                                    </div>
+                                    <v-row style="height: 25px;">
+                                        <label style="padding:10px;margin-left:90px;">&#60;&#47;STARTUP-OPTIONS&#62;</label>
+                                    </v-row>
+                                    <v-row>
+                                        <label style="height: 25px;margin:2px 0px 2px 100px;">&#60;TIMEOUT&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;ENTER-TIMEOUT-VALUE&#62;</label>
+                                        <v-text-field v-model="item.entertimeout" placeholder="Time Value"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;ENTER-TIMEOUT-VALUE&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;EXIT-TIMEOUT-VALUE&#62;</label>
+                                        <v-text-field v-model="item.exittimeout" placeholder="Time Value"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;EXIT-TIMEOUT-VALUE&#62;</label>
+                                    </v-row>
+                                    <v-row>
+                                        <label style="height: 25px;margin:2px 0px 2px 100px;">&#60;&#47;TIMEOUT&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;STARTUP-CONFIG&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row>
+                            <label style="padding:10px;">&#60;&#47;STARTUP-CONFIGS&#62;</label>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="saveARXML()" >
+                            Save
+                        </v-btn>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text @click="cancelARXML()">
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -229,6 +391,11 @@ export default {
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            dialogText: false,
+            editARXML: {name:'', config: []},
+            editTextConfig: {configname: '', policy: '', priority: '', entertimeout: '', exittimeout: '', option: [], environ: [], id: ''},
+            editTextOption: {arg: '', kind:'', name: '', id: ''},
+            editTextEnviro: { key: '', value: '', id: '' },
             isStartupConfigOpenClose : true,
             schedulingPolicy: ['SCHEDULING-POLICY-FIFO', 'SCHEDULING-POLICY-ROUND-ROBIN',],
             optionKind: ['COMMAND-LINE-SIMPLE-FORM', 'COMMAND-LINE-SHORT-FORM', 'COMMAND-LINE-LONG-FORM'],
@@ -417,6 +584,76 @@ export default {
         setactiveUUID() {
             this.$store.commit('setuuid', {uuid: this.element.uuid} )
             this.$store.commit('editStartupConfig', {compo:"z", uuid:this.element.uuid, zindex:10} )
+        },
+
+        viewARXML() {
+            this.editARXML.name = this.element.name
+            this.editARXML.config = JSON.parse(JSON.stringify(this.element.config))
+            this.dialogText= true
+        },
+        saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editStartupConfig', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
+            this.element.name = this.editARXML.name
+            this.element.config = JSON.parse(JSON.stringify(this.editARXML.config))
+            this.cancelARXML()
+        },
+        cancelARXML() {
+            this.editARXML = {name:'', config: []}
+            this.editTextItem = {configname: '', policy: null, priority: '', entertimeout: '', exittimeout: '', option: [], environ: [], id: ''}
+            this.editTextOption = {arg: '', kind:'', name: '', id: ''}
+            this.editTextEnviro = { key: '', value: '', id: '' }
+            this.dialogText = false
+        },
+        newTextStartup() {
+            this.editTextItem = {configname: '', policy: null, priority: '', entertimeout: '', exittimeout: '', option: [], environ: [], id: ''}
+            let res = true, n = 0
+            while (res) {
+                this.editTextItem.configname = 'StartupConfig_' + n++;
+                res = this.editARXML.config.some(item => item.id === n)
+            }
+            this.editTextItem.id = n
+
+            const addObj = Object.assign({}, this.editTextItem)
+            this.editARXML.config.push(addObj);
+        },
+        deletTextStartup(idx) {
+            this.editARXML.config.splice(idx,1)
+        },
+        newTextOption(idxConfig) {
+            this.editTextOption = {arg: '', kind:'', name: '', id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.editARXML.config[idxConfig].option.some(item => item.id === n)
+            }
+            this.editTextOption.id = n
+
+            const addObj = Object.assign({}, this.editTextOption)
+            this.editARXML.config[idxConfig].option.push(addObj);
+        },
+        deletTextOption(idxOption, idxConfig) {
+            this.editARXML.config[idxConfig].option.splice(idxOption,1)
+        },
+        newTextEnviro(idxConfig) {
+            this.editTextEnviro = { key: '', value: '', id: '' }
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.editARXML.config[idxConfig].environ.some(item => item.id === n)
+            }
+            this.editTextEnviro.id = n
+
+            const addObj = Object.assign({}, this.editTextEnviro)
+            this.editARXML.config[idxConfig].environ.push(addObj);
+        },
+        deletTextEnviro(idxEnviro, idxConfig) {
+            this.editARXML.config[idxConfig].environ.splice(idxEnviro,1)
         },
     },
 }

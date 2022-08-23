@@ -16,6 +16,9 @@
                             <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
                             <v-toolbar-title>Process Design</v-toolbar-title>
                             <v-spacer></v-spacer>
+                            <v-btn v-if="minimaptoolbar" icon @click="viewARXML">
+                                <v-icon> mdi-format-text</v-icon>
+                            </v-btn>
                         </v-toolbar>
                         <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
                             <v-toolbar-title>{{ element.name }}</v-toolbar-title>
@@ -107,6 +110,140 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
+            <v-dialog v-model="dialogText" persistent width="800">
+                <v-card >
+                    <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
+                    <v-card-text>
+                        <br>
+                        <v-row style="height:30px">
+                            <label style="padding:10px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row style="height:25px">
+                            <label style="padding:10px;">&#60;EXECUTABLE-REF&#62;</label>
+                            <v-text-field v-model="editARXML.executableref" placeholder="Path" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;EXECUTABLE-REF&#62;</label>
+                        </v-row>
+                        <v-row>
+                            <label style="padding:10px;height: 50px;">&#60;DETERMINISTIC-CLIENT-RESOURCE-NEEDSS&#62;
+                                <v-btn @click="newTextDeterministic()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <v-row>
+                            <div class="text-editDialog" style="height: 430px;">
+                                <v-row v-for="(item, i) in editARXML.determin" :key="i" style="height: 410px;">
+                                    <div>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 10px;">
+                                                <v-btn @click="deletTextDeterministic(i)" text x-small color="indigo">
+                                                    <v-icon>mdi-minus</v-icon>
+                                                </v-btn>
+                                                &#60;DETERMINISTIC-CLIENT-RESOURCE-NEEDS&#62;
+                                            </label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
+                                            <v-text-field v-model="item.swname" placeholder="String"  class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;HARDWARE-PLATFORM&#62;</label>
+                                            <v-text-field v-model="item.hardwareP" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;HARDWARE-PLATFORM&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;INIT-RESOURCE&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 100px;">&#60;NUMBER-OF-INSTRUCTIONS&#62;</label>
+                                            <v-text-field v-model="item.initnofinstruction" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;NUMBER-OF-INSTRUCTIONS&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:2px 0px 2px 100px;">
+                                            <v-col cols="5">
+                                            <label>&#60;SEQUENTIAL-INSTRUCTIONS-BEGIN&#62;</label>
+                                            </v-col><v-col cols="2">
+                                            <v-text-field v-model="item.initsequentialbegin" placeholder="Int" style="margin: -8px 0px 2px 0px;" class="lable-placeholer-color" dense></v-text-field>
+                                            </v-col><v-col cols="5">
+                                            <label style="padding:10px;">&#60;&#47;SEQUENTIAL-INSTRUCTIONS-BEGIN&#62;</label>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:2px 0px 2px 100px;">
+                                            <v-col cols="5">
+                                            <label>&#60;SEQUENTIAL-INSTRUCTIONS-END&#62;</label>
+                                            </v-col><v-col cols="2">
+                                            <v-text-field v-model="item.initsequentialend" placeholder="Int" style="margin: -8px 0px 2px 0px;" class="lable-placeholer-color" dense></v-text-field>
+                                            </v-col><v-col cols="5">
+                                            <label style="padding:10px;">&#60;&#47;SEQUENTIAL-INSTRUCTIONS-END&#62;</label>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left: 100px;">&#60;SPEEDUP&#62;</label>
+                                            <v-text-field v-model="item.initspeedup" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;SPEEDUP&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;&#47;INIT-RESOURCE&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;RUN-RESOURCE&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left: 100px;">&#60;NUMBER-OF-INSTRUCTIONS&#62;</label>
+                                            <v-text-field v-model="item.runnofinstruction" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;NUMBER-OF-INSTRUCTIONS&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:2px 0px 2px 100px;">
+                                            <v-col cols="5">
+                                            <label>&#60;SEQUENTIAL-INSTRUCTIONS-BEGIN&#62;</label>
+                                            </v-col><v-col cols="2">
+                                            <v-text-field v-model="item.runsequentialbegin" placeholder="Int" style="margin: -8px 0px 2px 0px;" class="lable-placeholer-color" dense></v-text-field>
+                                            </v-col><v-col cols="5">
+                                            <label style="padding:10px;">&#60;&#47;SEQUENTIAL-INSTRUCTIONS-BEGIN&#62;</label>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:2px 0px 2px 100px;">
+                                            <v-col cols="5">
+                                            <label>&#60;SEQUENTIAL-INSTRUCTIONS-END&#62;</label>
+                                            </v-col><v-col cols="2">
+                                            <v-text-field v-model="item.runsequentialend" placeholder="Int" style="margin: -8px 0px 2px 0px;" class="lable-placeholer-color" dense></v-text-field>
+                                            </v-col><v-col cols="5">
+                                            <label style="padding:10px;">&#60;&#47;SEQUENTIAL-INSTRUCTIONS-END&#62;</label>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left: 100px;">&#60;SPEEDUP&#62;</label>
+                                            <v-text-field v-model="item.runspeedup" placeholder="Int" class="lable-placeholer-color" dense></v-text-field>
+                                            <label style="padding:10px;">&#60;&#47;SPEEDUP&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;&#47;RUN-RESOURCE&#62;</label>
+                                        </v-row>
+                                        <v-row style="height: 25px;margin:0px;">
+                                            <label style="padding:10px;margin-left:58px;">&#60;&#47;DETERMINISTIC-CLIENT-RESOURCE-NEEDS&#62;</label>
+                                        </v-row>
+                                    </div>
+                                </v-row>
+                            </div>
+                        </v-row>
+                        <v-row>
+                            <label style="padding:10px;height: 20px;" >&#60;&#47;DETERMINISTIC-CLIENT-RESOURCE-NEEDSS&#62;</label>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="saveARXML()" >
+                            Save
+                        </v-btn>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text @click="cancelARXML()">
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -117,7 +254,7 @@ import { EventBus } from "../main.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -167,6 +304,11 @@ export default {
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            dialogText: false,
+            editARXML: {name:'', executableref: null, determin: []},
+            editTextItem: {swname: '', hardwareP:'', 
+                initnofinstruction: '', initsequentialbegin: '', initsequentialend: '', initspeedup: '',
+                runnofinstruction: '', runsequentialbegin: '', runsequentialend: '', runspeedup: ''},
             isDeterminsticOpenClose: true,
             selExecutable: this.$store.getters.getExecutable,
             determinTab: 0,
@@ -258,7 +400,7 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementExecutable', { //applicationtyperef 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameExecutable, input: false, path: '',
+                    name: this.$store.getters.getNameExecutable, path: '',
                     top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     version: '', category:'', buildType:null, loggingBehabior:null, reportingBehabior:null, swname:'', applicationtyperef: null,
                 })
@@ -296,6 +438,60 @@ export default {
             EventBus.$emit('new-line', drawLine, endLine)
         },
 
+        viewARXML() {
+            this.editARXML.name = this.element.name
+            this.editARXML.executableref = this.element.executableref
+            this.editARXML.determin = JSON.parse(JSON.stringify(this.element.determin))
+            this.dialogText= true
+        },
+        saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editProcessDesign', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
+            this.element.name = this.editARXML.name
+            
+            if (this.editARXML.executableref != null &&this.element.executableref != this.editARXML.executableref) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/prodesignexecutable')
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/prodesignexecutable')
+                }
+                var changEndLine = this.$store.getters.getExecutablePath(this.editARXML.executableref)
+                if (changEndLine != null) {
+                    this.newLine(this.element.uuid+'/prodesignexecutable', this.element.uuid+'/prodesignexecutable', changEndLine)
+                }
+            }
+            this.element.executableref = this.editARXML.executableref
+            this.element.determin = JSON.parse(JSON.stringify(this.editARXML.determin))
+            this.cancelARXML()
+        },
+        cancelARXML() {
+            this.editARXML = {name:'', executableref: '', determin: []}
+            this.editTextItem = {swname: '', hardwareP:'', 
+                initnofinstruction: '', initsequentialbegin: '', initsequentialend: '', initspeedup: '',
+                runnofinstruction: '', runsequentialbegin: '', runsequentialend: '', runspeedup: ''}
+            this.dialogText = false
+        },
+        newTextDeterministic() {
+            this.editTextItem = {swname: '', hardwareP:'', 
+                initnofinstruction: '', initsequentialbegin: '', initsequentialend: '', initspeedup: '',
+                runnofinstruction: '', runsequentialbegin: '', runsequentialend: '', runspeedup: ''}
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.editARXML.determin.some(item => item.id === n)
+            }
+            this.editTextItem.id = n
+
+            const addObj = Object.assign({}, this.editTextItem)
+            this.editARXML.determin.push(addObj);
+        },
+        deletTextDeterministic(idx) {
+            this.editARXML.determin.splice(idx,1)
+        },
     },
 }
 </script>

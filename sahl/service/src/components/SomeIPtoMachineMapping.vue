@@ -16,6 +16,9 @@
                             <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
                             <v-toolbar-title>SomeIP Service Instance To Machine Mapping</v-toolbar-title>
                             <v-spacer></v-spacer>
+                            <v-btn v-if="minimaptoolbar" icon @click="viewARXML">
+                                <v-icon> mdi-format-text</v-icon>
+                            </v-btn>
                         </v-toolbar>
                         <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
                             <v-toolbar-title>{{ element.name }}</v-toolbar-title>
@@ -140,8 +143,8 @@
                                     </v-data-table>
                                 </v-card-text>
                             </v-card>
-                            <v-text-field v-model="element.udp" label="UDP Port" placeholder="int" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
-                            <v-text-field v-model="element.tcp" label="TCP Port" placeholder="int" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.udp" label="UDP Port" placeholder="Int" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.tcp" label="TCP Port" placeholder="Int" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
                         </v-card-text>
                         <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
@@ -151,6 +154,69 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
+            <v-dialog v-model="dialogText" persistent width="800">
+                <v-card >
+                    <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
+                    <v-card-text>
+                        <br>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;COMMUNICATION-CONNECTOR-REF&#62;</label>
+                            <v-text-field v-model="editARXML.ccref" placeholder="Path" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;COMMUNICATION-CONNECTOR-REF&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;SERVICE-INSTANCE-REFS&#62;
+                                <v-btn @click="newTextServiceI()" icon color="teal darken" x-samll dark>
+                                    <v-icon dense dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </label>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 150px;">
+                            <v-row v-for="(item, i) in editARXML.serviceI" :key="i" style="height: 30px;">
+                                <div>
+                                    <br>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 30px;">
+                                            <v-btn @click="deletTextServiceI(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            &#60;SERVICE-INSTANCE-REF&#62;</label>
+                                        <v-text-field v-model="item.service" placeholder="Path"  class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;SERVICE-INSTANCE-REF&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;">&#60;&#47;SERVICE-INSTANCE-REFS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;TCP-PORT&#62;</label>
+                            <v-text-field v-model="editARXML.udp" placeholder="Int" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;TCP-PORT&#62;</label>
+                        </v-row>
+                        <v-row style="height: 25px;">
+                            <label style="padding:10px;">&#60;UDP-PORT&#62;</label>
+                            <v-text-field v-model="editARXML.tcp" placeholder="Int" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;UDP-PORT&#62;</label>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="saveARXML()" >
+                            Save
+                        </v-btn>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text @click="cancelARXML()">
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -162,7 +228,7 @@ import dialogPathSetting from './dialogPathSetting.vue'
 
 
 export default {
-    props: ['element', 'isDatailView', 'minimaptoolbar'],
+    props: ['element', 'isDatailView', 'minimaptoolbar', 'location'],
     components:{dialogPathSetting},
     computed: {
         activeUUID() {
@@ -211,6 +277,9 @@ export default {
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
             iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            dialogText: false,
+            editARXML: {name:'', ccref: null, serviceI: [], tcp:'', udp: ''},
+            editTextItem: {ref: '', service: null, id: ''},
             selCommuniConnect: this.$store.getters.getCommunicationConnect, //MachineDesign에 있다.
             selRequiredSomeIP: this.$store.getters.getRequiredSomeIP,
             selProvidedSomeIP: this.$store.getters.getProvidedSomeIP,
@@ -224,7 +293,6 @@ export default {
             selSI: [{name:"PROVIDED-SOMEIP-SERVICE-INSTANCE", uuid:1},{name:"REQUIRED-SOMEIP-SERVICE-INSTANCE", uuid:2},],
             isEditingPro: true,
             isEditingReq: true,
-            deleteChangeLine: [],
         }
     },
     mounted () {
@@ -320,43 +388,37 @@ export default {
         },
         deletSI() {
             if (this.isdeleteSIItem == true) {
-                for(let i=0; i<this.element.serviceI.length; i++){
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toMachinServiceIns-'+i)
-                    if(endLine != undefined) {
-                        this.deleteChangeLine.push({id:this.element.serviceI[i].id, endLine:endLine})
-                        this.deleteLine(this.element.uuid+'/toMachinServiceIns-'+i)
+                this.selectDelectSI.forEach(item => {
+                    for(let i=0; i<this.element.serviceI.length; i++){
+                        if (item.id == this.element.serviceI[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toMachinServiceIns-'+this.element.serviceI[i].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/toMachinServiceIns-'+this.element.serviceI[i].id)
+                            }
+                        }
                     }
-                }
+                })
 
                 this.element.serviceI = this.element.serviceI.filter(item => {
                         return this.selectDelectSI.indexOf(item) < 0 })
 
-                for(let n=0; n<this.element.serviceI.length; n++) {
-                    for(let idx=0; idx<this.deleteChangeLine.length; idx++) {
-                        if (this.element.serviceI[n].id == this.deleteChangeLine[idx].id) {
-                            this.newLine(this.element.uuid+'/toMachinServiceIns-'+n, this.element.uuid+'/toMachinServiceIns', this.deleteChangeLine[idx].endLine)
-                        }
-                    }
-                }
-
                 this.isdeleteSIItem = false
                 this.selectDelectSI = []
-                this.deleteChangeLine = []
             } 
         },
         editSI(idx) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toMachinServiceIns-'+idx)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toMachinServiceIns-'+this.element.serviceI[idx].id)
             this.element.serviceI[idx].ref = this.editSIItem.ref.name
             if (endLine != undefined && this.editSIItem.service == null) {
-                this.deleteLine(this.element.uuid+'/toMachinServiceIns-'+idx)
+                this.deleteLine(this.element.uuid+'/toMachinServiceIns-'+this.element.serviceI[idx].id)
                 this.element.serviceI[idx].service = null
             } else if (endLine != undefined && endLine != this.editSIItem.service.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                this.deleteLine(this.element.uuid+'/toMachinServiceIns-'+idx)
-                this.newLine(this.element.uuid+'/toMachinServiceIns-'+idx, this.element.uuid+'/toMachinServiceIns', this.editSIItem.service.uuid)
+                this.deleteLine(this.element.uuid+'/toMachinServiceIns-'+this.element.serviceI[idx].id)
+                this.newLine(this.element.uuid+'/toMachinServiceIns-'+this.element.serviceI[idx].id, this.element.uuid+'/toMachinServiceIns', this.editSIItem.service.uuid)
                 this.element.serviceI[idx].service = this.editSIItem.service.name
-            } else if (endLine == undefined && this.editSIItem.service != null) {
-                this.newLine(this.element.uuid+'/toMachinServiceIns-'+idx, this.element.uuid+'/toMachinServiceIns', this.editSIItem.service.uuid)
+            } else if (endLine == undefined && this.editSIItem.service != null && this.editSIItem.service.uuid != null) {
+                this.newLine(this.element.uuid+'/toMachinServiceIns-'+this.element.serviceI[idx].id, this.element.uuid+'/toMachinServiceIns', this.editSIItem.service.uuid)
                 this.element.serviceI[idx].service = this.editSIItem.service.name
             }
             this.cancelSI()
@@ -374,7 +436,7 @@ export default {
                 this.editSIItem.ref = this.element.serviceI[idx].ref
                 this.selProvidedSomeIP = this.$store.getters.getProvidedSomeIP
                 if ( this.element.serviceI[idx].service != null) {
-                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toMachinServiceIns-'+idx)
+                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toMachinServiceIns-'+this.element.serviceI[idx].id)
                     if (endLine == undefined) {
                         endLine = this.$store.getters.getProvidedSomeIPPath(this.element.serviceI[idx].service)
                     }
@@ -384,7 +446,7 @@ export default {
                 id = 2
                 this.selRequiredSomeIP = this.$store.getters.getRequiredSomeIP
                 if ( this.element.serviceI[idx].service != null) {
-                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toMachinServiceIns-'+idx)
+                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toMachinServiceIns-'+this.element.serviceI[idx].id)
                     if (endLine == undefined) {
                         endLine = this.$store.getters.getRequiredSomeIPPath(this.element.serviceI[idx].service)
                     }
@@ -395,7 +457,6 @@ export default {
         },
         addSI() {
             let res = true, n = 0
-            var datacount = this.element.serviceI.length
             while (res) {
                 n++
                 res = this.element.serviceI.some(item => item.id === n)
@@ -403,7 +464,7 @@ export default {
             this.editSIItem.id = n
             this.editSIItem.ref = this.editSIItem.ref.name
             if( this.editSIItem.service != null) {
-                this.newLine(this.element.uuid+'/toMachinServiceIns-'+datacount, this.element.uuid+'/toMachinServiceIns', this.editSIItem.service.uuid)
+                this.newLine(this.element.uuid+'/toMachinServiceIns-'+n, this.element.uuid+'/toMachinServiceIns', this.editSIItem.service.uuid)
                 this.editSIItem.service = this.editSIItem.service.name
             }
 
@@ -440,12 +501,11 @@ export default {
             const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             this.$store.commit('addElementProvidedSomeIP', {
-                name: this.$store.getters.getNameProvidedSomeIP, input: false, path: '',
+                name: this.$store.getters.getNameProvidedSomeIP, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 deployref: null, someipserver: null, id: '', eventP: [], method: [], eventG: [],
             })
             EventBus.$emit('add-element', constant.ProvidedSomeIP_str)
-            EventBus.$emit('add-element', constant.ServiceInstances_str)
             EventBus.$emit('add-element', constant.Service_str)
             this.$store.commit('editSomeIPtoMachine', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
@@ -475,12 +535,11 @@ export default {
             const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
 
             this.$store.commit('addElementRequiredSomeIP', { 
-                name: this.$store.getters.getNameRequiredSomeIP, input: false, path: '',
+                name: this.$store.getters.getNameRequiredSomeIP, path: '',
                 top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 deployref: null, minover: '', id: '', clientref: null, ver: null, method: [], requiredevent: [],
             })
             EventBus.$emit('add-element', constant.RequiredSomeIP_str)
-            EventBus.$emit('add-element', constant.ServiceInstances_str)
             EventBus.$emit('add-element', constant.Service_str)
             this.$store.commit('editSomeIPtoMachine', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
@@ -499,6 +558,115 @@ export default {
         newLine(startLine, drawLine, endLine) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
             EventBus.$emit('new-line', drawLine, endLine)
+        },
+
+        viewARXML() {
+            this.editARXML.name = this.element.name
+            this.editARXML.ccref = this.element.ccref
+            this.editARXML.tcp = this.element.tcp
+            this.editARXML.udp = this.element.udp
+            this.editARXML.serviceI = JSON.parse(JSON.stringify(this.element.serviceI))
+            this.dialogText= true
+        },
+        saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editSomeIPtoMachine', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
+                }
+            }
+            this.element.name = this.editARXML.name
+
+            var endLine = null, changEndLine = null
+            if (this.editARXML.ccref != this.element.ccref) {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/tomachinCC')
+                if (endLine != undefined) {
+                    this.deleteLine(this.element.uuid+'/tomachinCC')
+                }
+                changEndLine = this.$store.getters.getMachinDesignPath(this.editARXML.ccref,1)
+                if (changEndLine != null) {
+                    this.newLine(this.element.uuid+'/tomachinCC', this.element.uuid+'/tomachinCC', changEndLine)
+                }
+            }
+            this.element.ccref = this.editARXML.ccref
+            this.element.tcp = this.editARXML.tcp
+            this.element.udp = this.editARXML.udp
+
+            if (this.editARXML.serviceI.length > 0) {
+                this.editARXML.serviceI.forEach(item => {
+                    var isHaveTable = false
+                    for(let n=0; n<this.element.serviceI.length; n++){
+                        if (this.element.serviceI[n].id == item.id &&
+                            this.element.serviceI[n].service == item.service ) {
+                            isHaveTable = true
+                        }
+                    }
+                    if (!isHaveTable) {
+                        var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toMachinServiceIns-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/toMachinServiceIns-'+item.id)
+                        }
+                        var changEndLine = this.$store.getters.getRequiredSomeIPPath(item.service)
+                        if (changEndLine != null) {
+                            item.ref = "REQUIRED-SOMEIP-SERVICE-INSTANCE"
+                            this.newLine(this.element.uuid+'/toMachinServiceIns-'+item.id, this.element.uuid+'/toMachinServiceIns', changEndLine)
+                        } else {
+                            changEndLine = this.$store.getters.getProvidedSomeIPPath(item.service)
+                            if (changEndLine != null) {
+                                item.ref = "PROVIDED-SOMEIP-SERVICE-INSTANCE"
+                                this.newLine(this.element.uuid+'/toMachinServiceIns-'+item.id, this.element.uuid+'/toMachinServiceIns', changEndLine)
+                            }
+                        }
+                    }
+                })
+                this.element.serviceI.forEach(item => {
+                    var isHaveTable = false
+                    this.editARXML.serviceI.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toMachinServiceIns-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/toMachinServiceIns-'+item.id)
+                        }
+                    }
+                })
+            } else {
+                if (this.element.serviceI.length > 0) {
+                    this.element.serviceI.forEach(item => {
+                        if (item.service != null) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/toMachinServiceIns-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/toMachinServiceIns-'+item.id)
+                            }
+                        }
+                    })
+                }
+            }
+            this.element.serviceI = JSON.parse(JSON.stringify(this.editARXML.serviceI))
+            this.cancelARXML()
+        },
+        cancelARXML() {
+            this.editARXML = {name:'', ccref: null, serviceI: [], tcp:'', udp: ''}
+            this.editTextItem = {ref: '', service: null, id: ''}
+            this.dialogText = false
+        },
+        newTextServiceI() {
+            this.editTextItem = {ref: '', service: null, id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++;
+                res = this.editARXML.serviceI.some(item => item.id === n)
+            }
+            this.editTextItem.id = n
+
+            const addObj = Object.assign({}, this.editTextItem)
+            this.editARXML.serviceI.push(addObj);
+        },
+        deletTextServiceI(idx) {
+            this.editARXML.serviceI.splice(idx,1)
         },
 
     },
