@@ -6,6 +6,17 @@ module.exports = {
         //overlay: false
         disableHostCheck: true
     },
-    publicPath: '/sahl',
-    outputDir: 'docs'
+    outputDir: 'dist',
+    configureWebpack: {
+        performance: {
+            hints: false
+        },
+        optimization: {
+            splitChunks: {
+                minSize: 10000,
+                maxSize: 250000,
+            }
+        }
+    }
+
 }
