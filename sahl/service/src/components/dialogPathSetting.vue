@@ -4,7 +4,7 @@
                 <v-card-title class="text-h6 green accent-1"> Select Path  </v-card-title>
                 <v-card-text>
                     <br>
-                    <v-text-field v-model="editPath" label="New Path" placeholder="/String/String/String......" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                    <v-text-field v-model="editPath" label="New Path" placeholder="/String/String/String......" @click='clickPathField()' style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="deep-purple" x-small @click="deletPathList" dark> delete </v-btn>
@@ -89,6 +89,11 @@ export default {
         deletPathList() {
             if (this.checkSavePath != null) {
                 this.$store.commit('deleteSavePath', {deletePath: this.checkSavePath} )
+                this.checkSavePath = []
+            }
+        },
+        clickPathField() {
+            if (this.checkSavePath[0] != null) {
                 this.checkSavePath = []
             }
         },

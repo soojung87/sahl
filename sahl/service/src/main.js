@@ -22,6 +22,12 @@ Vue.prototype.$setZoominElement = 0.55
 Vue.prototype.$setZoominLineSetupStart = 0.58
 Vue.prototype.$setZoominLineSetupEnd = 0.61
 Vue.prototype.$setZoominLineTitle = 0.50
+Vue.prototype.$setNumTableList = 100
+Vue.prototype.$setPositionLeft = 600
+Vue.prototype.$setPositionElementX = -430
+Vue.prototype.$setPositionElementY = -50
+
+
 
 new Vue({
     vuetify,

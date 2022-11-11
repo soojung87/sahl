@@ -228,6 +228,9 @@ tr.v-data-table__selected {
 .my-handle {
     cursor: move !important;
 }
+.refView-tableItem {
+    margin: 0 -20px 0 -5px;
+}
 
 .text-editDialog {
     white-space: nowrap;
@@ -236,8 +239,19 @@ tr.v-data-table__selected {
     width: 750px;
 }
 
+.text-editDialog-Ethernet {
+    white-space: nowrap;
+    overflow-X: auto;
+    overflow-Y: auto;
+    width: 900px;
+}
+
 .text-Inner-editDialog {
     white-space: nowrap;
     overflow-X: hidden;
     overflow-Y: auto;
+}
+
+tr.v-data-table__selected {
+    background: #f15454 !important;
 }

@@ -7,7 +7,7 @@
                 </v-btn>
             </template>
             <v-list>
-                <template v-for="(item, index) in fileItem.slice(0, 7)">
+                <template v-for="(item, index) in fileItem.slice(0, 8)">
                     <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
                     <v-list-item v-else :key="index" @click="item.menuAction(item.title)">
                             <v-icon  left small>{{item.icon}} </v-icon> 
@@ -26,7 +26,7 @@
                 </v-btn>
             </template>
             <v-list>
-                <template v-for="(item, index) in projectItem.slice(0, 5)">
+                <template v-for="(item, index) in projectItem.slice(0, 6)">
                     <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
                     <v-list-item v-else :key="index" @click="item.menuAction(item.title)">
                             <v-icon  left small>{{item.icon}} </v-icon> 
@@ -38,7 +38,7 @@
                 </template>
             </v-list>
         </v-menu>
-        <v-menu offset-y>
+        <!-- <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
                 <v-btn text v-bind="attrs" v-on="on">
                     Tool
@@ -53,7 +53,7 @@
                     <v-list-item-action v-text="item.Shortcut" class="font-weight-light"></v-list-item-action>
                 </v-list-item>
             </v-list>
-        </v-menu>
+        </v-menu> -->
         <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
                 <v-btn text v-bind="attrs" v-on="on">
@@ -86,24 +86,6 @@
                 </v-list-item>
             </v-list>
         </v-menu>
-        <v-dialog v-model='dialogNewProject' width="500" persistent>
-            <v-card>
-                <v-card-title class="text-h6 green accent-1"> Name New Project </v-card-title>
-                <v-card-text>
-                    <v-text-field single-line label="project name" v-model="strProjectName">
-                    </v-text-field>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="addproject()" >
-                        Accept
-                    </v-btn>
-                    <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text @click="cancelproject">
-                        Cancel
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
         <v-dialog v-model='dialogSetting' width="500" persistent>
             <v-card>
                 <v-card-title class="text-h6 green accent-1"> Settings</v-card-title>
@@ -112,7 +94,7 @@
                     <v-slider v-model="zoomMain" append-icon="mdi-magnify-plus-outline" prepend-icon="mdi-magnify-minus-outline"
                         :max="2" :min="0.3" @click:append="zoomMainIn" @click:prepend="zoomMainOut" step="0.05" ticks="always" tick-size="3"></v-slider>
                 </v-card-text>
-                <v-subheader >Detail View</v-subheader>
+                <!-- <v-subheader >Detail View</v-subheader>
                 <v-card-text>
                     <v-switch v-model="switchDetailView" inset :label="switchDetailView ? 'visible' : 'unvisible'"></v-switch>
                 </v-card-text>
@@ -120,7 +102,7 @@
                 <v-card-text>
                     <v-slider v-model="zoomDetail" append-icon="mdi-magnify-plus-outline" prepend-icon="mdi-magnify-minus-outline"
                         :max="1.2" :min="0.8" @click:append="zoomDetailIn" @click:prepend="zoomDetailOut" step="0.1" ticks="always" tick-size="3"></v-slider>
-                </v-card-text>
+                </v-card-text> -->
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="saveSetting()" >
@@ -152,19 +134,22 @@ document.onkeydown = function(e) { //단축키 만들기
   if(e.altKey  && e.keyCode == 78) { // Alt+n  => new file
     EventBus.$emit('shortcut-keys', 'newfile')
   } 
-  if(e.altKey  && e.keyCode == 79) { //Alt+o => open file
-    EventBus.$emit('shortcut-keys-appbar', 'openfile')
+  if(e.altKey  && e.keyCode == 79) { //Alt+o => Import Arxml
+    EventBus.$emit('shortcut-keys', 'importARXML')
   }
   if(e.altKey  && e.keyCode == 83) { //Alt+s => save
     EventBus.$emit('shortcut-keys', 'save')
   }
+  if(e.altKey  && e.keyCode == 67) { //Alt+c => copy
+    EventBus.$emit('shortcut-keys', 'copy')
+  }
   if(e.ctrlKey && e.keyCode == 86 && e.shiftKey) { //ctrl+shift+v => validation check
-    EventBus.$emit('shortcut-keys-appbar', 'validation')
+    EventBus.$emit('shortcut-keys', 'validation')
   }
-  if(e.ctrlKey && e.keyCode == 70 && e.shiftKey) { //ctrl+shift+f => search
+  /*if(e.ctrlKey && e.keyCode == 70 && e.shiftKey) { //ctrl+shift+f => search
     EventBus.$emit('shortcut-keys', 'search')
-  }
-  if(e.ctrlKey && e.keyCode == 68 && e.shiftKey) { //ctrl+shift+d => delete file
+  }*/
+  if(e.ctrlKey && e.keyCode == 81 && e.shiftKey) { //ctrl+shift+q => delete file
     EventBus.$emit('shortcut-keys', 'deletefile')
   }
   if(e.ctrlKey && e.shiftKey && e.keyCode == 69) { //ctrl+shift+e => setting
@@ -202,34 +187,35 @@ export default({
     data() {
         return {
             fileItem: [
-                { title: 'New File', Shortcut:'Alt+N', icon:'mdi-file-plus', menuAction: action => { this.newFile(action) }},
-                { title: 'Delete File', Shortcut:'Ctrl+Shift+D', icon:'mdi-delete', menuAction: action => { this.deleteFile(action) }},
-                { title: 'Open File', Shortcut:'Alt+O', icon:'mdi-open-in-app', menuAction: action => { this.inputFile(action) }},
+                { title: 'New Element', Shortcut:'Alt+N', icon:'mdi-file-plus', menuAction: action => { this.newFile(action) }},
+                { title: 'Copy&Paste Element', Shortcut:'Alt+C', icon:'mdi-delete', menuAction: action => { this.copy(action) }},
+                { title: 'Delete Element', Shortcut:'Ctrl+Shift+Q', icon:'mdi-delete', menuAction: action => { this.deleteFile(action) }},
                 { divider: true, inset: true},
-                { title: 'Save', Shortcut:'Alt+S', icon:'mdi-content-save', menuAction: action => { this.save(action) }},
+                { title: 'Import Arxml', Shortcut:'Alt+O', icon:'mdi-open-in-app', menuAction: action => { this.importARXML(action) }},
+                { title: 'Export Arxml', icon:'mdi-file-export', menuAction: action => { this.export(action) }},
                 { divider: true, inset: true},
-                { title: 'Exit', icon:'mdi-exit-to-app', menuAction: action => { this.exit(action) }}
+                { title: 'Exit', icon:'mdi-exit-to-app', menuAction: action => { this.exit(action) }},
             ],
             projectItem: [
                 { title: 'New Project', icon:'mdi-folder-plus',  menuAction: action => { this.newProject(action) }},
                 { title: 'Delete Project', icon:'mdi-delete', menuAction: action => { this.deleteProject(action) }},
-                { title: 'Close Project', icon:'mdi-window-close', menuAction: () => {  }},
+                { title: 'Load Project', icon:'mdi-login-variant', menuAction: action => { this.loadProject(action) }},
                 { divider: true, inset: true},
-                { title: 'Save', Shortcut:'Alt+S', icon:'mdi-content-save', menuAction: action => { this.save(action) }}
+                { title: 'Save&Close Project', icon:'mdi-window-close', menuAction: action => { this.closeProject(action) }},
+                { title: 'Save Project', Shortcut:'Alt+S', icon:'mdi-content-save', menuAction: action => { this.saveProject(action) }},
             ],
             toolItem: [
                 { title: 'Search', Shortcut:'Ctrl+Shift+F', icon:'mdi-magnify', menuAction: action => { this.setSearch(action) }},
             ],
             settingItem: [
+                { title: 'Validation', Shortcut:'Ctrl+Shift+V', icon:'mdi-play', menuAction: action => { this.setValidation(action) }},
                 { title: 'Setting', Shortcut:'Ctrl+Shift+E', icon:'mdi-cog-outline', menuAction: action => { this.setSetting(action) }},
-                { title: 'Visible Line', icon:'mdi-vector-line', menuAction: action => { this.setVisibleLine(action) }},
+                // { title: 'Visible Line', icon:'mdi-vector-line', menuAction: action => { this.setVisibleLine(action) }},
             ],
             helpItem: [
                 { title: 'Manual', icon:'mdi-help-circle-outline', menuAction: action => { this.setManual(action) }},
             ],
-            dialogNewProject: false,
             dialogSetting: false,
-            strProjectName: null,
             zoomMain: this.$store.state.setting.zoomMain,
             zoomDetail: this.$store.state.setting.zoomDetail,
             dialogSaveWindow: false,
@@ -245,39 +231,69 @@ export default({
             if (str == 'newfile') {
                 this.newFile()
             } else if (str == 'save') {
-                this.save()
+                this.saveProject()
             } else if (str == 'search') {
                 this.setSearch()
             } else if (str == 'deletefile') {
                 this.deleteFile()
             } else if (str == 'setting') {
                 this.setSetting()
+            } else if (str == 'importARXML') {
+                this.importARXML()
+            } else if (str == 'validation') {
+                this.setValidation()
             } else if (str == 'F5') {
+                if(this.$store.state.SAHLProject.length > 0) {
+                    this.$store.commit('saveProject', {} )
+                }
                 this.$store.commit('setExit', )
+            } else if (str == 'copy') {
+                this.copy()
             }
         })
     },
     methods: {
         newProject() {
-            if (this.$store.state.SAHLProject.length == 0) {
-                this.dialogNewProject = true
-            }
+            EventBus.$emit('new-Project')
         },
         deleteProject() {
-            EventBus.$emit('delete-project')
+            if (this.$store.state.SAHLProject.length > 0){
+                this.dialogError = true
+                setTimeout(() => {this.dialogError = false}, 4000)
+            } else {
+                EventBus.$emit('delete-project')
+            }
         },
         newFile() {
-            if (this.isprojectOpen) {
+            if (this.$store.state.SAHLProject.length > 0) {
                 EventBus.$emit('new-file')
             }
         },
         deleteFile() {
-            if (this.isprojectOpen) {
-              EventBus.$emit('delete-file')
+            if (this.$store.state.SAHLProject.length > 0) {
+                EventBus.$emit('delete-file')
             }
         },
-        inputFile() {
-            EventBus.$emit('shortcut-keys-appbar', 'openfile')
+        copy() {
+            if (this.$store.state.SAHLProject.length > 0) {
+                EventBus.$emit('copy-file')
+            }
+        },
+        importARXML() {
+            if(this.$store.state.SAHLProject.length == 0){
+                this.dialogError = true
+                setTimeout(() => {this.dialogError = false}, 4000)
+            } else {
+                EventBus.$emit('shortcut-keys-appbar', 'ImportARXML')
+            }
+        },
+        setValidation() {
+            if(this.$store.state.SAHLProject.length == 0){
+                this.dialogError = true
+                setTimeout(() => {this.dialogError = false}, 4000)
+            } else {
+                EventBus.$emit('shortcut-keys-appbar', 'validation')
+            }
         },
         setSetting() {
             this.zoomMain = this.$store.state.setting.zoomMain
@@ -285,7 +301,7 @@ export default({
             this.dialogSetting = true
         },
         setSearch() {
-            if(!this.isprojectOpen){
+            if(this.$store.state.SAHLProject.length == 0){
                 this.dialogError = true
                 setTimeout(() => {this.dialogError = false}, 4000)
             } else {
@@ -293,23 +309,33 @@ export default({
                 this.$store.commit('setOpenCloseSearch', {isopen: this.isOpenCloseSearch} )
             }
         },
-        addproject () {
-            this.$store.commit('addProject', {name:this.strProjectName})
-            this.$store.commit('selectOpenProject', {openProjectIndex: (this.$store.getters.projectCount -1 )})
-            this.$store.commit('setmakeProject', {makeproject:true})
-            this.cancelproject()
-        },
-        cancelproject () {
-            this.dialogNewProject = false
-            this.strProjectName = null
-        },
-        save() {
-            if(!this.isprojectOpen){
+        export() {
+            if(this.$store.state.SAHLProject.length == 0){
                 this.dialogError = true
                 setTimeout(() => {this.dialogError = false}, 4000)
             } else {
                 this.dialogSaveWindow = true
             }
+        },
+        closeProject() {
+            if(this.$store.state.SAHLProject.length == 0){
+                this.dialogError = true
+                setTimeout(() => {this.dialogError = false}, 4000)
+            } else {
+                this.$store.commit('saveProject', )
+                this.$store.commit( 'deleteProject')
+            }
+        },
+        saveProject() {
+            if(this.$store.state.SAHLProject.length == 0){
+                this.dialogError = true
+                setTimeout(() => {this.dialogError = false}, 4000)
+            } else {
+                this.$store.commit('saveProject', )
+            }
+        },
+        loadProject() {
+            EventBus.$emit('load-Project')
         },
         saveSetting() {
             this.$store.commit('setZoomInOut', {valueMain: this.zoomMain, valueDetail: this.zoomDetail})
@@ -338,6 +364,9 @@ export default({
             this.$store.commit('setVisibleLine', {isvisible: isVisible})
         },
         exit() {
+            if(this.$store.state.SAHLProject.length > 0) {
+                this.$store.commit('saveProject', {} )
+            }
             this.$store.commit('setExit', )
             window.open('about:blank','_self').self.close()
             window.close()

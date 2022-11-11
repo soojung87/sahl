@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showPERKeyValueDI">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -17,13 +17,10 @@
                             <v-toolbar-title>Persistency Key Value Database Interface</v-toolbar-title>
                             <v-spacer></v-spacer>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Persistency Key Value Database Interface</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputPERKeyValueDIName' outlined dense></v-text-field>
                             <v-text-field v-model="element.minisize" label="Minimun Sustained Size" placeholder="Integer" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -45,7 +42,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isDataOpenClose">
-                                    <v-data-table v-model="selectDelectData" :headers="headerPersistency" :items="element.data" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectData" :headers="headerPersistency" :items="element.data" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteDataItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -54,7 +51,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editData(idx)" @open="openData(idx)" @save="cancelData" large >
+                                                        <v-edit-dialog persistent @cancel="editData(idx)" @open="cancelData" @save="openData(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -75,7 +72,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addData()" @save="cancelData"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelData" @save="addData()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon>mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -117,7 +114,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isSerializationOpenClose">
-                                    <v-data-table v-model="selectDelectSerialization" :headers="headerSerialization" :items="element.serialization" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectSerialization" :headers="headerSerialization" :items="element.serialization" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteSerializationItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -126,7 +123,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editSerialization(idx)" @open="openSerialization(idx)" @save="cancelSerialization" large >
+                                                        <v-edit-dialog persistent @cancel="editSerialization(idx)" @open="cancelSerialization" @save="openSerialization(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -145,7 +142,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addSerialization()" @save="cancelSerialization"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelSerialization" @save="addSerialization()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon>mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -170,7 +167,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -194,9 +191,6 @@ export default {
         activeUUID() {
             return this.$store.state.activeUUID
         },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
-        },
         setting() {
             return this.$store.state.setting
         },
@@ -205,9 +199,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -229,10 +223,10 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             enumRedundancy: ['NONE', ' REDUNDANT', 'REDUNDANTPER-ELEMENT'],
             strategy: ['DELETE', 'KEEPEXISTING', 'OVERWRITE'],
-            selImplementation: this.$store.getters.getImplementationDataType,
+            selImplementation: this.$store.getters.getImplementationDataType(''),
             isDataOpenClose: true,
             isEditingType: true,
             isdeleteDataItem: false,
@@ -260,6 +254,9 @@ export default {
         if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
             this.isTooltip = false
         }
+        EventBus.$on(this.element.uuid, () => {
+            //
+        })
     },
     methods: {
         submitDialog(element) {
@@ -287,7 +284,7 @@ export default {
         showPERKeyValueDI () {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
-                EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                EventBus.$emit('drawLine')
             })
         },
         showDataElement() {
@@ -331,7 +328,7 @@ export default {
                 for(let n=0; n<this.element.data.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLine.length; idx++) {
                         if (this.element.data[n].id == this.deleteChangeLine[idx].id) {
-                            this.newLine(this.element.uuid+'/PERData-'+n, this.element.uuid+'/PERData', this.deleteChangeLine[idx].endLine)
+                            this.newLine(this.element.uuid+'/PERData-'+n, this.element.uuid+'/PERData', this.deleteChangeLine[idx].endLine, false)
                         }
                     }
                 }
@@ -342,7 +339,7 @@ export default {
             } 
         },
         openData(idx) {
-            this.selImplementation = this.$store.getters.getImplementationDataType
+            this.selImplementation = this.$store.getters.getImplementationDataType('')
             if ( this.element.data[idx].type != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PERData-'+idx)
                 if (endLine == undefined) {
@@ -361,10 +358,10 @@ export default {
             } else if (endLine != undefined && endLine != this.editItem.type.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/PERData-'+idx)
-                this.newLine(this.element.uuid+'/PERData-'+idx, this.element.uuid+'/PERData', this.editItem.type.uuid)
+                this.newLine(this.element.uuid+'/PERData-'+idx, this.element.uuid+'/PERData', this.editItem.type.uuid, false)
                 this.element.data[idx].type = this.editItem.type.name
             } else if (endLine == undefined && this.editItem.type != null && this.editItem.type.uuid != null) {
-                this.newLine(this.element.uuid+'/PERData-'+idx, this.element.uuid+'/PERData', this.editItem.type.uuid)
+                this.newLine(this.element.uuid+'/PERData-'+idx, this.element.uuid+'/PERData', this.editItem.type.uuid, false)
                 this.element.data[idx].type = this.editItem.type.name
             }
 
@@ -393,7 +390,7 @@ export default {
 
             if( this.editItem.type != null) {
                 var datacount = this.element.data.length
-                this.newLine(this.element.uuid+'/PERData-'+datacount, this.element.uuid+'/PERData', this.editItem.type.uuid)
+                this.newLine(this.element.uuid+'/PERData-'+datacount, this.element.uuid+'/PERData', this.editItem.type.uuid, false)
                 this.editItem.type = this.editItem.type.name
             }
             const addObj = Object.assign({}, this.editItem)
@@ -409,8 +406,8 @@ export default {
             if (this.isEditingType == true) {
                 if (this.editItem.type != null && this.editItem.type.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editItem.type.uuid, element: constant.Implementation_str} )
-                    document.getElementById(this.editItem.type.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editItem.type.uuid)
+                    /*document.getElementById(this.editItem.type.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editItem.type.uuid)*/
                 }
                 this.setImplementList()
                 this.isEditingType = false
@@ -443,7 +440,7 @@ export default {
                 for(let n=0; n<this.element.serialization.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLineSerial.length; idx++) {
                         if (this.element.serialization[n].id == this.deleteChangeLineSerial[idx].id) {
-                            this.newLine(this.element.uuid+'/PERSerial-'+n, this.element.uuid+'/PERSerial', this.deleteChangeLineSerial[idx].endLine)
+                            this.newLine(this.element.uuid+'/PERSerial-'+n, this.element.uuid+'/PERSerial', this.deleteChangeLineSerial[idx].endLine, false)
                         }
                     }
                 }
@@ -454,7 +451,7 @@ export default {
             } 
         },
         openSerialization(idx) {
-            this.selImplementation = this.$store.getters.getImplementationDataType
+            this.selImplementation = this.$store.getters.getImplementationDataType('')
             if ( this.element.serialization[idx].serial != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/PERSerial-'+idx)
                 if (endLine == undefined) {
@@ -471,10 +468,10 @@ export default {
             } else if (endLine != undefined && endLine != this.editSerialItem.serial.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/PERSerial-'+idx)
-                this.newLine(this.element.uuid+'/PERSerial-'+idx, this.element.uuid+'/PERSerial', this.editSerialItem.serial.uuid)
+                this.newLine(this.element.uuid+'/PERSerial-'+idx, this.element.uuid+'/PERSerial', this.editSerialItem.serial.uuid, false)
                 this.element.serialization[idx].serial = this.editSerialItem.serial.name
             } else if (endLine == undefined && this.editSerialItem.serial != null && this.editSerialItem.serial.uuid != null) {
-                this.newLine(this.element.uuid+'/PERSerial-'+idx, this.element.uuid+'/PERSerial', this.editSerialItem.serial.uuid)
+                this.newLine(this.element.uuid+'/PERSerial-'+idx, this.element.uuid+'/PERSerial', this.editSerialItem.serial.uuid, false)
                 this.element.serialization[idx].serial = this.editSerialItem.serial.name
             }
 
@@ -494,7 +491,7 @@ export default {
 
             if( this.editSerialItem.serial != null) {
                 var datacount = this.element.serialization.length
-                this.newLine(this.element.uuid+'/PERSerial-'+datacount, this.element.uuid+'/PERSerial', this.editSerialItem.serial.uuid)
+                this.newLine(this.element.uuid+'/PERSerial-'+datacount, this.element.uuid+'/PERSerial', this.editSerialItem.serial.uuid, false)
                 this.editSerialItem.serial = this.editSerialItem.serial.name
             }
             const addObj = Object.assign({}, this.editSerialItem)
@@ -510,8 +507,8 @@ export default {
             if (this.isEditingImplement == true) {
                 if (this.editSerialItem.serial != null && this.editSerialItem.serial.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editSerialItem.serial.uuid, element: constant.Implementation_str} )
-                    document.getElementById(this.editSerialItem.serial.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editSerialItem.serial.uuid)
+                    /*document.getElementById(this.editSerialItem.serial.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editSerialItem.serial.uuid)*/
                 }
                 this.setImplementList()
                 this.isEditingImplement = false
@@ -520,18 +517,15 @@ export default {
             }
         },
         setImplementList() {
-            this.selImplementation = this.$store.getters.getImplementationDataType
+            this.selImplementation = this.$store.getters.getImplementationDataType('')
             this.setactiveUUID()
         },
         newImplementation() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementImplementation', {
-                    name: this.$store.getters.getNameImplementation, path: '',
-                    top: elementY, left: elementX,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    name: this.$store.getters.getNameImplementation, path: '', input: false,
+                    top: this.element.top, left: this.element.left + this.$setPositionLeft,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', traceName: '', trace: [],
-                    typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
+                    typeref: null, templatetype:[], desc:'', ddpc:[], idtelement:[],
             })
             EventBus.$emit('add-element', constant.Implementation_str)
             EventBus.$emit('add-element', constant.DateType_str)
@@ -546,13 +540,19 @@ export default {
         deleteLine(fineLine) {
             var linenum = this.$store.getters.getconnectLineNum(fineLine)
             if (linenum != -1) {
-                EventBus.$emit('delete-line', linenum)
                 this.$store.commit('deletConnectionline', {startnum: linenum} )
+                this.deleteOpenElement()
             }
         },
-        newLine(startLine, drawLine, endLine) {
+        deleteOpenElement() {
+            //EventBus.$emit('delete-line', this.$store.getters.getDeleteOpenElement(this.element.uuid))
+            this.$store.commit('deleteOpenElemnt', {uuid: this.element.uuid, isDeleteAll: false, startUUID: this.element.uuid} )
+        },
+        newLine(startLine, drawLine, endLine, isView) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
-            EventBus.$emit('new-line', drawLine, endLine)
+            if (isView) {
+                EventBus.$emit('new-line', drawLine, endLine)
+            }
         },
 
     },

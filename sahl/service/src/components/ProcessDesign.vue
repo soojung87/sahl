@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showProcessDesign">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -20,18 +20,16 @@
                                 <v-icon> mdi-format-text</v-icon>
                             </v-btn>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Process Design</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                        @input='inputProDesignName' outlined dense  @click="setactiveUUID"></v-text-field>
+                                        @input='inputProDesignName' outlined dense  @click="clickOtherFields()"></v-text-field>
                             <v-row style="height: 70px">
                                 <v-col cols="10">
-                                    <v-text-field v-model="element.executableref" readonly @click="setExecutableRefSelect()" clearable @click:clear='clearExecutableRef()' label="Executable Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                    <v-text-field v-model="element.executableref" readonly @click="setExecutableRefSelect()" :style="refExecutable ? 'height: 43px;border:solid red 2px' : ''"
+                                                 clearable @click:clear='clearExecutableRef()' label="Executable Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                 </v-col>
                                 <v-col cols="2">
                                     <v-menu>
@@ -72,17 +70,17 @@
                                     <v-tab-item v-for="(tab, idx) in element.determin" :key="idx">
                                         <v-card flat>
                                             <v-card-text>
-                                                <v-text-field v-model="tab.swname" label="name" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                                                <v-text-field v-model="tab.hardwareP" label="Hardware Platform" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.swname" label="name" @click="clickOtherFields()" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.hardwareP" label="Hardware Platform" @click="clickOtherFields()" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                                 <v-card outlined class="mx-auto">
                                                     <div class="subtitle-2" style="height:20px">
                                                         Init Resource
                                                     </div>
                                                     <v-card-text>
-                                                        <v-text-field v-model="tab.initnofinstruction" label="Number of Instructions" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="tab.initsequentialbegin" label="Sequential Instructions Begin" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="tab.initsequentialend" label="Sequential Instructions End " placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="tab.initspeedup" label="Speedup" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.initnofinstruction" label="Number of Instructions" @click="clickOtherFields()" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.initsequentialbegin" label="Sequential Instructions Begin" @click="clickOtherFields()" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.initsequentialend" label="Sequential Instructions End" @click="clickOtherFields()" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.initspeedup" label="Speedup" placeholder="int" @click="clickOtherFields()" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </v-card-text>
                                                 </v-card>
                                                 <v-card outlined class="mx-auto">
@@ -90,10 +88,10 @@
                                                         Run Resource
                                                     </div>
                                                     <v-card-text>
-                                                        <v-text-field v-model="tab.runnofinstruction" label="Number of Instructions" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="tab.runsequentialbegin" label="Sequential Instructions Begin" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="tab.runsequentialend" label="Sequential Instructions End" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                                                        <v-text-field v-model="tab.runspeedup" label="Speedup" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.runnofinstruction" label="Number of Instructions" @click="clickOtherFields()" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.runsequentialbegin" label="Sequential Instructions Begin" @click="clickOtherFields()" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.runsequentialend" label="Sequential Instructions End" @click="clickOtherFields()" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.runspeedup" label="Speedup" @click="clickOtherFields()" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </v-card-text>
                                                 </v-card>
                                             </v-card-text>
@@ -102,7 +100,7 @@
                                 </v-tabs-items>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -126,23 +124,20 @@
                             <label style="padding:10px;">&#60;&#47;EXECUTABLE-REF&#62;</label>
                         </v-row>
                         <v-row>
-                            <label style="padding:10px;height: 50px;">&#60;DETERMINISTIC-CLIENT-RESOURCE-NEEDSS&#62;
-                                <v-btn @click="newTextDeterministic()" icon color="teal darken" x-samll dark>
-                                    <v-icon dense dark>mdi-plus</v-icon>
-                                </v-btn>
-                            </label>
+                            <label style="padding:10px;height: 50px;">&#60;DETERMINISTIC-CLIENT-RESOURCE-NEEDSS&#62;</label>
+                            <v-btn style="margin: 3px 0px 0px -10px" @click="newTextDeterministic()" icon color="teal darken" x-samll dark>
+                                <v-icon dense dark>mdi-plus</v-icon>
+                            </v-btn>
                         </v-row>
                         <v-row>
                             <div class="text-editDialog" style="height: 430px;">
                                 <v-row v-for="(item, i) in editARXML.determin" :key="i" style="height: 410px;">
                                     <div>
                                         <v-row style="height: 25px;margin:0px;">
-                                            <label style="padding:10px;margin:2px 0px 2px 10px;">
-                                                <v-btn @click="deletTextDeterministic(i)" text x-small color="indigo">
-                                                    <v-icon>mdi-minus</v-icon>
-                                                </v-btn>
-                                                &#60;DETERMINISTIC-CLIENT-RESOURCE-NEEDS&#62;
-                                            </label>
+                                            <v-btn style="margin: 15px -20px 0px 20px" @click="deletTextDeterministic(i)" text x-small color="indigo">
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            <label style="padding:10px;margin:2px 0px 2px 10px;">&#60;DETERMINISTIC-CLIENT-RESOURCE-NEEDS&#62;</label>
                                         </v-row>
                                         <v-row style="height: 25px;margin:0px;">
                                             <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
@@ -260,9 +255,6 @@ export default {
         activeUUID() {
             return this.$store.state.activeUUID
         },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
-        },
         setting() {
             return this.$store.state.setting
         },
@@ -271,9 +263,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -303,7 +295,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             dialogText: false,
             editARXML: {name:'', executableref: null, determin: []},
             editTextItem: {swname: '', hardwareP:'', 
@@ -312,12 +304,20 @@ export default {
             isDeterminsticOpenClose: true,
             selExecutable: this.$store.getters.getExecutable,
             determinTab: 0,
+            refExecutable: false,
         }
     },
     mounted () {
         if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
             this.isTooltip = false
         }
+        EventBus.$on(this.element.uuid, (refNum) => {
+            this.refExecutable = false
+
+            if (refNum == 1 ) {
+                this.refExecutable = true
+            }
+        })
     },
     methods: {
         submitDialog(element) {
@@ -343,12 +343,14 @@ export default {
             }
         },
         showProcessDesign() {
+            this.clickOtherFields()
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
-                EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                EventBus.$emit('drawLine')
             })
         },
         showDeterministric() {
+            this.clickOtherFields()
             this.isDeterminsticOpenClose = this.isDeterminsticOpenClose? false : true
         },
         inputProDesignName() {
@@ -358,6 +360,12 @@ export default {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
         },
+        clickOtherFields() {
+            if (this.refExecutable) {
+                this.deleteOpenElement()
+                this.refExecutable = false
+            }
+        },
 
         clearExecutableRef() {
             this.element.executableref = null
@@ -365,17 +373,28 @@ export default {
             console.log('clearExecutableRef==' + endLine)
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/prodesignexecutable')
+                this.refExecutable = false
             }
         },
         setExecutableRefSelect() {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/prodesignexecutable')
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getExecutablePath(this.element.executableref)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.Executable_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+            if (this.element.executableref != null) {this.refExecutable = true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/prodesignexecutable')
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getExecutablePath(this.element.executableref)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editExecutable', {compo:"drag", uuid: endLine, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Executable_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/prodesignexecutable', endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/prodesignexecutable', end:endLine, iscircle:false, refNum:1})
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.Executable_str} )
+                    // document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', endLine)
+                }
             }
         },
         setExecutableList() {
@@ -383,25 +402,43 @@ export default {
             this.setactiveUUID()
         },
         setExecutable(item) {
-            if( this.element.executableref != item.name) {
+            this.clickOtherFields()
+            if (this.element.executableref != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/prodesignexecutable')
                 if (endLine != undefined && endLine != item.uuid) {
                     //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                     this.deleteLine(this.element.uuid+'/prodesignexecutable')
                 }
                 //새로 추가해준다
-                this.newLine(this.element.uuid+'/prodesignexecutable', this.element.uuid+'/prodesignexecutable', item.uuid)
+                if (endLine != item.uuid) {
+                    this.refExecutable = true
+                    this.$store.commit('editExecutable', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Executable_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/prodesignexecutable', this.element.uuid+'/prodesignexecutable', item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/prodesignexecutable', end:item.uuid, iscircle:false, refNum:1})
+                }
                 this.element.executableref = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refExecutable = true
+                    this.$store.commit('editExecutable', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Executable_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/prodesignexecutable', this.element.uuid+'/prodesignexecutable', item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/prodesignexecutable', end:item.uuid, iscircle:false, refNum:1})
+                }
             }
             this.setactiveUUID()
         },
         newExecutable() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementExecutable', { //applicationtyperef 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameExecutable, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    name: this.$store.getters.getNameExecutable, path: '', input: false,
+                    top: this.element.top, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     version: '', category:'', buildType:null, loggingBehabior:null, reportingBehabior:null, swname:'', applicationtyperef: null,
                 })
             EventBus.$emit('add-element', constant.Executable_str)
@@ -410,6 +447,7 @@ export default {
         },
 
         addDeterministic() {
+            this.clickOtherFields()
             const editItem = {swname: '', hardwareP:'', 
                 initnofinstruction: '', initsequentialbegin: '', initsequentialend: '', initspeedup: '',
                 runnofinstruction: '', runsequentialbegin: '', runsequentialend: '', runspeedup: ''}
@@ -419,6 +457,7 @@ export default {
         },
         clickDeterminstictab() {},
         deleteDeterminstic(idx) {
+            this.clickOtherFields()
             this.element.determin.splice(idx, 1)
         },
 
@@ -429,13 +468,19 @@ export default {
         deleteLine(fineLine) {
             var linenum = this.$store.getters.getconnectLineNum(fineLine)
             if (linenum != -1) {
-                EventBus.$emit('delete-line', linenum)
                 this.$store.commit('deletConnectionline', {startnum: linenum} )
+                this.deleteOpenElement()
             }
         },
-        newLine(startLine, drawLine, endLine) {
+        deleteOpenElement() {
+            //EventBus.$emit('delete-line', this.$store.getters.getDeleteOpenElement(this.element.uuid))
+            this.$store.commit('deleteOpenElemnt', {uuid: this.element.uuid, isDeleteAll: false, startUUID: this.element.uuid} )
+        },
+        newLine(startLine, drawLine, endLine, isView) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
-            EventBus.$emit('new-line', drawLine, endLine)
+            if (isView) {
+                EventBus.$emit('new-line', drawLine, endLine)
+            }
         },
 
         viewARXML() {
@@ -461,7 +506,7 @@ export default {
                 }
                 var changEndLine = this.$store.getters.getExecutablePath(this.editARXML.executableref)
                 if (changEndLine != null) {
-                    this.newLine(this.element.uuid+'/prodesignexecutable', this.element.uuid+'/prodesignexecutable', changEndLine)
+                    this.newLine(this.element.uuid+'/prodesignexecutable', this.element.uuid+'/prodesignexecutable', changEndLine, false)
                 }
             }
             this.element.executableref = this.editARXML.executableref

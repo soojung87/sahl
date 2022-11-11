@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn  icon @click="showSoftwareCluster">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -17,13 +17,10 @@
                             <v-toolbar-title>Software Cluster</v-toolbar-title>
                             <v-spacer></v-spacer>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Software Cluster</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputSoftwareClusterName' outlined dense></v-text-field>
                             <v-text-field v-model="element.category" label="Category" placeholder="string" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
@@ -45,7 +42,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isSDGSOpenClose">
-                                    <v-data-table v-model="selectDelectSDGS" :headers="headerSDGS" :items="element.sdgs" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectSDGS" :headers="headerSDGS" :items="element.sdgs" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteSDGSItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -54,7 +51,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openSDGS(idx)" @cancel="editSDGS(idx)" @save="cancelSDGS" large >
+                                                        <v-edit-dialog persistent @open="openSDGS(idx)" @cancel="cancelSDGS" @save="editSDGS(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -66,7 +63,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addSDGS()" @save="cancelSDGS"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelSDGS" @save="addSDGS()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon >mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -99,7 +96,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isExecutableOpenClose">
-                                    <v-data-table v-model="selectDelectExecutable" :headers="headerExecutable" :items="element.executable" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectExecutable" :headers="headerExecutable" :items="element.executable" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteExecutableItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -108,7 +105,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editExecutable(idx)" @open="openExecutable(idx)" @save="cancelExecutable" large >
+                                                        <v-edit-dialog persistent @cancel="cancelExecutable" @open="openExecutable(idx)" @save="editExecutable(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -127,7 +124,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addExecutable()" @save="cancelExecutable"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelExecutable" @save="addExecutable()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon>mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -167,7 +164,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isMachineDOpenClose">
-                                    <v-data-table v-model="selectDelectMachineD" :headers="headerMachineD" :items="element.machineD" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectMachineD" :headers="headerMachineD" :items="element.machineD" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteMachineDItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -176,7 +173,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editMachineD(idx)" @open="openMachineD(idx)" @save="cancelMachineD" large >
+                                                        <v-edit-dialog persistent @cancel="cancelMachineD" @open="openMachineD(idx)" @save="editMachineD(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -195,7 +192,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addMachineD()" @save="cancelMachineD"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelMachineD" @save="addMachineD()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon>mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -235,7 +232,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isToMachineMOpenClose">
-                                    <v-data-table v-model="selectDelectToMachineM" :headers="headerToMachineM" :items="element.toMachine" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectToMachineM" :headers="headerToMachineM" :items="element.toMachine" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteToMachineMItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -244,7 +241,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editToMachineM(idx)" @open="openToMachineM(idx)" @save="cancelToMachineM" large >
+                                                        <v-edit-dialog persistent @cancel="cancelToMachineM" @open="openToMachineM(idx)" @save="editToMachineM(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -263,7 +260,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addToMachineM()" @save="cancelToMachineM"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelToMachineM" @save="addToMachineM()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon>mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -303,7 +300,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isProcessOpenClose">
-                                    <v-data-table v-model="selectDelectProcess" :headers="headerProcess" :items="element.process" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectProcess" :headers="headerProcess" :items="element.process" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteProcessItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -312,7 +309,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editProcess(idx)" @open="openProcess(idx)" @save="cancelProcess" large >
+                                                        <v-edit-dialog persistent @cancel="cancelProcess" @open="openProcess(idx)" @save="editProcess(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -331,7 +328,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addProcess()" @save="cancelProcess"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelProcess" @save="addProcess()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon>mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -371,7 +368,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isSWClusterOpenClose">
-                                    <v-data-table v-model="selectDelectSWCluster" :headers="headerSWCluster" :items="element.sswc" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectSWCluster" :headers="headerSWCluster" :items="element.sswc" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteSWClusterItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -380,7 +377,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editSWCluster(idx)" @open="openSWCluster(idx)" @save="cancelSWCluster" large >
+                                                        <v-edit-dialog persistent @cancel="cancelSWCluster" @open="openSWCluster(idx)" @save="editSWCluster(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -399,7 +396,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addSWCluster()" @save="cancelSWCluster"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelSWCluster" @save="addSWCluster()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon>mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -424,7 +421,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement  || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -449,9 +446,6 @@ export default {
         activeUUID() {
             return this.$store.state.activeUUID
         },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
-        },
         setting() {
             return this.$store.state.setting
         },
@@ -460,9 +454,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -483,7 +477,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             dialogPath: false,
             isSDGSOpenClose: true,
             isdeleteSDGSItem: false,
@@ -557,6 +551,9 @@ export default {
         if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
             this.isTooltip = false
         }
+        EventBus.$on(this.element.uuid, () => {
+            //
+        })
     },
     methods: {
         submitDialog(element) {
@@ -584,7 +581,7 @@ export default {
         showSoftwareCluster () {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
-                EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                EventBus.$emit('drawLine')
             })
         },
         showSDGS() {
@@ -690,7 +687,7 @@ export default {
                 for(let n=0; n<this.element.executable.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLineExecutable.length; idx++) {
                         if (this.element.executable[n].id == this.deleteChangeLineExecutable[idx].id) {
-                            this.newLine(this.element.uuid+'/SCExecutable-'+n, this.element.uuid+'/SCExecutable', this.deleteChangeLineExecutable[idx].endLine)
+                            this.newLine(this.element.uuid+'/SCExecutable-'+n, this.element.uuid+'/SCExecutable', this.deleteChangeLineExecutable[idx].endLine, false)
                         }
                     }
                 }
@@ -705,7 +702,7 @@ export default {
             if ( this.element.executable[idx].execut != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/SCExecutable-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getImplementationPath(this.element.executable[idx].execut)
+                    endLine = this.$store.getters.getExecutablePath(this.element.executable[idx].execut)
                 }
                 this.editExecutableItem.execut = { name: this.element.executable[idx].execut, uuid: endLine }
             }
@@ -718,10 +715,10 @@ export default {
             } else if (endLine != undefined && endLine != this.editExecutableItem.execut.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/SCExecutable-'+idx)
-                this.newLine(this.element.uuid+'/SCExecutable-'+idx, this.element.uuid+'/SCExecutable', this.editExecutableItem.execut.uuid)
+                this.newLine(this.element.uuid+'/SCExecutable-'+idx, this.element.uuid+'/SCExecutable', this.editExecutableItem.execut.uuid, false)
                 this.element.executable[idx].execut = this.editExecutableItem.execut.name
             } else if (endLine == undefined && this.editExecutableItem.execut != null && this.editExecutableItem.execut.uuid != null) {
-                this.newLine(this.element.uuid+'/SCExecutable-'+idx, this.element.uuid+'/SCExecutable', this.editExecutableItem.execut.uuid)
+                this.newLine(this.element.uuid+'/SCExecutable-'+idx, this.element.uuid+'/SCExecutable', this.editExecutableItem.execut.uuid, false)
                 this.element.executable[idx].execut = this.editExecutableItem.execut.name
             }
 
@@ -741,7 +738,7 @@ export default {
 
             if( this.editExecutableItem.execut != null) {
                 var datacount = this.element.executable.length
-                this.newLine(this.element.uuid+'/SCExecutable-'+datacount, this.element.uuid+'/SCExecutable', this.editExecutableItem.execut.uuid)
+                this.newLine(this.element.uuid+'/SCExecutable-'+datacount, this.element.uuid+'/SCExecutable', this.editExecutableItem.execut.uuid, false)
                 this.editExecutableItem.execut = this.editExecutableItem.execut.name
             }
             const addObj = Object.assign({}, this.editExecutableItem)
@@ -756,8 +753,8 @@ export default {
             if (this.isEditingExecutable == true) {
                 if (this.editExecutableItem.execut != null && this.editExecutableItem.execut.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editExecutableItem.execut.uuid, element: constant.Executable_str} )
-                    document.getElementById(this.editExecutableItem.execut.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editExecutableItem.execut.uuid)
+                    //document.getElementById(this.editExecutableItem.execut.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    //EventBus.$emit('active-element', this.editExecutableItem.execut.uuid)
                 }
                 this.setExecutableList()
                 this.isEditingExecutable = false
@@ -770,12 +767,9 @@ export default {
             this.setactiveUUID()
         },
         newExecutable() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementExecutable', { //applicationtyperef 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                name: this.$store.getters.getNameExecutable, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNameExecutable, path: '', input: false,
+                top: this.element.top, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 version: '', category:'', buildType:null, loggingBehabior:null, reportingBehabior:null, swname:'', applicationtyperef: null,
             })
             EventBus.$emit('add-element', constant.Executable_str)
@@ -807,7 +801,7 @@ export default {
                 for(let n=0; n<this.element.machineD.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLineMachineD.length; idx++) {
                         if (this.element.machineD[n].id == this.deleteChangeLineMachineD[idx].id) {
-                            this.newLine(this.element.uuid+'/SCMachineD-'+n, this.element.uuid+'/SCMachineD', this.deleteChangeLineMachineD[idx].endLine)
+                            this.newLine(this.element.uuid+'/SCMachineD-'+n, this.element.uuid+'/SCMachineD', this.deleteChangeLineMachineD[idx].endLine, false)
                         }
                     }
                 }
@@ -835,10 +829,10 @@ export default {
             } else if (endLine != undefined && endLine != this.editMachineDItem.machine.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/SCMachineD-'+idx)
-                this.newLine(this.element.uuid+'/SCMachineD-'+idx, this.element.uuid+'/SCMachineD', this.editMachineDItem.machine.uuid)
+                this.newLine(this.element.uuid+'/SCMachineD-'+idx, this.element.uuid+'/SCMachineD', this.editMachineDItem.machine.uuid, false)
                 this.element.machineD[idx].machine = this.editMachineDItem.machine.name
             } else if (endLine == undefined && this.editMachineDItem.machine != null && this.editMachineDItem.machine.uuid != null) {
-                this.newLine(this.element.uuid+'/SCMachineD-'+idx, this.element.uuid+'/SCMachineD', this.editMachineDItem.machine.uuid)
+                this.newLine(this.element.uuid+'/SCMachineD-'+idx, this.element.uuid+'/SCMachineD', this.editMachineDItem.machine.uuid, false)
                 this.element.machineD[idx].machine = this.editMachineDItem.machine.name
             }
 
@@ -858,7 +852,7 @@ export default {
 
             if( this.editMachineDItem.machine != null) {
                 var datacount = this.element.machineD.length
-                this.newLine(this.element.uuid+'/SCMachineD-'+datacount, this.element.uuid+'/SCMachineD', this.editMachineDItem.machine.uuid)
+                this.newLine(this.element.uuid+'/SCMachineD-'+datacount, this.element.uuid+'/SCMachineD', this.editMachineDItem.machine.uuid, false)
                 this.editMachineDItem.machine = this.editMachineDItem.machine.name
             }
             const addObj = Object.assign({}, this.editMachineDItem)
@@ -873,8 +867,8 @@ export default {
             if (this.isEditingMachineD == true) {
                 if (this.editMachineDItem.machine != null && this.editMachineDItem.machine.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editMachineDItem.machine.uuid, element: constant.MachineDesigne_str} )
-                    document.getElementById(this.editMachineDItem.machine.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editMachineDItem.machine.uuid)
+                    //document.getElementById(this.editMachineDItem.machine.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    //EventBus.$emit('active-element', this.editMachineDItem.machine.uuid)
                 }
                 this.setMachineDList()
                 this.isEditingMachineD = false
@@ -887,13 +881,9 @@ export default {
             this.setactiveUUID()
         },
         newMachineD() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementMachineDesign', {
-                name: this.$store.getters.getNameMachine, path: '',
-                top: elementY, left: elementX, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, admin: '',
-                functiongroup:[], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: [], icon:"mdi-clipboard-outline", validation: false
+                name: this.$store.getters.getNameMachineDesign, path: '', input: false,
+                top: this.element.top, left: this.element.left + this.$setPositionLeft, zindex: 10, access: null, resettimer:'', connector:[], servicediscover:[], icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.MachineDesigne_str)
             EventBus.$emit('add-element', constant.Machines_str)
@@ -924,7 +914,7 @@ export default {
                 for(let n=0; n<this.element.toMachine.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLineToMachineM.length; idx++) {
                         if (this.element.toMachine[n].id == this.deleteChangeLineToMachineM[idx].id) {
-                            this.newLine(this.element.uuid+'/SCtoMachine-'+n, this.element.uuid+'/SCtoMachine', this.deleteChangeLineToMachineM[idx].endLine)
+                            this.newLine(this.element.uuid+'/SCtoMachine-'+n, this.element.uuid+'/SCtoMachine', this.deleteChangeLineToMachineM[idx].endLine, false)
                         }
                     }
                 }
@@ -939,7 +929,7 @@ export default {
             if ( this.element.toMachine[idx].mapping != null) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/SCtoMachine-'+idx)
                 if (endLine == undefined) {
-                    endLine = this.$store.getters.getImplementationPath(this.element.toMachine[idx].mapping)
+                    endLine = this.$store.getters.getSomeIPToMachineMappingPath(this.element.toMachine[idx].mapping)
                 }
                 this.editToMachineMItem.mapping = { name: this.element.toMachine[idx].mapping, uuid: endLine }
             }
@@ -952,10 +942,10 @@ export default {
             } else if (endLine != undefined && endLine != this.editToMachineMItem.mapping.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/SCtoMachine-'+idx)
-                this.newLine(this.element.uuid+'/SCtoMachine-'+idx, this.element.uuid+'/SCtoMachine', this.editToMachineMItem.mapping.uuid)
+                this.newLine(this.element.uuid+'/SCtoMachine-'+idx, this.element.uuid+'/SCtoMachine', this.editToMachineMItem.mapping.uuid, false)
                 this.element.toMachine[idx].mapping = this.editToMachineMItem.mapping.name
             } else if (endLine == undefined && this.editToMachineMItem.mapping != null && this.editToMachineMItem.mapping.uuid != null) {
-                this.newLine(this.element.uuid+'/SCtoMachine-'+idx, this.element.uuid+'/SCtoMachine', this.editToMachineMItem.mapping.uuid)
+                this.newLine(this.element.uuid+'/SCtoMachine-'+idx, this.element.uuid+'/SCtoMachine', this.editToMachineMItem.mapping.uuid, false)
                 this.element.toMachine[idx].mapping = this.editToMachineMItem.mapping.name
             }
 
@@ -975,7 +965,7 @@ export default {
 
             if( this.editToMachineMItem.mapping != null) {
                 var datacount = this.element.toMachine.length
-                this.newLine(this.element.uuid+'/SCtoMachine-'+datacount, this.element.uuid+'/SCtoMachine', this.editToMachineMItem.mapping.uuid)
+                this.newLine(this.element.uuid+'/SCtoMachine-'+datacount, this.element.uuid+'/SCtoMachine', this.editToMachineMItem.mapping.uuid, false)
                 this.editToMachineMItem.mapping = this.editToMachineMItem.mapping.name
             }
             const addObj = Object.assign({}, this.editToMachineMItem)
@@ -990,8 +980,8 @@ export default {
             if (this.isEditingToMachineM == true) {
                 if (this.editToMachineMItem.mapping != null && this.editToMachineMItem.mapping.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editToMachineMItem.mapping.uuid, element: constant.SomeIPToMachineMapping_str} )
-                    document.getElementById(this.editToMachineMItem.mapping.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editToMachineMItem.mapping.uuid)
+                    //document.getElementById(this.editToMachineMItem.mapping.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    //EventBus.$emit('active-element', this.editToMachineMItem.mapping.uuid)
                 }
                 this.setToMachineMList()
                 this.isEditingToMachineM = false
@@ -1004,12 +994,9 @@ export default {
             this.setactiveUUID()
         },
         newToMachineM() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementSomeIPtoMachine', {
-                name: this.$store.getters.getNameSomeIPtoMachine, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNameSomeIPtoMachine, path: '', input: false,
+                top: this.element.top, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 ccref: null, siref: null, tcp:'', udp: '',
             })
             EventBus.$emit('add-element', constant.SomeIPToMachineMapping_str)
@@ -1041,7 +1028,7 @@ export default {
                 for(let n=0; n<this.element.process.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLineProcess.length; idx++) {
                         if (this.element.process[n].id == this.deleteChangeLineProcess[idx].id) {
-                            this.newLine(this.element.uuid+'/SCProcess-'+n, this.element.uuid+'/SCProcess', this.deleteChangeLineProcess[idx].endLine)
+                            this.newLine(this.element.uuid+'/SCProcess-'+n, this.element.uuid+'/SCProcess', this.deleteChangeLineProcess[idx].endLine, false)
                         }
                     }
                 }
@@ -1069,10 +1056,10 @@ export default {
             } else if (endLine != undefined && endLine != this.editProcessItem.pro.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/SCProcess-'+idx)
-                this.newLine(this.element.uuid+'/SCProcess-'+idx, this.element.uuid+'/SCProcess', this.editProcessItem.pro.uuid)
+                this.newLine(this.element.uuid+'/SCProcess-'+idx, this.element.uuid+'/SCProcess', this.editProcessItem.pro.uuid, false)
                 this.element.process[idx].pro = this.editProcessItem.pro.name
             } else if (endLine == undefined && this.editProcessItem.pro != null && this.editProcessItem.pro.uuid != null) {
-                this.newLine(this.element.uuid+'/SCProcess-'+idx, this.element.uuid+'/SCProcess', this.editProcessItem.pro.uuid)
+                this.newLine(this.element.uuid+'/SCProcess-'+idx, this.element.uuid+'/SCProcess', this.editProcessItem.pro.uuid, false)
                 this.element.process[idx].pro = this.editProcessItem.pro.name
             }
 
@@ -1092,7 +1079,7 @@ export default {
 
             if( this.editProcessItem.pro != null) {
                 var datacount = this.element.process.length
-                this.newLine(this.element.uuid+'/SCProcess-'+datacount, this.element.uuid+'/SCProcess', this.editProcessItem.pro.uuid)
+                this.newLine(this.element.uuid+'/SCProcess-'+datacount, this.element.uuid+'/SCProcess', this.editProcessItem.pro.uuid, false)
                 this.editProcessItem.pro = this.editProcessItem.pro.name
             }
             const addObj = Object.assign({}, this.editProcessItem)
@@ -1107,8 +1094,8 @@ export default {
             if (this.isEditingProcess == true) {
                 if (this.editProcessItem.pro != null && this.editProcessItem.pro.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editProcessItem.pro.uuid, element: constant.Process_str} )
-                    document.getElementById(this.editProcessItem.pro.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editProcessItem.pro.uuid)
+                    //document.getElementById(this.editProcessItem.pro.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    //EventBus.$emit('active-element', this.editProcessItem.pro.uuid)
                 }
                 this.setProcessList()
                 this.isEditingProcess = false
@@ -1121,12 +1108,9 @@ export default {
             this.setactiveUUID()
         },
         newProcess() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementProcess', {
-                name: this.$store.getters.getNameProcess, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNameProcess, path: '', input: false,
+                top: this.element.top, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
                 prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
             })
@@ -1159,7 +1143,7 @@ export default {
                 for(let n=0; n<this.element.sswc.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLineSWCluster.length; idx++) {
                         if (this.element.sswc[n].id == this.deleteChangeLineSWCluster[idx].id) {
-                            this.newLine(this.element.uuid+'/SCswc-'+n, this.element.uuid+'/SCswc', this.deleteChangeLineSWCluster[idx].endLine)
+                            this.newLine(this.element.uuid+'/SCswc-'+n, this.element.uuid+'/SCswc', this.deleteChangeLineSWCluster[idx].endLine, false)
                         }
                     }
                 }
@@ -1187,10 +1171,10 @@ export default {
             } else if (endLine != undefined && endLine != this.editSWClusterItem.swc.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/SCswc-'+idx)
-                this.newLine(this.element.uuid+'/SCswc-'+idx, this.element.uuid+'/SCswc', this.editSWClusterItem.swc.uuid)
+                this.newLine(this.element.uuid+'/SCswc-'+idx, this.element.uuid+'/SCswc', this.editSWClusterItem.swc.uuid, false)
                 this.element.sswc[idx].swc = this.editSWClusterItem.swc.name
             } else if (endLine == undefined && this.editSWClusterItem.swc != null && this.editSWClusterItem.swc.uuid != null) {
-                this.newLine(this.element.uuid+'/SCswc-'+idx, this.element.uuid+'/SCswc', this.editSWClusterItem.swc.uuid)
+                this.newLine(this.element.uuid+'/SCswc-'+idx, this.element.uuid+'/SCswc', this.editSWClusterItem.swc.uuid, false)
                 this.element.sswc[idx].swc = this.editSWClusterItem.swc.name
             }
 
@@ -1210,7 +1194,7 @@ export default {
 
             if( this.editSWClusterItem.swc != null) {
                 var datacount = this.element.sswc.length
-                this.newLine(this.element.uuid+'/SCswc-'+datacount, this.element.uuid+'/SCswc', this.editSWClusterItem.swc.uuid)
+                this.newLine(this.element.uuid+'/SCswc-'+datacount, this.element.uuid+'/SCswc', this.editSWClusterItem.swc.uuid, false)
                 this.editSWClusterItem.swc = this.editSWClusterItem.swc.name
             }
             const addObj = Object.assign({}, this.editSWClusterItem)
@@ -1225,8 +1209,8 @@ export default {
             if (this.isEditingSWCluster == true) {
                 if (this.editSWClusterItem.swc != null && this.editSWClusterItem.swc.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editSWClusterItem.swc.uuid, element: constant.SWCluster_str} )
-                    document.getElementById(this.editSWClusterItem.swc.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editSWClusterItem.swc.uuid)
+                    //document.getElementById(this.editSWClusterItem.swc.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    //EventBus.$emit('active-element', this.editSWClusterItem.swc.uuid)
                 }
                 this.setSWClusterList()
                 this.isEditingSWCluster = false
@@ -1239,12 +1223,9 @@ export default {
             this.setactiveUUID()
         },
         newSWCluster() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementSoftWareCluster', {
-                name: this.$store.getters.getNameSoftWareCluster,path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNameSoftWareCluster,path: '', input: false,
+                top: this.element.top, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 category: '', inVendor: '', version: '', sdgs: [], executable: [], machineD: [], toMachine: [], process: [], sswc: [],
             })
             this.$store.commit('editSoftWareCluster', {compo:"z", uuid:this.element.uuid, zindex:2} )
@@ -1257,13 +1238,19 @@ export default {
         deleteLine(fineLine) {
             var linenum = this.$store.getters.getconnectLineNum(fineLine)
             if (linenum != -1) {
-                EventBus.$emit('delete-line', linenum)
                 this.$store.commit('deletConnectionline', {startnum: linenum} )
+                this.deleteOpenElement()
             }
         },
-        newLine(startLine, drawLine, endLine) {
+        deleteOpenElement() {
+            //EventBus.$emit('delete-line', this.$store.getters.getDeleteOpenElement(this.element.uuid))
+            this.$store.commit('deleteOpenElemnt', {uuid: this.element.uuid, isDeleteAll: false, startUUID: this.element.uuid} )
+        },
+        newLine(startLine, drawLine, endLine, isView) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
-            EventBus.$emit('new-line', drawLine, endLine)
+            if (isView) {
+                EventBus.$emit('new-line', drawLine, endLine)
+            }
         },
 
     },

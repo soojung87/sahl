@@ -2,6 +2,12 @@
     <v-app>
         <v-system-bar app >
             <systembar />
+            <v-spacer></v-spacer>
+            <v-hover v-slot="{ hover }">
+                <v-btn small icon @click="clickExit()"  >
+                    <v-icon :color="hover? '#ff0000': '#000000'">mdi-close</v-icon>
+                </v-btn>
+            </v-hover>
         </v-system-bar>
         <v-app-bar app dense flat clipped-left clipped-right>
             <appbar />
@@ -15,7 +21,7 @@
                 <v-icon >mdi-crosshairs-gps</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-tooltip bottom v-if="isprojectOpen" >  
+            <!-- <v-tooltip bottom v-if="isprojectOpen" >  
                 <template v-slot:activator="{on, attrs}">
                     <v-btn small icon v-bind="attrs" v-on="on" @click="addPanes()" :disabled="panesNumber == 3">
                         <v-icon>mdi-monitor-multiple</v-icon>
@@ -30,9 +36,9 @@
                     </v-btn>
                 </template>
                 <span>Delete Split Editor</span>
-            </v-tooltip>
+            </v-tooltip> -->
         </v-app-bar>
-        <v-navigation-drawer ref="drawer" v-model="navigation.shown" :width="navigation.width" app clipped>
+        <v-navigation-drawer ref="drawer" v-model="navigation.shown" :width="navigation.width" app clipped disable-resize-watcher>
             <navigatorbar />
         </v-navigation-drawer>
         <v-main v-if="isprojectOpen">
@@ -42,16 +48,16 @@
                     <mainview :minimaptoolbar='true' :location='i'/>
                 </pane>
             </splitpanes>
-            <div class='minimap-resize'>
+            <!--<div class='minimap-resize'>
                 <v-btn small :text="btnMinimapResize" @click="onClickMinimapResize()"><v-icon>mdi-arrow-expand</v-icon></v-btn>
             </div>
             <div class='mini-map' v-show="btnMinimapResize">
                 <mainview :minimaptoolbar='false' :location='1'/>
-            </div>
+            </div>-->
         </v-main>
-        <v-navigation-drawer ref="detailViewer" :width="drawViewernavi.width" app v-model="drawViewernavi.shown" clipped right >
+        <!-- <v-navigation-drawer ref="detailViewer" :width="drawViewernavi.width" app v-model="drawViewernavi.shown" clipped right >
             <detailViewer />
-        </v-navigation-drawer>
+        </v-navigation-drawer> -->
         <v-footer padless app>
             <footbar />
         </v-footer> 
@@ -70,7 +76,7 @@ import Systembar from '@/components/systembar.vue'
 import Appbar from '@/components/appbar.vue'
 import Navigatorbar from '@/components/navigatorbar.vue'
 import Mainview from '@/components/mainview.vue'
-import DetailViewer from '@/components/detailViewer.vue'
+//import DetailViewer from '@/components/detailViewer.vue'
 import footbar from '@/components/footbar.vue'
 import { EventBus } from '../main'
 import { Splitpanes, Pane } from 'splitpanes'
@@ -79,7 +85,7 @@ import 'splitpanes/dist/splitpanes.css'
 
 
 export default ({
-    components:{  Splitpanes, Pane, Systembar, Appbar, Navigatorbar, Mainview, DetailViewer, footbar },
+    components:{  Splitpanes, Pane, Systembar, Appbar, Navigatorbar, Mainview, footbar }, //DetailViewer
     computed: { 
         ismakeProject() {
             return this.$store.state.ismakeProject
@@ -103,11 +109,11 @@ export default ({
     watch: {
         ismakeProject(val) { // project가 없는상태에서 다른 compoment들을 만들어 놓으니 에러가 떠서 만들어줌
             this.isprojectOpen = val
-            if (val) {
+            /*if (val) {
                 this.$nextTick(() => { //이렇게 안해주면 minimap을 그리기 전에 호출되서 undefine으로 나옴 
-                    this.setMinimapLeft()
+                    //this.setMinimapLeft()
                 })
-            }
+            }*/
         },
         isOpenCloseDetailView(val) {
             //console.log('isOpenCloseDetailView ' + val)
@@ -117,6 +123,7 @@ export default ({
         isOpenCloseNavigationView(val) {
             //console.log(val)
             this.navigation.shown = val
+            setTimeout(() => {EventBus.$emit('drawLine')}, 200)
         },
         isOpenCloseSearch(val) {
             this.isSearch = val
@@ -140,11 +147,12 @@ export default ({
             search: null, //찾은 이름이 나옴
             model: null, // 찾은 아이템 정보가 담김
             searchList: [],
-            btnMinimapResize: true,
+            btnMinimapResize: false,
             panesNumber: 1,
             screenItem: ['1'],
             selectScreen: null,
             dialogErrorSelectScreen: false,
+            isResize: false
         }
     },
     updated() { //창크기 변환하면 this.drawViewernavi.show가 true로 변함
@@ -160,8 +168,8 @@ export default ({
     mounted() {
         this.setBorderNavigationWidth()
         this.setEventsNavigation()
-        this.setBorderDetailViewerWidth()
-        this.setEventsDetailViewer()
+        //this.setBorderDetailViewerWidth()
+        //this.setEventsDetailViewer()
     },
     methods: {
         onClickMinimapResize() {
@@ -184,11 +192,13 @@ export default ({
             const direction = el.classList.contains("v-navigation-drawer--right") ? "right" : "left"
 
             function resize(e) {
+                vm.isResize = true
                 document.body.style.cursor = "ew-resize"
                 let f = direction === "right" ? document.body.scrollWidth - e.clientX : e.clientX
                 if (f >= vm.navigation.minSize) {
                     el.style.width = f + "px"
                     vm.navigation.width = el.style.width
+                    EventBus.$emit('drawLine')
                 }
             }
 
@@ -213,11 +223,13 @@ export default ({
                     vm.navigation.width = el.style.width
                     document.body.style.cursor = ""
                     document.removeEventListener("mousemove", resize, false)
-                    if (this.isprojectOpen) {
-                        for(var i=1; i<=vm.panesNumber; i++) {
+                    
+                    if (vm.isResize) {
+                        /*for(var i=1; i<=vm.panesNumber; i++) {
                             document.getElementById('main-view'+i).style.overflow= "auto"
-                        }
-                        EventBus.$emit('drawLine')
+                        }*/
+                        setTimeout(() => {EventBus.$emit('drawLine')}, 100)
+                        vm.isResize = false
                     }
                 },
                 false
@@ -323,7 +335,15 @@ export default ({
                     document.getElementsByClassName('minimap-resize')[0].style.left = (window.innerWidth - 82) +'px'
                 }
             }
-        }
+        },
+        clickExit() {
+            if(this.isprojectOpen) {
+                this.$store.commit('saveProject', {} )
+            }
+            this.$store.commit('setExit', )
+            window.open('about:blank','_self').self.close()
+            window.close()
+        },
     },
 })
 </script>

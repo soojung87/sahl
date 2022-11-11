@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showStartupConfigset">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -20,13 +20,10 @@
                                 <v-icon> mdi-format-text</v-icon>
                             </v-btn>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Startup Config Set</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputStartupConfigName' outlined dense></v-text-field>
                             <v-card outlined class="mx-auto">
@@ -51,7 +48,7 @@
                                         <v-tab-item v-for="(tab, idx) in element.config" :key="idx">
                                             <v-card flat>
                                                 <v-card-text>
-                                                    <v-text-field v-model="tab.configname" label="name" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                    <v-text-field v-model="tab.configname" label="name" :rules="rules.name" @input="inputConfigName()" @click="clickConfigName(tab.configname)" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                                     <v-select :items="schedulingPolicy" label="Scheduling Policy" @click="setactiveUUID()" v-model="tab.policy" clearable outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
                                                     <v-text-field v-model="tab.priority" label="Scheduling Priority" placeholder="int" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     <v-text-field v-model="tab.entertimeout" label="Enter Timeout" placeholder="Time Value" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -72,7 +69,7 @@
                                                             </v-btn>
                                                         </div>
                                                         <v-card-text v-show="isOptionsOpenClose">
-                                                            <v-data-table v-model="selectDelectOptions" :headers="headerOptions" :items="tab.option" :items-per-page='20'
+                                                            <v-data-table v-model="selectDelectOptions" :headers="headerOptions" :items="tab.option" :items-per-page='$setNumTableList'
                                                                     :show-select="isdeleteOptions" item-key="id" height="140px" dense hide-default-footer >
                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -81,7 +78,7 @@
                                                                     <tbody>
                                                                         <tr v-for="(item,num) in items" :key="num">
                                                                             <td v-for="(header,key) in headers" :key="key">
-                                                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openOptions(num)" @cancel="editOptionsItem(num)" @save="cancelOptions" large >
+                                                                                <v-edit-dialog persistent @open="openOptions(num)" @cancel="cancelOptions" @save="editOptionsItem(num)" large >
                                                                                     {{item[header.value]}}
                                                                                     <template v-slot:input>
                                                                                         <br>
@@ -94,7 +91,7 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <th colspan="3">
-                                                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addOptions()" @save="cancelOptions"> 
+                                                                                <v-edit-dialog  large persistent @cancel="cancelOptions" @save="addOptions()"> 
                                                                                     <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                                         <v-icon >mdi-plus</v-icon>New Item
                                                                                     </v-btn>
@@ -128,7 +125,7 @@
                                                             </v-btn>
                                                         </div>
                                                         <v-card-text v-if="isEnvironmentVOpenClose">
-                                                            <v-data-table v-model="selectDelectEnvironmentV" :headers="headerEnvironmentV" :items="tab.environ" :items-per-page='20'
+                                                            <v-data-table v-model="selectDelectEnvironmentV" :headers="headerEnvironmentV" :items="tab.environ" :items-per-page='$setNumTableList'
                                                                     :show-select="isdeleteEnvironmentV" item-key="id" height="140px" dense hide-default-footer >
                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -137,7 +134,7 @@
                                                                     <tbody>
                                                                         <tr v-for="(item,num) in items" :key="num">
                                                                             <td v-for="(header,key) in headers" :key="key">
-                                                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openEnvironmentV(num)" @cancel="editEnvironmentV(num)" @save="cancelEnvironmentV" large >
+                                                                                <v-edit-dialog persistent @open="openEnvironmentV(num)" @cancel="cancelEnvironmentV" @save="editEnvironmentV(num)" large >
                                                                                     {{item[header.value]}}
                                                                                     <template v-slot:input>
                                                                                         <br>
@@ -149,7 +146,7 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <th colspan="3">
-                                                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addEnvironmentV()" @save="cancelEnvironmentV"> 
+                                                                                <v-edit-dialog  large persistent @cancel="cancelEnvironmentV" @save="addEnvironmentV()"> 
                                                                                     <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                                         <v-icon >mdi-plus</v-icon>New Item
                                                                                     </v-btn>
@@ -173,7 +170,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement  || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -192,22 +189,19 @@
                             <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
                         </v-row>
                         <v-row style="height: 50px;">
-                            <label style="padding:10px;">&#60;STARTUP-CONFIGS&#62;
-                                <v-btn @click="newTextStartup()" icon color="teal darken" x-samll dark>
-                                    <v-icon dense dark>mdi-plus</v-icon>
-                                </v-btn>
-                            </label>
+                            <label style="padding:10px;">&#60;STARTUP-CONFIGS&#62;</label>
+                            <v-btn style="margin: 3px 0px 0px -10px" @click="newTextStartup()" icon color="teal darken" x-samll dark>
+                                <v-icon dense dark>mdi-plus</v-icon>
+                            </v-btn>
                         </v-row>
                         <div class="text-editDialog" style="height: 600px;">
                             <v-row v-for="(item, i) in editARXML.config" :key="i" style="height: 550px;">
                                 <div>
                                     <v-row style="height: 25px;margin:0px;">
-                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
-                                            <v-btn @click="deletTextStartup(i)" text x-small color="indigo">
-                                                <v-icon>mdi-minus</v-icon>
-                                            </v-btn>
-                                            &#60;STARTUP-CONFIG&#62;
-                                        </label>
+                                        <v-btn style="margin: 15px -20px 0px 20px" @click="deletTextStartup(i)" text x-small color="indigo">
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">&#60;STARTUP-CONFIG&#62;</label>
                                     </v-row>
                                     <v-row style="height: 25px;margin:0px;">
                                         <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
@@ -225,22 +219,19 @@
                                         <label style="padding:10px;">&#60;&#47;SCHEDULING-PRIORITY&#62;</label>
                                     </v-row>
                                     <v-row style="height: 50px;">
-                                        <label style="padding:10px;margin-left:90px;">&#60;ENVIRONMENT-VARIABLES&#62;
-                                            <v-btn @click="newTextEnviro(i)" icon color="teal darken" x-samll dark>
-                                                <v-icon dense dark>mdi-plus</v-icon>
-                                            </v-btn>
-                                        </label>
+                                        <label style="padding:10px;margin-left:90px;">&#60;ENVIRONMENT-VARIABLES&#62;</label>
+                                        <v-btn style="margin: 3px 0px 0px -10px" @click="newTextEnviro(i)" icon color="teal darken" x-samll dark>
+                                            <v-icon dense dark>mdi-plus</v-icon>
+                                        </v-btn>
                                     </v-row>
                                     <div class="text-Inner-editDialog" style="height: 120px;">
                                         <v-row v-for="(en, e) in item.environ" :key="e" style="height: 100px;">
                                             <div>
                                                 <v-row style="height: 25px;margin:0px;">
-                                                    <label style="padding:10px;margin:2px 0px 2px 80px;">
-                                                        <v-btn @click="deletTextEnviro(e,i)" text x-small color="indigo">
-                                                            <v-icon>mdi-minus</v-icon>
-                                                        </v-btn>
-                                                        &#60;TAG-WITH-OPTIONAL-VALUE&#62;
-                                                    </label>
+                                                    <v-btn style="margin: 15px -80px 0px 80px" @click="deletTextEnviro(e,i)" text x-small color="indigo">
+                                                        <v-icon>mdi-minus</v-icon>
+                                                    </v-btn>
+                                                    <label style="padding:10px;margin:2px 0px 2px 70px;">&#60;TAG-WITH-OPTIONAL-VALUE&#62;</label>
                                                 </v-row>
                                                 <v-row style="height: 25px;margin:0px;">
                                                     <label style="padding:10px;margin:2px 0px 2px 140px;">&#60;KEY&#62;</label>
@@ -253,7 +244,7 @@
                                                     <label style="padding:10px;">&#60;&#47;VALUE&#62;</label>
                                                 </v-row>
                                                 <v-row style="height: 25px;margin:0px;">
-                                                        <label style="padding:10px;margin-left:125px;">&#60;&#47;TAG-WITH-OPTIONAL-VALUE&#62;</label>
+                                                        <label style="padding:10px;margin-left:115px;">&#60;&#47;TAG-WITH-OPTIONAL-VALUE&#62;</label>
                                                 </v-row>
                                             </div>
                                         </v-row>
@@ -262,40 +253,37 @@
                                         <label style="padding:10px;margin:2px 0px 2px 90px;">&#60;&#47;ENVIRONMENT-VARIABLES&#62;</label>
                                     </v-row>
                                     <v-row style="height: 50px;">
-                                        <label style="padding:10px;margin-left:90px;">&#60;STARTUP-OPTIONS&#62;
-                                            <v-btn @click="newTextOption(i)" icon color="teal darken" x-samll dark>
-                                                <v-icon dense dark>mdi-plus</v-icon>
-                                            </v-btn>
-                                        </label>
+                                        <label style="padding:10px;margin-left:90px;">&#60;STARTUP-OPTIONS&#62;</label>
+                                        <v-btn style="margin: 3px 0px 0px -10px" @click="newTextOption(i)" icon color="teal darken" x-samll dark>
+                                            <v-icon dense dark>mdi-plus</v-icon>
+                                        </v-btn>
                                     </v-row>
                                     <div class="text-Inner-editDialog" style="height: 120px;">
                                         <v-row v-for="(op, o) in item.option" :key="o" style="height: 120px;">
                                             <div>
                                                 <v-row style="height: 25px;margin:0px;">
-                                                    <label style="padding:10px;margin:2px 0px 2px 80px;">
-                                                        <v-btn @click="deletTextOption(o,i)" text x-small color="indigo">
-                                                            <v-icon>mdi-minus</v-icon>
-                                                        </v-btn>
-                                                        &#60;STARTUP-OPTION&#62;
-                                                    </label>
+                                                    <v-btn style="margin: 15px -80px 0px 80px" @click="deletTextOption(o,i)" text x-small color="indigo">
+                                                        <v-icon>mdi-minus</v-icon>
+                                                    </v-btn>
+                                                    <label style="padding:10px;margin:2px 0px 2px 70px;">&#60;STARTUP-OPTION&#62;</label>
                                                 </v-row>
                                                 <v-row style="height: 25px;margin:0px;">
-                                                    <label style="padding:10px;margin:2px 0px 2px 140px;">&#60;OPTION-ARGUMENT&#62;</label>
+                                                    <label style="padding:10px;margin:2px 0px 2px 130px;">&#60;OPTION-ARGUMENT&#62;</label>
                                                     <v-text-field v-model="op.arg" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
                                                     <label style="padding:10px;">&#60;&#47;OPTION-ARGUMENT&#62;</label>
                                                 </v-row>
                                                 <v-row style="height: 25px;margin:0px;">
-                                                    <label style="padding:10px;margin:2px 0px 2px 140px;">&#60;OPTION-KIND&#62;</label>
+                                                    <label style="padding:10px;margin:2px 0px 2px 130px;">&#60;OPTION-KIND&#62;</label>
                                                     <v-text-field v-model="op.kind" placeholder="COMMAND-LINE-SIMPLE-FORM or COMMAND-LINE-SHORT-FORM or COMMAND-LINE-LONG-FORM" class="lable-placeholer-color" dense></v-text-field>
                                                     <label style="padding:10px;">&#60;&#47;OPTION-KIND&#62;</label>
                                                 </v-row>
                                                 <v-row style="height: 25px;margin:0px;">
-                                                    <label style="padding:10px;margin:2px 0px 2px 140px;">&#60;OPTION-NAME&#62;</label>
+                                                    <label style="padding:10px;margin:2px 0px 2px 130px;">&#60;OPTION-NAME&#62;</label>
                                                     <v-text-field v-model="op.name" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
                                                     <label style="padding:10px;">&#60;&#47;OPTION-NAME&#62;</label>
                                                 </v-row>
                                                 <v-row style="height: 25px;margin:0px;">
-                                                        <label style="padding:10px;margin-left:125px;">&#60;&#47;STARTUP-OPTION&#62;</label>
+                                                        <label style="padding:10px;margin-left:115px;">&#60;&#47;STARTUP-OPTION&#62;</label>
                                                 </v-row>
                                             </div>
                                         </v-row>
@@ -346,6 +334,7 @@
 
 <script>
 import dialogPathSetting from '../components/dialogPathSetting.vue'
+import { EventBus } from "../main.js"
 
 export default {
     props: ['element', 'isDatailView', 'minimaptoolbar'],
@@ -353,9 +342,6 @@ export default {
     computed: {
         activeUUID() {
             return this.$store.state.activeUUID
-        },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
         },
         setting() {
             return this.$store.state.setting
@@ -365,9 +351,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -390,11 +376,11 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             dialogText: false,
             editARXML: {name:'', config: []},
-            editTextConfig: {configname: '', policy: '', priority: '', entertimeout: '', exittimeout: '', option: [], environ: [], id: ''},
-            editTextOption: {arg: '', kind:'', name: '', id: ''},
+            editTextConfig: {configname: '', policy:  null, priority: '', entertimeout: '', exittimeout: '', option: [], environ: [], id: ''},
+            editTextOption: {arg: '', kind: null, name: '', id: ''},
             editTextEnviro: { key: '', value: '', id: '' },
             isStartupConfigOpenClose : true,
             schedulingPolicy: ['SCHEDULING-POLICY-FIFO', 'SCHEDULING-POLICY-ROUND-ROBIN',],
@@ -419,6 +405,8 @@ export default {
             ],
             editEnvironItem: { key: '', value: '', id: '' },
             defaultEnvironItem: { key: '', value: '', id: '' },
+
+            beforeConfig: null,
 
         }
     },
@@ -452,6 +440,9 @@ export default {
         },
         showStartupConfigset() {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
+            this.$nextTick(() => {
+                EventBus.$emit('drawLine')
+            })
         },
         showStartupConfig() {
             this.isStartupConfigOpenClose = this.isStartupConfigOpenClose ? false : true
@@ -468,6 +459,14 @@ export default {
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
+        },
+        inputConfigName() {
+            this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                        changeName: 'ConfigName', listname: this.element.config[this.startupCTab].configname, beforename: this.beforeConfig} )
+            this.beforeConfig = this.element.config[this.startupCTab].configname
+        },
+        clickConfigName(name) {
+            this.beforeConfig = name
         },
 
         addStartUpConfig() {
@@ -490,6 +489,7 @@ export default {
         changeStartUpConfigTab() {
         },
         deleteStartUpConfig(idx) {
+            this.$store.commit('deleteRefTable', {deleteName:'StartupC', deleteTab: true, tabName: this.element.config[idx].configname, path: this.element.path, name: this.element.name})
             this.element.config.splice(idx, 1)
         },
         isCheckOptions() {
@@ -600,13 +600,30 @@ export default {
                 }
             }
             this.element.name = this.editARXML.name
+
+            this.editARXML.config.forEach(item => {
+                if (item.policy != null) {
+                    item.policy = item.policy.toUpperCase()
+                    if(!(item.policy == 'SCHEDULING-POLICY-FIFO' || item.policy == 'SCHEDULING-POLICY-ROUND-ROBIN')) {
+                        item.policy = null
+                    }
+                }
+                item.option.forEach(data => {
+                    if (data.kind != null) {
+                        data.kind = data.kind.toUpperCase()
+                        if(!(data.kind == 'COMMAND-LINE-SIMPLE-FORM' || data.kind == 'COMMAND-LINE-SHORT-FORM' || data.kind == 'COMMAND-LINE-LONG-FORM')) {
+                            data.kind = null
+                        }
+                    }
+                })
+            })
             this.element.config = JSON.parse(JSON.stringify(this.editARXML.config))
             this.cancelARXML()
         },
         cancelARXML() {
             this.editARXML = {name:'', config: []}
             this.editTextItem = {configname: '', policy: null, priority: '', entertimeout: '', exittimeout: '', option: [], environ: [], id: ''}
-            this.editTextOption = {arg: '', kind:'', name: '', id: ''}
+            this.editTextOption = {arg: '', kind: null, name: '', id: ''}
             this.editTextEnviro = { key: '', value: '', id: '' }
             this.dialogText = false
         },
@@ -626,7 +643,7 @@ export default {
             this.editARXML.config.splice(idx,1)
         },
         newTextOption(idxConfig) {
-            this.editTextOption = {arg: '', kind:'', name: '', id: ''}
+            this.editTextOption = {arg: '', kind: null, name: '', id: ''}
             let res = true, n = 0
             while (res) {
                 n++

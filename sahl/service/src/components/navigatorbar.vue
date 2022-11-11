@@ -82,10 +82,10 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn class="d-inline-flex ml-3 mr-1" color="white darken-1" text  @click="okDelete(ismenu)" >
+                    <v-btn class="d-inline-flex ml-3 mr-1" color="white darken-1" text  @click="okDelete()" >
                         Ok
                     </v-btn>
-                    <v-btn class="d-inline-flex ml-3 mr-1" color="white darken-1" text @click="dialogDeleteProject = false">
+                    <v-btn class="d-inline-flex ml-3 mr-1" color="white darken-1" text @click="cancelDelete()">
                         Cancel
                     </v-btn>
                 </v-card-actions>
@@ -116,20 +116,19 @@ export default({
         ismakeProject() {
             return this.$store.state.ismakeProject
         },
+        elementLeft() {
+            return this.$store.state.elementLeft
+        },
     },
     watch:{
         activeUUID(val) {
-            //console.log('activeUUID '+this.activenode[0])
             //console.log('activeUUID*** '+ val)
-            if(this.activenode[0] != null) {
-                if(val != null) {
-                    this.activenode = []
-                    this.activenode.push(val)
-                } else if (val == null && this.activenode[0].indexOf('-') !== -1) {
-                    this.activenode = []
-                }
-            } else if (this.activenode[0] == undefined && val != null) {
+            if (this.isCreatElementMain) {
+                this.isCreatElementMain = false
+                this.activenode = []
                 this.activenode.push(val)
+            } else {
+                this.checkValidation(val)
             }
         },
         ismakeProject(val) {
@@ -150,7 +149,10 @@ export default({
             openIds: [],
             dialogDeleteProject: false,
             strDelete: null,
+            deletActive: false, // mainiview에서 active시킨후 단축키로 element delete하면 deactive하면서 activenode값이 null로 바뀜
             rename: { id: 0, name: null, parent: null},
+            isCreatElementMain: false,
+            isLoading: false,
             menuElementitems: [
                 // { title: 'Rename', menuAction: action => { this.renameElement(action) } },
                 { title: 'Delete', menuAction: action => { this.deleteElement(action) } },
@@ -181,15 +183,32 @@ export default({
             }
         })
         EventBus.$on('active-element', (uuid) => {
-            this.activenode = []
-            if (uuid != null) {
-                this.activenode.push(uuid)
+            if (!this.deletActive) {
+                this.activenode = []
+                if (uuid != null) {
+                    this.activenode.push(uuid)
+                }
             }
-            //console.log(this.activenode)
         })
         EventBus.$on('new-file', () => {this.newElement()})
-        EventBus.$on('delete-file', () => {this.deleteElement()})
-        EventBus.$on('delete-project', () => {this.deleteProject()})
+        EventBus.$on('delete-file', () => {
+            this.ismenu = 2
+            this.deletActive = true
+            this.deleteElement()
+        })
+        EventBus.$on('delete-project', () => {
+            this.ismenu = 0
+            this.deleteProject()
+        })
+        EventBus.$on('copy-file', () => {this.copyElement()})
+        EventBus.$on('openAll-List', (uuid) => {
+            console.log('openAll-List')
+            if (uuid != null) {
+                this.isLoading = true
+                this.activenode.push(uuid)
+            }
+            this.openAll()
+        })
     },
 
     methods: {
@@ -219,353 +238,373 @@ export default({
             //alert(this.openIds)
         },
         newElement() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000)) // (max - min) + min
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            // const elementX = Array.from({length:4}, () => Math.floor(Math.random() * (1400 - 11)) + 10) // (max - min) + min
-            // const elementY = Array.from({length:4}, () => Math.floor(Math.random() * (200 - 6)) + 5)
+            if (this.activenode[0] != null && this.activenode[0].indexOf('-') === -1) {
+                this.isCreatElementMain = true
+                const elementX = this.$setPositionElementX+this.$store.state.elementLeft//-550//Array.from({length:4}, () => -550)//Array.from({length:4}, () => Math.floor(Math.random() * 500)) 
+                //const elementY = -50//Array.from({length:4}, () => -50)//Array.from({length:4}, () => Math.floor(Math.random() * 500))
+                
+                if (this.activenode[0] == constant.CompuMethod_str) {
+                    this.$store.commit('addElementCompuMehtod', {
+                        name: this.$store.getters.getNameCompuMethod, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, category:'', attributeName: '', scales:[], icon:"mdi-clipboard-outline", validation: false
+                    })
+                } else if (this.activenode[0] == constant.DataConstr_str) {
+                    this.$store.commit('addElementDataConstr', {
+                        name: this.$store.getters.getNameDataConstr, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, lowerlimit:'', upperlimit:'', icon:"mdi-clipboard-outline", validation: false
+                    })
+                } else if (this.activenode[0] == constant.SWBaseType_str) {
+                    this.$store.commit('addElementSWBaseType', {
+                        name: this.$store.getters.getNameSWBaseType, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, category:'', encoding:'', icon:"mdi-clipboard-outline", validation: false
+                    })
+                } else if (this.activenode[0] == constant.ApplicationArray_str) {
+                    this.$store.commit('addElementApplicationArray', { // elehandling, elesemantics 는 select라서 초기값이 null이다.
+                        name: this.$store.getters.getNameApplicationArray,  path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        category:'', dynamicArrySize:'', elename: '', elehandling: null, elesemantics: null, elemaxnumber:'', 
+                    })
+                } else if (this.activenode[0] == constant.Implementation_str) {
+                    this.$store.commit('addElementImplementation', { //typeref, templatetype  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
+                        name: this.$store.getters.getNameImplementation, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
+                        category:'', namespace:'', arraysize:'', typeemitter:'', 
+                        typeref: null, templatetype:[], desc:'', traceName: '', trace: [], ddpc:[], idtelement:[],
+                    })
+                } else if (this.activenode[0] == constant.Machine_str) {
+                    /*var nameMachine = this.$store.getters.getNameMachine
+                    this.$store.commit('addElementModeDeclarationGroup', {
+                        name: nameMachine+'_MachineState_ModeDeclarationGroup', path: '', isVisible : false,
+                        top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                        zindex: 10, modedeclaration:[{name: 'Off', value: ''},{name: 'Startup', Value: ''},{name: 'Running', Value: ''},{name: 'Shutdown', Value: ''}], initmode:'Off', icon:"mdi-clipboard-outline", validation: false
+                    })
+                    if(!this.openIds.some(item => item === constant.ModeDeclarationGroup_str)){
+                        this.openIds.push(constant.ModeDeclarationGroup_str)
+                    }
+                    this.$store.commit('addElementMachine', {
+                        name: nameMachine, path: '', isVisible : false,
+                        top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        machinedesign:null, enterTimeout:'', exitTimeout:'', hwelement:[], executable:null, admin: '',
+                        functiongroup:[{name:'MachineState', type:'/'+nameMachine+'_MachineState_ModeDeclarationGroup'}], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: []
+                    })*/
+                    this.$store.commit('addElementMachine', {
+                        name: this.$store.getters.getNameMachine, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        machinedesign:null, enterTimeout:'', exitTimeout:'', hwelement:[], executable:null, admin: '',
+                        functiongroup:[], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: []
+                    })
+                } else if (this.activenode[0] == constant.MachineDesigne_str) {
+                    this.$store.commit('addElementMachineDesign', {
+                        name: this.$store.getters.getNameMachineDesign, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, access: null, resettimer:'', connector:[], servicediscover:[], icon:"mdi-clipboard-outline", validation: false
+                    })
+                } else if (this.activenode[0] == constant.ModeDeclarationGroup_str) {
+                    this.$store.commit('addElementModeDeclarationGroup', {
+                        name: this.$store.getters.getNameModeDeclarationGroup,  path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, modedeclaration:[{name: 'Off', value: '', id: 0},{name: 'Startup', Value: '', id: 1}], initmode:'Off', icon:"mdi-clipboard-outline", validation: false
+                    })
+                } else if (this.activenode[0] == constant.HWElement_str) {
+                    this.$store.commit('addElementHWElement', { //category 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
+                        name: this.$store.getters.getNameHWElement, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, category:null, attribute:[], icon:"mdi-clipboard-outline", validation: false
+                    })
+                } else if (this.activenode[0] == constant.HWCategory_str) {
+                    this.$store.commit('addElementHWCategory', { 
+                        name: this.$store.getters.getNameHWCategory, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        attribute: []
+                    })
+                }else if (this.activenode[0] == constant.EthernetCluster_str) {
+                    this.$store.commit('addElementEthernetCluster', {
+                        name: this.$store.getters.getNameEthernetCluster, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, conditional:[], icon:"mdi-clipboard-outline", validation: false
+                    })
+                } else if (this.activenode[0] == constant.ProcesstoMachineMapping_str) {
+                    this.$store.commit('addElementProtoMachineMapping', { //ptmmMachine, ptmmProcess  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
+                        name: this.$store.getters.getNameProcesstoMachineMapping, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        mapping: [],
+                    })
+                } else if (this.activenode[0] == constant.SWComponents_str) {
+                    this.$store.commit('addElementSWComponents', {
+                        name: this.$store.getters.getNameSWComponents, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        pport: [], rport: [], prport: [],
+                    })
+                } else if (this.activenode[0] == constant.Process_str) {
+                    this.$store.commit('addElementProcess', { //prodesign, determin, execut, machinetype  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
+                        name: this.$store.getters.getNameProcess, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
+                        prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
+                    })
+                } else if (this.activenode[0] == constant.ProcessDesign_str) {
+                    this.$store.commit('addElementProcessDesign', { //executableref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
+                        name: this.$store.getters.getNameProcessDesign, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10,icon:"mdi-clipboard-outline", validation: false,
+                        executableref: null, determin: [],
+                    })
+                } else if (this.activenode[0] == constant.Executable_str) {
+                    this.$store.commit('addElementExecutable', { //applicationtyperef 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
+                        name: this.$store.getters.getNameExecutable, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        version: '', category:'', buildType:null, loggingBehabior:null, reportingBehabior:null, swname:'', applicationtyperef: null,
+                    })
+                } else if (this.activenode[0] == constant.StartupConfig_str) {
+                    this.$store.commit('addElementStartupConfig', {
+                        name: this.$store.getters.getNameStartupConfig, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        config: []
+                    })
+                } else if (this.activenode[0] == constant.DeterministicClient_str) {
+                    this.$store.commit('addElementDeterministicClien', {
+                        name: this.$store.getters.getNameDeterministicClient, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        cycletiem: '', numofworkers: '',
+                    })
+                } else if (this.activenode[0] == constant.SomeIPServiceInterfaceDeployment_str) {
+                    this.$store.commit('addElementSomeIPService', {
+                        name: this.$store.getters.getNameSomeIPService, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        service: null, majversion:'', minversion:'', id: '', eventG:[], eventD: [], methodD:[], fieldD:[],
+                    })
+                } else if (this.activenode[0] == constant.ServiceInterface_str) {
+                    this.$store.commit('addElementService', {
+                        name: this.$store.getters.getNameServiceInterface, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: null,
+                    })
+                } else if (this.activenode[0] == constant.Client_str) {
+                    this.$store.commit('addElementClient', { 
+                        name: this.$store.getters.getNameClient, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        retrydelay: '', retrymax: '', timetolive: '', delaymax: '', delaymin:''
+                    })
+                } else if (this.activenode[0] == constant.Server_str) {
+                    this.$store.commit('addElementServer', { 
+                        name: this.$store.getters.getNameServer, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        delaymax: '', delaymin: '',
+                    })
+                } else if (this.activenode[0] == constant.SomeIPClient_str) {
+                    this.$store.commit('addElementSomeIPClient', { 
+                        name: this.$store.getters.getNameSomeIPClient, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        findtime: '', inidelaymax: '', inidelaymin: '', inibasedelay: '', inirepetimax: '',
+                    })
+                } else if (this.activenode[0] == constant.SomeIPServer_str) {
+                    this.$store.commit('addElementSomeIPServer', { 
+                        name: this.$store.getters.getNameSomeIPServer, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        inidelaymax: '', inidelaymin: '', inibasedelay: '', inirepetimax: '', delaymax: '', delaymin: '',
+                        offer: '', timetolive: '',
+                    })
+                } else if (this.activenode[0] == constant.SomeIPToMachineMapping_str) {
+                    this.$store.commit('addElementSomeIPtoMachine', { //ccref, siref  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
+                        name: this.$store.getters.getNameSomeIPtoMachine, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        ccref: null, serviceI: [], tcp:'', udp: '',
+                    })
+                } else if (this.activenode[0] == constant.ToPortPrototypeMapping_str) {
+                    this.$store.commit('addElementToPortPrototype', { 
+                        name: this.$store.getters.getNameToPortPrototype, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        selectPort:null, porttype: null, context: null, process:null, selectServiceIns: null, serviceIns: null,
+                    })
+                } else if (this.activenode[0] == constant.RequiredSomeIP_str) {
+                    this.$store.commit('addElementRequiredSomeIP', {  //deployref, clientref,ver는 null해줘야한다. clearable하면 값이 null변하기 때문에 
+                        name: this.$store.getters.getNameRequiredSomeIP, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        deployref: null, minorver: '', id: '', someipclient: null, ver: null, method: [], requiredevent: [], E2EEvent: [], E2EMethod: []
+                    })
+                } else if (this.activenode[0] == constant.ProvidedSomeIP_str) {
+                    this.$store.commit('addElementProvidedSomeIP', {
+                        name: this.$store.getters.getNameProvidedSomeIP, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        deployref: null, someipserver: null, instanceid: '', loadPriority: '', loadWeight: '', eventP: [], method: [], eventG: [], E2EEvent: [], E2EMethod: []
+                    })
+                } else if (this.activenode[0] == constant.E2EProfileConfig_str) {
+                    this.$store.commit('addElementE2EProfileConfig', {
+                        name: this.$store.getters.getNameE2EProfileConfig, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        profile: []
+                    })
+                } else if (this.activenode[0] == constant.SDG_DEF_str) {
+                    this.$store.commit('addElementSDG_DEF', {
+                        name: this.$store.getters.getNameSDG_DEF, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        sdgClass: []
+                    })
+                } else if (this.activenode[0] == constant.Error_str) {
+                    this.$store.commit('addElementError', { //errorDref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
+                        name: this.$store.getters.getNameError, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        desc: '', errorcode: '', errorDref: null
+                    })
+                } else if (this.activenode[0] == constant.Errorset_str) {
+                    this.$store.commit('addElementErrorSet', {
+                        name: this.$store.getters.getNameErrorSet, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        errorref: [],
+                    })
+                } else if (this.activenode[0] == constant.ErrorDomain_str) {
+                    this.$store.commit('addElementErrorDomain', {
+                        name: this.$store.getters.getNameErrorDomain, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        namespace: '', value: '',
+                    })
+                } else if (this.activenode[0] == constant.FileArray_str) {
+                    this.$store.commit('addElementPERFileArray', {
+                        name: this.$store.getters.getNamePERFileArray, path: '', isVisible : false, input: false,
+                        top:this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        sdgs: [], maxSize: '', miniSize: '', updateS: null, uri: '', files: [],
+                    })
+                } else if (this.activenode[0] == constant.FileProxyInterf_str) {
+                    this.$store.commit('addElementPERFileProxy', {
+                        name: this.$store.getters.getNamePERFileProxy, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        category: '', minisize: '', redundancy: null, updateS: null, encoding: '', proxy: [], maxfiles: ''
+                    })
+                } else if (this.activenode[0] == constant.KeyValueData_str) {
+                    this.$store.commit('addElementPERKeyValueD', {
+                        name: this.$store.getters.getNamePERKeyValueD, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        sdgs: [], maxSize: '', miniSize: '', updateS: null, uri: '', redundancy: [], keyValue: []
+                    })
+                } else if (this.activenode[0] == constant.KeyValueDI_str) {
+                    this.$store.commit('addElementPERKeyValueDI', {
+                        name: this.$store.getters.getNamePERKeyValueDI, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        minisize: '', redundancy: null, updateS: null, data: [], serialization: []
+                    })
+                } else if (this.activenode[0] == constant.PortProtoFileA_str) {
+                    this.$store.commit('addElementPERPPtoFileArray', {
+                        name: this.$store.getters.getNamePERPPtoFileArray, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        fileArray: null, port: null, process: null
+                    })
+                } else if (this.activenode[0] == constant.PortProtoKeyV_str) {
+                    this.$store.commit('addElementPERPPtoKeyValue', {
+                        name: this.$store.getters.getNamePERPPtoKeyValue, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        keyValue: null, port: null, process: null
+                    })
+                } else if (this.activenode[0] == constant.PlatformHealthManagC_str) {
+                    this.$store.commit('addElementPHMContribution', {
+                        name: this.$store.getters.getNamePHMContribution, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    })
+                } else if (this.activenode[0] == constant.ContritoMachine_str) {
+                    this.$store.commit('addElementPHMtoMachine', {
+                        name: this.$store.getters.getNamePHMtoMachine, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        machine: null, contri: []
+                    })
+                } else if (this.activenode[0] == constant.HealthChannel_str) {
+                    this.$store.commit('addElementPHMHealth', {
+                        name: this.$store.getters.getNamePHMHealth, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        status: []
+                    })
+                } else if (this.activenode[0] == constant.RecoveryVA_str) {
+                    this.$store.commit('addElementPHMRecovery', {
+                        name: this.$store.getters.getNamePHMRecovery, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        reconame: '', faf: null
+                    })
+                } else if (this.activenode[0] == constant.PHMSupervised_str) {
+                    this.$store.commit('addElementPHMSupervised', {
+                        name: this.$store.getters.getNamePHMSupervised, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        checkpoint: []
+                    })
+                } else if (this.activenode[0] == constant.RecoveryActionInterf_str) {
+                    this.$store.commit('addElementRecoveryVia', {
+                        name: this.$store.getters.getNameRecoveryVia, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        process: null, swcomponent: null, port: null, phmRecovery: null
+                    })
+                } else if (this.activenode[0] == constant.ComMethodGDesign_str) {
+                    this.$store.commit('addElementMethodGD', {
+                        name: this.$store.getters.getNameMethodGD, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        processD: null, SIMethod: null,
+                    })
+                } else if (this.activenode[0] == constant.ComEventGDesign_str) {
+                    this.$store.commit('addElementEventGD', {
+                        name: this.$store.getters.getNameEventGD, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        processD: null, SIEvent: null,
+                    })
+                } else if (this.activenode[0] == constant.ComFieldGDesign_str) {
+                    this.$store.commit('addElementFieldGD', {
+                        name: this.$store.getters.getNameFieldGD, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        processD: null, SIField: null, role: null
+                    })
+                } else if (this.activenode[0] == constant.ComMethodGrant_str) {
+                    this.$store.commit('addElementMethodG', {
+                        name: this.$store.getters.getNameMethodG, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        methodD: null, provide: null,
+                    })
+                } else if (this.activenode[0] == constant.ComEventGrant_str) {
+                    this.$store.commit('addElementEventG', {
+                        name: this.$store.getters.getNameEventG, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        eventD: null, provide: null,
+                    })
+                } else if (this.activenode[0] == constant.ComFieldGrant_str) {
+                    this.$store.commit('addElementFieldG', {
+                        name: this.$store.getters.getNameFieldG, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        fieldD: null, provide: null, role: null
+                    })
+                } else if (this.activenode[0] == constant.SWCluster_str) {
+                    this.$store.commit('addElementSoftWareCluster', {
+                        name: this.$store.getters.getNameSoftWareCluster, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        category: '', idVendor: '', version: '', sdgs: [], executable: [], machineD: [], toMachine: [], process: [], sswc: [],
+                    })
+                } else if (this.activenode[0] == constant.SWPackage_str) {
+                    this.$store.commit('addElementSoftWarePackage', {
+                        name: this.$store.getters.getNameSoftWarePackage, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        action: null, activation: null, compSWPsize: '', deltaPakage: null, maximunVer: '', minimunVer: '',
+                        id: '', postReboot: null, preReboot: null, swcluster: null, uncompSWCsize: ''
+                    })
+                } else if (this.activenode[0] == constant.VehiclePackage_str) {
+                    this.$store.commit('addElementVehiclePackage', {
+                        name: this.$store.getters.getNameVehiclePackage, path: '', isVisible : false, input: false,
+                        top: this.$setPositionElementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                        reposi: '', sdgs: [], driver: [], rollout: [], ucms: [],
+                    })
+                }
 
-            if (this.activenode[0] == constant.CompuMethod_str) {
-                this.$store.commit('addElementCompuMehtod', {
-                    name: this.$store.getters.getNameCompuMethod, path: '',
-                    top: elementY, left: elementX, zindex: 10, category:'', attributeName: '', scales:[], icon:"mdi-clipboard-outline", validation: false
-                })
-            } else if (this.activenode[0] == constant.DataConstr_str) {
-                this.$store.commit('addElementDataConstr', {
-                    name: this.$store.getters.getNameDataConstr, path: '',
-                    top: elementY, left: elementX, zindex: 10, lowerlimit:'', upperlimit:'', icon:"mdi-clipboard-outline", validation: false
-                })
-            } else if (this.activenode[0] == constant.SWBaseType_str) {
-                this.$store.commit('addElementSWBaseType', {
-                    name: this.$store.getters.getNameSWBaseType, path: '',
-                    top: elementY, left: elementX, zindex: 10, category:'', encoding:'', icon:"mdi-clipboard-outline", validation: false
-                })
-            } else if (this.activenode[0] == constant.ApplicationArray_str) {
-                this.$store.commit('addElementApplicationArray', { // elehandling, elesemantics 는 select라서 초기값이 null이다.
-                    name: this.$store.getters.getNameApplicationArray,  path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    category:'', dynamicArrySize:'', elename: '', elehandling: null, elesemantics: null, elemaxnumber:'', 
-                })
-            } else if (this.activenode[0] == constant.Implementation_str) {
-                this.$store.commit('addElementImplementation', { //typeref, templatetype  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameImplementation, path: '',
-                    top: elementY, left: elementX, zindex: 10,  icon:"mdi-clipboard-outline", validation: false,
-                    category:'', namespace:'', arraysize:'', typeemitter:'', 
-                    typeref: null, templatetype:null, desc:'', traceName: '', trace: [], ddpc:[], idtelement:[],
-                })
-            } else if (this.activenode[0] == constant.Machine_str) {
-                this.$store.commit('addElementMachine', {
-                    name: this.$store.getters.getNameMachine, path: '',
-                    top: elementY, left: elementX, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, admin: '',
-                    functiongroup:[], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: [], icon:"mdi-clipboard-outline", validation: false
-                })
-            } else if (this.activenode[0] == constant.MachineDesigne_str) {
-                this.$store.commit('addElementMachineDesign', {
-                    name: this.$store.getters.getNameMachineDesign, path: '',
-                    top: elementY, left: elementX, zindex: 10, access: null, resettimer:'', connector:[], servicediscover:[], icon:"mdi-clipboard-outline", validation: false
-                })
-            } else if (this.activenode[0] == constant.ModeDeclarationGroup_str) {
-                this.$store.commit('addElementModeDeclarationGroup', {
-                    name: this.$store.getters.getNameModeDeclarationGroup,  path: '',
-                    top: elementY, left: elementX, zindex: 10, modedeclaration:[], initmode:null, icon:"mdi-clipboard-outline", validation: false
-                })
-            } else if (this.activenode[0] == constant.HWElement_str) {
-                this.$store.commit('addElementHWElement', { //category 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameHWElement, path: '',
-                    top: elementY, left: elementX, zindex: 10, category:null, attribute:[], icon:"mdi-clipboard-outline", validation: false
-                })
-            } else if (this.activenode[0] == constant.HWCategory_str) {
-                this.$store.commit('addElementHWCategory', { 
-                    name: this.$store.getters.getNameHWCategory, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    attribute: []
-                })
-            }else if (this.activenode[0] == constant.EthernetCluster_str) {
-                this.$store.commit('addElementEthernetCluster', {
-                    name: this.$store.getters.getNameEthernetCluster, path: '',
-                    top: elementY, left: elementX, zindex: 10, conditional:[], icon:"mdi-clipboard-outline", validation: false
-                })
-            } else if (this.activenode[0] == constant.ProcesstoMachineMapping_str) {
-                this.$store.commit('addElementProtoMachineMapping', { //ptmmMachine, ptmmProcess  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameProcesstoMachineMapping, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    mapping: [],
-                })
-            } else if (this.activenode[0] == constant.SWComponents_str) {
-                this.$store.commit('addElementSWComponents', {
-                    name: this.$store.getters.getNameSWComponents, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    pport: [], rport: [], prport: [],
-                })
-            } else if (this.activenode[0] == constant.Process_str) {
-                this.$store.commit('addElementProcess', { //prodesign, determin, execut, machinetype  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameProcess, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
-                    prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
-                })
-            } else if (this.activenode[0] == constant.ProcessDesign_str) {
-                this.$store.commit('addElementProcessDesign', { //executableref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameProcessDesign, path: '',
-                    top: elementY, left: elementX, zindex: 10,icon:"mdi-clipboard-outline", validation: false,
-                    executableref: null, determin: [],
-                })
-            } else if (this.activenode[0] == constant.Executable_str) {
-                this.$store.commit('addElementExecutable', { //applicationtyperef 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameExecutable, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    version: '', category:'', buildType:null, loggingBehabior:null, reportingBehabior:null, swname:'', applicationtyperef: null,
-                })
-            } else if (this.activenode[0] == constant.StartupConfig_str) {
-                this.$store.commit('addElementStartupConfig', {
-                    name: this.$store.getters.getNameStartupConfig, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    config: []
-                })
-            } else if (this.activenode[0] == constant.DeterministicClient_str) {
-                this.$store.commit('addElementDeterministicClien', {
-                    name: this.$store.getters.getNameDeterministicClient, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    cycletiem: '', numofworkers: '',
-                })
-            } else if (this.activenode[0] == constant.SomeIPServiceInterfaceDeployment_str) {
-                this.$store.commit('addElementSomeIPService', {
-                    name: this.$store.getters.getNameSomeIPService, path: '',
-                    top: elementY, left: elementX, zindex: 10, version:null, namespace:null, events:null, fields:null, methods:null, icon:"mdi-clipboard-outline", validation: false,
-                    service: null, majversion:'', minversion:'', id: '', eventG:[], eventD: [], methodD:[], fieldD:[],
-                })
-            } else if (this.activenode[0] == constant.ServiceInterface_str) {
-                this.$store.commit('addElementService', {
-                    name: this.$store.getters.getNameServiceInterface, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: null,
-                })
-            } else if (this.activenode[0] == constant.Client_str) {
-                this.$store.commit('addElementClient', { 
-                    name: this.$store.getters.getNameClient, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    delay: '', max: '', timetolive: '', delaymax: '', delaymin:''
-                })
-            } else if (this.activenode[0] == constant.Server_str) {
-                this.$store.commit('addElementServer', { 
-                    name: this.$store.getters.getNameServer, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    delaymax: '', delaymin: '',
-                })
-            } else if (this.activenode[0] == constant.SomeIPClient_str) {
-                this.$store.commit('addElementSomeIPClient', { 
-                    name: this.$store.getters.getNameSomeIPClient, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    findtime: '', inidelaymax: '', inidelaymin: '', inibasedelay: '', inirepetimax: '',
-                })
-            } else if (this.activenode[0] == constant.SomeIPServer_str) {
-                this.$store.commit('addElementSomeIPServer', { 
-                    name: this.$store.getters.getNameSomeIPServer, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    inidelaymax: '', inidelaymin: '', inibasedelay: '', inirepetimax: '', delaymax: '', delaymin: '',
-                    offer: '', tiemtolive: '',
-                })
-            } else if (this.activenode[0] == constant.SomeIPToMachineMapping_str) {
-                this.$store.commit('addElementSomeIPtoMachine', { //ccref, siref  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameSomeIPtoMachine, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    ccref: null, serviceI: [], tcp:'', udp: '',
-                })
-            } else if (this.activenode[0] == constant.ToPortPrototypeMapping_str) {
-                this.$store.commit('addElementToPortPrototype', { 
-                    name: this.$store.getters.getNameToPortPrototype, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    selectPort:null, porttype: null, context: null, process:null, selectServiceIns: null, serviceIns: null,
-                })
-            } else if (this.activenode[0] == constant.RequiredSomeIP_str) {
-                this.$store.commit('addElementRequiredSomeIP', {  //deployref, clientref,ver는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameRequiredSomeIP, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    deployref: null, minover: '', id: '', someipclient: null, ver: null, method: [], requiredevent: [], E2EEvent: [], E2EMethod: []
-                })
-            } else if (this.activenode[0] == constant.ProvidedSomeIP_str) {
-                this.$store.commit('addElementProvidedSomeIP', {
-                    name: this.$store.getters.getNameProvidedSomeIP, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    deployref: null, someipserver: null, instanceid: '', loadPriority: '', loadWeight: '', eventP: [], method: [], eventG: [], E2EEvent: [], E2EMethod: []
-                })
-            } else if (this.activenode[0] == constant.E2EProfileConfig_str) {
-                this.$store.commit('addElementE2EProfileConfig', {
-                    name: this.$store.getters.getNameE2EProfileConfig, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    profile: []
-                })
-            } else if (this.activenode[0] == constant.SDG_DEF_str) {
-                this.$store.commit('addElementSDG_DEF', {
-                    name: this.$store.getters.getNameSDG_DEF, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    sdgClass: []
-                })
-            } else if (this.activenode[0] == constant.Error_str) {
-                this.$store.commit('addElementError', { //errorDref 는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                    name: this.$store.getters.getNameError, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    desc: '', errorcode: '', errorDref: null
-                })
-            } else if (this.activenode[0] == constant.Errorset_str) {
-                this.$store.commit('addElementErrorSet', {
-                    name: this.$store.getters.getNameErrorSet, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    errorref: [],
-                })
-            } else if (this.activenode[0] == constant.ErrorDomain_str) {
-                this.$store.commit('addElementErrorDomain', {
-                    name: this.$store.getters.getNameErrorDomain, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    namespace: '', value: '',
-                })
-            } else if (this.activenode[0] == constant.FileArray_str) {
-                this.$store.commit('addElementPERFileArray', {
-                    name: this.$store.getters.getNamePERFileArray, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    sdgs: [], maxSize: '', miniSize: '', updateS: null, uri: '', files: [],
-                })
-            } else if (this.activenode[0] == constant.FileProxyInterf_str) {
-                this.$store.commit('addElementPERFileProxy', {
-                    name: this.$store.getters.getNamePERFileProxy, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    category: '', minisize: '', redundancy: null, updateS: null, encoding: '', proxy: [], maxfiles: ''
-                })
-            } else if (this.activenode[0] == constant.KeyValueData_str) {
-                this.$store.commit('addElementPERKeyValueD', {
-                    name: this.$store.getters.getNamePERKeyValueD, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    sdgs: [], maxSize: '', miniSize: '', updateS: null, uri: '', redundancy: [], keyValue: []
-                })
-            } else if (this.activenode[0] == constant.KeyValueDI_str) {
-                this.$store.commit('addElementPERKeyValueDI', {
-                    name: this.$store.getters.getNamePERKeyValueDI, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    minisize: '', redundancy: null, updateS: null, data: [], serialization: []
-                })
-            } else if (this.activenode[0] == constant.PortProtoFileA_str) {
-                this.$store.commit('addElementPERPPtoFileArray', {
-                    name: this.$store.getters.getNamePERPPtoFileArray, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    fileArray: null, port: null, process: null
-                })
-            } else if (this.activenode[0] == constant.PortProtoKeyV_str) {
-                this.$store.commit('addElementPERPPtoKeyValue', {
-                    name: this.$store.getters.getNamePERPPtoKeyValue, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    keyValue: null, port: null, process: null
-                })
-            } else if (this.activenode[0] == constant.PlatformHealthManagC_str) {
-                this.$store.commit('addElementPHMContribution', {
-                    name: this.$store.getters.getNamePHMContribution, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                })
-            } else if (this.activenode[0] == constant.ContritoMachine_str) {
-                this.$store.commit('addElementPHMtoMachine', {
-                    name: this.$store.getters.getNamePHMtoMachine, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    machine: null, contri: []
-                })
-            } else if (this.activenode[0] == constant.HealthChannel_str) {
-                this.$store.commit('addElementPHMHealth', {
-                    name: this.$store.getters.getNamePHMHealth, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    status: []
-                })
-            } else if (this.activenode[0] == constant.RecoveryVA_str) {
-                this.$store.commit('addElementPHMRecovery', {
-                    name: this.$store.getters.getNamePHMRecovery, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    reconame: '', faf: null
-                })
-            } else if (this.activenode[0] == constant.PHMSupervised_str) {
-                this.$store.commit('addElementPHMSupervised', {
-                    name: this.$store.getters.getNamePHMSupervised, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    checkpoint: []
-                })
-            } else if (this.activenode[0] == constant.RecoveryActionInterf_str) {
-                this.$store.commit('addElementRecoveryVia', {
-                    name: this.$store.getters.getNameRecoveryVia, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    process: null, swcomponent: null, port: null, phmRecovery: null
-                })
-            } else if (this.activenode[0] == constant.ComMethodGDesign_str) {
-                this.$store.commit('addElementMethodGD', {
-                    name: this.$store.getters.getNameMethodGD, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    processD: null, SIMethod: null,
-                })
-            } else if (this.activenode[0] == constant.ComEventGDesign_str) {
-                this.$store.commit('addElementEventGD', {
-                    name: this.$store.getters.getNameEventGD, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    processD: null, SIEvent: null,
-                })
-            } else if (this.activenode[0] == constant.ComFieldGDesign_str) {
-                this.$store.commit('addElementFieldGD', {
-                    name: this.$store.getters.getNameFieldGD, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    processD: null, SIField: null, role: null
-                })
-            } else if (this.activenode[0] == constant.ComMethodGrant_str) {
-                this.$store.commit('addElementMethodG', {
-                    name: this.$store.getters.getNameMethodG, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    methodD: null, provide: null,
-                })
-            } else if (this.activenode[0] == constant.ComEventGrant_str) {
-                this.$store.commit('addElementEventG', {
-                    name: this.$store.getters.getNameEventG, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    eventD: null, provide: null,
-                })
-            } else if (this.activenode[0] == constant.ComFieldGrant_str) {
-                this.$store.commit('addElementFieldG', {
-                    name: this.$store.getters.getNameFieldG, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    fieldD: null, provide: null, role: null
-                })
-            } else if (this.activenode[0] == constant.SWCluster_str) {
-                this.$store.commit('addElementSoftWareCluster', {
-                    name: this.$store.getters.getNameSoftWareCluster, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    category: '', idVendor: '', version: '', sdgs: [], executable: [], machineD: [], toMachine: [], process: [], sswc: [],
-                })
-            } else if (this.activenode[0] == constant.SWPackage_str) {
-                this.$store.commit('addElementSoftWarePackage', {
-                    name: this.$store.getters.getNameSoftWarePackage, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    action: null, activation: null, compSWPsize: '', deltaPakage: null, maximunVer: '', minimunVer: '',
-                    id: '', postReboot: null, preReboot: null, swcluster: null, uncompSWCsize: ''
-                })
-            } else if (this.activenode[0] == constant.VehiclePackage_str) {
-                this.$store.commit('addElementVehiclePackage', {
-                    name: this.$store.getters.getNameVehiclePackage, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
-                    reposi: '', sdgs: [], driver: [], rollout: [], ucms: [],
-                })
-            }
-
-            if(!this.openIds.some(item => item === this.activenode[0])){
-                this.openIds.push(this.activenode[0])
+                if(!this.openIds.some(item => item === this.activenode[0])){
+                    this.openIds.push(this.activenode[0])
+                }
             }
         },
         newGroupElement() {
+            //const elementX = -550//Array.from({length:4}, () => -550)//Array.from({length:4}, () => Math.floor(Math.random() * 500)) 
+            //const elementY = -50//Array.from({length:4}, () => -50)//Array.from({length:4}, () => Math.floor(Math.random() * 500))
+
             if (this.activenode[0] == constant.AdaptiveApplication_str) {
                 if(!this.openIds.some(item => item === constant.AdaptiveApplication_str)){
                     this.openIds.push(constant.AdaptiveApplication_str)
                 }
                 this.$store.commit('addElementProtoMachineMapping', { 
-                    name: this.$store.getters.getNameProcesstoMachineMapping, path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
-                    zindex: 10, icon:"mdi-clipboard-outline", validation: false, mapping: [],
+                    name: this.$store.getters.getNameProcesstoMachineMapping, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false, 
+                    mapping: [],
                 })
                 if(!this.openIds.some(item => item === constant.ProcesstoMachineMapping_str)){
                     this.openIds.push(constant.ProcesstoMachineMapping_str)
                 }
                 this.$store.commit('addElementSWComponents', {
-                    name: this.$store.getters.getNameSWComponents, path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    name: this.$store.getters.getNameSWComponents, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX, 
                     zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     pport: [], rport: [], prport: [],
                 })
@@ -573,8 +612,8 @@ export default({
                     this.openIds.push(constant.SWComponents_str)
                 }
                 this.$store.commit('addElementProcess', { 
-                    name: this.$store.getters.getNameProcess, path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    name: this.$store.getters.getNameProcess, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX,
                     zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
                     prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
@@ -583,8 +622,8 @@ export default({
                     this.openIds.push(constant.Process_str)
                 }
                 this.$store.commit('addElementProcessDesign', {
-                    name: this.$store.getters.getNameProcessDesign, path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    name: this.$store.getters.getNameProcessDesign, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX,
                     zindex: 10,icon:"mdi-clipboard-outline", validation: false,
                     executableref: null, determin: [],
                 })
@@ -592,8 +631,8 @@ export default({
                     this.openIds.push(constant.ProcessDesign_str)
                 }
                 this.$store.commit('addElementExecutable', { 
-                    name: this.$store.getters.getNameExecutable, path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() *3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    name: this.$store.getters.getNameExecutable, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX,
                     zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     version: '', category:'', buildType:null, loggingBehabior:null, reportingBehabior:null, swname:'', applicationtyperef: null,
                 })
@@ -601,8 +640,8 @@ export default({
                     this.openIds.push(constant.Executable_str)
                 }
                 this.$store.commit('addElementStartupConfig', {
-                    name: this.$store.getters.getNameStartupConfig, path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    name: this.$store.getters.getNameStartupConfig, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX,
                     zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     config: []
                 })
@@ -610,8 +649,8 @@ export default({
                     this.openIds.push(constant.StartupConfig_str)
                 }
                 this.$store.commit('addElementDeterministicClien', {
-                    name: this.$store.getters.getNameDeterministicClient, path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    name: this.$store.getters.getNameDeterministicClient, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX,
                     zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     cycletiem: '', numofworkers: '',
                 })
@@ -622,50 +661,65 @@ export default({
                 if(!this.openIds.some(item => item === constant.Machines_str)){
                     this.openIds.push(constant.Machines_str)
                 }
-                this.$store.commit('addElementMachine', {
-                    name: this.$store.getters.getNameMachine, path: '',
+                /*var nameMachine = this.$store.getters.getNameMachine
+                this.$store.commit('addElementModeDeclarationGroup', {
+                    name: nameMachine+'_MachineState_ModeDeclarationGroup', path: '', isVisible : false,
                     top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
-                    zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, admin: '',
+                    zindex: 10, modedeclaration:[{name: 'Off', value: ''},{name: 'Startup', Value: ''},{name: 'Running', Value: ''},{name: 'Shutdown', Value: ''}], initmode:'Off', icon:"mdi-clipboard-outline", validation: false
+                })
+                if(!this.openIds.some(item => item === constant.ModeDeclarationGroup_str)){
+                    this.openIds.push(constant.ModeDeclarationGroup_str)
+                }
+                this.$store.commit('addElementMachine', {
+                    name: nameMachine, path: '', isVisible : false,
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, machinedesign:null, enterTimeout:'', exitTimeout:'', hwelement:[], executable:null, admin: '',
+                    functiongroup:[{name:'MachineState', type:'/'+nameMachine+'_MachineState_ModeDeclarationGroup'}], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: [], icon:"mdi-clipboard-outline", validation: false
+                })*/
+                this.$store.commit('addElementMachine', {
+                    name: this.$store.getters.getNameMachine, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX,
+                    zindex: 10, machinedesign:null, enterTimeout:'', exitTimeout:'', hwelement:[], executable:null, admin: '',
                     functiongroup:[], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: [], icon:"mdi-clipboard-outline", validation: false
                 })
                 if(!this.openIds.some(item => item === constant.Machine_str)){
                     this.openIds.push(constant.Machine_str)
                 }
                 this.$store.commit('addElementMachineDesign', {
-                    name: this.$store.getters.getNameMachineDesign, path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    name: this.$store.getters.getNameMachineDesign, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX,
                     zindex: 10, access: null, resettimer:'', connector:[], servicediscover:[], icon:"mdi-clipboard-outline", validation: false
                 })
                 if(!this.openIds.some(item => item === constant.MachineDesigne_str)){
                     this.openIds.push(constant.MachineDesigne_str)
                 }
                 this.$store.commit('addElementModeDeclarationGroup', {
-                    name: this.$store.getters.getNameModeDeclarationGroup, path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
-                    zindex: 10, modedeclaration:[], initmode:null, icon:"mdi-clipboard-outline", validation: false
+                    name: this.$store.getters.getNameModeDeclarationGroup, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX,
+                    zindex: 10, modedeclaration:[], initmode:'', icon:"mdi-clipboard-outline", validation: false
                 })
                 if(!this.openIds.some(item => item === constant.ModeDeclarationGroup_str)){
                     this.openIds.push(constant.ModeDeclarationGroup_str)
                 }
                 this.$store.commit('addElementHWElement', {
-                    name: this.$store.getters.getNameHWElement, path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    name: this.$store.getters.getNameHWElement, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX,
                     zindex: 10, category:null, attribute:[], icon:"mdi-clipboard-outline", validation: false
                 })
                 if(!this.openIds.some(item => item === constant.HWElement_str)){
                     this.openIds.push(constant.HWElement_str)
                 }
                 this.$store.commit('addElementHWCategory', {
-                    name: this.$store.getters.getNameHWCategory,  path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    name: this.$store.getters.getNameHWCategory,  path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX,
                     zindex: 10, icon:"mdi-clipboard-outline", validation: false, attribute: []
                 })
                 if(!this.openIds.some(item => item === constant.HWCategory_str)){
                     this.openIds.push(constant.HWCategory_str)
                 }
                 this.$store.commit('addElementEthernetCluster', {
-                    name: this.$store.getters.getNameEthernetCluster, path: '',
-                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    name: this.$store.getters.getNameEthernetCluster, path: '', isVisible : false, input: false,
+                    top: this.$setPositionElementY, left: this.$setPositionElementX,
                     zindex: 10, conditional:[], icon:"mdi-clipboard-outline", validation: false
                 })
                 if(!this.openIds.some(item => item === constant.EthernetCluster_str)){
@@ -686,10 +740,35 @@ export default({
             })
         },
         activeElement() {
-            var treeitem
-            var arrelement
+            //console.log('activeElement /  '+ this.activenode[0])
+            // 기존에 있던 선과 보여지는 element들 다 삭제
+            if (!this.isLoading) {
+                EventBus.$emit('delete-line', 'all')
+                this.$store.commit('deleteOpenElemnt', {uuid: '', isDeleteAll: true} )
+                //지금 activenode에 있는거 element보여주기 
+                console.log(this.$store.state.elementLeft)
+                if (this.activenode[0] != undefined && this.activenode[0].indexOf('-') !== -1) {
+                    var treeitem = Object.values(this.$store.getters.gettreeviewitems)
+                    var element = treeitem.find(data =>  data.uuid === this.activenode[0])
+                    EventBus.$emit('Element-open', true, element.uuid)
+                    this.$store.commit('setzIndexVisible', {parent:element.parent, uuid: element.uuid, top: this.$setPositionElementY, left: this.$setPositionElementX+this.$store.state.elementLeft, compo: 'drag'} )
+                    this.$store.commit('setzIndexVisible', {parent:element.parent, uuid: element.uuid, isVisible: true, compo: 'visible', startUUID: '1'} )
+
+                    if(element.validation) { 
+                        //console.log('111111'+this.activenode[0])
+                        this.$store.commit('setValidation', {parent:element.parent, uuid:this.activenode[0]})
+                    }
+
+                }
+            } else {
+                this.isLoading = false
+            }
+            
+            //var treeitem
+            //var arrelement
             //console.log('00 '+ this.$store.state.activeUUID)
-            if(this.activenode[0] != this.$store.state.activeUUID) {
+            /*if(this.activenode[0] != this.$store.state.activeUUID) {
+                
                 if(this.$store.state.activeUUID != null) {
                     treeitem = Object.values(this.$store.getters.gettreeviewitems)
                     arrelement = treeitem.find(data =>  data.uuid === this.$store.state.activeUUID)
@@ -698,13 +777,16 @@ export default({
                         var actelement = treeitem.find(data =>  data.uuid === this.activenode[0])
                         this.$store.commit('setzIndex', {parent:arrelement.parent, uuid: this.$store.state.activeUUID, zindex: 2} )
                         EventBus.$emit('setLineActive', this.$store.state.activeUUID, false)
-                        this.$store.commit('setzIndex', {parent:actelement.parent, uuid: this.activenode[0], zindex: 10} )
-                        EventBus.$emit('setLineActive', this.activenode[0], true)
-                        this.$store.commit('setuuid', {uuid: this.activenode[0]} )
+                        if (this.$store.getters.getFindParentDrawWindow(actelement.parent)) {
+                            this.$store.commit('setzIndex', {parent:actelement.parent, uuid: this.activenode[0], zindex: 10} )
+                            EventBus.$emit('setLineActive', this.activenode[0], true)
+                            this.$store.commit('setuuid', {uuid: this.activenode[0]} )
+                             document.getElementById(this.activenode[0]+'1').scrollIntoView(true)
 
-                        if(actelement.validation) { 
-                            //console.log('111111'+this.activenode[0])
-                            this.$store.commit('setValidation', {parent:actelement.parent, uuid:this.activenode[0]})
+                            if(actelement.validation) { 
+                                //console.log('111111'+this.activenode[0])
+                                this.$store.commit('setValidation', {parent:actelement.parent, uuid:this.activenode[0]})
+                            }
                         }
 
                     } else {
@@ -718,24 +800,41 @@ export default({
                         treeitem = Object.values(this.$store.getters.gettreeviewitems)
                         arrelement = treeitem.find(data =>  data.uuid === this.activenode[0])
                         //console.log(arrelement)
-                        this.$store.commit('setzIndex', {parent:arrelement.parent, uuid: this.activenode[0], zindex: 10} )
-                        this.$store.commit('setuuid', {uuid: this.activenode[0]} )
-                        EventBus.$emit('setLineActive', this.activenode[0], true)
+                        if (this.$store.getters.getFindParentDrawWindow(arrelement.parent)) {
+                            this.$store.commit('setzIndex', {parent:arrelement.parent, uuid: this.activenode[0], zindex: 10} )
+                            this.$store.commit('setuuid', {uuid: this.activenode[0]} )
+                            EventBus.$emit('setLineActive', this.activenode[0], true)
+                            document.getElementById(this.activenode[0]+'1').scrollIntoView(true)
 
-                        if(arrelement.validation) { 
-                            this.$store.commit('setValidation', {parent:arrelement.parent, uuid:this.activenode[0]})
+                            if(arrelement.validation) { 
+                                this.$store.commit('setValidation', {parent:arrelement.parent, uuid:this.activenode[0]})
+                            }
                         }
                     }
                 } 
-
-                if (this.activenode[0].indexOf('-') !== -1) {
+                
+                */
+                /*if (this.activenode[0] != undefined && this.activenode[0].indexOf('-') !== -1) {
                     document.getElementById(this.activenode[0]+'1').scrollIntoView(true)
-                }
-            }
+                }*/
+            //}
         },
         deleteElement () {
-            this.dialogDeleteProject = true
-            this.strDelete = "Element를 삭제하시겠습니까?"
+            if (this.activenode[0] != null && this.activenode[0].indexOf('-') !== -1) {
+                this.dialogDeleteProject = true
+                this.strDelete = "Element를 삭제하시겠습니까?"
+            }
+        },
+        checkValidation(uuid) {
+            console.log('checkValidation')
+            if (uuid != null) {
+                var treeitem = Object.values(this.$store.getters.gettreeviewitems)
+                var element = treeitem.find(data =>  data.uuid === uuid)
+
+                if(element.validation) { 
+                    this.$store.commit('setValidation', {parent:element.parent, uuid:uuid})
+                }
+            }
         },
         renameElement() {
             //console.log('renameElement')
@@ -793,18 +892,28 @@ export default({
             if(this.ismenu == 0) { //project
                 this.$store.commit( 'deleteProject')
             } else if (this.ismenu == 2) {
+                console.log(this.activenode[0])
                 var treeitem = Object.values(this.$store.getters.gettreeviewitems)
                 var arrelement = treeitem.find(data =>  data.uuid === this.activenode[0])
+                EventBus.$emit('delete-line', 'all')
+                this.$store.commit('deleteOpenElemnt', {uuid: '', isDeleteAll: true} )
                 this.$store.commit('deleteRefElement', {uuid:this.activenode[0]} ) // 내가 화살표의 끝인가?
                 this.$store.commit('deleteElementLine', {uuid:this.activenode[0]} ) // 내가 화살표의 시작인가?
                 this.$store.commit('deleteElement', {parent:arrelement.parent, uuid:this.activenode[0]} )
             }
+            this.cancelDelete()
+        },
+        cancelDelete() {
             this.dialogDeleteProject = false
+            this.deletActive = false
+            this.activenode = []
         },
         copyElement() {
-            var treeitem = Object.values(this.$store.getters.gettreeviewitems)
-            var arrelement = treeitem.find(data =>  data.uuid === this.$store.state.activeUUID)
-            this.$store.commit('copyElement', {parent:arrelement.parent, uuid: this.$store.state.activeUUID} )
+            if (this.activenode[0] != null && this.activenode[0].indexOf('-') !== -1) {
+                var treeitem = Object.values(this.$store.getters.gettreeviewitems)
+                var arrelement = treeitem.find(data =>  data.uuid === this.activenode[0])
+                this.$store.commit('copyElement', {parent:arrelement.parent, uuid: this.activenode[0]} )
+            }
         },
     },
 })

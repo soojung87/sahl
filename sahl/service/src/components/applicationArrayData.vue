@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showApplicationArray">
                                     <v-icon>{{ istoolbarOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -20,13 +20,10 @@
                                 <v-icon> mdi-format-text</v-icon>
                             </v-btn>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Application Array Data Type</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="istoolbarOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="istoolbarOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputApplicaionAName' outlined dense></v-text-field>
                             <v-text-field v-model="element.category" label="Category" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
@@ -48,7 +45,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -121,6 +118,7 @@
 <script>
 //import constant from "../store/constants.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
+import { EventBus } from "../main.js"
 
 export default {
     props: ['element', 'isDatailView', 'minimaptoolbar'],
@@ -158,7 +156,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            istoolbarOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            istoolbarOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             dialogText: false,
             editARXML: {name:'', category: '', dynamicArrySize: '', elename: '', elehandling: null, elesemantics: null, elemaxnumber: ''},
             isElementOpenClose: true,
@@ -190,6 +188,9 @@ export default {
         },
         showAAItem () {
             this.isElementOpenClose = this.isElementOpenClose ? false : true
+            this.$nextTick(() => {
+                EventBus.$emit('drawLine')
+            })
         },
         inputApplicaionAName () {
             this.$store.commit('editApplicationArray', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
@@ -224,10 +225,12 @@ export default {
             this.element.category = this.editARXML.category
             this.element.dynamicArrySize = this.editARXML.dynamicArrySize
             this.element.elename = this.editARXML.elename
-            if (this.editARXML.elehandling == 'ALL-INDICES-DIFFERENT-ARRAY-SIZE' || this.editARXML.elehandling == 'ALL-INDICES-DEFFERENT-ARRAY-SIZE' || this.editARXML.elehandling == 'INHERITED-FORM-ARRAY-ELEMENT-TYPE-SIZE' || this.editARXML.elehandling == null) {
+            this.editARXML.elehandling = this.editARXML.elehandling.toUpperCase()
+            if (this.editARXML.elehandling == 'ALL-INDICES-DIFFERENT-ARRAY-SIZE' || this.editARXML.elehandling == 'ALL-INDICES-DEFFERENT-ARRAY-SIZE') {
                 this.element.elehandling = this.editARXML.elehandling
             }
-            if(this.editARXML.elesemantics == 'FIXED-SIZE' || this.editARXML.elesemantics == 'VARIABLE-SIZE' || this.editARXML.elesemantics == null) {
+            this.editARXML.elesemantics = this.editARXML.elesemantics.toUpperCase()
+            if(this.editARXML.elesemantics == 'FIXED-SIZE' || this.editARXML.elesemantics == 'VARIABLE-SIZE') {
                 this.element.elesemantics = this.editARXML.elesemantics
             }
             this.element.elemaxnumber = this.editARXML.elemaxnumber

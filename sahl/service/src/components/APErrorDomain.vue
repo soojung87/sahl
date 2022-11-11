@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView&& zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showErrorDomain">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -20,20 +20,17 @@
                                 <v-icon> mdi-format-text</v-icon>
                             </v-btn>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>AP Application Error Domain</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputErrorDomainName' outlined dense></v-text-field>
                             <v-text-field v-model="element.namespace" label="Name Space" @input='inputNameSpace' placeholder="String/String/,String/String/,...." style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-text-field v-model="element.value" label="Value" placeholder="int" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
 
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -80,6 +77,7 @@
 <script>
 //import constant from "../store/constants.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
+import { EventBus } from "../main.js"
 
 export default {
     props: ['element', 'isDatailView', 'minimaptoolbar'],
@@ -87,9 +85,6 @@ export default {
     computed: {
         activeUUID() {
             return this.$store.state.activeUUID
-        },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
         },
         setting() {
             return this.$store.state.setting
@@ -99,9 +94,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -123,7 +118,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             dialogText: false,
             editARXML: {name:'', namespace:'', value: ''},            
         }
@@ -158,6 +153,9 @@ export default {
         },
         showErrorDomain () {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
+            this.$nextTick(() => {
+                EventBus.$emit('drawLine')
+            })
         },
         inputErrorDomainName () {
             this.$store.commit('editErrorDomain', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )

@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showDataConstr">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -20,20 +20,17 @@
                                 <v-icon> mdi-format-text</v-icon>
                             </v-btn>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Data Constr</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputDateConstrName' outlined dense></v-text-field>
                             <v-text-field v-model="element.lowerlimit" label="Lower Limit" placeholder="" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-text-field v-model="element.upperlimit" label="Upper Limit" placeholder="" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
 
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -96,9 +93,9 @@
 </template>
 
 <script>
-//import constant from "../store/constants.js"
+import constant from "../store/constants.js"
 import dialogPathSetting from '../components/dialogPathSetting.vue'
-
+import { EventBus } from "../main.js"
 
 export default {
     props: ['element', 'isDatailView', 'minimaptoolbar'],
@@ -106,9 +103,6 @@ export default {
     computed: {
         activeUUID() {
             return this.$store.state.activeUUID
-        },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
         },
         setting() {
             return this.$store.state.setting
@@ -118,9 +112,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -142,7 +136,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             dialogText: false,
             editARXML: {name:'', lowerlimit: '', upperlimit: ''},
         }
@@ -151,6 +145,11 @@ export default {
         if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
             this.isTooltip = false
         }
+        EventBus.$on('Element-open', (isopen, uuid) => {
+            if (this.element.uuid == uuid) {
+                this.iselementOpenClose = isopen
+            }
+        })
     },
     methods: {
         submitDialog(element) {
@@ -177,6 +176,15 @@ export default {
         },
         showDataConstr () {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
+            if (this.iselementOpenClose) { //SWComponent RClient에서 3개가 같이 뜰수있음 그때 하나만 펼치고 나머지 다 접으려고
+                this.$store.commit('setOpenCloseCompuDataStrMachineModeD', {
+                                uuid: this.element.uuid, left: this.element.left, top: this.element.top,
+                                beforElement: constant.Implementation_str, closeElement: constant.CompuMethod_str})
+            }
+            this.$nextTick(() => {
+                EventBus.$emit('drawLine')
+                document.getElementById(this.element.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+            })
         },
         inputDateConstrName () {
             this.$store.commit('editDataConstr', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )

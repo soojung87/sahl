@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView " :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                             <v-btn icon @click="showServiceInterface">
                                 <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -16,23 +16,23 @@
                             <dialogPathSetting v-model="dialogPath" :path="element.path" @submit="submitDialog"/>
                             <v-toolbar-title>Service Interface</v-toolbar-title>
                             <v-spacer></v-spacer>
-                        </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
+                            <v-btn v-if="minimaptoolbar" icon @click="viewARXML">
+                                <v-icon> mdi-format-text</v-icon>
+                            </v-btn>
                         </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Service Interface</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement"> <!-- edit -->
+                        <v-card-text v-if="iselementOpenClose"> <!-- edit -->
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                        @input='inputServiceInfName' outlined dense></v-text-field>
-                            <v-text-field v-model="element.namespace" label="Name Spaces" @input='inputNameSpace' placeholder="String/String/..." style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                        @input='inputServiceInfName' @click="clickOtherFields()" outlined dense></v-text-field>
+                            <v-text-field v-model="element.namespace" label="Name Spaces" @input='inputNameSpace' @click="clickOtherFields()" placeholder="String/String/..." style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-row>
                                 <v-col col="6">
-                                    <v-text-field v-model="element.majversion" label="Major Version" placeholder="number.number" style="height: 25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                    <v-text-field v-model="element.versionMaj" label="Major Version" @click="clickOtherFields()" placeholder="number.number" style="height: 25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                 </v-col>
                                 <v-col col="6">
-                                    <v-text-field v-model="element.minversion" label="Minor Version" placeholder="number.number" style="height: 25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                    <v-text-field v-model="element.versionMin" label="Minor Version" @click="clickOtherFields()" placeholder="number.number" style="height: 25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-checkbox v-model="element.isservice" label="Is Service" value="element.isservice" :indeterminate="element.isservice==null? true:false" true-value="true" false-value="false" style="height: 33px;"></v-checkbox>
@@ -52,7 +52,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-show="isEventsOpenClose">  
-                                    <v-data-table v-model="selectDelectEventItem" :headers="headerEvents" :items="element.events" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectEventItem" :headers="headerEvents" :items="element.events" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteEventItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
@@ -61,7 +61,8 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog v-if="header.value != 'sort'" persistent cancel-text='Ok' save-text="Cancel" @open="openEventItem(idx)" @cancel="editEventItem(idx)" @save="cancelEventItem" large >
+                                                        <v-icon v-if="header.value == 'refView'" class="refView-tableItem" :color="refEvent === item.id ? 'red' : null " @click="rowEventClick(idx)">mdi-pencil</v-icon>
+                                                        <v-edit-dialog v-if="header.value != 'refView'" persistent @open="openEventItem(idx)" @cancel="cancelEventItem" @save="editEventItem(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -81,7 +82,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addEventItem()" @save="cancelEventItem"> 
+                                                        <v-edit-dialog  large persistent @open="clickOtherFields()" @cancel="cancelEventItem" @save="addEventItem()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon >mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -122,7 +123,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-show="isFieldOpenClose">                            
-                                    <v-data-table v-model="selectDelectFieldItem" :headers="headerField" :items="element.fields" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectFieldItem" :headers="headerField" :items="element.fields" :items-per-page='$setNumTableList'
                                                 :show-select="isdeleteFieldItem" item-key="id" height="140px" dense hide-default-footer>
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :ripple="false" :value="isSelected" @input="select($event)"></v-simple-checkbox>
@@ -131,7 +132,8 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openFieldItem(idx)" @cancel="editFieldItem(idx)" @save="cancelFieldItem" large >
+                                                        <v-icon v-if="header.value == 'refView'" class="refView-tableItem" :color="refField === item.id ? 'red' : null " @click="rowFieldClick(idx)">mdi-pencil</v-icon>
+                                                        <v-edit-dialog v-if="header.value != 'refView'" persistent @open="openFieldItem(idx)" @cancel="cancelFieldItem" @save="editFieldItem(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -162,7 +164,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="5">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addFieldItem()" @save="cancelFieldItem"> <!--lager 빼면 cancel save없어진다 근데 없으면 select하고나서 엔터 안치면 값이 안바뀜 -->
+                                                        <v-edit-dialog  large persistent @open="clickOtherFields()" @cancel="cancelFieldItem" @save="addFieldItem()"> <!--lager 빼면 cancel save없어진다 근데 없으면 select하고나서 엔터 안치면 값이 안바뀜 -->
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon >mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -238,16 +240,17 @@
                                                         </v-btn>
                                                     </div>
                                                     <v-card-text v-show="isArgumentOpenClose">
-                                                        <v-data-table v-model="selDeleteArgItem" :headers="headerArg" :items="tab.argument" :items-per-page='20'
+                                                        <v-data-table v-model="selDeleteArgItem" :headers="headerArg" :items="tab.argument" :items-per-page='$setNumTableList'
                                                                 :show-select="isdeleteArg" item-key="id" height="140px" dense hide-default-footer >
                                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                             </template>
                                                             <template v-if="!isdeleteArg" v-slot:body="{ items, headers }">
                                                                 <tbody>
-                                                                    <tr v-for="(item,idx) in items" :key="idx" >
+                                                                    <tr v-for="(item,num) in items" :key="num" >
                                                                         <td v-for="(header,key) in headers" :key="key">
-                                                                            <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openArg(idx)" @cancel="editArg(idx)" @save="cancelArg" large >
+                                                                            <v-icon v-if="header.value == 'refView'" class="refView-tableItem" :color="refArgument === item.id ? 'red' : null " @click="rowArgumentClick(num)">mdi-pencil</v-icon>
+                                                                            <v-edit-dialog v-if="header.value != 'refView'" persistent @open="openArg(num)" @cancel="cancelArg" @save="editArg(num)" large >
                                                                                 {{item[header.value]}}
                                                                                 <template v-slot:input>
                                                                                     <br> 
@@ -269,7 +272,7 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <th colspan="3">
-                                                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addArg()" @save="cancelArg"> 
+                                                                            <v-edit-dialog  large persistent @open="clickOtherFields()" @cancel="cancelArg" @save="addArg()"> 
                                                                                 <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                                     <v-icon >mdi-plus</v-icon>New Item
                                                                                 </v-btn>
@@ -312,16 +315,17 @@
                                                         </v-btn>
                                                     </div>
                                                     <v-card-text v-show="isErrorSetOpenClose">
-                                                        <v-data-table v-model="selDeleteErrorSet" :headers="headerErrorSet" :items="tab.errorSet" :items-per-page='20'
+                                                        <v-data-table v-model="selDeleteErrorSet" :headers="headerErrorSet" :items="tab.errorSet" :items-per-page='$setNumTableList'
                                                                 :show-select="isdeleteErrorSet" item-key="id" height="140px" dense hide-default-footer >
                                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                             </template>
                                                             <template v-if="!isdeleteErrorSet" v-slot:body="{ items, headers }">
                                                                 <tbody>
-                                                                    <tr v-for="(item,idx) in items" :key="idx" >
+                                                                    <tr v-for="(item,num) in items" :key="num" >
                                                                         <td v-for="(header,key) in headers" :key="key">
-                                                                            <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openErrorSet(idx)" @cancel="editErrorSet(idx)" @save="cancelErrorSet" large >
+                                                                            <v-icon v-if="header.value == 'refView'" class="refView-tableItem" :color="refErrorSet === item.id ? 'red' : null " @click="rowErrorSetClick(num)">mdi-pencil</v-icon>
+                                                                            <v-edit-dialog v-if="header.value != 'refView'" persistent @open="openErrorSet(num)" @cancel="cancelErrorSet" @save="editErrorSet(num)" large >
                                                                                 {{item[header.value]}}
                                                                                 <template v-slot:input>
                                                                                     <br> 
@@ -340,7 +344,7 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <th colspan="3">
-                                                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addErrorSet()" @save="cancelErrorSet"> 
+                                                                            <v-edit-dialog  large persistent @open="clickOtherFields()" @cancel="cancelErrorSet" @save="addErrorSet()"> 
                                                                                 <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                                     <v-icon >mdi-plus</v-icon>New Item
                                                                                 </v-btn>
@@ -380,16 +384,17 @@
                                                         </v-btn>
                                                     </div>
                                                     <v-card-text v-show="isErrorOpenClose">
-                                                        <v-data-table v-model="selDeleteError" :headers="headerError" :items="tab.error" :items-per-page='20'
+                                                        <v-data-table v-model="selDeleteError" :headers="headerError" :items="tab.error" :items-per-page='$setNumTableList'
                                                                 :show-select="isdeleteError" item-key="id" height="140px" dense hide-default-footer >
                                                             <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                 <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
                                                             </template>
                                                             <template v-if="!isdeleteError" v-slot:body="{ items, headers }">
                                                                 <tbody>
-                                                                    <tr v-for="(item,idx) in items" :key="idx" >
+                                                                    <tr v-for="(item,num) in items" :key="num" >
                                                                         <td v-for="(header,key) in headers" :key="key">
-                                                                            <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openError(idx)" @cancel="editError(idx)" @save="cancelError" large >
+                                                                            <v-icon v-if="header.value == 'refView'" class="refView-tableItem" :color="refError === item.id ? 'red' : null " @click="rowErrorClick(num)">mdi-pencil</v-icon>
+                                                                            <v-edit-dialog v-if="header.value != 'refView'" persistent @open="openError(num)" @cancel="cancelError" @save="editError(num)" large >
                                                                                 {{item[header.value]}}
                                                                                 <template v-slot:input>
                                                                                     <br>
@@ -408,7 +413,7 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <th colspan="3">
-                                                                            <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addError()" @save="cancelError"> 
+                                                                            <v-edit-dialog  large persistent @open="clickOtherFields()" @cancel="cancelError" @save="addError()"> 
                                                                                 <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                                     <v-icon >mdi-plus</v-icon>New Item
                                                                                 </v-btn>
@@ -433,14 +438,14 @@
                                                     </v-card-text>
                                                 </v-card>
                                                 <br>
-                                                <v-text-field v-model="tab.descrip" label="Description" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                <v-text-field v-model="tab.descrip" label="Description" @click="clickOtherFields()" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                             </v-card-text>
                                         </v-card>
                                     </v-tab-item>
                                 </v-tabs-items>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                     outlined dense readonly></v-text-field>
                         </v-card-text>
@@ -448,6 +453,262 @@
                 </template>
                 <span>{{ element.name }}</span>
             </v-tooltip>
+            <v-dialog v-model="dialogText" persistent width="800">
+                <v-card >
+                    <v-card-title class="text-h6 green accent-1"> Edit Text </v-card-title>
+                    <v-card-text>
+                        <br>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;SHORT-NAME&#62;</label>
+                            <v-text-field v-model="editARXML.name" placeholder="String" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;NAMESPACES&#62;</label>
+                            <v-text-field v-model="editARXML.namespace" placeholder="String/String/..."  class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;NAMESPACES&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;MAJOR-VERSION&#62;</label>
+                            <v-text-field v-model="editARXML.versionMaj" placeholder="number.number" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;MAJOR-VERSION&#62;</label>
+                        </v-row>
+                        <v-row style="height: 30px;">
+                            <label style="padding:10px;">&#60;MINOR-VERSION&#62;</label>
+                            <v-text-field v-model="editARXML.versionMin" placeholder="number.number" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;MINOR-VERSION&#62;</label>
+                        </v-row>
+                        <v-row style="height: 15px;">
+                            <label style="padding:10px;">&#60;IS-SERVICE&#62;</label>
+                            <v-text-field v-model="editARXML.isservice" placeholder="true or false" style="height: 15px;" class="lable-placeholer-color" dense></v-text-field>
+                            <label style="padding:10px;">&#60;&#47;IS-SERVICE&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;EVENTS&#62;</label>
+                            <v-btn style="margin: 3px 0px 0px -10px" @click="newTextEvent()" icon color="teal darken" x-samll dark>
+                                <v-icon dense dark>mdi-plus</v-icon>
+                            </v-btn>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 200px;">
+                            <v-row v-for="(item, i) in editARXML.events" :key="i" style="height: 90px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <v-btn style="margin: 15px -20px 0px 20px" @click="deletTextEvent(i)" text x-small color="indigo">
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">&#60;VARIABLE-DATA-PROTOTYPE&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
+                                        <v-text-field v-model="item.name" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;TYPE-TREF&#62;</label>
+                                        <v-text-field v-model="item.type" placeholder="Path" style="width:400px" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;TYPE-TREF&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 30px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;VARIABLE-DATA-PROTOTYPE&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row style="height: 15px;">
+                            <label style="padding:10px;">&#60;&#47;EVENTS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;FIELDS&#62;</label>
+                            <v-btn style="margin: 3px 0px 0px -10px" @click="newTextField()" icon color="teal darken" x-samll dark>
+                                <v-icon dense dark>mdi-plus</v-icon>
+                            </v-btn>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 250px;">
+                            <v-row v-for="(item, i) in editARXML.fields" :key="i" style="height: 170px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <v-btn style="margin: 15px -20px 0px 20px" @click="deletTextField(i)" text x-small color="indigo">
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">&#60;FIELD&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
+                                        <v-text-field v-model="item.name" placeholder="String" style="width:400px" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;TYPE-TREF&#62;</label>
+                                        <v-text-field v-model="item.type" placeholder="Path" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;TYPE-TREF&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;HAS-GETTER&#62;</label>
+                                        <v-text-field v-model="item.getter" placeholder="true or false" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;HAS-GETTER&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;HAS-NOTIFIER&#62;</label>
+                                        <v-text-field v-model="item.notifier" placeholder="true or false" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;HAS-NOTIFIER&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;HAS-SETTER&#62;</label>
+                                        <v-text-field v-model="item.setter" placeholder="true or false" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;HAS-SETTER&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 30px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;FIELD&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row style="height: 15px;">
+                            <label style="padding:10px;">&#60;&#47;FIELDS&#62;</label>
+                        </v-row>
+                        <v-row style="height: 50px;">
+                            <label style="padding:10px;">&#60;METHODS&#62;</label>
+                            <v-btn style="margin: 3px 0px 0px -10px" @click="newTextMethod()" icon color="teal darken" x-samll dark>
+                                <v-icon dense dark>mdi-plus</v-icon>
+                            </v-btn>
+                        </v-row>
+                        <div class="text-editDialog" style="height: 650px;">
+                            <v-row v-for="(item, i) in editARXML.methods" :key="i" style="height: 590px;">
+                                <div>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <v-btn style="margin: 15px -20px 0px 20px" @click="deletTextMethod(i)" text x-small color="indigo">
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">&#60;CLIENT-SERVER-OPERATION&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 25px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 70px;">&#60;SHORT-NAME&#62;</label>
+                                        <v-text-field v-model="item.name" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 10px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 70px;">&#60;DESC&#62;</label>
+                                        <v-text-field v-model="item.descrip" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;DESC&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 50px;">
+                                        <label style="padding:10px;margin-left:80px;">&#60;ARGUMENTS&#62;</label>
+                                        <v-btn style="margin: 3px 0px 0px -10px" @click="newTextArg(i)" icon color="teal darken" x-samll dark>
+                                            <v-icon dense dark>mdi-plus</v-icon>
+                                        </v-btn>
+                                    </v-row>
+                                    <div class="text-Inner-editDialog" style="height: 150px;">
+                                        <v-row v-for="(arg, a) in item.argument" :key="a" style="height: 140px;">
+                                            <div>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <v-btn style="margin: 15px -70px 0px 70px" @click="deletTextArg(a,i)" text x-small color="indigo">
+                                                        <v-icon>mdi-minus</v-icon>
+                                                    </v-btn>
+                                                    <label style="padding:10px;margin:2px 0px 2px 60px;">&#60;ARGUMENT-DATA-PROTOTYPE&#62;</label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <label style="padding:10px;margin:2px 0px 2px 120px;">&#60;SHORT-NAME&#62;</label>
+                                                    <v-text-field v-model="arg.name" placeholder="Path" style="width:350px" class="lable-placeholer-color" dense></v-text-field>
+                                                    <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <label style="padding:10px;margin:2px 0px 2px 120px;">&#60;TYPE-TREF&#62;</label>
+                                                    <v-text-field v-model="arg.type" placeholder="Path" class="lable-placeholer-color" dense></v-text-field>
+                                                    <label style="padding:10px;">&#60;&#47;TYPE-TREF&#62;</label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <label style="padding:10px;margin:2px 0px 2px 120px;">&#60;DIRECTION&#62;</label>
+                                                    <v-text-field v-model="arg.dir" placeholder="IN or OUT or INOUT" class="lable-placeholer-color" dense></v-text-field>
+                                                    <label style="padding:10px;">&#60;&#47;DIRECTION&#62;</label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <label style="padding:10px;margin:2px 0px 2px 120px;">&#60;DESC&#62;</label>
+                                                    <v-text-field v-model="arg.descrip" placeholder="String" class="lable-placeholer-color" dense></v-text-field>
+                                                    <label style="padding:10px;">&#60;&#47;DESC&#62;</label>
+                                                </v-row>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                        <label style="padding:10px;margin-left:105px;">&#60;&#47;ARGUMENT-DATA-PROTOTYPE&#62;</label>
+                                                </v-row>
+                                            </div>
+                                        </v-row>
+                                    </div> 
+                                    <v-row style="height: 30px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;&#47;ARGUMENTS&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 10px;margin:0px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 70px;">&#60;FIRE-AND-FORGET&#62;</label>
+                                        <v-text-field v-model="item.fireforget" placeholder="true or false" style="width: 350px;" class="lable-placeholer-color" dense></v-text-field>
+                                        <label style="padding:10px;">&#60;&#47;FIRE-AND-FORGET&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 50px;">
+                                        <label style="padding:10px;margin-left:80px;">&#60;POSSIBLE-AP-ERROR-REFS&#62;</label>
+                                        <v-btn style="margin: 3px 0px 0px -10px" @click="newTextError(i)" icon color="teal darken" x-samll dark>
+                                            <v-icon dense dark>mdi-plus</v-icon>
+                                        </v-btn>
+                                    </v-row>
+                                    <div class="text-Inner-editDialog" style="height: 100px;">
+                                        <v-row v-for="(err, e) in item.error" :key="e" style="height: 25px;">
+                                            <div>
+                                                <br>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <v-btn style="margin: 15px -70px 0px 70px" @click="deletTextError(e,i)" text x-small color="indigo">
+                                                        <v-icon>mdi-minus</v-icon>
+                                                    </v-btn>
+                                                    <label style="padding:10px;margin:2px 0px 2px 60px;">&#60;POSSIBLE-AP-ERROR-REF&#62;</label>
+                                                    <v-text-field v-model="err.error" style="width:220px" placeholder="Path" class="lable-placeholer-color" dense></v-text-field>
+                                                    <label style="padding:10px;">&#60;&#47;POSSIBLE-AP-ERROR-REF&#62;</label>
+                                                </v-row>
+                                            </div>
+                                        </v-row>
+                                    </div> 
+                                    <v-row style="height: 15px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;&#47;POSSIBLE-AP-ERROR-REFS&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 50px;">
+                                        <label style="padding:10px;margin-left:80px;">&#60;POSSIBLE-AP-ERROR-SET-REFS&#62;</label>
+                                        <v-btn style="margin: 3px 0px 0px -10px" @click="newTextErrorSet(i)" icon color="teal darken" x-samll dark>
+                                            <v-icon dense dark>mdi-plus</v-icon>
+                                        </v-btn>
+                                    </v-row>
+                                    <div class="text-Inner-editDialog" style="height: 100px;">
+                                        <v-row v-for="(errs, e) in item.errorSet" :key="e" style="height: 25px;">
+                                            <div>
+                                                <br>
+                                                <v-row style="height: 25px;margin:0px;">
+                                                    <v-btn style="margin: 15px -70px 0px 70px" @click="deletTextErrorSet(e,i)" text x-small color="indigo">
+                                                        <v-icon>mdi-minus</v-icon>
+                                                    </v-btn>
+                                                    <label style="padding:10px;margin:2px 0px 2px 60px;">&#60;POSSIBLE-AP-ERROR-SET-REF&#62;</label>
+                                                    <v-text-field v-model="errs.error" placeholder="Path" class="lable-placeholer-color" dense></v-text-field>
+                                                    <label style="padding:10px;">&#60;&#47;POSSIBLE-AP-ERROR-SET-REF&#62;</label>
+                                                </v-row>
+                                            </div>
+                                        </v-row>
+                                    </div> 
+                                    <v-row style="height: 30px;">
+                                        <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;&#47;POSSIBLE-AP-ERROR-SET-REFS&#62;</label>
+                                    </v-row>
+                                    <v-row style="height: 30px;margin:0px;">
+                                            <label style="padding:10px;margin-left:55px;">&#60;&#47;CLIENT-SERVER-OPERATION&#62;</label>
+                                    </v-row>
+                                </div>
+                            </v-row>
+                        </div>
+                        <v-row style="height: 20px;">
+                            <label style="padding:10px;">&#60;&#47;METHODS&#62;</label>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text  @click="saveARXML()" >
+                            Save
+                        </v-btn>
+                        <v-btn class="d-inline-flex ml-3 mr-1" color="green darken-1" text @click="cancelARXML()">
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -470,20 +731,20 @@ export default {
         activeUUID() {
             return this.$store.state.activeUUID
         },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
-        },
         setting() {
             return this.$store.state.setting
         },
+        openElement() {
+            return this.$store.state.openElement
+        }
     },
     watch: {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -521,14 +782,22 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            dialogText: false,
+            editARXML: {name:'', versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: null},
+            editTextEvent: {name: '', type: null, id: ''},
+            editTextMethod: {name: '', fireforget: null, argument: [], errorSet: [], error: [], descrip: '', id:''},
+            editTextField: { name: '', type: null, getter: null, setter: null, notifier: null, id: ''},
+            editTextArg: {name: '', type: null, dir: null, descrip: '', id: ''},
+            editTextError: {error: null, id: ''},
+            editTextErrorS: {error: null, id: ''},
             isEventsOpenClose: true,
             isFieldOpenClose: true,
             isMethodsOpenClose: true,
             isEditingEventDataType: true,
             isEditingFieldDataType: true,
             headerEvents: [
-                { text: '', sortable: false, value: 'sort' },
+                { text: '', sortable: false, value: 'refView', width: '5px' },
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
                 { text: 'Data Type', sortable: false, value: 'type' },
             ],
@@ -536,6 +805,7 @@ export default {
             editEventsItem: {name: '', type: null, id: '' },
             isdeleteEventItem: false,
             headerField: [
+                { text: '', sortable: false, value: 'refView', width: '5px' },
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
                 { text: 'Type', sortable: false, value: 'type' },
                 { text: 'Getter', sortable: false, value: 'getter' },
@@ -548,9 +818,7 @@ export default {
             selectDelectEventItem: [],
             selectDelectFieldItem: [],
             enumTrueFalse: [ 'true', 'false'],
-            seltype: this.$store.getters.getImplementationDataType,
-            changeLineEvent : [],
-            changeLineField : [],
+            seltype: this.$store.getters.getImplementationDataType(''),
 
             methodTab: 0,
             isArgumentOpenClose: true,
@@ -563,15 +831,18 @@ export default {
             selDeleteErrorSet:[],
             selDeleteError: [],
             headerArg: [
+                { text: '', sortable: false, value: 'refView', width: '5px' },
                 { text: 'Name', align: 'start', sortable: false, value: 'name' },
                 { text: 'Data Type', sortable: false, value: 'type' },
                 { text: 'Direction', sortable: false, value: 'dir' },
                 { text: 'Description', sortable: false, value: 'descrip' },
             ],
             headerErrorSet: [
+                { text: '', sortable: false, value: 'refView', width: '5px' },
                 { text: 'Possible AP Error Set Ref', align: 'start', sortable: false, value: 'error' },
             ],
             headerError: [
+                { text: '', sortable: false, value: 'refView', width: '5px' },
                 { text: 'Possible AP Error Ref', align: 'start', sortable: false, value: 'error' },
             ],
             argDirection: ['IN', 'OUT', 'INOUT'],
@@ -584,16 +855,46 @@ export default {
             isEditingError: true,
             selErrorSet : this.$store.getters.getErrorSet,
             selError : this.$store.getters.getError,
-            changeLineArg: [],
-            changeLineES: [],
-            changeLineE: [],
             beforeName: '',
+
+            refEvent: null,
+            refField: null,
+            refArgument: null,
+            refErrorSet: null,
+            refError: null,
         }
     },
     mounted() {
         if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
             this.isTooltip = false
         }
+        EventBus.$on(this.element.uuid, (refNum, idxID, tabID) => {
+            this.refEvent = null
+            this.refField = null
+            this.refArgument = null
+            this.refErrorSet = null
+            this.refError = null
+
+            if (refNum == 1) {
+                this.refEvent = idxID
+            } else if (refNum == 2) {
+                this.refField = idxID
+            } else if (refNum == 3) {
+                this.methodTab = tabID
+                this.refArgument = idxID
+            } else if (refNum == 4) {
+                this.methodTab = tabID
+                this.refErrorSet = idxID
+            } else if (refNum == 5) {
+                this.methodTab = tabID
+                this.refError = idxID
+            }
+        })
+        EventBus.$on('Element-open', (isopen, uuid) => {
+            if (this.element.uuid == uuid) {
+                this.iselementOpenClose = isopen
+            }
+        })
     },
     methods: {
         submitDialog(element) {
@@ -619,8 +920,19 @@ export default {
             }
         },
         showServiceInterface() {
+            this.clickOtherFields()
             this.iselementOpenClose = this.iselementOpenClose ? false : true
-            this.$nextTick(() => {
+            if (this.iselementOpenClose) { //SWComponent RClient에서 3개가 같이 뜰수있음 그때 하나만 펼치고 나머지 다 접으려고
+                this.$store.commit('setOpenCloseServiceInterface', {
+                                uuid: this.element.uuid, left: this.element.left, top: this.element.top,
+                                beforElement: constant.SWComponents_str, nowElement: constant.ServiceInterface_str})
+                this.$nextTick(() => {
+                    document.getElementById(this.element.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                })
+            }
+            EventBus.$emit('drawLine')
+
+            /*this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
                 if(this.iselementOpenClose) {
                     if(this.element.methods.length > 0 && this.location == 1) {
@@ -631,21 +943,24 @@ export default {
                         }
                     }
                 }
-            })
+            })*/
         },
         showEventItem() {
+            this.clickOtherFields()
             this.isEventsOpenClose =  this.isEventsOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
-            EventBus.$emit('drawLine')
+            //EventBus.$emit('drawLine')
         },
         showFieldItem() {
+            this.clickOtherFields()
             this.isFieldOpenClose = this.isFieldOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
-            EventBus.$emit('drawLine')
+            //EventBus.$emit('drawLine')
         },
         showMethodItem() { 
+            this.clickOtherFields()
             this.isMethodsOpenClose = this.isMethodsOpenClose ? false : true
-            if(this.element.methods.length > 0 && this.location == 1) {
+            /*if(this.element.methods.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isMethodsOpenClose) {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.element.methods[this.methodTab].id)
@@ -654,40 +969,198 @@ export default {
                     }
                     EventBus.$emit('drawLine')
                 })
+            }*/
+        },
+        clickOtherFields() {
+            if (this.refEvent != null || this.refField != null || this.refArgument != null || this.refErrorSet != null || this.refError != null) {
+                this.deleteOpenElement()
+                this.refEvent = null
+                this.refField = null
+                this.refArgument = null
+                this.refErrorSet = null
+                this.refError = null
             }
         },
+        rowEventClick(idx) {
+            console.log('rowClick ' + idx)
+            if (this.refEvent != this.element.events[idx].id) { // 같은거 계속 누르면 안됨
+                //기존것 delete하고 
+                this.clickOtherFields()
+                // 새로들어온 idx line draw
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+this.element.events[idx].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getImplementationPath(this.element.events[idx].type)
+                }
+                if (endLine != null) {
+                    // 기존에 있던거 좌표 바꿔줘야함.
+                    if (this.$store.getters.getDeleteOpenElement(endLine) == -1) {
+                        this.$store.commit('editImplementation', {compo:"drag", uuid: endLine, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.Implementation_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/Eventtable', endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/Eventtable', end:endLine, iscircle:false, refNum:1, idxID: this.element.events[idx].id})
+                }
+                this.refEvent = this.element.events[idx].id
+            }
+        },
+        rowFieldClick(idx) {
+            console.log('rowClick ' + idx)
+            if (this.refField != this.element.fields[idx].id) { // 같은거 계속 누르면 안됨
+                //기존것 delete하고 
+                this.clickOtherFields()
+                // 새로들어온 idx line draw
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+this.element.fields[idx].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getImplementationPath(this.element.fields[idx].type)
+                }
+                if (endLine != null) {
+                    // 기존에 있던거 좌표 바꿔줘야함.
+                    if (this.$store.getters.getDeleteOpenElement(endLine) == -1) {
+                        this.$store.commit('editImplementation', {compo:"drag", uuid: endLine, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.Implementation_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/Fieldtable', endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/Fieldtable', end:endLine, iscircle:false, refNum:2, idxID: this.element.fields[idx].id})
+                }
+                this.refField = this.element.fields[idx].id
+            }
+        },
+        rowArgumentClick(idx) {
+            console.log('rowClick ' + idx)
+            if (this.refArgument != this.element.methods[this.methodTab].argument[idx].id) { // 같은거 계속 누르면 안됨
+                //기존것 delete하고 
+                this.clickOtherFields()
+                // 새로들어온 idx line draw
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+this.element.methods[this.methodTab].argument[idx].id +'-'+ this.element.methods[this.methodTab].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getImplementationPath(this.element.methods[this.methodTab].argument[idx].type)
+                }
+                if (endLine != null) {
+                    // 기존에 있던거 좌표 바꿔줘야함.
+                    if (this.$store.getters.getDeleteOpenElement(endLine) == -1) {
+                        this.$store.commit('editImplementation', {compo:"drag", uuid: endLine, top: this.element.top + 245, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.Implementation_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, end:endLine, iscircle:false, refNum:3, idxID: this.element.methods[this.methodTab].argument[idx].id, tabID: this.methodTab})
+                }
+                this.refArgument = this.element.methods[this.methodTab].argument[idx].id
+            }
+        },
+        rowErrorSetClick(idx) {
+            console.log('rowClick ' + idx)
+            if (this.refErrorSet != this.element.methods[this.methodTab].errorSet[idx].id) { // 같은거 계속 누르면 안됨
+                //기존것 delete하고 
+                this.clickOtherFields()
+                // 새로들어온 idx line draw
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+this.element.methods[this.methodTab].errorSet[idx].id+'-'+this.element.methods[this.methodTab].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getErrorSetPath(this.element.methods[this.methodTab].errorSet[idx].error)
+                }
+                if (endLine != null) {
+                    // 기존에 있던거 좌표 바꿔줘야함.
+                    if (this.$store.getters.getDeleteOpenElement(endLine) == -1) {
+                        this.$store.commit('editErrorSet', {compo:"drag", uuid: endLine, top: this.element.top + 810, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.Errorset_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, end:endLine, iscircle:false, refNum:4, idxID: this.element.methods[this.methodTab].errorSet[idx].id, tabID: this.methodTab})
+                }
+                this.refErrorSet = this.element.methods[this.methodTab].errorSet[idx].id
+            }
+        },
+        rowErrorClick(idx) {
+            console.log('rowClick ' + idx)
+            if (this.refError != this.element.methods[this.methodTab].error[idx].id) { // 같은거 계속 누르면 안됨
+                //기존것 delete하고 
+                this.clickOtherFields()
+                // 새로들어온 idx line draw
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+this.element.methods[this.methodTab].error[idx].id+'-'+this.element.methods[this.methodTab].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getErrorPath(this.element.methods[this.methodTab].error[idx].error)
+                }
+                if (endLine != null) {
+                    // 기존에 있던거 좌표 바꿔줘야함.
+                    if (this.$store.getters.getDeleteOpenElement(endLine) == -1) {
+                        this.$store.commit('editError', {compo:"drag", uuid: endLine, top: this.element.top + 1025, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.Error_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, end:endLine, iscircle:false, refNum:5, idxID: this.element.methods[this.methodTab].error[idx].id, tabID: this.methodTab})
+                }
+                this.refError = this.element.methods[this.methodTab].error[idx].id
+            }
+        },
+
         addEventItem() {
+            this.clickOtherFields()
             let res = true, n = 0
             while (res) {
                 n++
                 res = this.element.events.some(item => item.id === n)
             }
             this.editEventsItem.id = n
-
-            var datacount = this.element.events.length
+            var endLine = null
             if( this.editEventsItem.type != null) {
-                this.newLine(this.element.uuid+'/Eventtable-'+datacount, this.element.uuid+'/Eventtable', this.editEventsItem.type.uuid)
+                endLine = this.editEventsItem.type.uuid
+                if (this.$store.getters.getDeleteOpenElement(this.editEventsItem.type.uuid) == -1) {
+                    this.$store.commit('editImplementation', {compo:"drag", uuid: this.editEventsItem.type.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                }
+                this.$store.commit('setzIndexVisible', {parent:constant.Implementation_str, uuid: this.editEventsItem.type.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                
                 this.editEventsItem.type = this.editEventsItem.type.name
+                this.$nextTick(() => { 
+                    this.newLine(this.element.uuid+'/Eventtable-'+n, this.element.uuid+'/Eventtable', endLine, true)
+                    document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                })
+                this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/Eventtable', end:endLine, iscircle:false, refNum:1, idxID: this.editEventsItem.id})
             }
             const addObj = Object.assign({}, this.editEventsItem);
             this.element.events.push(addObj);
+            this.refEvent = n
             this.cancelEventItem()
         },
         addFieldItem() {
+            this.clickOtherFields()
             let res = true, n = 0
             while (res) {
                 n++
                 res = this.element.fields.some(item => item.id === n)
             }
             this.editFieldsItem.id = n
-
-            var datacount = this.element.fields.length
+            var endLine = null
             if( this.editFieldsItem.type != null) {
-                this.newLine(this.element.uuid+'/Fieldtable-'+datacount, this.element.uuid+'/Fieldtable', this.editFieldsItem.type.uuid)
+                endLine = this.editFieldsItem.type.uuid
+                if (this.$store.getters.getDeleteOpenElement(this.editFieldsItem.type.uuid) == -1) {
+                    this.$store.commit('editImplementation', {compo:"drag", uuid: this.editFieldsItem.type.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                }
+                this.$store.commit('setzIndexVisible', {parent:constant.Implementation_str, uuid: this.editFieldsItem.type.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                
                 this.editFieldsItem.type = this.editFieldsItem.type.name
+                this.$nextTick(() => { 
+                    this.newLine(this.element.uuid+'/Fieldtable-'+n, this.element.uuid+'/Fieldtable', endLine, true)
+                    document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                })
+                this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/Fieldtable', end:endLine, iscircle:false, refNum:2, idxID: this.editFieldsItem.id})
             }
             const addObj = Object.assign({}, this.editFieldsItem);
             this.element.fields.push(addObj);
+            this.refField = n
             this.cancelFieldItem()
         },
         cancelEventItem() {
@@ -699,6 +1172,7 @@ export default {
             this.setactiveUUID()
         },
         isEventCheckbox() {
+            this.clickOtherFields()
             if (this.isdeleteEventItem == true) {
                 this.selectDelectEventItem = []
                 this.isdeleteEventItem = false
@@ -707,33 +1181,29 @@ export default {
             }
         },
         deleteEventItem() {
+            this.clickOtherFields()
             if (this.isdeleteEventItem == true) {
-                for(let i=0; i<this.element.events.length; i++){
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+i)
-                    if(endLine != undefined) {
-                        this.changeLineEvent.push({id:this.element.events[i].id, endLine:endLine})
-                        this.deleteLine(this.element.uuid+'/Eventtable-'+i)
+                this.selectDelectEventItem.forEach(item => {
+                    for(let i=0; i<this.element.events.length; i++){
+                        if (item.id == this.element.events[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+this.element.events[i].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/Eventtable-'+this.element.events[i].id)
+                            }
+                        }
                     }
-                }
+                })
 
                 this.$store.commit('deleteRefTable', {deleteName:'eventSI', deletItemList: this.selectDelectEventItem, path: this.element.path, name: this.element.name})
                 this.element.events = this.element.events.filter(item => {
                          return this.selectDelectEventItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.element.events.length; n++) {
-                    for(let idx=0; idx<this.changeLineEvent.length; idx++) {
-                        if (this.element.events[n].id == this.changeLineEvent[idx].id) {
-                            this.newLine(this.element.uuid+'/Eventtable-'+n, this.element.uuid+'/Eventtable', this.changeLineEvent[idx].endLine)
-                        }
-                    }
-                }
-
                 this.isdeleteEventItem = false
                 this.selectDelectEventItem = []
-                this.changeLineEvent = []
             } 
         },
         isFieldCheckbox() {
+            this.clickOtherFields()
             if (this.isdeleteFieldItem == true) {
                 this.selectDelectFieldItem = []
                 this.isdeleteFieldItem = false
@@ -742,37 +1212,32 @@ export default {
             }
         },
         deleteFieldItem() {
+            this.clickOtherFields()
             if (this.isdeleteFieldItem == true) {
-                for(let i=0; i<this.element.fields.length; i++){
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+i)
-                    if(endLine != undefined) {
-                        this.changeLineField.push({id:this.element.fields[i].id, endLine:endLine})
-                        this.deleteLine(this.element.uuid+'/Fieldtable-'+i)
+                this.selectDelectFieldItem.forEach(item => {
+                    for(let i=0; i<this.element.fields.length; i++){
+                        if (item.id == this.element.fields[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+this.element.fields[i].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/Fieldtable-'+this.element.fields[i].id)
+                            }
+                        }
                     }
-                }
+                })
 
                 this.$store.commit('deleteRefTable', {deleteName:'fieldSI', deletItemList: this.selectDelectFieldItem, path: this.element.path, name: this.element.name})
                 this.element.fields = this.element.fields.filter(item => {
                          return this.selectDelectFieldItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.element.fields.length; n++) {
-                    for(let idx=0; idx<this.changeLineField.length; idx++) {
-                        if (this.element.fields[n].id == this.changeLineField[idx].id) {
-                            this.newLine(this.element.uuid+'/Fieldtable-'+n, this.element.uuid+'/Fieldtable', this.changeLineField[idx].endLine)
-                        }
-                    }
-                }
-         
                 this.isdeleteFieldItem = false
                 this.selectDelectFieldItem = []
-                this.changeLineField = []
             } 
         },
         openEventItem(idx) {
-            this.seltype = this.$store.getters.getImplementationDataType,
+            this.seltype = this.$store.getters.getImplementationDataType(''),
             this.editEventsItem.name = this.element.events[idx].name
             if ( this.element.events[idx].type != null) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+idx)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+this.element.events[idx].id)
                 if (endLine == undefined) {
                     endLine = this.$store.getters.getImplementationPath(this.element.events[idx].type)
                 }
@@ -781,11 +1246,11 @@ export default {
 
         },
         openFieldItem(idx) {
-            this.seltype = this.$store.getters.getImplementationDataType,
+            this.seltype = this.$store.getters.getImplementationDataType(''),
 
             this.editFieldsItem.name = this.element.fields[idx].name
             if ( this.element.fields[idx].type != null) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+idx)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+this.element.fields[idx].id)
                 if (endLine == undefined) {
                     endLine = this.$store.getters.getImplementationPath(this.element.fields[idx].type)
                 }
@@ -796,17 +1261,17 @@ export default {
             this.editFieldsItem.notifier = this.element.fields[idx].notifier
         },
         editEventItem(idx) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+idx)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+this.element.events[idx].id)
             if (endLine != undefined && this.editEventsItem.type == null) {
-                this.deleteLine(this.element.uuid+'/Eventtable-'+idx)
+                this.deleteLine(this.element.uuid+'/Eventtable-'+this.element.events[idx].id)
                 this.element.events[idx].type = null
             } else if (endLine != undefined && endLine != this.editEventsItem.type.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                this.deleteLine(this.element.uuid+'/Eventtable-'+idx)
-                this.newLine(this.element.uuid+'/Eventtable-'+idx, this.element.uuid+'/Eventtable', this.editEventsItem.type.uuid)
+                this.deleteLine(this.element.uuid+'/Eventtable-'+this.element.events[idx].id)
+                this.newLine(this.element.uuid+'/Eventtable-'+this.element.events[idx].id, this.element.uuid+'/Eventtable', this.editEventsItem.type.uuid, false)
                 this.element.events[idx].type = this.editEventsItem.type.name
             } else if (endLine == undefined && this.editEventsItem.type != null && this.editEventsItem.type.uuid != null) {
-                this.newLine(this.element.uuid+'/Eventtable-'+idx, this.element.uuid+'/Eventtable', this.editEventsItem.type.uuid)
+                this.newLine(this.element.uuid+'/Eventtable-'+this.element.events[idx].id, this.element.uuid+'/Eventtable', this.editEventsItem.type.uuid, false)
                 this.element.events[idx].type = this.editEventsItem.type.name
             }
 
@@ -814,27 +1279,60 @@ export default {
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'serviceEventD', listname: this.editEventsItem.name, beforename:this.element.events[idx].name} )
             }
+
+            if (this.refEvent == this.element.events[idx].id) {
+                this.deleteOpenElement()
+                if (this.editEventsItem.type != null && this.editEventsItem.type.uuid != null) {
+                    var endLineChange = this.editEventsItem.type.uuid 
+                    if (this.$store.getters.getDeleteOpenElement(this.editEventsItem.type.uuid) == -1) {
+                        this.$store.commit('editImplementation', {compo:"drag", uuid: this.editEventsItem.type.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.Implementation_str, uuid: this.editEventsItem.type.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/Eventtable', endLineChange)
+                        document.getElementById(endLineChange+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/Eventtable', end:endLineChange, iscircle:false, refNum:1, idxID: this.refEvent})
+                }
+            }
             this.element.events[idx].name = this.editEventsItem.name
             this.cancelEventItem()
         },
         editFieldItem(idx) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+idx)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+this.element.fields[idx].id)
             if (endLine != undefined && this.editFieldsItem.type == null) {
-                this.deleteLine(this.element.uuid+'/Fieldtable-'+idx)
+                this.deleteLine(this.element.uuid+'/Fieldtable-'+this.element.fields[idx].id)
                 this.element.fields[idx].type = null
             } else if (endLine != undefined && endLine != this.editFieldsItem.type.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                this.deleteLine(this.element.uuid+'/Fieldtable-'+idx)
-                this.newLine(this.element.uuid+'/Fieldtable-'+idx, this.element.uuid+'/Fieldtable', this.editFieldsItem.type.uuid)
+                this.deleteLine(this.element.uuid+'/Fieldtable-'+this.element.fields[idx].id)
+                this.newLine(this.element.uuid+'/Fieldtable-'+this.element.fields[idx].id, this.element.uuid+'/Fieldtable', this.editFieldsItem.type.uuid, false)
                 this.element.fields[idx].type = this.editFieldsItem.type.name
             }else if (endLine == undefined && this.editFieldsItem.type != null && this.editFieldsItem.type.uuid != null) {
-                this.newLine(this.element.uuid+'/Fieldtable-'+idx, this.element.uuid+'/Fieldtable', this.editFieldsItem.type.uuid)
+                this.newLine(this.element.uuid+'/Fieldtable-'+this.element.fields[idx].id, this.element.uuid+'/Fieldtable', this.editFieldsItem.type.uuid, false)
                 this.element.fields[idx].type = this.editFieldsItem.type.name
             }
 
             if (this.element.fields[idx].name != this.editFieldsItem.name){
                 this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                                           changeName: 'field', listname: this.editFieldsItem.name, beforename: this.element.fields[idx].name} )
+            }
+
+            if (this.refField == this.element.fields[idx].id) {
+                this.deleteOpenElement()
+                if (this.editFieldsItem.type != null && this.editFieldsItem.type.uuid != null) {
+                    var endLineChange = this.editFieldsItem.type.uuid
+                    if (this.$store.getters.getDeleteOpenElement(this.editFieldsItem.type.uuid) == -1) {
+                        this.$store.commit('editImplementation', {compo:"drag", uuid: this.editFieldsItem.type.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.Implementation_str, uuid: this.editFieldsItem.type.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/Fieldtable', endLineChange)
+                        document.getElementById(endLineChange+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/Fieldtable', end:endLineChange, iscircle:false, refNum:2, idxID: this.refField})
+                }
             }
 
             this.element.fields[idx].name = this.editFieldsItem.name
@@ -845,7 +1343,7 @@ export default {
         },
 
         setDataTypeList() {
-            this.seltype = this.$store.getters.getImplementationDataType
+            this.seltype = this.$store.getters.getImplementationDataType('')
             this.setactiveUUID()
         },
         inputServiceInfName() {
@@ -859,14 +1357,11 @@ export default {
             this.$store.commit('isintoErrorList', {uuid:this.element.uuid, namespace:this.element.namespace, path:this.element.path})
         },
         newDataType() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementImplementation', {
-                    name: this.$store.getters.getNameImplementation, path: '',
-                    top: elementY, left: elementX,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    name: this.$store.getters.getNameImplementation, path: '', input: false,
+                    top: this.element.top, left: this.element.left + this.$setPositionLeft,  zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     category:'', namespace:'', arraysize:'', typeemitter:'', traceName: '', trace: [],
-                    typeref: null, templatetype:null, desc:'', ddpc:[], idtelement:[],
+                    typeref: null, templatetype:[], desc:'', ddpc:[], idtelement:[],
             })
             EventBus.$emit('add-element', constant.Implementation_str)
             EventBus.$emit('add-element', constant.DateType_str)
@@ -877,8 +1372,8 @@ export default {
             if (this.isEditingEventDataType == true) {
                 if (this.editEventsItem.type != null && this.editEventsItem.type.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editEventsItem.type.uuid, element: constant.Implementation_str} )
-                    document.getElementById(this.editEventsItem.type.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editEventsItem.type.uuid)
+                    // document.getElementById(this.editEventsItem.type.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', this.editEventsItem.type.uuid)
                 }
                 this.setDataTypeList()
                 this.isEditingEventDataType = false
@@ -899,8 +1394,8 @@ export default {
             if (this.isEditingFieldDataType == true) {
                 if (this.editFieldsItem.type != null && this.editFieldsItem.type.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editFieldsItem.type.uuid, element: constant.Implementation_str} )
-                    document.getElementById(this.editFieldsItem.type.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editFieldsItem.type.uuid)
+                    // document.getElementById(this.editFieldsItem.type.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', this.editFieldsItem.type.uuid)
                 }
                 this.setDataTypeList()
                 this.isEditingFieldDataType = false
@@ -910,22 +1405,26 @@ export default {
         },
 
         showArgument() {
+            this.clickOtherFields()
             this.isArgumentOpenClose = this.isArgumentOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
-            EventBus.$emit('drawLine')
+            //EventBus.$emit('drawLine')
         },
         showErrorSet() {
+            this.clickOtherFields()
             this.isErrorSetOpenClose = this.isErrorSetOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
-            EventBus.$emit('drawLine')
+            //EventBus.$emit('drawLine')
         },
         showError() {
+            this.clickOtherFields()
             this.isErrorOpenClose = this.isErrorOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
-            EventBus.$emit('drawLine')
+            //EventBus.$emit('drawLine')
         },
 
         addMethod() {
+            this.clickOtherFields()
             const editItem = { name: '', fireforget: null, argument: [], errorSet: [], error: [], descrip: '', id:''}
             const addObj = new Object(editItem)
             let res = true, n = 0
@@ -940,6 +1439,9 @@ export default {
             if (this.location == 1) {
                 EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
             }
+            this.$store.commit('setOpenCloseServiceInterface', {
+                                uuid: this.element.uuid, left: this.element.left, top: this.element.top,
+                                beforElement: constant.SWComponents_str, nowElement: constant.ServiceInterface_str})
         },
         clickMethodtab() {
             this.selDeleteArgItem = []
@@ -950,59 +1452,46 @@ export default {
             this.isdeleteError = false
         },
         changeMethodTab() {
-            if(this.element.methods.length > 0 && this.location == 1 && this.methodTab != undefined) {
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.element.methods[this.methodTab].id)}, 300);
+            if (this.refArgument != null || this.refErrorSet != null || this.refError != null) {
+                this.deleteOpenElement()
+                this.refArgument = null
+                this.refErrorSet = null
+                this.refError = null
             }
+            /*if(this.element.methods.length > 0 && this.location == 1 && this.methodTab != undefined) {
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.methodTab, this.element.methods[this.methodTab].id)}, 300);
+            }*/
         },
         deleteMethod(idx) {
+            this.clickOtherFields()
             var endLine
             this.$store.commit('deleteRefTable', {deleteName:'methodSI', deleteTab:true, tabName: this.element.methods[idx].name, path: this.element.path, name: this.element.name})
 
-            for(let i=0; i<this.element.methods[idx].argument.length; i++){
-                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+i+'-'+idx)
+            this.element.methods[idx].argument.forEach(item => {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+item.id+'-'+this.element.methods[idx].id)
                 if(endLine != undefined) {
-                    this.deleteLine(this.element.uuid+'/argtable-'+i+'-'+idx)
+                    this.deleteLine(this.element.uuid+'/argtable-'+item.id+'-'+this.element.methods[idx].id)
                 }
-            }
-            for(let i=0; i<this.element.methods[idx].errorSet.length; i++){
-                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+i+'-'+idx)
+            })
+            this.element.methods[idx].errorSet.forEach(item => {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+item.id+'-'+this.element.methods[idx].id)
                 if(endLine != undefined) {
-                    this.deleteLine(this.element.uuid+'/methoderrors-'+i+'-'+idx)
+                    this.deleteLine(this.element.uuid+'/methoderrors-'+item.id+'-'+this.element.methods[idx].id)
                 }
-            }
-            for(let i=0; i<this.element.methods[idx].error.length; i++){
-                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+i+'-'+idx)
+            })
+            this.element.methods[idx].error.forEach(item => {
+                endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+item.id+'-'+this.element.methods[idx].id)
                 if(endLine != undefined) {
-                    this.deleteLine(this.element.uuid+'/methoderror-'+i+'-'+idx)
+                    this.deleteLine(this.element.uuid+'/methoderror-'+item.id+'-'+this.element.methods[idx].id)
                 }
-            }
-
-            for(let n=idx+1; n<this.element.methods.length; n++){
-                for(let i=0; i<this.element.methods[n].argument.length; i++){
-                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+i+'-'+n)
-                    if(endLine != undefined) {
-                        this.deleteLine(this.element.uuid+'/argtable-'+i+'-'+n)
-                        this.newLine(this.element.uuid+'/argtable-'+i+'-'+(n-1), this.element.uuid+'/methods', endLine)
-                    }
-                }
-                for(let i=0; i<this.element.methods[n].errorSet.length; i++){
-                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+i+'-'+n)
-                    if(endLine != undefined) {
-                        this.deleteLine(this.element.uuid+'/methoderrors-'+i+'-'+n)
-                        this.newLine(this.element.uuid+'/methoderrors-'+i+'-'+(n-1), this.element.uuid+'/methods', endLine)
-                    }
-                }
-                for(let i=0; i<this.element.methods[n].error.length; i++){
-                    endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+i+'-'+n)
-                    if(endLine != undefined) {
-                        this.deleteLine(this.element.uuid+'/methoderror-'+i+'-'+n)
-                        this.newLine(this.element.uuid+'/methoderror-'+i+'-'+(n-1), this.element.uuid+'/methods', endLine)
-                    }
-                }
-            }
+            })
             this.element.methods.splice(idx, 1)
+            this.$store.commit('setOpenCloseServiceInterface', {
+                                uuid: this.element.uuid, left: this.element.left, top: this.element.top,
+                                beforElement: constant.SWComponents_str, nowElement: constant.ServiceInterface_str})
         },
         clickMethodName(name) {
+            this.clickOtherFields()
             this.beforeName = name
         },
         inputMethodName(name) {
@@ -1012,6 +1501,7 @@ export default {
         },
 
         isCheckArg() {
+            this.clickOtherFields()
             if (this.isdeleteArg == true) {
                 this.isdeleteArg = false
                 this.selDeleteArgItem = []
@@ -1020,36 +1510,31 @@ export default {
             }
         },
         deleteArg() {
+            this.clickOtherFields()
             if (this.isdeleteArg == true) {
-                for(let i=0; i<this.element.methods[this.methodTab].argument.length; i++){
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+i+'-'+this.methodTab)
-                    if(endLine != undefined) {
-                        this.changeLineArg.push({id:this.element.methods[this.methodTab].argument[i].id, endLine:endLine})
-                        this.deleteLine(this.element.uuid+'/argtable-'+i+'-'+this.methodTab)
+                this.selDeleteArgItem.forEach(item => {
+                    for(let i=0; i<this.element.methods[this.methodTab].argument.length; i++){
+                        if (item.id == this.element.methods[this.methodTab].argument[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+this.element.methods[this.methodTab].argument[i].id +'-'+ this.element.methods[this.methodTab].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/argtable-'+this.element.methods[this.methodTab].argument[i].id +'-'+ this.element.methods[this.methodTab].id)
+                            }
+                        }
                     }
-                }
+                })
 
                 this.element.methods[this.methodTab].argument = this.element.methods[this.methodTab].argument.filter(item => {
                          return this.selDeleteArgItem.indexOf(item) < 0 })
 
-                for(let n=0; n<this.element.methods[this.methodTab].argument.length; n++) {
-                    for(let idx=0; idx<this.changeLineArg.length; idx++) {
-                        if (this.element.methods[this.methodTab].argument[n].id == this.changeLineArg[idx].id) {
-                            this.newLine(this.element.uuid+'/argtable-'+n+'-'+this.methodTab, this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, this.changeLineArg[idx].endLine)
-                        }
-                    }
-                }
-
                 this.isdeleteArg = false
                 this.selDeleteArgItem = []
-                this.changeLineArg = []
             }
         },
         openArg(idx) {
-            this.seltype = this.$store.getters.getImplementationDataType,
+            this.seltype = this.$store.getters.getImplementationDataType(''),
             this.editArgItem.name = this.element.methods[this.methodTab].argument[idx].name
             if ( this.element.methods[this.methodTab].argument[idx].type != null) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+idx)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+this.element.methods[this.methodTab].argument[idx].id+'-'+this.element.methods[this.methodTab].id)
                 if (endLine == undefined) {
                     endLine = this.$store.getters.getImplementationPath(this.element.methods[this.methodTab].argument[idx].type)
                 }
@@ -1059,18 +1544,36 @@ export default {
             this.editArgItem.descrip = this.element.methods[this.methodTab].argument[idx].descrip
         },
         editArg(idx) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+this.element.methods[this.methodTab].argument[idx].id+'-'+this.element.methods[this.methodTab].id)
             if (endLine != undefined && this.editArgItem.type == null) {
-                this.deleteLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab)
+                this.deleteLine(this.element.uuid+'/argtable-'+this.element.methods[this.methodTab].argument[idx].id+'-'+this.element.methods[this.methodTab].id)
                 this.element.methods[this.methodTab].argument[idx].type = null
             } else if (endLine != undefined && endLine != this.editArgItem.type.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                this.deleteLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab)
-                this.newLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab, this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, this.editArgItem.type.uuid)
+                this.deleteLine(this.element.uuid+'/argtable-'+this.element.methods[this.methodTab].argument[idx].id+'-'+this.element.methods[this.methodTab].id)
+                this.newLine(this.element.uuid+'/argtable-'+this.element.methods[this.methodTab].argument[idx].id+'-'+this.element.methods[this.methodTab].id, 
+                                this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, this.editArgItem.type.uuid, false)
                 this.element.methods[this.methodTab].argument[idx].type = this.editArgItem.type.name
             }else if (endLine == undefined && this.editArgItem.type != null && this.editArgItem.type.uuid != null) {
-                this.newLine(this.element.uuid+'/argtable-'+idx+'-'+this.methodTab, this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, this.editArgItem.type.uuid)
+                this.newLine(this.element.uuid+'/argtable-'+this.element.methods[this.methodTab].argument[idx].id+'-'+this.element.methods[this.methodTab].id, 
+                                this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, this.editArgItem.type.uuid, false)
                 this.element.methods[this.methodTab].argument[idx].type = this.editArgItem.type.name
+            }
+
+            if (this.refArgument == this.element.methods[this.methodTab].argument[idx].id) {
+                this.deleteOpenElement()
+                if (this.editArgItem.type != null && this.editArgItem.type.uuid != null) {
+                    var endLineChange = this.editArgItem.type.uuid
+                    if (this.$store.getters.getDeleteOpenElement(endLine) == -1) {
+                        this.$store.commit('editImplementation', {compo:"drag", uuid: this.editArgItem.type.uuid, top: this.element.top + 245, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.Implementation_str, uuid: this.editArgItem.type.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, endLineChange)
+                        document.getElementById(endLineChange+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, end:endLineChange, iscircle:false, refNum:3, idxID: this.refArgument, tabID: this.methodTab})
+                }
             }
 
             this.element.methods[this.methodTab].argument[idx].name = this.editArgItem.name
@@ -1083,20 +1586,31 @@ export default {
             this.setactiveUUID()
         },
         addArg() {
+            this.clickOtherFields()
             let res = true, n = 0
             while (res) {
                 n++
                 res = this.element.methods[this.methodTab].argument.some(item => item.id === n)
             }
             this.editArgItem.id = n
-
+            var endLine = null
             if( this.editArgItem.type != null) {
-                var datacount = this.element.methods[this.methodTab].argument.length
-                this.newLine(this.element.uuid+'/argtable-'+datacount+'-'+this.methodTab, this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, this.editArgItem.type.uuid)
+                endLine = this.editArgItem.type.uuid
+                if (this.$store.getters.getDeleteOpenElement(this.editArgItem.type.uuid) == -1) {
+                    this.$store.commit('editImplementation', {compo:"drag", uuid: this.editArgItem.type.uuid, top: this.element.top + 245, left: this.element.left + this.$setPositionLeft} )
+                }
+                this.$store.commit('setzIndexVisible', {parent:constant.Implementation_str, uuid: this.editArgItem.type.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
                 this.editArgItem.type = this.editArgItem.type.name
+                this.$nextTick(() => { 
+                    this.newLine(this.element.uuid+'/argtable-'+n+'-'+this.element.methods[this.methodTab].id, this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id,
+                                 endLine, true)
+                    document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                })
+                this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/argtable'+this.element.methods[this.methodTab].id, end:endLine, iscircle:false, refNum:3, idxID: this.editArgItem.id, tabID: this.methodTab})
             }
             const addObj = Object.assign({}, this.editArgItem);
             this.element.methods[this.methodTab].argument.push(addObj);
+            this.refArgument = n
             this.cancelArg()
         },
         clearArgType() {
@@ -1107,8 +1621,8 @@ export default {
             if (this.isEditingArgType == true) { 
                 if (this.editArgItem.type != null && this.editArgItem.type.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editArgItem.type.uuid, element: constant.Implementation_str} )
-                    document.getElementById(this.editArgItem.type.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editArgItem.type.uuid)
+                    // document.getElementById(this.editArgItem.type.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', this.editArgItem.type.uuid)
                 }
                 this.setDataTypeList()
                 this.isEditingArgType = false
@@ -1118,6 +1632,7 @@ export default {
         },
 
         isCheckErrorSet() {
+            this.clickOtherFields()
             if (this.isdeleteErrorSet == true) {
                 this.isdeleteErrorSet = false
                 this.selDeleteErrorSet = []
@@ -1126,29 +1641,24 @@ export default {
             }
         },
         deleteErrorSet() {
+            this.clickOtherFields()
             if (this.isdeleteErrorSet == true) {
-                for(let i=0; i<this.element.methods[this.methodTab].errorSet.length; i++){
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+i+'-'+this.methodTab)
-                    if(endLine != undefined) {
-                        this.changeLineES.push({id:this.element.methods[this.methodTab].errorSet[i].id, endLine:endLine})
-                        this.deleteLine(this.element.uuid+'/methoderrors-'+i+'-'+this.methodTab)
+                this.selDeleteErrorSet.forEach(item => {
+                    for(let i=0; i<this.element.methods[this.methodTab].errorSet.length; i++){
+                        if (item.id == this.element.methods[this.methodTab].errorSet[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+this.element.methods[this.methodTab].errorSet[i].id+'-'+this.element.methods[this.methodTab].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/methoderrors-'+this.element.methods[this.methodTab].errorSet[i].id+'-'+this.element.methods[this.methodTab].id)
+                            }
+                        }
                     }
-                }
+                })
 
                 this.element.methods[this.methodTab].errorSet = this.element.methods[this.methodTab].errorSet.filter(item => {
                         return this.selDeleteErrorSet.indexOf(item) < 0 })
 
-                for(let n=0; n<this.element.methods[this.methodTab].errorSet.length; n++) {
-                    for(let idx=0; idx<this.changeLineES.length; idx++) {
-                        if (this.element.methods[this.methodTab].errorSet[n].id == this.changeLineES[idx].id) {
-                            this.newLine(this.element.uuid+'/methoderrors-'+n+'-'+this.methodTab, this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, this.changeLineES[idx].endLine)
-                        }
-                    }
-                }
-
                 this.isdeleteErrorSet = false
                 this.selDeleteErrorSet = []
-                this.changeLineES = []
             } 
         },
         clearErrorSet() {
@@ -1159,8 +1669,8 @@ export default {
             if (this.isEditingErrorSet == true) {
                 if (this.editErrorSetItem.error != null && this.editErrorSetItem.error.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editErrorSetItem.error.uuid, element: constant.Errorset_str} )
-                    document.getElementById(this.editErrorSetItem.error.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editErrorSetItem.error.uuid)
+                    // document.getElementById(this.editErrorSetItem.error.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', this.editErrorSetItem.error.uuid)
                 }
                 this.setErrorSetList()
                 this.isEditingErrorSet = false
@@ -1175,7 +1685,7 @@ export default {
         openErrorSet(idx) {
             this.selErrorSet = this.$store.getters.getErrorSet
             if ( this.element.methods[this.methodTab].errorSet[idx].error != null) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+idx)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+this.element.methods[this.methodTab].errorSet[idx].id+'-'+this.element.methods[this.methodTab].id)
                 if (endLine == undefined) {
                     endLine = this.$store.getters.getErrorSetPath(this.element.methods[this.methodTab].errorSet[idx].error)
                 }
@@ -1183,18 +1693,36 @@ export default {
             }
         },
         editErrorSet(idx) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+this.element.methods[this.methodTab].errorSet[idx].id+'-'+this.element.methods[this.methodTab].id)
             if (endLine != undefined && this.editErrorSetItem.error == null) {
-                this.deleteLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab)
+                this.deleteLine(this.element.uuid+'/methoderrors-'+this.element.methods[this.methodTab].errorSet[idx].id+'-'+this.element.methods[this.methodTab].id)
                 this.element.methods[this.methodTab].errorSet[idx].error = null
             } else if (endLine != undefined && endLine != this.editErrorSetItem.error.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                this.deleteLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab)
-                this.newLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, this.editErrorSetItem.error.uuid)
+                this.deleteLine(this.element.uuid+'/methoderrors-'+this.element.methods[this.methodTab].errorSet[idx].id+'-'+this.element.methods[this.methodTab].id)
+                this.newLine(this.element.uuid+'/methoderrors-'+this.element.methods[this.methodTab].errorSet[idx].id+'-'+this.element.methods[this.methodTab].id, 
+                                this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, this.editErrorSetItem.error.uuid, false)
                 this.element.methods[this.methodTab].errorSet[idx].error = this.editErrorSetItem.error.name
             } else if (endLine == undefined && this.editErrorSetItem.error != null && this.editErrorSetItem.error.uuid != null) {
-                this.newLine(this.element.uuid+'/methoderrors-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, this.editErrorSetItem.error.uuid)
+                this.newLine(this.element.uuid+'/methoderrors-'+this.element.methods[this.methodTab].errorSet[idx].id+'-'+this.element.methods[this.methodTab].id,
+                                 this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, this.editErrorSetItem.error.uuid, false)
                 this.element.methods[this.methodTab].errorSet[idx].error = this.editErrorSetItem.error.name
+            }
+
+            if (this.refErrorSet == this.element.methods[this.methodTab].errorSet[idx].id) {
+                this.deleteOpenElement()
+                if (this.editErrorSetItem.error != null && this.editErrorSetItem.error.uuid != null) {
+                    var endLineChange = this.editErrorSetItem.error.uuid
+                    if (this.$store.getters.getDeleteOpenElement(this.editErrorSetItem.error.uuid) == -1) {
+                        this.$store.commit('editErrorSet', {compo:"drag", uuid: this.editErrorSetItem.error.uuid, top: this.element.top + 810, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.Errorset_str, uuid: this.editErrorSetItem.error.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, endLineChange)
+                        document.getElementById(endLineChange+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, end:endLineChange, iscircle:false, refNum:4, idxID: this.refErrorSet, tabID: this.methodTab})
+                }
             }
             
             this.cancelErrorSet()
@@ -1204,30 +1732,37 @@ export default {
             this.setactiveUUID()
         },
         addErrorSet() {
+            this.clickOtherFields()
             let res = true, n = 0
             while (res) {
                 n++
                 res = this.element.methods[this.methodTab].errorSet.some(item => item.id === n)
             }
             this.editErrorSetItem.id = n
-
+            var endLine = null
             if( this.editErrorSetItem.error != null) {
-                var datacount = this.element.methods[this.methodTab].errorSet.length
-                this.newLine(this.element.uuid+'/methoderrors-'+datacount+'-'+this.methodTab, this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, this.editErrorSetItem.error.uuid)
+                endLine = this.editErrorSetItem.error.uuid
+                if (this.$store.getters.getDeleteOpenElement(this.editErrorSetItem.error.uuid) == -1) {
+                    this.$store.commit('editErrorSet', {compo:"drag", uuid: this.editErrorSetItem.error.uuid, top: this.element.top + 810, left: this.element.left + this.$setPositionLeft} )
+                }
+                this.$store.commit('setzIndexVisible', {parent:constant.Errorset_str, uuid: this.editErrorSetItem.error.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
                 this.editErrorSetItem.error = this.editErrorSetItem.error.name
+                this.$nextTick(() => { 
+                    this.newLine(this.element.uuid+'/methoderrors-'+n+'-'+this.element.methods[this.methodTab].id, this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id,
+                                 endLine, true)
+                    document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                })
+                this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/methoderrors'+this.element.methods[this.methodTab].id, end:endLine, iscircle:false, refNum:4, idxID: this.editErrorSetItem.id, tabID: this.methodTab})
             }
             const addObj = Object.assign({}, this.editErrorSetItem)
             this.element.methods[this.methodTab].errorSet.push(addObj);
-
+            this.refErrorSet = n
             this.cancelErrorSet()
         },
         newErrorSet() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementErrorSet', {
-                name: this.$store.getters.getNameErrorSet, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNameErrorSet, path: '', input: false,
+                top: this.element.top, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 errorref: [],
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -1236,6 +1771,7 @@ export default {
         },
 
         isCheckError() {
+            this.clickOtherFields()
             if (this.isdeleteError == true) {
                 this.isdeleteError = false
                 this.selDeleteError = []
@@ -1244,29 +1780,24 @@ export default {
             }
         },
         deleteError() {
+            this.clickOtherFields()
             if (this.isdeleteError == true) {
-                for(let i=0; i<this.element.methods[this.methodTab].error.length; i++){
-                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+i+'-'+this.methodTab)
-                    if(endLine != undefined) {
-                        this.changeLineE.push({id:this.element.methods[this.methodTab].error[i].id, endLine:endLine})
-                        this.deleteLine(this.element.uuid+'/methoderror-'+i+'-'+this.methodTab)
+                this.selDeleteError.forEach(item => {
+                    for(let i=0; i<this.element.methods[this.methodTab].error.length; i++){
+                        if (item.id == this.element.methods[this.methodTab].error[i].id) {
+                            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+this.element.methods[this.methodTab].error[i].id+'-'+this.element.methods[this.methodTab].id)
+                            if(endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/methoderror-'+this.element.methods[this.methodTab].error[i].id+'-'+this.element.methods[this.methodTab].id)
+                            }
+                        }
                     }
-                }
+                })
 
                 this.element.methods[this.methodTab].error = this.element.methods[this.methodTab].error.filter(item => {
                         return this.selDeleteError.indexOf(item) < 0 })
 
-                for(let n=0; n<this.element.methods[this.methodTab].error.length; n++) {
-                    for(let idx=0; idx<this.changeLineE.length; idx++) {
-                        if (this.element.methods[this.methodTab].error[n].id == this.changeLineE[idx].id) {
-                            this.newLine(this.element.uuid+'/methoderror-'+n+'-'+this.methodTab, this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, this.changeLineE[idx].endLine)
-                        }
-                    }
-                }
-
                 this.isdeleteError = false
                 this.selDeleteError = []
-                this.changeLineE = []
             } 
         },
         clearErrorRef() {
@@ -1277,8 +1808,8 @@ export default {
             if (this.isEditingError == true) {
                 if (this.editErrorItem.error != null && this.editErrorItem.error.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editErrorItem.error.uuid, element: constant.Error_str} )
-                    document.getElementById(this.editErrorItem.error.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editErrorItem.error.uuid)
+                    // document.getElementById(this.editErrorItem.error.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', this.editErrorItem.error.uuid)
                 }
                 this.setErrorList()
                 this.isEditingError = false
@@ -1294,7 +1825,7 @@ export default {
             this.selError = this.$store.getters.getError
 
             if ( this.element.methods[this.methodTab].error[idx].error != null) {
-                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+idx)
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+this.element.methods[this.methodTab].error[idx].id+'-'+this.element.methods[this.methodTab].id)
                 if (endLine == undefined) {
                     endLine = this.$store.getters.getErrorPath(this.element.methods[this.methodTab].error[idx].error)
                 }
@@ -1302,18 +1833,36 @@ export default {
             }
         },
         editError(idx) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab)
+            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+this.element.methods[this.methodTab].error[idx].id+'-'+this.element.methods[this.methodTab].id)
             if (endLine != undefined && this.editErrorItem.error == null) {
-                this.deleteLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab)
+                this.deleteLine(this.element.uuid+'/methoderror-'+this.element.methods[this.methodTab].error[idx].id+'-'+this.element.methods[this.methodTab].id)
                 this.element.methods[this.methodTab].error[idx].error = null
             } else if (endLine != undefined && endLine != this.editErrorItem.error.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
-                this.deleteLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab)
-                this.newLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, this.editErrorItem.error.uuid)
+                this.deleteLine(this.element.uuid+'/methoderror-'+this.element.methods[this.methodTab].error[idx].id+'-'+this.element.methods[this.methodTab].id)
+                this.newLine(this.element.uuid+'/methoderror-'+this.element.methods[this.methodTab].error[idx].id+'-'+this.element.methods[this.methodTab].id, 
+                                this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, this.editErrorItem.error.uuid, false)
                 this.element.methods[this.methodTab].error[idx].error = this.editErrorItem.error.name
             } else if (endLine == undefined && this.editErrorItem.error != null && this.editErrorItem.error.uuid != null) {
-                this.newLine(this.element.uuid+'/methoderror-'+idx+'-'+this.methodTab, this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, this.editErrorItem.error.uuid)
+                this.newLine(this.element.uuid+'/methoderror-'+this.element.methods[this.methodTab].error[idx].id+'-'+this.element.methods[this.methodTab].id,
+                                 this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, this.editErrorItem.error.uuid, false)
                 this.element.methods[this.methodTab].error[idx].error = this.editErrorItem.error.name
+            }
+
+            if (this.refError == this.element.methods[this.methodTab].error[idx].id) {
+                this.deleteOpenElement()
+                if (this.editErrorItem.error != null && this.editErrorItem.error.uuid != null) {
+                    var endLineChange = this.editErrorItem.error.uuid
+                    if (this.$store.getters.getDeleteOpenElement(this.editErrorItem.error.uuid) == -1) {
+                        this.$store.commit('editError', {compo:"drag", uuid: this.editErrorItem.error.uuid, top: this.element.top + 1025, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.Error_str, uuid: this.editErrorItem.error.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, endLineChange)
+                        document.getElementById(endLineChange+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, end:endLineChange, iscircle:false, refNum:5, idxID: this.refError, tabID: this.methodTab})
+                }
             }
             
             this.cancelError()
@@ -1323,30 +1872,37 @@ export default {
             this.setactiveUUID()
         },
         addError() {
+            this.clickOtherFields()
             let res = true, n = 0
             while (res) {
                 n++
                 res = this.element.methods[this.methodTab].error.some(item => item.id === n)
             }
             this.editErrorItem.id = n
-
+            var endLine = null
             if( this.editErrorItem.error != null) {
-                var datacount = this.element.methods[this.methodTab].error.length
-                this.newLine(this.element.uuid+'/methoderror-'+datacount+'-'+this.methodTab, this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, this.editErrorItem.error.uuid)
+                endLine = this.editErrorItem.error.uuid
+                if (this.$store.getters.getDeleteOpenElement(this.editErrorItem.error.uuid) == -1) {
+                    this.$store.commit('editError', {compo:"drag", uuid: this.editErrorItem.error.uuid, top: this.element.top + 1025, left: this.element.left + this.$setPositionLeft} )
+                }
+                this.$store.commit('setzIndexVisible', {parent:constant.Error_str, uuid: this.editErrorItem.error.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
                 this.editErrorItem.error = this.editErrorItem.error.name
+                this.$nextTick(() => { 
+                    this.newLine(this.element.uuid+'/methoderror-'+n+'-'+this.element.methods[this.methodTab].id, this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, 
+                                endLine, true)
+                    document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                })
+                this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/methoderror'+this.element.methods[this.methodTab].id, end:endLine, iscircle:false, refNum:5, idxID: this.editErrorItem.id, tabID: this.methodTab})
             }
             const addObj = Object.assign({}, this.editErrorItem)
             this.element.methods[this.methodTab].error.push(addObj);
-
+            this.refError = n
             this.cancelError()
         },
         newError() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementError', {
-                name: this.$store.getters.getNameError, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNameError, path: '', input: false,
+                top: this.element.top, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 desc: '', errorcode: '', errorDref: null
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -1361,37 +1917,475 @@ export default {
         deleteLine(fineLine) {
             var linenum = this.$store.getters.getconnectLineNum(fineLine)
             if (linenum != -1) {
-                EventBus.$emit('delete-line', linenum)
                 this.$store.commit('deletConnectionline', {startnum: linenum} )
+                this.deleteOpenElement()
             }
         },
-        newLine(startLine, drawLine, endLine) {
+        deleteOpenElement() {
+            //EventBus.$emit('delete-line', this.$store.getters.getDeleteOpenElement(this.element.uuid))
+            this.$store.commit('deleteOpenElemnt', {uuid: this.element.uuid, isDeleteAll: false, startUUID: this.element.uuid} )
+        },
+        newLine(startLine, drawLine, endLine, isView) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
-            EventBus.$emit('new-line', drawLine, endLine)
+            if (isView) {
+                EventBus.$emit('new-line', drawLine, endLine)
+            }
         },
-        searchChangeName(isInArg) {
-            console.log('=searchChangeName='+isInArg)
-            if (isInArg) { //inArg일 경우
-                for (let i = 0; i<this.inArgumentItem.length; i++) {
-                    if (this.afterEditInArgLine[i].enduuid != null) {
-                        var changeName = this.$store.getters.getImplementationName(this.afterEditInArgLine[i].enduuid)
-                        if (changeName != this.inArgumentItem[i].type) {
-                            this.inArgumentItem[i].type = changeName
-                        }
-                    }
-                }
-            } else { //outArg일 경우
-                for (let i = 0; i<this.outArgumentItem.length; i++) {
-                    if (this.afterEditOutArgLine[i].enduuid != null) {
-                        var changeNameOut = this.$store.getters.getImplementationName(this.afterEditOutArgLine[i].enduuid)
-                        if (this.afterEditOutArgLine[i].enduuid != null && changeNameOut != this.outArgumentItem[i].type) {
-                            this.outArgumentItem[i].type = changeNameOut
-                        }
-                    }
+        
+
+        viewARXML() {
+            this.editARXML.name = this.element.name
+            this.editARXML.versionMaj = this.element.versionMaj
+            this.editARXML.versionMin = this.element.versionMin
+            this.editARXML.namespace = this.element.namespace
+            this.editARXML.isservice = this.element.isservice
+            this.editARXML.events = JSON.parse(JSON.stringify(this.element.events))
+            this.editARXML.fields = JSON.parse(JSON.stringify(this.element.fields))
+            this.editARXML.methods = JSON.parse(JSON.stringify(this.element.methods))
+            this.dialogText= true
+        },
+        saveARXML() {
+            if (this.element.name != this.editARXML.name) {
+                this.$store.commit('editServiceInterface', {compo:"Name", uuid:this.element.uuid, name:this.editARXML.name} )
+                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.editARXML.name} )
+                if (this.editARXML.name != '') {
+                    this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.editARXML.name, path:this.element.path})
                 }
             }
-        }
+            this.element.name = this.editARXML.name
+            this.element.versionMaj = this.editARXML.versionMaj
+            this.element.versionMin = this.editARXML.versionMin
+            this.element.namespace = this.editARXML.namespace
+            this.element.isservice = this.editARXML.isservice
 
+            this.editTableList()
+            var endLine = null, changEndLine = null
+
+            if (this.editARXML.events.length > 0) {
+                this.editARXML.events.forEach(item => {
+                    var isHaveTable = false
+                    for(let n=0; n<this.element.events.length; n++){
+                        if (this.element.events[n].id == item.id &&
+                            this.element.events[n].type == item.type ) {
+                            isHaveTable = true
+                        }
+                    }
+                    if (!isHaveTable) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/Eventtable-'+item.id)
+                        }
+                        changEndLine = this.$store.getters.getImplementationPath(item.type)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/Eventtable-'+item.id, this.element.uuid+'/Eventtable', changEndLine, false)
+                        }
+                    }
+                })
+                this.element.events.forEach(item => {
+                    var isHaveTable = false
+                    this.editARXML.events.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/Eventtable-'+item.id)
+                        }
+                    }
+                })
+            } else {
+                if (this.element.events.length > 0) {
+                    this.element.events.forEach(item => {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Eventtable-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/Eventtable-'+item.id)
+                        }
+                    })
+                }
+            }
+            this.element.events = JSON.parse(JSON.stringify(this.editARXML.events))
+
+            if (this.editARXML.fields.length > 0) {
+                this.editARXML.fields.forEach(item => {
+                    var isHaveTable = false
+                    for(let n=0; n<this.element.fields.length; n++){
+                        if (this.element.fields[n].id == item.id &&
+                            this.element.fields[n].type == item.type ) {
+                            isHaveTable = true
+                        }
+                    }
+                    if (!isHaveTable) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/Fieldtable-'+item.id)
+                        }
+                        changEndLine = this.$store.getters.getImplementationPath(item.type)
+                        if (changEndLine != null) {
+                            this.newLine(this.element.uuid+'/Fieldtable-'+item.id, this.element.uuid+'/Fieldtable', changEndLine, false)
+                        }
+                    }
+                })
+                this.element.fields.forEach(item => {
+                    var isHaveTable = false
+                    this.editARXML.fields.forEach(edit => {
+                        if (edit.id == item.id) {
+                            isHaveTable = true
+                        }
+                    })
+                    if (!isHaveTable) {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/Fieldtable-'+item.id)
+                        }
+                    }
+                })
+            } else {
+                if (this.element.fields.length > 0) {
+                    this.element.fields.forEach(item => {
+                        endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/Fieldtable-'+item.id)
+                        if (endLine != undefined) {
+                            this.deleteLine(this.element.uuid+'/Fieldtable-'+item.id)
+                        }
+                    })
+                }
+            }
+            this.element.fields = JSON.parse(JSON.stringify(this.editARXML.fields))
+
+            if (this.editARXML.methods.length > 0) {
+                this.editARXML.methods.forEach(item => {
+                    item.argument.forEach(arr => {
+                        var isHaveTableArg = false
+                        this.element.methods.forEach(met => {
+                            met.argument.forEach(arg => {
+                                if (arg.id == arr.id && arg.type == arr.type) {
+                                    isHaveTableArg = true
+                                }
+                            })
+                        })
+                        if (!isHaveTableArg) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+arr.id+'-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/argtable-'+arr.id+'-'+item.id)
+                            }
+                            changEndLine = this.$store.getters.getImplementationPath(arr.type)
+                            if (changEndLine != null) {
+                                this.newLine(this.element.uuid+'/argtable-'+arr.id+'-'+item.id, this.element.uuid+'/methods', changEndLine, false)
+                            }
+                        }
+
+                        if (arr.dir != null) {
+                            arr.dir = arr.dir.toUpperCase()
+                            if(!(arr.dir == 'IN' || arr.dir == 'OUT' || arr.dir == 'INOUT')) {
+                                arr.dir = null
+                            }
+                        }
+                    })
+                    item.error.forEach(err => {
+                        var isHaveTableErr = false
+                        this.element.methods.forEach(met => {
+                            met.error.forEach(er => {
+                                if (er.id == err.id && er.error == err.error) {
+                                    isHaveTableErr = true
+                                }
+                            })
+                        })
+                        if (!isHaveTableErr) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+err.id+'-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/methoderror-'+err.id+'-'+item.id)
+                            }
+                            changEndLine = this.$store.getters.getErrorPath(err.error)
+                            if (changEndLine != null) {
+                                this.newLine(this.element.uuid+'/methoderror-'+err.id+'-'+item.id, this.element.uuid+'/methods', changEndLine, false)
+                            }
+                        }
+                    })
+                    item.errorSet.forEach(errs => {
+                        var isHaveTableErrS = false
+                        this.element.methods.forEach(met => {
+                            met.errorSet.forEach(err => {
+                                if (err.id == errs.id && err.error == errs.error) {
+                                    isHaveTableErrS = true
+                                }
+                            })
+                        })
+                        if (!isHaveTableErrS) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+errs.id+'-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/methoderrors-'+errs.id+'-'+item.id)
+                            }
+                            changEndLine = this.$store.getters.getErrorSetPath(errs.error)
+                            if (changEndLine != null) {
+                                this.newLine(this.element.uuid+'/methoderrors-'+errs.id+'-'+item.id, this.element.uuid+'/methods', changEndLine, false)
+                            }
+                        }
+                    })
+                })
+                this.element.methods.forEach(item => {
+                    item.argument.forEach(arg => {
+                        var isHaveTableArg = false
+                        this.editARXML.methods.forEach(edit => {
+                            edit.argument.forEach(editA => {
+                                if (editA.id == arg.id) {
+                                    isHaveTableArg = true
+                                }
+                            })
+                        })
+                        if (!isHaveTableArg) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+arg.id+'-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/argtable-'+arg.id+'-'+item.id)
+                            }
+                        }
+                    })
+                    item.error.forEach(err => {
+                        var isHaveTableErr = false
+                        this.editARXML.methods.forEach(edit => {
+                            edit.error.forEach(editE => {
+                                if (editE.id == err.id) {
+                                    isHaveTableErr = true
+                                }
+                            })
+                        })
+                        if (!isHaveTableErr) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+err.id+'-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/methoderror-'+err.id+'-'+item.id)
+                            }
+                        }
+                    })
+                    item.errorSet.forEach(err => {
+                        var isHaveTableErrS = false
+                        this.editARXML.methods.forEach(edit => {
+                            edit.errorSet.forEach(editES => {
+                                if (editES.id == err.id) {
+                                    isHaveTableErrS = true
+                                }
+                            })
+                        })
+                        if (!isHaveTableErrS) {
+                            endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+err.id+'-'+item.id)
+                            if (endLine != undefined) {
+                                this.deleteLine(this.element.uuid+'/methoderrors-'+err.id+'-'+item.id)
+                            }
+                        }
+                    })
+                })
+            } else {
+                if (this.element.methods.length > 0) {
+                    this.element.methods.forEach(item => {
+                        item.argument.forEach(arg => {
+                            if (arg.type != null) {
+                                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/argtable-'+arg.id+'-'+item.id)
+                                if (endLine != undefined) {
+                                    this.deleteLine(this.element.uuid+'/argtable-'+arg.id+'-'+item.id)
+                                }
+                            }
+                        })
+                        item.error.forEach(err => {
+                            if (err.error != null) {
+                                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderror-'+err.id+'-'+item.id)
+                                if (endLine != undefined) {
+                                    this.deleteLine(this.element.uuid+'/methoderror-'+err.id+'-'+item.id)
+                                }
+                            }
+                        })
+                        item.errorSet.forEach(err => {
+                            if (err.error != null) {
+                                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/methoderrors-'+err.id+'-'+item.id)
+                                if (endLine != undefined) {
+                                    this.deleteLine(this.element.uuid+'/methoderrors-'+err.id+'-'+item.id)
+                                }
+                            }
+                        })
+                    })
+                }
+            }
+            this.element.methods = JSON.parse(JSON.stringify(this.editARXML.methods))
+            this.cancelARXML()
+        },
+        editTableList() {
+            var deleteItem = []
+            if (this.editARXML.events.length > 0) {
+                deleteItem = []
+                this.element.events.forEach(item => {
+                    var isExistence = false
+                    this.editARXML.events.forEach(data => {
+                        if (data.id == item.id) {
+                            isExistence = true
+                            if (data.name != item.name) {
+                                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                        changeName: 'serviceEventD', listname: data.name, beforename: item.name} )
+                            }
+                        }
+                    })
+                    if (!isExistence) {
+                        deleteItem.push(item)
+                    }
+                })
+                if (deleteItem.length > 0)
+                {
+                    this.$store.commit('deleteRefTable', {deleteName:'eventSI', deletItemList: deleteItem, path: this.element.path, name: this.element.name})
+                }
+            } else {
+                if (this.element.events.length > 0) {
+                    this.$store.commit('deleteRefTable', {deleteName:'eventSI', deletItemList: this.element.events, path: this.element.path, name: this.element.name})
+                }
+            }
+
+            if (this.editARXML.fields.length > 0) {
+                deleteItem = []
+                this.element.fields.forEach(item => {
+                    var isExistence = false
+                    this.editARXML.fields.forEach(data => {
+                        if (data.id == item.id) {
+                            isExistence = true
+                            if (data.name != item.name) {
+                                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                        changeName: 'field', listname: data.name, beforename: item.name} )
+                            }
+                        }
+                    })
+                    if (!isExistence) {
+                        deleteItem.push(item)
+                    }
+                })
+                if (deleteItem.length > 0)
+                {
+                    this.$store.commit('deleteRefTable', {deleteName:'fieldSI', deletItemList: deleteItem, path: this.element.path, name: this.element.name})
+                }
+            } else {
+                if (this.element.fields.length > 0) {
+                    this.$store.commit('deleteRefTable', {deleteName:'fieldSI', deletItemList: this.element.fields, path: this.element.path, name: this.element.name})
+                }
+            }
+
+            if (this.editARXML.methods.length > 0) {
+                this.element.methods.forEach(item => {
+                    var isHaveTable = false
+                    this.editARXML.methods.forEach(data => {
+                        if (data.id == item.id) {
+                            isHaveTable = true
+                            if (data.name != item.name) {
+                                this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
+                                                        changeName: 'serviceMethodD', listname: data.name, beforename: item.name} )
+                            }
+                        }
+                    })
+                    if (!isHaveTable) {
+                        this.$store.commit('deleteRefTable', {deleteName:'methodSI', deleteTab:true, tabName: item.name, path: this.element.path, name: this.element.name})
+                    }
+                })
+            } else {
+                if (this.element.methods.length > 0) {
+                    this.element.methods.forEach(item => {
+                        this.$store.commit('deleteRefTable', {deleteName:'methodSI', deleteTab:true, tabName: item.name, path: this.element.path, name: this.element.name})
+                    })
+                }
+            }
+        },
+        cancelARXML() {
+            this.editARXML = {name:'', versionMaj:'', versionMin:'', namespace:'', events:[], fields:[], methods:[], isservice: null}
+            this.editTextEvent = {name: '', type: null, id: ''}
+            this.editTextMethod = {name: '', fireforget: null, argument: [], errorSet: [], error: [], descrip: '', id:''}
+            this.editTextField = {name: '', type: null, getter: null, setter: null, notifier: null, id: ''}
+            this.editTextArg = {name: '', type: null, dir: null, descrip: '', id: ''}
+            this.editTextError = { error: null, id: ''}
+            this.editTextErrorS = {error: null, id: ''}
+            this.dialogText = false
+        },
+        newTextMethod() {
+            this.editTextMethod = {name: '', fireforget: null, argument: [], errorSet: [], error: [], descrip: '', id:''}
+            let res = true, n = 0
+            while (res) {
+                this.editTextMethod.name = 'Method_' + n++;
+                res = this.editARXML.methods.some(item => item.id === n)
+            }
+            this.editTextMethod.id = n
+
+            const addObj = Object.assign({}, this.editTextMethod)
+            this.editARXML.methods.push(addObj);
+        },
+        deletTextMethod(idx) {
+            this.editARXML.methods.splice(idx,1)
+        },
+        newTextEvent() {
+            this.editTextEvent = {name: '', type: null, id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++;
+                res = this.editARXML.events.some(item => item.id === n)
+            }
+            this.editTextEvent.id = n
+
+            const addObj = Object.assign({}, this.editTextEvent)
+            this.editARXML.events.push(addObj);
+        },
+        deletTextEvent(idx) {
+            this.editARXML.events.splice(idx,1)
+        },
+        newTextField() {
+            this.editTextField = { name: '', type: null, getter: null, setter: null, notifier: null, id: ''}
+            let res = true, n = 0
+            while (res) {
+                 n++;
+                res = this.editARXML.fields.some(item => item.id === n)
+            }
+            this.editTextField.id = n
+
+            const addObj = Object.assign({}, this.editTextField)
+            this.editARXML.fields.push(addObj);
+        },
+        deletTextField(idx) {
+            this.editARXML.fields.splice(idx,1)
+        },
+        newTextArg(idxMethod) {
+            this.editTextArg = { name: '', type: null, dir: null, descrip: '', id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++
+                res = this.editARXML.methods[idxMethod].argument.some(item => item.id === n)
+            }
+            this.editTextArg.id = n
+
+            const addObj = Object.assign({}, this.editTextArg)
+            this.editARXML.methods[idxMethod].argument.push(addObj);
+        },
+        deletTextArg(idx, idxMethod) {
+            this.editARXML.methods[idxMethod].argument.splice(idx,1)
+        },
+        newTextError(idxMethod) {
+            this.editTextError = {error: null, id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++;
+                res = this.editARXML.methods[idxMethod].error.some(item => item.id === n)
+            }
+            this.editTextError.id = n
+
+            const addObj = Object.assign({}, this.editTextError)
+            this.editARXML.methods[idxMethod].error.push(addObj);
+        },
+        deletTextError(idx, idxMethod) {
+            this.editARXML.methods[idxMethod].error.splice(idx,1)
+        },
+        newTextErrorSet(idxMethod) {
+            this.editTextErrorS = {error: null, id: ''}
+            let res = true, n = 0
+            while (res) {
+                n++;
+                res = this.editARXML.methods[idxMethod].errorSet.some(item => item.id === n)
+            }
+            this.editTextErrorS.id = n
+
+            const addObj = Object.assign({}, this.editTextErrorS)
+            this.editARXML.methods[idxMethod].errorSet.push(addObj);
+        },
+        deletTextErrorSet(idx, idxMethod) {
+            this.editARXML.methods[idxMethod].errorSet.splice(idx,1)
+        },
     }
 }
 </script>

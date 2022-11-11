@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showRequiredSomeIP">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -20,18 +20,16 @@
                                 <v-icon> mdi-format-text</v-icon>
                             </v-btn>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Required SomeIP Service Instance</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                        @input='inputRequiredSomeIPName' outlined dense></v-text-field>
+                                        @input='inputRequiredSomeIPName'  @click="clickOtherFields()" outlined dense></v-text-field>
                             <v-row>
                                 <v-col cols="10">
-                                    <v-text-field v-model="element.deployref" readonly @click="setSIDeploymentSelect()" clearable @click:clear='clearSIDeployment()' label="Service Interface Deployment Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                    <v-text-field v-model="element.deployref" readonly @click="setSIDeploymentSelect()" :style="refServiceID ? 'height: 43px;border:solid red 2px' : ''"
+                                                 clearable @click:clear='clearSIDeployment()' label="Service Interface Deployment Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                 </v-col>
                                 <v-col cols="2">
                                     <v-menu>
@@ -51,11 +49,12 @@
                                     </v-menu>
                                 </v-col>
                             </v-row>
-                            <v-text-field v-model="element.minorver" label="Required Minor Version" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                            <v-text-field v-model="element.serviceInsid" label="Required Service Instance ID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.minorver" label="Required Minor Version"  @click="clickOtherFields()" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.serviceInsid" label="Required Service Instance ID"  @click="clickOtherFields()" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-row>
                                 <v-col cols="10">
-                                    <v-text-field v-model="element.someipclient" readonly @click="setSomeIPClientSelect()" clearable @click:clear='clearSomeIPClient()' label="SD Client Config Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                    <v-text-field v-model="element.someipclient" readonly @click="setSomeIPClientSelect()" :style="refSDClient ? 'height: 43px;border:solid red 2px' : ''"
+                                                 clearable @click:clear='clearSomeIPClient()' label="SD Client Config Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                 </v-col>
                                 <v-col cols="2">
                                     <v-menu>
@@ -75,7 +74,7 @@
                                     </v-menu>
                                 </v-col>
                             </v-row>
-                            <v-select v-model="element.version" :items="enumVersion" clearable label="Version Driven Find Behavior" @click="setactiveUUID" outlined dense style="height: 45px;"></v-select>
+                            <v-select v-model="element.version" :items="enumVersion" clearable label="Version Driven Find Behavior" @click="[clickOtherFields(),setactiveUUID()]" @click:clear="clickOtherFields()" outlined dense style="height: 45px;"></v-select>
                             <v-card outlined class="mx-auto">
                                 <div class="subtitle-2" :id="element.uuid+'/requiredMethod'" style="height:20px">
                                     <v-hover v-slot="{ hover }">
@@ -92,7 +91,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-show="isMethodRefOpenClose">
-                                    <v-data-table v-model="selectMethodRef" :headers="headerMethodRef" :items="element.method" :items-per-page='20'
+                                    <v-data-table v-model="selectMethodRef" :headers="headerMethodRef" :items="element.method" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteMethodRef" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -101,7 +100,8 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openMethodRef(idx)" @cancel="editMethodRef(idx)" @save="cancelMethodRef" large >
+                                                        <v-icon v-if="header.value == 'refView'" class="refView-tableItem" :color="refMethod === item.id ? 'red' : null " @click="rowClick(idx)">mdi-pencil</v-icon>
+                                                        <v-edit-dialog v-if="header.value != 'refView'" persistent @open="openMethodRef(idx)" @cancel="cancelMethodRef" @save="editMethodRef(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -115,7 +115,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addMethodRef()" @save="cancelMethodRef"> 
+                                                        <v-edit-dialog  large persistent @open="clickOtherFields()" @cancel="cancelMethodRef" @save="addMethodRef()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon >mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -155,10 +155,11 @@
                                     <v-tab-item v-for="(tab, idx) in element.requiredevent" :key="idx">
                                         <v-card flat>
                                             <v-card-text>
-                                                <v-text-field v-model="tab.name" label="name" :rules="rules.name" @input='inputEventGName(tab.name)' @click="setactiveUUID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.name" label="name" :rules="rules.name" @input='inputEventGName(tab.name)' @click="clickOtherFields()" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                                 <v-row style="height: 45px">
                                                     <v-col cols="10">
-                                                        <v-text-field v-model="tab.eventG" readonly @click="setEventGSelect(tab)" clearable @click:clear='clearEventG(tab)' label="Event Group Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.eventG" readonly @click="setEventGSelect(tab)" :style="refEventG ? 'height: 43px;border:solid red 2px' : ''"
+                                                                     clearable @click:clear='clearEventG(tab)' label="Event Group Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </v-col>
                                                     <v-col cols="2">
                                                         <v-menu>
@@ -180,7 +181,8 @@
                                                 </v-row>
                                                 <v-row>
                                                     <v-col cols="10">
-                                                        <v-text-field v-model="tab.client" readonly @click="setClientSelect(tab)" clearable @click:clear='clearClient(tab)' label="SD Client Event Group Timing Config Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.client" readonly @click="setClientSelect(tab)" :style="refSDClientE ? 'height: 43px;border:solid red 2px' : ''"
+                                                                     clearable @click:clear='clearClient(tab)' label="SD Client Event Group Timing Config Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </v-col>
                                                     <v-col cols="2">
                                                         <v-menu>
@@ -226,13 +228,14 @@
                                     <v-tab-item v-for="(tab, idx) in element.E2EEvent" :key="idx">
                                         <v-card flat>
                                             <v-card-text>
-                                                <v-text-field v-model="tab.name" label="name" :rules="rules.name" @input='inputEventGName(tab.name)' @click="setactiveUUID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                                                <v-text-field v-model="tab.dataIds" label="Data IDs" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                                                <v-text-field v-model="tab.dataLength" label="Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                                                <v-text-field v-model="tab.period" label="Data Update Period" @click="setactiveUUID" placeholder="Time" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.name" label="name" :rules="rules.name" @input='inputEventGName(tab.name)' @click="clickOtherFields()" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.dataIds" label="Data IDs" @click="clickOtherFields()" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.dataLength" label="Data Length" @click="clickOtherFields()" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.period" label="Data Update Period" @click="clickOtherFields()" placeholder="Time" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                                 <v-row style="height: 45px">
                                                     <v-col cols="10">
-                                                        <v-text-field v-model="tab.e2e" readonly @click="setE2ESelect(tab)" clearable @click:clear='clearE2EProfile(tab)' label="E-2-E Profile Configuration Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.e2e" readonly @click="setE2ESelect(tab)" :style="refE2EEventPro ? 'height: 43px;border:solid red 2px' : ''"
+                                                                     clearable @click:clear='clearE2EProfile(tab)' label="E-2-E Profile Configuration Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </v-col>
                                                     <v-col cols="2">
                                                         <v-menu>
@@ -254,7 +257,8 @@
                                                 </v-row>
                                                 <v-row>
                                                     <v-col cols="10">
-                                                        <v-text-field v-model="tab.event" readonly @click="setEventSelect(tab)" clearable @click:clear='clearEvent(tab)' label="Event Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.event" readonly @click="setEventSelect(tab)" :style="refE2EEventR ? 'height: 43px;border:solid red 2px' : ''"
+                                                                     clearable @click:clear='clearEvent(tab)' label="Event Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </v-col>
                                                     <v-col cols="2">
                                                         <v-menu>
@@ -274,8 +278,8 @@
                                                         </v-menu>
                                                     </v-col>
                                                 </v-row>
-                                                <v-text-field v-model="tab.max" label="Max Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                                                <v-text-field v-model="tab.min" label="Min Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.max" label="Max Data Length" @click="clickOtherFields()" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.min" label="Min Data Length" @click="clickOtherFields()" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                             </v-card-text>
                                         </v-card>
                                     </v-tab-item>
@@ -302,12 +306,13 @@
                                     <v-tab-item v-for="(tab, idx) in element.E2EMethod" :key="idx">
                                         <v-card flat>
                                             <v-card-text>
-                                                <v-text-field v-model="tab.dataIds" label="Data IDs" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                                                <v-text-field v-model="tab.dataLength" label="Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                                                <v-text-field v-model="tab.period" label="Data Update Period" @click="setactiveUUID" placeholder="Time" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.dataIds" label="Data IDs" @click="clickOtherFields()" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.dataLength" label="Data Length" @click="clickOtherFields()" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.period" label="Data Update Period" @click="clickOtherFields()" placeholder="Time" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                                 <v-row style="height: 45px">
                                                     <v-col cols="10">
-                                                        <v-text-field v-model="tab.e2e" readonly @click="setE2ESelectM(tab)" clearable @click:clear='clearE2EProfileM(tab)' label="E-2-E Profile Configuration Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.e2e" readonly @click="setE2ESelectM(tab)" :style="refE2EMethodPro ? 'height: 43px;border:solid red 2px' : ''"
+                                                                     clearable @click:clear='clearE2EProfileM(tab)' label="E-2-E Profile Configuration Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </v-col>
                                                     <v-col cols="2">
                                                         <v-menu>
@@ -329,7 +334,8 @@
                                                 </v-row>
                                                 <v-row>
                                                     <v-col cols="10">
-                                                        <v-text-field v-model="tab.method" readonly @click="setE2EMethodelect(tab)" clearable @click:clear='clearE2EMethod(tab)' label="Method Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                        <v-text-field v-model="tab.method" readonly @click="setE2EMethodSelect(tab)" :style="refE2EMethodR ? 'height: 43px;border:solid red 2px' : ''"
+                                                                     clearable @click:clear='clearE2EMethod(tab)' label="Method Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     </v-col>
                                                     <v-col cols="2">
                                                         <v-menu>
@@ -349,15 +355,15 @@
                                                         </v-menu>
                                                     </v-col>
                                                 </v-row>
-                                                <v-text-field v-model="tab.max" label="Max Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
-                                                <v-text-field v-model="tab.min" label="Min Data Length" @click="setactiveUUID" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.max" label="Max Data Length" @click="clickOtherFields()" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                                <v-text-field v-model="tab.min" label="Min Data Length" @click="clickOtherFields()" placeholder="Int" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                             </v-card-text>
                                         </v-card>
                                     </v-tab-item>
                                 </v-tabs-items>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -401,22 +407,19 @@
                             <label style="padding:10px;">&#60;&#47;VERSION-DRIVEN-FIND-BEHAVIOR&#62;</label>
                         </v-row>
                         <v-row style="height: 50px;">
-                            <label style="padding:10px;">&#60;E-2-E-EVENT-PROTECTION-PROPSS&#62;
-                                <v-btn @click="newTextE2EE()" icon color="teal darken" x-samll dark>
-                                    <v-icon dense dark>mdi-plus</v-icon>
-                                </v-btn>
-                            </label>
+                            <label style="padding:10px;">&#60;E-2-E-EVENT-PROTECTION-PROPSS&#62;</label>
+                            <v-btn style="margin: 3px 0px 0px -10px" @click="newTextE2EE()" icon color="teal darken" x-samll dark>
+                                <v-icon dense dark>mdi-plus</v-icon>
+                            </v-btn>
                         </v-row>
                         <div class="text-editDialog" style="height: 350px;">
                             <v-row v-for="(item, i) in editARXML.E2EEvent" :key="i" style="height: 250px;">
                                 <div>
                                     <v-row style="height: 25px;margin:0px;">
-                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
-                                            <v-btn @click="deletTextE2EE(i)" text x-small color="indigo">
-                                                <v-icon>mdi-minus</v-icon>
-                                            </v-btn>
-                                            &#60;END-2-END-EVENT-PROTECTION-PROPS&#62;
-                                        </label>
+                                        <v-btn style="margin: 15px -20px 0px 20px" @click="deletTextE2EE(i)" text x-small color="indigo">
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">&#60;END-2-END-EVENT-PROTECTION-PROPS&#62;</label>
                                     </v-row>
                                     <v-row style="height: 25px;margin:0px;">
                                         <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
@@ -472,22 +475,19 @@
                             <label style="padding:10px;">&#60;&#47;E-2-E-EVENT-PROTECTION-PROPSS&#62;</label>
                         </v-row>
                         <v-row style="height: 50px;">
-                            <label style="padding:10px;">&#60;E-2-E-METHOD-PROTECTION-PROPSS&#62;
-                                <v-btn @click="newTextE2EM()" icon color="teal darken" x-samll dark>
-                                    <v-icon dense dark>mdi-plus</v-icon>
-                                </v-btn>
-                            </label>
+                            <label style="padding:10px;">&#60;E-2-E-METHOD-PROTECTION-PROPSS&#62;</label>
+                            <v-btn style="margin: 3px 0px 0px -10px" @click="newTextE2EM()" icon color="teal darken" x-samll dark>
+                                <v-icon dense dark>mdi-plus</v-icon>
+                            </v-btn>
                         </v-row>
                         <div class="text-editDialog" style="height: 350px;">
                             <v-row v-for="(item, i) in editARXML.E2EMethod" :key="i" style="height: 220px;">
                                 <div>
                                     <v-row style="height: 25px;margin:0px;">
-                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
-                                            <v-btn @click="deletTextE2EM(i)" text x-small color="indigo">
-                                                <v-icon>mdi-minus</v-icon>
-                                            </v-btn>
-                                            &#60;END-2-END-METHOD-PROTECTION-PROPS&#62;
-                                        </label>
+                                        <v-btn style="margin: 15px -20px 0px 20px" @click="deletTextE2EM(i)" text x-small color="indigo">
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">&#60;END-2-END-METHOD-PROTECTION-PROPS&#62;</label>
                                     </v-row>
                                     <v-row style="height: 25px;margin:0px;">
                                         <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;DATA-IDS&#62;</label>
@@ -538,22 +538,19 @@
                             <label style="padding:10px;">&#60;&#47;E-2-E-METHOD-PROTECTION-PROPSS&#62;</label>
                         </v-row>
                         <v-row style="height: 50px;">
-                            <label style="padding:10px;">&#60;METHOD-REQUEST-PROPSS&#62;
-                                <v-btn @click="newTextMethod()" icon color="teal darken" x-samll dark>
-                                    <v-icon dense dark>mdi-plus</v-icon>
-                                </v-btn>
-                            </label>
+                            <label style="padding:10px;">&#60;METHOD-REQUEST-PROPSS&#62;</label>
+                            <v-btn style="margin: 3px 0px 0px -10px" @click="newTextMethod()" icon color="teal darken" x-samll dark>
+                                <v-icon dense dark>mdi-plus</v-icon>
+                            </v-btn>
                         </v-row>
                         <div class="text-editDialog" style="height: 150px;">
                             <v-row v-for="(item, i) in editARXML.method" :key="i" style="height: 70px;">
                                 <div>
                                     <v-row style="height: 25px;margin:0px;">
-                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
-                                            <v-btn @click="deletTextMethod(i)" text x-small color="indigo">
-                                                <v-icon>mdi-minus</v-icon>
-                                            </v-btn>
-                                            &#60;SOMEIP-METHOD-PROPS&#62;
-                                        </label>
+                                        <v-btn style="margin: 15px -20px 0px 20px" @click="deletTextMethod(i)" text x-small color="indigo">
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">&#60;SOMEIP-METHOD-PROPS&#62;</label>
                                     </v-row>
                                     <v-row style="height: 25px;margin:0px;">
                                         <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;METHOD-REF&#62;</label>
@@ -570,22 +567,19 @@
                             <label style="padding:10px;">&#60;&#47;METHOD-REQUEST-PROPSS&#62;</label>
                         </v-row>
                         <v-row style="height: 50px;">
-                            <label style="padding:10px;">&#60;REQUIRED-EVENT-GROUPS&#62;
-                                <v-btn @click="newTextEvent()" icon color="teal darken" x-samll dark>
-                                    <v-icon dense dark>mdi-plus</v-icon>
-                                </v-btn>
-                            </label>
+                            <label style="padding:10px;">&#60;REQUIRED-EVENT-GROUPS&#62;</label>
+                            <v-btn style="margin: 3px 0px 0px -10px" @click="newTextEvent()" icon color="teal darken" x-samll dark>
+                                <v-icon dense dark>mdi-plus</v-icon>
+                            </v-btn>
                         </v-row>
                         <div class="text-editDialog" style="height: 200px;">
                             <v-row v-for="(item, i) in editARXML.requiredevent" :key="i" style="height: 120px;">
                                 <div>
                                     <v-row style="height: 25px;margin:0px;">
-                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
-                                            <v-btn @click="deletTextEvent(i)" text x-small color="indigo">
-                                                <v-icon>mdi-minus</v-icon>
-                                            </v-btn>
-                                            &#60;SOMEIP-REQUIRED-EVENT-GROUP&#62;
-                                        </label>
+                                        <v-btn style="margin: 15px -20px 0px 20px" @click="deletTextEvent(i)" text x-small color="indigo">
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">&#60;SOMEIP-REQUIRED-EVENT-GROUP&#62;</label>
                                     </v-row>
                                     <v-row style="height: 25px;margin:0px;">
                                         <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
@@ -644,9 +638,6 @@ export default {
         activeUUID() {
             return this.$store.state.activeUUID
         },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
-        },
         setting() {
             return this.$store.state.setting
         },
@@ -655,9 +646,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -709,7 +700,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             dialogText: false,
             editARXML: {name:'', deployref: null, minover: '', id: '', someipclient: null, ver: null, method: [], requiredevent: [], E2EEvent: [], E2EMethod: []},
             editTextMethod: {method: null, id: ''},
@@ -726,6 +717,7 @@ export default {
 
             selectMethodRef: [],
             headerMethodRef: [
+                { text: '', sortable: false, value: 'refView', width: '5px' },
                 { text: 'SomeIP Method Props', align: 'start', sortable: false, value: 'method' },
             ],
             editMethodItem: { method : null, id: ''},
@@ -744,12 +736,77 @@ export default {
             selE2EProfileM: this.$store.getters.getE2EProfileConfig,
             selMethod: this.$store.getters.getDeploymentMethod,
 
+            refServiceID: false,
+            refSDClient: false,
+            refMethod: null,
+            refEventG: false,
+            refSDClientE: false,
+            refE2EEventPro: false,
+            refE2EEventR: false,
+            refE2EMethodPro: false,
+            refE2EMethodR: false,
         }
     },
     mounted () {
         if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
             this.isTooltip = false
         }
+        EventBus.$on(this.element.uuid, (refNum, idxID, tabID, id, isDeleteItem, item, idxRow) => {
+                        console.log('## '+id+' / '+isDeleteItem+ ' / ' + item+ ' / '+tabID)
+                        console.log(this.refMethod)
+            if (isDeleteItem) {
+                if (this.refMethod == id && item == 'method') {
+                    this.refMethod = id + 1
+                    this.rowClick(idxRow)
+                } else if (this.refE2EEventR && this.element.E2EEvent[this.E2EEventTab].id == tabID && item == 'E2EEvent') {
+                    this.clickOtherFields()
+                } else if (this.refE2EMethodR && this.element.E2EMethod[this.E2EMethodTab].id == tabID && item == 'E2EMethod') {
+                    this.clickOtherFields()
+                } else if (this.refE2EEventPro && this.element.E2EEvent[this.E2EEventTab].id == tabID && item == 'E2EEventPro') {
+                    this.clickOtherFields()
+                } else if (this.refE2EMethodPro && this.element.E2EMethod[this.E2EMethodTab].id == tabID && item == 'E2EMethodPro') {
+                    this.clickOtherFields()
+                } else if (this.refEventG && this.element.requiredevent[this.eventGroupTab].id == tabID && item == 'eventG') {
+                    this.clickOtherFields()
+                }
+            } else {
+                this.refServiceID = false
+                this.refSDClient = false
+                this.refMethod = null
+                this.refEventG = false
+                this.refSDClientE = false
+                this.refE2EEventPro = false
+                this.refE2EEventR = false
+                this.refE2EMethodPro = false
+                this.refE2EMethodR = false
+
+                if (refNum == 1) {
+                    this.refServiceID = true
+                } else if (refNum == 2) {
+                    this.refSDClient = true
+                } else if (refNum == 3) {
+                    this.refMethod = idxID
+                } else if (refNum == 4) {
+                    this.eventGroupTab = tabID
+                    this.refEventG = true
+                } else if (refNum == 5) {
+                    this.eventGroupTab = tabID
+                    this.refSDClientE = true
+                } else if (refNum == 6) {
+                    this.E2EEventTab = tabID
+                    this.refE2EEventPro = true
+                } else if (refNum == 7) {
+                    this.E2EEventTab = tabID
+                    this.refE2EEventR = true
+                } else if (refNum == 8) {
+                    this.E2EMethodTab = tabID
+                    this.refE2EMethodPro = true
+                } else if (refNum == 9) {
+                    this.E2EMethodTab = tabID
+                    this.refE2EMethodR = true
+                } 
+            }
+        })
     },
     methods: {
         submitDialog(element) {
@@ -775,8 +832,12 @@ export default {
             }
         },
         showRequiredSomeIP () {
+            this.clickOtherFields()
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
+                EventBus.$emit('drawLine')
+            })
+            /*this.$nextTick(() => {
                 EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
                 if(this.iselementOpenClose) {
                     if(this.element.requiredevent.length > 0 && this.location == 1) {
@@ -801,17 +862,19 @@ export default {
                         }
                     }
                 }
-            })
+            })*/
         },
         showMethodRef() {
+            this.clickOtherFields()
             this.isMethodRefOpenClose = this.isMethodRefOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
-            EventBus.$emit('drawLine')
+            //EventBus.$emit('drawLine')
         },
         showRequiredEvent() {
+            this.clickOtherFields()
             this.isRequiredEventOpenClose = this.isRequiredEventOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
-            if(this.element.requiredevent.length > 0 && this.location == 1) {
+            /*if(this.element.requiredevent.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isRequiredEventOpenClose) {
                         EventBus.$emit('changeLine-someipService', 'requiredEvent', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].id)
@@ -819,12 +882,13 @@ export default {
                         EventBus.$emit('changeLine-someipService', 'requiredEvent', this.element.uuid, null)
                     }
                 })
-            }
+            }*/
         },
         showE2EEvent() {
+            this.clickOtherFields()
             this.isE2EEventOpenClose = this.isE2EEventOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
-            if(this.element.E2EEvent.length > 0 && this.location == 1) {
+            /*if(this.element.E2EEvent.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isE2EEventOpenClose) {
                         EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, this.E2EEventTab, this.element.E2EEvent[this.E2EEventTab].id)
@@ -832,12 +896,13 @@ export default {
                         EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, null)
                     }
                 })
-            }
+            }*/
         },
         showE2EMethod() {
+            this.clickOtherFields()
             this.isE2EMethodOpenClose = this.isE2EMethodOpenClose ? false : true
             // 선을 다시 그려줘야 하기 때문에
-            if(this.element.E2EMethod.length > 0 && this.location == 1) {
+            /*if(this.element.E2EMethod.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isE2EMethodOpenClose) {
                         EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, this.E2EMethodTab, this.element.E2EMethod[this.E2EMethodTab].id)
@@ -845,13 +910,53 @@ export default {
                         EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, null)
                     }
                 })
-            }
+            }*/
         },
         inputRequiredSomeIPName () {
             this.$store.commit('editRequiredSomeIP', {compo:"Name", uuid:this.element.uuid, name:this.element.name} )
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name, req: true} )
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
+            }
+        },
+        clickOtherFields() {
+            if (this.refServiceID || this.refSDClient || this.refMethod != null || this.refEventG || this.refSDClientE ||
+                this.refE2EEventPro || this.refE2EEventR || this.refE2EMethodPro || this.refE2EMethodR) {
+                this.deleteOpenElement()
+                this.refServiceID = false
+                this.refSDClient = false
+                this.refEventG = false
+                this.refSDClientE = false
+                this.refE2EEventPro = false
+                this.refE2EEventR = false
+                this.refE2EMethodPro = false
+                this.refE2EMethodR = false
+                this.refMethod = null
+            }
+        },
+        rowClick(idx) {
+            console.log('rowClick ' + idx)
+            if (this.refMethod != this.element.method[idx].id) { // 같은거 계속 누르면 안됨
+                //기존것 delete하고 
+                this.clickOtherFields()
+                // 새로들어온 idx line draw
+                if (this.element.method[idx].method != null) {
+                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredMethod-'+this.element.method[idx].id)
+                    if (endLine == undefined) {
+                        endLine = this.$store.getters.getSomeIPMethodDeploymentPath(this.element.method[idx].method)
+                    }
+                    if (endLine != null) {
+                        // 기존에 있던거 좌표 바꿔줘야함.
+                        this.$store.commit('editSomeIPService', {compo:"drag", uuid: endLine, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                        this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                        this.$nextTick(() => { 
+                            EventBus.$emit('new-line', this.element.uuid+'/requiredMethod', endLine)
+                            document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        })
+                        this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredMethod', end:endLine, iscircle:false, refNum:3, idxID: this.element.method[idx].id})
+                    }
+                }
+                this.refMethod = this.element.method[idx].id
             }
         },
 
@@ -861,16 +966,28 @@ export default {
                 this.element.deployref = null
                 this.deleteLine(this.element.uuid+'/requiredDeploy')
             }
+            this.clickOtherFields()
         },
         setSIDeploymentSelect() {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredDeploy')
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getServiceInterfaceDeploymentPath(this.element.deployref, 0)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPServiceInterfaceDeployment_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+            this.clickOtherFields()
+            if (this.element.deployref != null) {this.refServiceID = true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredDeploy')
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getServiceInterfaceDeploymentPath(this.element.deployref, 0)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: endLine, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/requiredDeploy', endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredDeploy', end:endLine, iscircle:false, refNum:1})
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPServiceInterfaceDeployment_str} )
+                    // document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', endLine)
+                }
             }
         },
         setSIDeploymentList() {
@@ -878,6 +995,7 @@ export default {
             this.setactiveUUID()
         },
         setSIDeployment(item){
+            this.clickOtherFields()
             if( this.element.deployref != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredDeploy')
                 if (endLine != undefined && endLine != item.uuid) {
@@ -886,19 +1004,34 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/requiredDeploy', this.element.uuid+'/requiredDeploy', item.uuid)
+                    this.refServiceID = true
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/requiredDeploy', this.element.uuid+'/requiredDeploy', item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredDeploy', end:item.uuid, iscircle:false, refNum:1})
                 }
                 this.element.deployref = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refServiceID = true
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/requiredDeploy', this.element.uuid+'/requiredDeploy', item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredDeploy', end:item.uuid, iscircle:false, refNum:1})
+                }
             }
             this.setactiveUUID()
         },
         newSIDeployment() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementSomeIPService', {
-                name: this.$store.getters.getNameSomeIPService, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNameSomeIPService, path: '', input: false,
+                top: this.element.top, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 service: null, majversion:'', minversion:'', id: '', eventG:[], eventD: [], methodD:[], fieldD:[],
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -912,16 +1045,28 @@ export default {
                 this.element.someipclient = null
                 this.deleteLine(this.element.uuid+'/requiredSomeIPC')
             }
+            this.clickOtherFields()
         },
         setSomeIPClientSelect() {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredSomeIPC')
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getSomeIPClientPath(this.element.someipclient)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPClient_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+            this.clickOtherFields()
+            if (this.element.someipclient != null) {this.refSDClient = true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredSomeIPC')
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getSomeIPClientPath(this.element.someipclient)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editSomeIPClient', {compo:"drag", uuid: endLine, top: this.element.top + 50, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPClient_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/requiredSomeIPC', endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredSomeIPC', end:endLine, iscircle:false, refNum:2})
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPClient_str} )
+                    // document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', endLine)
+                }
             }
         },
         setSomeIPClientList() {
@@ -929,6 +1074,7 @@ export default {
             this.setactiveUUID()
         },
         setSomeIPClient(item){
+            this.clickOtherFields()
             if( this.element.someipclient != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredSomeIPC')
                 if (endLine != undefined && endLine != item.uuid) {
@@ -937,19 +1083,34 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/requiredSomeIPC', this.element.uuid+'/requiredSomeIPC', item.uuid)
+                    this.refSDClient = true
+                    this.$store.commit('editSomeIPClient', {compo:"drag", uuid: item.uuid, top: this.element.top + 50, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPClient_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/requiredSomeIPC', this.element.uuid+'/requiredSomeIPC', item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredSomeIPC', end:item.uuid, iscircle:false, refNum:2})
                 }
                 this.element.someipclient = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refSDClient = true
+                    this.$store.commit('editSomeIPClient', {compo:"drag", uuid: item.uuid, top: this.element.top + 50, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPClient_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/requiredSomeIPC', this.element.uuid+'/requiredSomeIPC', item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredSomeIPC', end:item.uuid, iscircle:false, refNum:2})
+                }
             }
             this.setactiveUUID()
         },
         newSomeIPClient() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementSomeIPClient', { 
-                name: this.$store.getters.getNameSomeIPClient, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNameSomeIPClient, path: '', input: false,
+                top: this.element.top + 50, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 findtime: '', inidelaymax: '', inidelaymin: '', inibasedelay: '', inirepetimax: '',
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -958,6 +1119,7 @@ export default {
         },
 
         isCheckMethodRef() {
+            this.clickOtherFields()
             if (this.isdeleteMethodRef == true) {
                 this.isdeleteMethodRef = false
                 this.selectMethodRef = []
@@ -966,6 +1128,7 @@ export default {
             }
         },
         deletMethodRef() {
+            this.clickOtherFields()
             if (this.isdeleteMethodRef == true) {
                 this.selectMethodRef.forEach(item => {
                     for(let i=0; i<this.element.method.length; i++){
@@ -1004,13 +1167,27 @@ export default {
             } else if (endLine != undefined && endLine != this.editMethodItem.method.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/requiredMethod-'+this.element.method[idx].id)
-                this.newLine(this.element.uuid+'/requiredMethod-'+this.element.method[idx].id, this.element.uuid+'/requiredMethod', this.editMethodItem.method.uuid)
+                this.newLine(this.element.uuid+'/requiredMethod-'+this.element.method[idx].id, this.element.uuid+'/requiredMethod', this.editMethodItem.method.uuid, false)
                 this.element.method[idx].method = this.editMethodItem.method.name
             } else if (endLine == undefined && this.editMethodItem.method != null && this.editMethodItem.method.uuid != null) {
-                this.newLine(this.element.uuid+'/requiredMethod-'+this.element.method[idx].id, this.element.uuid+'/requiredMethod', this.editMethodItem.method.uuid)
+                this.newLine(this.element.uuid+'/requiredMethod-'+this.element.method[idx].id, this.element.uuid+'/requiredMethod', this.editMethodItem.method.uuid, false)
                 this.element.method[idx].method = this.editMethodItem.method.name
             } else if (this.editMethodItem.method != null && endLine == this.editMethodItem.method.uuid && this.element.method[idx].method != this.editMethodItem.method.name) {
                 this.element.method[idx].method = this.editMethodItem.method.name
+            }
+
+            if (this.refMethod == this.element.method[idx].id) {
+                this.deleteOpenElement()
+                if (this.editMethodItem.method != null && this.editMethodItem.method.uuid != null) {
+                    var endLineChange = this.editMethodItem.method.uuid
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: this.editMethodItem.method.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: this.editMethodItem.method.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/requiredMethod', endLineChange)
+                        document.getElementById(endLineChange+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredMethod', end:endLineChange, iscircle:false, refNum:3, idxID: this.refMethod})
+                }
             }
             
             this.cancelMethodRef()
@@ -1020,19 +1197,31 @@ export default {
             this.setactiveUUID()
         },
         addMethodRef() {
+            this.clickOtherFields()
             let res = true, n = 0
             while (res) {
                 n++
                 res = this.element.method.some(item => item.id === n)
             }
             this.editMethodItem.id = n
-
+            var endLine = null
             if( this.editMethodItem.method != null) {
-                this.newLine(this.element.uuid+'/requiredMethod-'+n, this.element.uuid+'/requiredMethod', this.editMethodItem.method.uuid)
+                endLine = this.editMethodItem.method.uuid
+                this.$store.commit('editSomeIPService', {compo:"drag", uuid: this.editMethodItem.method.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: this.editMethodItem.method.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                
                 this.editMethodItem.method = this.editMethodItem.method.name
+                if (endLine != null) {
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/requiredMethod-'+n, this.element.uuid+'/requiredMethod', endLine, true)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                }
+                this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredMethod', end:endLine, iscircle:false, refNum:3, idxID: this.editMethodItem.id})
             }
             const addObj = Object.assign({}, this.editMethodItem)
             this.element.method.push(addObj);
+            this.refMethod = n
 
             this.cancelMethodRef()
         },
@@ -1040,8 +1229,8 @@ export default {
             if (this.isEditingMethod == true) {
                 if (this.editMethodItem.method != null && this.editMethodItem.method.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editMethodItem.method.uuid, element: constant.SomeIPServiceInterfaceDeployment_str} )
-                    document.getElementById(this.editMethodItem.method.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editMethodItem.method.uuid)
+                    // document.getElementById(this.editMethodItem.method.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', this.editMethodItem.method.uuid)
                 }
                 this.setMethodList()
                 this.isEditingMethod = false
@@ -1059,6 +1248,7 @@ export default {
         },
 
         addRequiredEvent() {
+            this.clickOtherFields()
             const editItem = { name: '', eventG: null, client: null, id: ''}
             const addObj = new Object(editItem)
             let res = true, n = 0
@@ -1077,11 +1267,17 @@ export default {
         },
         clickEeventGroupTab() {},
         changeEeventGroupTab() {
-            if(this.element.requiredevent.length > 0 && this.location == 1 && this.eventGroupTab != undefined) {
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'requiredEvent', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].id)}, 300);
+            if (this.refEventG || this.refSDClientE) {
+                this.deleteOpenElement()
+                this.refEventG = false
+                this.refSDClientE = false
             }
+            /*if(this.element.requiredevent.length > 0 && this.location == 1 && this.eventGroupTab != undefined) {
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'requiredEvent', this.element.uuid, this.eventGroupTab, this.element.requiredevent[this.eventGroupTab].id)}, 300);
+            }*/
         },
         deleteEventGroup(idx) {
+            this.clickOtherFields()
             var endLine
             if (this.element.requiredevent[idx].eventG != null) {
                 endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredEventG-'+this.element.requiredevent[idx].id)
@@ -1103,16 +1299,29 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/requiredEventG-'+item.id)
             }
+            this.clickOtherFields()
         },
         setEventGSelect(item) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredEventG-'+item.id)
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.eventG, 1)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPServiceInterfaceDeployment_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+            this.clickOtherFields()
+            if (item.eventG != null) {this.refEventG = true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredEventG-'+item.id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.eventG, 1)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: endLine, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/requiredEventG-'+item.id, endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredEventG-'+item.id, end:endLine, 
+                                        iscircle:false, refNum:4, idxID: 0, tabID: this.eventGroupTab})
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPServiceInterfaceDeployment_str} )
+                    // document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', endLine)
+                }
             }
         },
         setEventGList() {
@@ -1120,6 +1329,7 @@ export default {
             this.setactiveUUID()
         },
         setEventG(item, tab){
+            this.clickOtherFields()
             if( tab.eventG != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredEventG-'+tab.id)
                 if (endLine != undefined && endLine != item.uuid) {
@@ -1128,9 +1338,29 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/requiredEventG-'+tab.id, this.element.uuid+'/requiredEventG-'+tab.id, item.uuid)
+                    this.refEventG = true
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/requiredEventG-'+tab.id, this.element.uuid+'/requiredEventG-'+tab.id, item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredEventG-'+tab.id, end:item.uuid, iscircle:false, 
+                                        refNum:4, idxID: 0, tabID: this.eventGroupTab})
                 }
                 tab.eventG = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refEventG = true
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/requiredEventG-'+tab.id, this.element.uuid+'/requiredEventG-'+tab.id, item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredEventG-'+tab.id, end:item.uuid, iscircle:false, 
+                                        refNum:4, idxID: 0, tabID: this.eventGroupTab})
+                }
             }
             this.setactiveUUID()
         },
@@ -1140,16 +1370,29 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/requiredClient-'+item.id)
             }
+            this.clickOtherFields()
         },
         setClientSelect(item) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredClient-'+item.id)
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getClientPath(item.client)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.Client_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+            this.clickOtherFields()
+            if (item.client != null) {this.refSDClientE = true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredClient-'+item.id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getClientPath(item.client)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editClient', {compo:"drag", uuid: endLine, top: this.element.top + 510, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Client_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/requiredClient-'+item.id, endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredClient-'+item.id, end:endLine, 
+                                        iscircle:false, refNum:5, idxID: 0, tabID: this.eventGroupTab})
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.Client_str} )
+                    // document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', endLine)
+                }
             }
         },
         setClientList() {
@@ -1157,6 +1400,7 @@ export default {
             this.setactiveUUID()
         },
         setClient(item, tab){
+            this.clickOtherFields()
             if( tab.client != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/requiredClient-'+tab.id)
                 if (endLine != undefined && endLine != item.uuid) {
@@ -1165,19 +1409,36 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/requiredClient-'+tab.id, this.element.uuid+'/requiredClient-'+tab.id, item.uuid)
+                    this.refSDClientE = true
+                    this.$store.commit('editClient', {compo:"drag", uuid: item.uuid, top: this.element.top + 510, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Client_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/requiredClient-'+tab.id, this.element.uuid+'/requiredClient-'+tab.id, item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredClient-'+tab.id, end:item.uuid, 
+                                        iscircle:false, refNum:5, idxID: 0, tabID: this.eventGroupTab})
                 }
                 tab.client = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refSDClientE = true
+                    this.$store.commit('editClient', {compo:"drag", uuid: item.uuid, top: this.element.top + 510, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Client_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/requiredClient-'+tab.id, this.element.uuid+'/requiredClient-'+tab.id, item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/requiredClient-'+tab.id, end:item.uuid, 
+                                        iscircle:false, refNum:5, idxID: 0, tabID: this.eventGroupTab})
+                }
             }
             this.setactiveUUID()
         },
         newClient() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementClient', { 
-                name: this.$store.getters.getNameClient, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNameClient, path: '', input: false,
+                top: this.element.top + 510, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 delay: '', max: '', timetolive: '', delaymax: '', delaymin:''
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -1186,13 +1447,19 @@ export default {
         },
 
         addE2EEvent() {
+            this.clickOtherFields()
             const editItem = { name: '', dataIds: '', dataLength: '', period: '', e2e: null, event: null, max: '', min: '', id: ''}
             const addObj = new Object(editItem)
             let res = true, n = 0
 
-            while (res) {
-                addObj.name = 'E2EEvtProtProps_' + n++;
-                res = this.element.E2EEvent.some(ele => ele.name === addObj.name)
+            if (this.element.E2EEvent.length == 0) {
+                res = false
+                addObj.name = 'E2EEvtProtProps_' + n
+            } else {
+                while (res) {
+                    addObj.name = 'E2EEvtProtProps_' + n++;
+                    res = this.element.E2EEvent.some(ele => ele.name === addObj.name)
+                }
             }
             addObj.id = n
 
@@ -1204,11 +1471,17 @@ export default {
         },
         clickE2EEventTab() {},
         changeE2EEventTab() {
-            if(this.element.E2EEvent.length > 0 && this.location == 1 && this.E2EEventTab != undefined) {
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, this.E2EEventTab, this.element.E2EEvent[this.E2EEventTab].id)}, 300);
+            if (this.refE2EEventPro || this.refE2EEventR) {
+                this.deleteOpenElement()
+                this.refE2EEventPro = false
+                this.refE2EEventR = false
             }
+            /*if(this.element.E2EEvent.length > 0 && this.location == 1 && this.E2EEventTab != undefined) {
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'E2EEvent', this.element.uuid, this.E2EEventTab, this.element.E2EEvent[this.E2EEventTab].id)}, 300);
+            }*/
         },
         deleteE2EEvent(idx) {
+            this.clickOtherFields()
             var endLine
             if (this.element.E2EEvent[idx].e2e != null) {
                 endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePro-'+this.element.E2EEvent[idx].id)
@@ -1231,16 +1504,30 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id)
             }
+            this.clickOtherFields()
         },
         setE2ESelect(item) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id)
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getE2EProfileConfigPath(item.e2e)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.E2EProfileConfig_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+            this.clickOtherFields()
+            if (item.e2e != null) {this.refE2EEventPro = true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getE2EProfileConfigPath(item.e2e)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editE2EProfileConfig', {compo:"drag", uuid: endLine, top: this.element.top + 410, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.E2EProfileConfig_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id, endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id, end:endLine, 
+                                        iscircle:false, refNum:6, idxID: 0, tabID: this.E2EEventTab})
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.E2EProfileConfig_str} )
+                    // document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', endLine)
+                }
             }
         },
         setE2EProfileList() {
@@ -1248,6 +1535,7 @@ export default {
             this.setactiveUUID()
         },
         setE2EProfile(item, tab){
+            this.clickOtherFields()
             if( tab.e2e != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id)
                 if (endLine != undefined && endLine != item.uuid) {
@@ -1256,9 +1544,31 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id, this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id, item.uuid)
+                    this.refE2EEventPro = true
+                    this.$store.commit('editE2EProfileConfig', {compo:"drag", uuid: item.uuid, top: this.element.top + 410, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.E2EProfileConfig_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id, this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id, 
+                                    item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id, end:item.uuid, 
+                                        iscircle:false, refNum:6, idxID: 0, tabID: this.E2EEventTab})
                 }
                 tab.e2e = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refE2EEventPro = true
+                    this.$store.commit('editE2EProfileConfig', {compo:"drag", uuid: item.uuid, top: this.element.top + 410, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.E2EProfileConfig_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id, this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id, 
+                                    item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2ePro-'+this.element.E2EEvent[this.E2EEventTab].id, end:item.uuid, 
+                                        iscircle:false, refNum:6, idxID: 0, tabID: this.E2EEventTab})
+                }
             }
             this.setactiveUUID()
         },
@@ -1268,16 +1578,29 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id)
             }
+            this.clickOtherFields()
         },
         setEventSelect(item) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id)
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.event,2)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPServiceInterfaceDeployment_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+            this.clickOtherFields()
+            if (item.event != null) {this.refE2EEventR = true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.event,2)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: endLine, top: this.element.top + 80, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id, endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id, end:endLine, 
+                                        iscircle:false, refNum:7, idxID: 0, tabID:this.E2EEventTab })
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPServiceInterfaceDeployment_str} )
+                    // document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', endLine)
+                }
             }
         },
         setEventList() {
@@ -1285,6 +1608,7 @@ export default {
             this.setactiveUUID()
         },
         setEvent(item, tab){
+            this.clickOtherFields()
             if( tab.event != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id)
                 if (endLine != undefined && endLine != item.uuid) {
@@ -1293,18 +1617,44 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id, this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id, item.uuid)
+                    this.refE2EEventR = true
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: item.uuid, top: this.element.top + 80, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id, this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id, 
+                                    item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id, end:item.uuid, 
+                                        iscircle:false, refNum:7, idxID: 0, tabID: this.E2EEventTab})
                 }
                 tab.event = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refE2EEventR = true
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: item.uuid, top: this.element.top + 80, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id, this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id, 
+                                    item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2eEvent-'+this.element.E2EEvent[this.E2EEventTab].id, end:item.uuid,
+                                        iscircle:false, refNum:7, idxID: 0, tabID: this.E2EEventTab})
+                }
             }
             this.setactiveUUID()
         },
 
         addE2EMethod() {
+            this.clickOtherFields()
             const editItem = { dataIds: '', dataLength: '', period: '', e2e: null, method: null, max: '', min: '', id: ''}
             const addObj = new Object(editItem)
             let res = true, n = 0
 
+            if (this.element.E2EMethod.length == 0) {
+                res = false
+            } 
             while (res) {
                 n++;
                 res = this.element.E2EMethod.some(ele => ele.id === n)
@@ -1319,11 +1669,17 @@ export default {
         },
         clickE2EMethodtTab() {},
         changeE2EMethodTab() {
-            if(this.element.E2EMethod.length > 0 && this.location == 1 && this.E2EMethodTab != undefined) {
-                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, this.E2EMethodTab, this.element.E2EMethod[this.E2EMethodTab].id)}, 300);
+            if (this.refE2EMethodPro || this.refE2EMethodR) {
+                this.deleteOpenElement()
+                this.refE2EMethodPro = false
+                this.refE2EMethodR = false
             }
+            /*if(this.element.E2EMethod.length > 0 && this.location == 1 && this.E2EMethodTab != undefined) {
+                setTimeout(() => {EventBus.$emit('changeLine-someipService', 'E2EMethod', this.element.uuid, this.E2EMethodTab, this.element.E2EMethod[this.E2EMethodTab].id)}, 300);
+            }*/
         },
         deleteE2EMethod(idx) {
+            this.clickOtherFields()
             var endLine
             if (this.element.E2EMethod[idx].e2e != null) {
                 endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProM-'+this.element.E2EMethod[idx].id)
@@ -1346,16 +1702,29 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id)
             }
+            this.clickOtherFields()
         },
         setE2ESelectM(item) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id)
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getE2EProfileConfigPath(item.e2e)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.E2EProfileConfig_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+            this.clickOtherFields()
+            if (item.e2e != null) {this.refE2EMethodPro = true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getE2EProfileConfigPath(item.e2e)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editE2EProfileConfig', {compo:"drag", uuid: endLine, top: this.element.top + 720, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.E2EProfileConfig_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id, endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id, end:endLine, 
+                                        iscircle:false, refNum:8, idxID: 0, tabID: this.E2EMethodTab})
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.E2EProfileConfig_str} )
+                    // document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', endLine)
+                }
             }
         },
         setE2EProfileMList() {
@@ -1363,6 +1732,7 @@ export default {
             this.setactiveUUID()
         },
         setE2EProfileM(item, tab){
+            this.clickOtherFields()
             if (tab.e2e != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id)
                 if (endLine != undefined && endLine != item.uuid) {
@@ -1371,9 +1741,31 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id, this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id, item.uuid)
+                    this.refE2EMethodPro = true
+                    this.$store.commit('editE2EProfileConfig', {compo:"drag", uuid: item.uuid, top: this.element.top + 725, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.E2EProfileConfig_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id, this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id,
+                                     item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id, end:item.uuid, 
+                                        iscircle:false, refNum:8, idxID: 0, tabID: this.E2EMethodTab})
                 }
                 tab.e2e = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refE2EMethodPro = true
+                    this.$store.commit('editE2EProfileConfig', {compo:"drag", uuid: item.uuid, top: this.element.top + 725, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.E2EProfileConfig_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id, this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id,
+                                     item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2eProM-'+this.element.E2EMethod[this.E2EMethodTab].id, end:item.uuid, 
+                                        iscircle:false, refNum:8, idxID: 0, tabID: this.E2EMethodTab})
+                }
             }
             this.setactiveUUID()
         },
@@ -1383,16 +1775,29 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id)
             }
+            this.clickOtherFields()
         },
-        setE2EMethodelect(item) {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id)
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.event,3)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPServiceInterfaceDeployment_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+        setE2EMethodSelect(item) {
+            this.clickOtherFields()
+            if (item.method != null) {this.refE2EMethodR = true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.method,3)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: endLine, top: this.element.top + 500, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id, endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id, end:endLine, 
+                                        iscircle:false, refNum:9, idxID: 0, tabID: this.E2EMethodTab})
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.SomeIPServiceInterfaceDeployment_str} )
+                    // document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', endLine)
+                }
             }
         },
         setE2EMethodList() {
@@ -1400,6 +1805,7 @@ export default {
             this.setactiveUUID()
         },
         setE2EMethod(item, tab){
+            this.clickOtherFields()
             if( tab.method != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id)
                 if (endLine != undefined && endLine != item.uuid) {
@@ -1408,9 +1814,31 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id, this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id, item.uuid)
+                    this.refE2EMethodR = true
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: item.uuid, top: this.element.top + 500, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id, this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id,
+                                     item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id, end:item.uuid, 
+                                        iscircle:false, refNum:9, idxID: 0, tabID: this.E2EMethodTab})
                 }
                 tab.method = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refE2EMethodR = true
+                    this.$store.commit('editSomeIPService', {compo:"drag", uuid: item.uuid, top: this.element.top + 500, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SomeIPServiceInterfaceDeployment_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id, this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id,
+                                     item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/e2eMethod-'+this.element.E2EMethod[this.E2EMethodTab].id, end:item.uuid, 
+                                        iscircle:false, refNum:9, idxID: 0, tabID: this.E2EMethodTab})
+                }
             }
             this.setactiveUUID()
         },
@@ -1422,13 +1850,19 @@ export default {
         deleteLine(fineLine) {
             var linenum = this.$store.getters.getconnectLineNum(fineLine)
             if (linenum != -1) {
-                EventBus.$emit('delete-line', linenum)
                 this.$store.commit('deletConnectionline', {startnum: linenum} )
+                this.deleteOpenElement()
             }
         },
-        newLine(startLine, drawLine, endLine) {
+        deleteOpenElement() {
+            //EventBus.$emit('delete-line', this.$store.getters.getDeleteOpenElement(this.element.uuid))
+            this.$store.commit('deleteOpenElemnt', {uuid: this.element.uuid, isDeleteAll: false, startUUID: this.element.uuid} )
+        },
+        newLine(startLine, drawLine, endLine, isView) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
-            EventBus.$emit('new-line', drawLine, endLine)
+            if (isView) {
+                EventBus.$emit('new-line', drawLine, endLine)
+            }
         },
 
         viewARXML() {
@@ -1455,7 +1889,10 @@ export default {
             this.element.name = this.editARXML.name
             this.element.minover = this.editARXML.minover
             this.element.id = this.editARXML.id
-            this.element.ver = this.editARXML.ver
+            this.editARXML.ver = this.editARXML.ver.toUpperCase()
+            if(this.editARXML.ver == 'MINIMUM-MINOR-VERSION' || this.editARXML.ver == 'EXACT-OF-ANY-MINOR-VERSION') {
+                this.element.ver = this.editARXML.ver
+            }
 
             var endLine = null, changEndLine = null
             if (this.editARXML.deployref != this.element.deployref) {
@@ -1465,7 +1902,7 @@ export default {
                 }
                 changEndLine = this.$store.getters.getServiceInterfaceDeploymentPath(this.editARXML.deployref, 0)
                 if (changEndLine != null) {
-                    this.newLine(this.element.uuid+'/requiredDeploy', this.element.uuid+'/requiredDeploy', changEndLine)
+                    this.newLine(this.element.uuid+'/requiredDeploy', this.element.uuid+'/requiredDeploy', changEndLine, false)
                 }
             }
             this.element.deployref = this.editARXML.deployref
@@ -1476,7 +1913,7 @@ export default {
                 }
                 changEndLine = this.$store.getters.getSomeIPClientPath(this.editARXML.someipclient)
                 if (changEndLine != null) {
-                    this.newLine(this.element.uuid+'/requiredSomeIPC', this.element.uuid+'/requiredSomeIPC', changEndLine)
+                    this.newLine(this.element.uuid+'/requiredSomeIPC', this.element.uuid+'/requiredSomeIPC', changEndLine, false)
                 }
             }
             this.element.someipclient = this.editARXML.someipclient
@@ -1497,7 +1934,7 @@ export default {
                         }
                         var changEndLine = this.$store.getters.getSomeIPMethodDeploymentPath(item.method)
                         if (changEndLine != null) {
-                            this.newLine(this.element.uuid+'/requiredMethod-'+item.id, this.element.uuid+'/requiredMethod', changEndLine)
+                            this.newLine(this.element.uuid+'/requiredMethod-'+item.id, this.element.uuid+'/requiredMethod', changEndLine, false)
                         }
                     }
                 })
@@ -1547,7 +1984,7 @@ export default {
                         }
                         changEndLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.eventG, 1)
                         if (changEndLine != null) {
-                            this.newLine(this.element.uuid+'/requiredEventG-'+item.id, this.element.uuid+'/requiredE', changEndLine)
+                            this.newLine(this.element.uuid+'/requiredEventG-'+item.id, this.element.uuid+'/requiredE', changEndLine, false)
                         }
                     }
                     if (!isHaveTableC) {
@@ -1557,7 +1994,7 @@ export default {
                         }
                         changEndLine = this.$store.getters.getClientPath(item.client)
                         if (changEndLine != null) {
-                            this.newLine(this.element.uuid+'/requiredClient-'+item.id, this.element.uuid+'/requiredE', changEndLine)
+                            this.newLine(this.element.uuid+'/requiredClient-'+item.id, this.element.uuid+'/requiredE', changEndLine, false)
                         }
                     }
                 })
@@ -1625,7 +2062,7 @@ export default {
                         changEndLine = this.$store.getters.getE2EProfileConfigPath(item.e2e)
                         console.log(changEndLine)
                         if (changEndLine != null) {
-                            this.newLine(this.element.uuid+'/e2ePro-'+item.id, this.element.uuid+'/E2EE', changEndLine)
+                            this.newLine(this.element.uuid+'/e2ePro-'+item.id, this.element.uuid+'/E2EE', changEndLine, false)
                         }
                     }
                     if (!isHaveTable2E) {
@@ -1635,7 +2072,7 @@ export default {
                         }
                         changEndLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.event, 2)
                         if (changEndLine != null) {
-                            this.newLine(this.element.uuid+'/e2eEvent-'+item.id, this.element.uuid+'/E2EE', changEndLine)
+                            this.newLine(this.element.uuid+'/e2eEvent-'+item.id, this.element.uuid+'/E2EE', changEndLine, false)
                         }
                     }
                 })
@@ -1701,7 +2138,7 @@ export default {
                         }
                         changEndLine = this.$store.getters.getE2EProfileConfigPath(item.e2e)
                         if (changEndLine != null) {
-                            this.newLine(this.element.uuid+'/e2eProM-'+item.id, this.element.uuid+'/E2EM', changEndLine)
+                            this.newLine(this.element.uuid+'/e2eProM-'+item.id, this.element.uuid+'/E2EM', changEndLine, false)
                         }
                     }
                     if (!isHaveTableM) {
@@ -1711,7 +2148,7 @@ export default {
                         }
                         changEndLine = this.$store.getters.getServiceInterfaceDeploymentPath(item.method, 3)
                         if (changEndLine != null) {
-                            this.newLine(this.element.uuid+'/e2eMethod-'+item.id, this.element.uuid+'/E2EM', changEndLine)
+                            this.newLine(this.element.uuid+'/e2eMethod-'+item.id, this.element.uuid+'/E2EM', changEndLine, false)
                         }
                     }
                 })

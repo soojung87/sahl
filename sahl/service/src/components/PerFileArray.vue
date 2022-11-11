@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showPERFileArray">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -17,13 +17,10 @@
                             <v-toolbar-title>Persistency File Array</v-toolbar-title>
                             <v-spacer></v-spacer>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Persistency File Array</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputPERFileArrayName' outlined dense  @click="setactiveUUID"></v-text-field>
                             <v-card outlined class="mx-auto">
@@ -42,7 +39,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isSDGSOpenClose">
-                                    <v-data-table v-model="selectDelectSDGS" :headers="headerSDGS" :items="element.sdgs" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectSDGS" :headers="headerSDGS" :items="element.sdgs" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteSDGSItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -51,7 +48,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openSDGS(idx)" @cancel="editSDGS(idx)" @save="cancelSDGS" large >
+                                                        <v-edit-dialog persistent @open="openSDGS(idx)" @cancel="cancelSDGS" @save="editSDGS(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -69,7 +66,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addSDGS()" @save="cancelSDGS"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelSDGS" @save="addSDGS()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon >mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -112,7 +109,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isFileOpenClose">
-                                    <v-data-table v-model="selectDelectFile" :headers="headerFile" :items="element.files" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectFile" :headers="headerFile" :items="element.files" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteFileItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -121,7 +118,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openFile(idx)" @cancel="editFile(idx)" @save="cancelFile" large >
+                                                        <v-edit-dialog persistent @open="openFile(idx)" @cancel="cancelFile" @save="editFile(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -135,7 +132,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addFile()" @save="cancelFile"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelFile" @save="addFile()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon >mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -155,7 +152,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -179,9 +176,6 @@ export default {
         activeUUID() {
             return this.$store.state.activeUUID
         },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
-        },
         setting() {
             return this.$store.state.setting
         },
@@ -190,9 +184,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -215,7 +209,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             strategy: ['DELETE', 'KEEPEXISTING', 'OVERWRITE'],
             isSDGSOpenClose: true,
             isdeleteSDGSItem: false,
@@ -248,6 +242,9 @@ export default {
         if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
             this.isTooltip = false
         }
+        EventBus.$on(this.element.uuid, () => {
+            //
+        })
     },
     methods: {
         submitDialog(element) {
@@ -275,7 +272,7 @@ export default {
         showPERFileArray() {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
-                EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                EventBus.$emit('drawLine')
             })
         },
         showSDGS() {
@@ -316,7 +313,7 @@ export default {
                 for(let n=0; n<this.element.sdgs.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLine.length; idx++) {
                         if (this.element.sdgs[n].id == this.deleteChangeLine[idx].id) {
-                            this.newLine(this.element.uuid+'/PERArraySDG-'+n, this.element.uuid+'/PERArraySDG', this.deleteChangeLine[idx].endLine)
+                            this.newLine(this.element.uuid+'/PERArraySDG-'+n, this.element.uuid+'/PERArraySDG', this.deleteChangeLine[idx].endLine, false)
                         }
                     }
                 }
@@ -346,10 +343,10 @@ export default {
                 } else if (endLine != undefined && endLine != this.editSDGSItem.port.uuid) {
                     //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                     this.deleteLine(this.element.uuid+'/PERArraySDG-'+idx)
-                    this.newLine(this.element.uuid+'/PERArraySDG-'+idx, this.element.uuid+'/PERArraySDG', this.editSDGSItem.port.uuid)
+                    this.newLine(this.element.uuid+'/PERArraySDG-'+idx, this.element.uuid+'/PERArraySDG', this.editSDGSItem.port.uuid, false)
                     this.element.sdgs[idx].port = this.editSDGSItem.port.name
                 } else if (endLine == undefined && this.editSDGSItem.port != null && this.editSDGSItem.port.uuid != null) {
-                    this.newLine(this.element.uuid+'/PERArraySDG-'+idx, this.element.uuid+'/PERArraySDG', this.editSDGSItem.port.uuid)
+                    this.newLine(this.element.uuid+'/PERArraySDG-'+idx, this.element.uuid+'/PERArraySDG', this.editSDGSItem.port.uuid, false)
                     this.element.sdgs[idx].port = this.editSDGSItem.port.name
                 }
                 this.element.sdgs[idx].sd = null
@@ -392,7 +389,7 @@ export default {
             this.editSDGSItem.id = n
             this.editSDGSItem.sdg = this.editSDGSItem.sdg.name
             if( this.editSDGSItem.port != null) {
-                this.newLine(this.element.uuid+'/PERArraySDG-'+datacount, this.element.uuid+'/PERArraySDG', this.editSDGSItem.port.uuid)
+                this.newLine(this.element.uuid+'/PERArraySDG-'+datacount, this.element.uuid+'/PERArraySDG', this.editSDGSItem.port.uuid, false)
                 this.editSDGSItem.port = this.editSDGSItem.port.name
             }
 
@@ -407,8 +404,8 @@ export default {
             if (this.isEditingPort == true) {
                 if (this.editSDGSItem.port != null && this.editSDGSItem.port.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editSDGSItem.port.uuid, element: constant.SWComponents_str} )
-                    document.getElementById(this.editSDGSItem.port.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editSDGSItem.port.uuid)
+                    /*document.getElementById(this.editSDGSItem.port.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editSDGSItem.port.uuid)*/
                 }
                 this.setPortList()
                 this.isEditingPort = false
@@ -486,13 +483,19 @@ export default {
         deleteLine(fineLine) {
             var linenum = this.$store.getters.getconnectLineNum(fineLine)
             if (linenum != -1) {
-                EventBus.$emit('delete-line', linenum)
                 this.$store.commit('deletConnectionline', {startnum: linenum} )
+                this.deleteOpenElement()
             }
         },
-        newLine(startLine, drawLine, endLine) {
+        deleteOpenElement() {
+            //EventBus.$emit('delete-line', this.$store.getters.getDeleteOpenElement(this.element.uuid))
+            this.$store.commit('deleteOpenElemnt', {uuid: this.element.uuid, isDeleteAll: false, startUUID: this.element.uuid} )
+        },
+        newLine(startLine, drawLine, endLine, isView) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
-            EventBus.$emit('new-line', drawLine, endLine)
+            if (isView) {
+                EventBus.$emit('new-line', drawLine, endLine)
+            }
         },
 
     },

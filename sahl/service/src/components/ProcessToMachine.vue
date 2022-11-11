@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showProcesstoMachineMappingset">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -20,15 +20,12 @@
                                 <v-icon> mdi-format-text</v-icon>
                             </v-btn>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Process to Machine Mapping Set</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                        @input='inputProcesstoMachineMappingsetName' outlined dense></v-text-field>
+                                        @input='inputProcesstoMachineMappingsetName' @click="clickOtherFields()" outlined dense></v-text-field>
                             <v-card outlined class="mx-auto">
                                 <div class="subtitle-2" :id="element.uuid+'/proMapping'" style="height:20px">
                                     <v-hover v-slot="{ hover }">
@@ -51,10 +48,11 @@
                                         <v-tab-item v-for="(tab, idx) in element.mapping" :key="idx">
                                             <v-card flat>
                                                 <v-card-text>
-                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @input="inputProMappingName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                    <v-text-field v-model="tab.name" :rules="rules.name" label="Name" @click="clickOtherFields()" @input="inputProMappingName(tab.name)" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                     <v-row style="height: 45px">
                                                         <v-col cols="10">
-                                                            <v-text-field v-model="tab.ptmmMachine" readonly @click="setMachineRefSelect()" clearable @click:clear='clearMachineRef(idx)' label="Machine Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            <v-text-field v-model="tab.ptmmMachine" readonly @click="setMachineRefSelect()" :style="refMachine ? 'height: 43px;border:solid red 2px' : ''"
+                                                                     clearable @click:clear='clearMachineRef(idx)' label="Machine Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         </v-col>
                                                         <v-col cols="2">
                                                             <v-menu>
@@ -76,7 +74,8 @@
                                                     </v-row>
                                                     <v-row>
                                                         <v-col cols="10">
-                                                            <v-text-field v-model="tab.ptmmProcess" readonly @click="setProcessRefSelect()" clearable @click:clear='clearProcessRef(idx)' label="Process Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                                            <v-text-field v-model="tab.ptmmProcess" readonly @click="setProcessRefSelect()" :style="refProcess ? 'height: 43px;border:solid red 2px' : ''"
+                                                                         clearable @click:clear='clearProcessRef(idx)' label="Process Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                                         </v-col>
                                                         <v-col cols="2">
                                                             <v-menu>
@@ -112,7 +111,7 @@
                                                             </v-btn>
                                                         </div>
                                                         <v-card-text v-show="isRunOnOpenClose">
-                                                            <v-data-table v-model="selectDelectRunOn" :headers="headerRunOn" :items="tab.runon" :items-per-page='20'
+                                                            <v-data-table v-model="selectDelectRunOn" :headers="headerRunOn" :items="tab.runon" :items-per-page='$setNumTableList'
                                                                     :show-select="isdeleteRunOn" item-key="id" height="140px" dense hide-default-footer >
                                                                 <template v-slot:item.data-table-select="{ isSelected, select }">
                                                                     <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -121,11 +120,12 @@
                                                                     <tbody>
                                                                         <tr v-for="(item,num) in items" :key="num">
                                                                             <td v-for="(header,key) in headers" :key="key">
-                                                                                <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openRunOn(num)" @cancel="editRunOnItem(num)" @save="cancelRunOn()" large >
+                                                                                <v-icon v-if="header.value == 'refView'" class="refView-tableItem" :color="refShall === item.id ? 'red' : null " @click="rowClick(num)">mdi-pencil</v-icon>
+                                                                                <v-edit-dialog v-if="header.value != 'refView'" persistent @open="openRunOn(num)" @cancel="cancelRunOn()" @save="editRunOnItem(num)" large >
                                                                                     {{item[header.value]}}
                                                                                     <template v-slot:input>
                                                                                         <br>
-                                                                                        <v-autocomplete v-model='editRunOn.shall' label='Shall Run On Reference' :items='selRunOn' item-text='name' item-value="name" class="lable-placeholer-color"
+                                                                                        <v-autocomplete v-if="header.value != 'refView'" v-model='editRunOn.shall' label='Shall Run On Reference' :items='selRunOn' item-text='name' item-value="name" class="lable-placeholer-color"
                                                                                             return-object :readonly="!isEditingRunOn" clearable @click="setRunOnSelect()" 
                                                                                             @click:clear='clearRunOn' @blur="isEditingRunOn=true" outlined dense style="height: 45px;">
                                                                                         </v-autocomplete>
@@ -135,7 +135,7 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <th colspan="3">
-                                                                                <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addRunOn()" @save="cancelRunOn"> 
+                                                                                <v-edit-dialog  large persistent @opan="clickOtherFields()" @cancel="cancelRunOn" @save="addRunOn()"> 
                                                                                     <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                                         <v-icon >mdi-plus</v-icon>New Item
                                                                                     </v-btn>
@@ -161,7 +161,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -180,22 +180,19 @@
                             <label style="padding:10px;">&#60;&#47;SHORT-NAME&#62;</label>
                         </v-row>
                         <v-row style="height: 50px;">
-                            <label style="padding:10px;">&#60;PROCESS-TO-MACHINE-MAPPINGS&#62;
-                                <v-btn @click="newTextToMachine()" icon color="teal darken" x-samll dark>
-                                    <v-icon dense dark>mdi-plus</v-icon>
-                                </v-btn>
-                            </label>
+                            <label style="padding:10px;">&#60;PROCESS-TO-MACHINE-MAPPINGS&#62;</label>
+                            <v-btn style="margin: 3px 0px 0px -10px" @click="newTextToMachine()" icon color="teal darken" x-samll dark>
+                                <v-icon dense dark>mdi-plus</v-icon>
+                            </v-btn>
                         </v-row>
                         <div class="text-editDialog" style="height: 400px;">
                             <v-row v-for="(item, i) in editARXML.mapping" :key="i" style="height: 280px;">
                                 <div>
                                     <v-row style="height: 25px;margin:0px;">
-                                        <label style="padding:10px;margin:2px 0px 2px 10px;">
-                                            <v-btn @click="deletTextToMachine(i)" text x-small color="indigo">
-                                                <v-icon>mdi-minus</v-icon>
-                                            </v-btn>
-                                            &#60;PROCESS-TO-MACHINE-MAPPING&#62;
-                                        </label>
+                                        <v-btn style="margin: 15px -20px 0px 20px" @click="deletTextToMachine(i)" text x-small color="indigo">
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                        <label style="padding:10px;margin:2px 0px 2px 10px;">&#60;PROCESS-TO-MACHINE-MAPPING&#62;</label>
                                     </v-row>
                                     <v-row style="height: 25px;margin:0px;">
                                         <label style="padding:10px;margin:2px 0px 2px 80px;">&#60;SHORT-NAME&#62;</label>
@@ -213,22 +210,20 @@
                                         <label style="padding:10px;">&#60;&#47;PROCESS-REF&#62;</label>
                                     </v-row>
                                     <v-row style="height: 50px;">
-                                        <label style="padding:10px;margin-left:90px;">&#60;SHALL-RUN-ON-REFS&#62;
-                                            <v-btn @click="newTextShall(i)" icon color="teal darken" x-samll dark>
-                                                <v-icon dense dark>mdi-plus</v-icon>
-                                            </v-btn>
-                                        </label>
+                                        <label style="padding:10px;margin-left:90px;">&#60;SHALL-RUN-ON-REFS&#62;</label>
+                                        <v-btn @click="newTextShall(i)" icon color="teal darken" x-samll dark>
+                                            <v-icon dense dark>mdi-plus</v-icon>
+                                        </v-btn>
                                     </v-row>
                                     <div class="text-Inner-editDialog" style="height: 120px;">
                                         <v-row v-for="(run, r) in item.runon" :key="r" style="height: 30px;">
                                             <div>
                                                 <br>
                                                 <v-row style="height: 25px;margin:0px;">
-                                                    <label style="padding:10px;margin:2px 0px 2px 80px;">
-                                                        <v-btn @click="deletTextShall(r,i)" text x-small color="indigo">
-                                                            <v-icon>mdi-minus</v-icon>
-                                                        </v-btn>
-                                                        &#60;SHALL-RUN-ON-REF&#62;</label>
+                                                    <v-btn style="margin: 13px -80px 0px 80px" @click="deletTextShall(r,i)" text x-small color="indigo">
+                                                        <v-icon>mdi-minus</v-icon>
+                                                    </v-btn>
+                                                    <label style="padding:10px;margin:2px 0px 2px 70px;"> &#60;SHALL-RUN-ON-REF&#62;</label>
                                                     <v-text-field v-model="run.shall" placeholder="Path" style="width:300px;" class="lable-placeholer-color" dense></v-text-field>
                                                     <label style="padding:10px;">&#60;&#47;SHALL-RUN-ON-REF&#62;</label>
                                                 </v-row>
@@ -275,9 +270,6 @@ export default {
         activeUUID() {
             return this.$store.state.activeUUID
         },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
-        },
         setting() {
             return this.$store.state.setting
         },
@@ -286,9 +278,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -325,7 +317,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             dialogText: false,
             editARXML: {name:'', mapping: []},
             editTextConfig: {name: '', ptmmMachine: null, ptmmProcess: null, runon: [], id: ''},
@@ -339,17 +331,46 @@ export default {
             isdeleteRunOn: false,
             selectDelectRunOn: [],
             headerRunOn: [
+                { text: '', sortable: false, value: 'refView', width: '5px' },
                 { text: 'Shall Run On Ref', sortable: false, value: 'shall' },
             ],
             editRunOn: { shall: null, id: ''},
             isEditingRunOn: true,
             selRunOn: this.$store.getters.getMachinProcessor,
+
+            refMachine: false,
+            refProcess: false,
+            refShall: null
         }
     },
     mounted () {
         if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
             this.isTooltip = false
         }
+        EventBus.$on(this.element.uuid, (refNum, idxID, tabID, id, isDeleteItem, idxRow) => {
+            if (isDeleteItem) {
+                if (this.refShall == id && this.element.mapping[this.mappingTab].id == tabID) {
+                    this.refShall = id + 1
+                    this.rowClick(idxRow)
+                }
+            } else {
+                this.refMachine = false
+                this.refProcess = false
+                this.refShall = null
+
+                if (refNum == 1) {
+                    this.mappingTab = tabID
+                    this.refMachine = true
+                } else if (refNum == 2) {
+                    this.mappingTab = tabID
+                    this.refProcess = true
+                } else if (refNum == 3) {
+                    this.mappingTab = tabID
+                    this.refShall = idxID
+                }
+            }
+            console.log('##  '+ this.mappingTab)
+        })
     },
     methods: {
         submitDialog(element) {
@@ -374,21 +395,16 @@ export default {
             }
         },
         showProcesstoMachineMappingset() {
+            this.clickOtherFields()
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
-                EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
-                if(this.iselementOpenClose && this.location == 1) {
-                    if (this.isProMappingOpenClose) {
-                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.mappingTab, this.element.mapping[this.mappingTab].id)
-                    } else {
-                        EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
-                    }
-                }
+                EventBus.$emit('drawLine')
             })
         },
         showProMapping() {
+            this.clickOtherFields()
             this.isProMappingOpenClose = this.isProMappingOpenClose ? false : true
-            if(this.element.mapping.length > 0 && this.location == 1) {
+            /*if(this.element.mapping.length > 0 && this.location == 1) {
                 this.$nextTick(() => {
                     if(this.isProMappingOpenClose) {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.mappingTab, this.element.mapping[this.mappingTab].id)
@@ -396,9 +412,10 @@ export default {
                         EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
                     }
                 })
-            }
+            }*/
         },
         showRunOn() {
+            this.clickOtherFields()
             this.isRunOnOpenClose = this.isRunOnOpenClose ? false : true
         },
         inputProcesstoMachineMappingsetName() {
@@ -407,7 +424,43 @@ export default {
             if (this.element.name != '') {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
-        }, 
+        },
+        clickOtherFields() {
+            if (this.refMachine || this.refProcess || this.refShall != null) {
+                this.deleteOpenElement()
+                this.refMachine = false
+                this.refProcess = false
+                this.refShall = null
+            }
+        },
+        rowClick(idx) {
+            console.log('rowClick ' + idx)
+            if (this.refShall != this.element.mapping[this.mappingTab].runon[idx].id) { // 같은거 계속 누르면 안됨
+                //기존것 delete하고 
+                this.clickOtherFields()
+                // 새로들어온 idx line draw
+                if (this.element.mapping[this.mappingTab].runon[idx].shall != null) {
+                    var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].runon[idx].id+'-'+this.element.mapping[this.mappingTab].id)
+                    if (endLine == undefined) {
+                        endLine = this.$store.getters.getMachineProcessorPath(this.element.mapping[this.mappingTab].runon[idx].shall)
+                    }
+                    if (endLine != null) {
+                        // 기존에 있던거 좌표 바꿔줘야함.
+                        this.$store.commit('editMachine', {compo:"drag", uuid: endLine, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                        this.$store.commit('setzIndexVisible', {parent:constant.Machine_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                        
+                        this.$nextTick(() => { 
+                            EventBus.$emit('Element-open', true, endLine)
+                            EventBus.$emit('new-line', this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].id, endLine)
+                            document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        })
+                        this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].id, end:endLine, iscircle:false, refNum:3,
+                                         idxID: this.element.mapping[this.mappingTab].runon[idx].id, tabID: this.mappingTab})
+                    }
+                }
+                this.refShall = this.element.mapping[this.mappingTab].runon[idx].id
+            }
+        },
 
         clearMachineRef(idx) {
             this.element.mapping[idx].ptmmMachine = null
@@ -415,16 +468,30 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/machinefromptmm-' + this.element.mapping[idx].id)
             }
+            this.clickOtherFields()
         },
         setMachineRefSelect() {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id)
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getMachinePath(this.element.mapping[this.mappingTab].ptmmMachine, 0)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.Machine_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+            this.clickOtherFields()
+            if (this.element.mapping[this.mappingTab].ptmmMachine != null) {this.refMachine = true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getMachinePath(this.element.mapping[this.mappingTab].ptmmMachine, 0)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editMachine', {compo:"drag", uuid: endLine, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Machine_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('Element-open', true, endLine)
+                        EventBus.$emit('new-line', this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id, endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id, end:endLine, iscircle:false, 
+                                    refNum:1, idxID: 0, tabID: this.mappingTab})
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.Machine_str} )
+                    // document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', endLine)
+                }
             }
         },
         setMachineList() {
@@ -433,6 +500,7 @@ export default {
         },
         setMachine(item) {
             console.log('/// '+ this.element.mapping[this.mappingTab].ptmmMachine)
+            this.clickOtherFields()
             if( this.element.mapping[this.mappingTab].ptmmMachine != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/machinefromptmm-'+ this.element.mapping[this.mappingTab].id)
                 if (endLine != undefined && endLine != item.uuid) {
@@ -441,21 +509,54 @@ export default {
                 }
                 //새로 추가해준다
                 if (endLine != item.uuid) {
-                    this.newLine(this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id, this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id, item.uuid)
+                    this.refMachine = true
+                    this.$store.commit('editMachine', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Machine_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => {     
+                        EventBus.$emit('Element-open', true, item.uuid)
+                        this.newLine(this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id, this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id,
+                                     item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id, end:item.uuid, iscircle:false, 
+                                        refNum:1, idxID: 0, tabID: this.mappingTab})
                 }
                 this.element.mapping[this.mappingTab].ptmmMachine = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refMachine = true
+                    this.$store.commit('editMachine', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Machine_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => {     
+                        EventBus.$emit('Element-open', true, item.uuid)
+                        this.newLine(this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id, this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id,
+                                     item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/machinefromptmm-'+this.element.mapping[this.mappingTab].id, end:item.uuid, iscircle:false,
+                                        refNum:1, idxID: 0, tabID: this.mappingTab})
+                }
             }
             this.setactiveUUID()
         },
         newMachine() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
+            /*var nameMachine = this.$store.getters.getNameMachine
+            this.$store.commit('addElementModeDeclarationGroup', {
+                name: nameMachine+'_MachineState_ModeDeclarationGroup', path: '',
+                top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                zindex: 10, modedeclaration:[{name: 'Off', value: ''},{name: 'Startup', Value: ''},{name: 'Running', Value: ''},{name: 'Shutdown', Value: ''}], initmode:'Off', icon:"mdi-clipboard-outline", validation: false
+            })
             this.$store.commit('addElementMachine', {
-                name: this.$store.getters.getNameMachine, path: '',
-                top: elementY, left: elementX, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, admin: '',
+                name: nameMachine, path: '',
+                top: elementY, left: elementX, zindex: 10, machinedesign:null, enterTimeout:'', exitTimeout:'', hwelement:[], executable:null, admin: '',
+                functiongroup:[{name:'MachineState', type:'/'+nameMachine+'_MachineState_ModeDeclarationGroup'}], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: [], icon:"mdi-clipboard-outline", validation: false
+            })*/
+            this.$store.commit('addElementMachine', {
+                name: this.$store.getters.getNameMachine, path: '', input: false,
+                top: this.element.top - 20, left: this.element.left + this.$setPositionLeft, zindex: 10, machinedesign:null, enterTimeout:'', exitTimeout:'', hwelement:[], executable:null, admin: '',
                 functiongroup:[], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: [], icon:"mdi-clipboard-outline", validation: false
             })
+            //EventBus.$emit('add-element', constant.ModeDeclarationGroup_str)
             EventBus.$emit('add-element', constant.Machine_str)
             EventBus.$emit('add-element', constant.Machines_str)
             this.$store.commit('editProtoMachineMapping', {compo:"z", uuid:this.element.uuid, zindex:2} )
@@ -466,16 +567,29 @@ export default {
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/processfromptmm-'+this.element.mapping[idx].id)
             }
+            this.clickOtherFields()
         },
         setProcessRefSelect() {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id)
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getProcessPath(this.element.mapping[this.mappingTab].ptmmProcess)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.Process_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+            this.clickOtherFields()
+            if (this.element.mapping[this.mappingTab].ptmmProcess != null) {this.refProcess= true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id)
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getProcessPath(this.element.mapping[this.mappingTab].ptmmProcess)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editProcess', {compo:"drag", uuid: endLine, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Process_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id, endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id, end:endLine, iscircle:false, 
+                                        refNum:2, idxID: 0, tabID: this.mappingTab})
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.Process_str} )
+                    // document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', endLine)
+                }
             }
         },
         setProcessList() {
@@ -483,6 +597,7 @@ export default {
             this.setactiveUUID()
         },
         setProcess(item) {
+            this.clickOtherFields()
             if( this.element.mapping[this.mappingTab].ptmmProcess != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id)
                 if (endLine != undefined && endLine != item.uuid) {
@@ -490,18 +605,39 @@ export default {
                     this.deleteLine(this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id)
                 }
                 //새로 추가해준다
-                this.newLine(this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id, this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id, item.uuid)
+                if (endLine != item.uuid) {
+                    this.refProcess = true
+                    this.$store.commit('editProcess', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Process_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id, this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id,
+                                 item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id, end:item.uuid, iscircle:false, 
+                                        refNum:2, idxID: 0, tabID: this.mappingTab})
+                }
                 this.element.mapping[this.mappingTab].ptmmProcess = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refProcess = true
+                    this.$store.commit('editProcess', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Process_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id, this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id,
+                                 item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/processfromptmm-'+this.element.mapping[this.mappingTab].id, end:item.uuid, iscircle:false, 
+                                        refNum:2, idxID: 0, tabID: this.mappingTab})
+                }
             }
             this.setactiveUUID()
         },
         newProcess() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementProcess', { //prodesign, determin, execut, machinetype  는 null해줘야한다. clearable하면 값이 null변하기 때문에 
-                name: this.$store.getters.getNameProcess, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNameProcess, path: '', input: false,
+                top: this.element.top + 200, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 logLevel: null, logPath: '', logProDesc: '', logProID: '', restart: '', preMapping: null, logMode: [],
                 prodesign: null, determin: null, execut: null, machinname: '', machinetype: null, dependent: []
             })
@@ -511,6 +647,7 @@ export default {
         },
 
         addProMapping() {
+            this.clickOtherFields()
             const editItem = {name: '', ptmmMachine: null, ptmmProcess: null, runon: [], id: ''}
             const addObj = new Object(editItem)
             let res = true, n = 0
@@ -522,20 +659,22 @@ export default {
             addObj.id = n
             this.element.mapping.push(addObj)
             this.mappingTab = this.element.mapping.length-1
-            if(this.location == 1) {
+            /*if(this.location == 1) {
                 EventBus.$emit('changeLine-someipService', '', this.element.uuid, null)
-            }
+            }*/
         },
         clickProMappingtab() {
             this.isdeleteRunOn = false
             this.selectDelectRunOn = []
         },
         changeProMappingTab() {
-            if(this.element.mapping.length > 0 && this.location == 1 && this.mappingTab != undefined) {
+            this.clickOtherFields()
+            /*if(this.element.mapping.length > 0 && this.location == 1 && this.mappingTab != undefined) {
                 setTimeout(() => {EventBus.$emit('changeLine-someipService', '', this.element.uuid, this.mappingTab, this.element.mapping[this.mappingTab].id)}, 300);
-            }
+            }*/
         },
         deleteProMapping(idx) {
+            this.clickOtherFields()
             this.$store.commit('deleteRefTable', {deleteName:'proMapping', deleteTab: true, tabName: this.element.mapping[idx].name, path: this.element.path, name: this.element.name})
 
             if (this.element.mapping[this.mappingTab].ptmmMachine != null) {
@@ -554,6 +693,7 @@ export default {
             this.element.mapping.splice(idx, 1)
         },
         isCheckRunOn() {
+            this.clickOtherFields()
             if (this.isdeleteRunOn == true) {
                 this.isdeleteRunOn = false
                 this.selectDelectRunOn = []
@@ -562,6 +702,7 @@ export default {
             }
         },
         deleteRunOn() {
+            this.clickOtherFields()
             if (this.isdeleteRunOn == true) {
                 this.selectDelectRunOn.forEach(element => {
                     for(let i=0; i<this.element.mapping[this.mappingTab].runon.length; i++){
@@ -581,7 +722,7 @@ export default {
                 this.selectDelectRunOn = []
             } 
         },
-        openRunOn(idx) { 
+        openRunOn(idx) {
             this.selRunOn = this.$store.getters.getMachinProcessor
 
             if ( this.element.mapping[this.mappingTab].runon[idx].shall != null) {
@@ -600,13 +741,31 @@ export default {
             } else if (endLine != undefined && endLine != this.editRunOn.shall.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].runon[idx].id+'-'+this.element.mapping[this.mappingTab].id)
-                this.newLine(this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].runon[idx].id+'-'+this.element.mapping[this.mappingTab].id, this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].id, this.editRunOn.shall.uuid)
+                this.newLine(this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].runon[idx].id+'-'+this.element.mapping[this.mappingTab].id, 
+                                this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].id, this.editRunOn.shall.uuid, false)
                 this.element.mapping[this.mappingTab].runon[idx].shall = this.editRunOn.shall.name
             } else if (endLine == undefined && this.editRunOn.shall != null && this.editRunOn.shall.uuid != null) {
-                this.newLine(this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].runon[idx].id+'-'+this.element.mapping[this.mappingTab].id, this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].id, this.editRunOn.shall.uuid)
+                this.newLine(this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].runon[idx].id+'-'+this.element.mapping[this.mappingTab].id, 
+                                this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].id, this.editRunOn.shall.uuid, false)
                 this.element.mapping[this.mappingTab].runon[idx].shall = this.editRunOn.shall.name
             } else if (this.editRunOn.shall != null && endLine == this.editRunOn.method.uuid && this.element.mapping[this.mappingTab].runon[idx].shall != this.editRunOn.shall.name) {
                 this.element.mapping[this.mappingTab].runon[idx].shall = this.editRunOn.shall.name
+            }
+
+            if (this.refShall == this.element.mapping[this.mappingTab].runon[idx].id) {
+                this.deleteOpenElement()
+                if (this.editRunOn.shall != null && this.editRunOn.shall.uuid != null) {
+                    var endLineChange= this.editRunOn.shall.uuid
+                    this.$store.commit('editMachine', {compo:"drag", uuid: this.editRunOn.shall.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.Machine_str, uuid: this.editRunOn.shall.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('Element-open', true, endLineChange)
+                        EventBus.$emit('new-line', this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].id, endLineChange)
+                        document.getElementById(endLineChange+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].id, end:endLineChange,
+                                         iscircle:false, refNum:3, idxID: this.refShall, tabID: this.mappingTab})
+                }
             }
 
             this.cancelRunOn()
@@ -616,28 +775,40 @@ export default {
             this.setactiveUUID()
         },
         addRunOn() {
+            this.clickOtherFields()
             let res = true, n = 0
             while (res) {
                 n++
                 res = this.element.mapping[this.mappingTab].runon.some(item => item.id === n)
             }
             this.editRunOn.id = n
-
+            var endLine = null
             if( this.editRunOn.shall != null) {
-                this.newLine(this.element.uuid+'/runOn-'+n+'-'+this.element.mapping[this.mappingTab].id, this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].id, this.editRunOn.shall.uuid)
+                endLine = this.editRunOn.shall.uuid
+                this.$store.commit('editMachine', {compo:"drag", uuid: this.editRunOn.shall.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                this.$store.commit('setzIndexVisible', {parent:constant.Machine_str, uuid: this.editRunOn.shall.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                
                 this.editRunOn.shall = this.editRunOn.shall.name
+                this.$nextTick(() => { 
+                    EventBus.$emit('Element-open', true, endLine)
+                    this.newLine(this.element.uuid+'/runOn-'+n+'-'+this.element.mapping[this.mappingTab].id, this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].id, 
+                                endLine, true)
+                    document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                })
+                this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/runOn-'+this.element.mapping[this.mappingTab].id, end:endLine, iscircle:false, 
+                                    refNum:3, idxID: this.editRunOn.id, tabID: this.mappingTab})
             }
-
             const addObj = Object.assign({}, this.editRunOn)
             this.element.mapping[this.mappingTab].runon.push(addObj);
+            this.refShall = n
             this.cancelRunOn()
         },
         setRunOnSelect() {
             if (this.isEditingRunOn == true) {
                 if (this.editRunOn.shall != null && this.editRunOn.shall.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editRunOn.shall.uuid, element: constant.Machine_str} )
-                    document.getElementById(this.editRunOn.shall.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editRunOn.shall.uuid)
+                    // document.getElementById(this.editRunOn.shall.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    // EventBus.$emit('active-element', this.editRunOn.shall.uuid)
                 }
                 this.setEventList()
                 this.isEditingRunOn = false
@@ -661,13 +832,19 @@ export default {
         deleteLine(fineLine) {
             var linenum = this.$store.getters.getconnectLineNum(fineLine)
             if (linenum != -1) {
-                EventBus.$emit('delete-line', linenum)
                 this.$store.commit('deletConnectionline', {startnum: linenum} )
+                this.deleteOpenElement()
             }
         },
-        newLine(startLine, drawLine, endLine) {
+        deleteOpenElement() {
+            //EventBus.$emit('delete-line', this.$store.getters.getDeleteOpenElement(this.element.uuid))
+            this.$store.commit('deleteOpenElemnt', {uuid: this.element.uuid, isDeleteAll: false, startUUID: this.element.uuid} )
+        },
+        newLine(startLine, drawLine, endLine, isView) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
-            EventBus.$emit('new-line', drawLine, endLine)
+            if (isView) {
+                EventBus.$emit('new-line', drawLine, endLine)
+            }
         },
 
         viewARXML() {
@@ -702,7 +879,7 @@ export default {
                             }
                             changEndLine = this.$store.getters.getMachinePath(item.ptmmMachine, 0)
                             if (changEndLine != null) {
-                                this.newLine(this.element.uuid+'/machinefromptmm-'+item.id, this.element.uuid+'/proMapping', changEndLine)
+                                this.newLine(this.element.uuid+'/machinefromptmm-'+item.id, this.element.uuid+'/proMapping', changEndLine, false)
                             }
                         }
                         if (item.ptmmProcess != this.element.mapping[idxHaveTable].ptmmProcess) {
@@ -712,7 +889,7 @@ export default {
                             }
                             changEndLine = this.$store.getters.getProcessPath(item.ptmmProcess)
                             if (changEndLine != null) {
-                                this.newLine(this.element.uuid+'/processfromptmm-'+item.id, this.element.uuid+'/proMapping', changEndLine)
+                                this.newLine(this.element.uuid+'/processfromptmm-'+item.id, this.element.uuid+'/proMapping', changEndLine, false)
                             }
                         }
                         if (item.runon.length > 0) {
@@ -730,7 +907,7 @@ export default {
                                     }
                                     changEndLine = this.$store.getters.getMachineProcessorPath(run.shall)
                                     if (changEndLine != null) {
-                                        this.newLine(this.element.uuid+'/runOn-'+run.id+'-'+item.id, this.element.uuid+'/runOn-'+item.id, changEndLine)
+                                        this.newLine(this.element.uuid+'/runOn-'+run.id+'-'+item.id, this.element.uuid+'/runOn-'+item.id, changEndLine, false)
                                     }
                                 }
                             })
@@ -762,13 +939,13 @@ export default {
                         if (item.ptmmMachine != null) {
                             changEndLine = this.$store.getters.getMachinePath(item.ptmmMachine, 0)
                             if (changEndLine != null) {
-                                this.newLine(this.element.uuid+'/machinefromptmm-'+item.id, this.element.uuid+'/proMapping', changEndLine)
+                                this.newLine(this.element.uuid+'/machinefromptmm-'+item.id, this.element.uuid+'/proMapping', changEndLine, false)
                             }   
                         }
                         if (item.ptmmProcess != null) {
                             changEndLine = this.$store.getters.getProcessPath(item.ptmmProcess)
                             if (changEndLine != null) {
-                                this.newLine(this.element.uuid+'/processfromptmm-'+item.id, this.element.uuid+'/proMapping', changEndLine)
+                                this.newLine(this.element.uuid+'/processfromptmm-'+item.id, this.element.uuid+'/proMapping', changEndLine, false)
                             }   
                         }
                         if (item.runon.length > 0) {
@@ -776,7 +953,7 @@ export default {
                                 if (run.shall != null) {
                                     var changEndLine = this.$store.getters.getMachineProcessorPath(run.shall)
                                     if (changEndLine != null) {
-                                        this.newLine(this.element.uuid+'/runOn-'+run.id+'-'+item.id, this.element.uuid+'/runOn-'+item.id, changEndLine)
+                                        this.newLine(this.element.uuid+'/runOn-'+run.id+'-'+item.id, this.element.uuid+'/runOn-'+item.id, changEndLine, false)
                                     }
                                 }
                             })

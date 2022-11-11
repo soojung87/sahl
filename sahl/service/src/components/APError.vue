@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn  icon @click="showError">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -20,20 +20,17 @@
                                 <v-icon> mdi-format-text</v-icon>
                             </v-btn>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>AP Application Error</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                        @input='inputErrorName' outlined dense></v-text-field>
-                            <v-text-field v-model="element.desc" label="Desc" placeholder="String" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
-                            <v-text-field v-model="element.errorcode" label="Error Code" placeholder="int" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
+                                        @input='inputErrorName' @click="clickOtherFields()" outlined dense></v-text-field>
+                            <v-text-field v-model="element.desc" label="Desc" @click="clickOtherFields()" placeholder="String" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-text-field v-model="element.errorcode" label="Error Code" @click="clickOtherFields()" placeholder="int" style="height: 45px;"  outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-row>
                                 <v-col cols="10">
-                                    <v-text-field v-model="element.errorDref" readonly @click="setErrorDSelect()" clearable @click:clear='clearErrorD()' label="Error Domain Reference" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                    <v-text-field v-model="element.errorDref" readonly @click="setErrorDSelect()" clearable @click:clear='clearErrorD()' label="Error Domain Reference" :style="refDomain ? 'height: 43px;border:solid red 2px' : ''" outlined dense class="lable-placeholer-color"></v-text-field>
                                 </v-col>
                                 <v-col cols="2">
                                     <v-menu>
@@ -46,7 +43,7 @@
                                             <v-list-item v-for="(item, i) in selErrorDomain" :key="i" link @click="setErrorD(item)">
                                                 <v-list-item-title>{{ item.name }}</v-list-item-title>
                                             </v-list-item>
-                                            <v-btn outlined color="indigo" dense text small block @click="newErrorD" >
+                                            <v-btn id="newDomainBtn" outlined color="indigo" dense text small block @click="newErrorD()">
                                                 <v-icon >mdi-plus</v-icon>New Item
                                             </v-btn>
                                         </v-list>
@@ -54,7 +51,7 @@
                                 </v-col>
                             </v-row>
                         </v-card-text>
-                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -116,20 +113,20 @@ export default {
         activeUUID() {
             return this.$store.state.activeUUID
         },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
-        },
         setting() {
             return this.$store.state.setting
         },
+        openElement() {
+            return this.$store.state.openElement
+        }
     },
     watch: {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -157,17 +154,25 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             selErrorDomain: this.$store.getters.getErrorDomain,
             dialogPath: false,
             dialogText: false,
-            editARXML: {name:'', desc:'', errorcode: '', errorDref: ''},            
+            editARXML: {name:'', desc:'', errorcode: '', errorDref: ''},
+            refDomain: false,         
         }
     },
     mounted () {
         if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
             this.isTooltip = false
         }
+        EventBus.$on(this.element.uuid, (refNum) => {
+            if (refNum == 1) {
+                this.refDomain = true
+            } else {
+                this.refDomain = false
+            }
+        })
     },
     methods: {
         submitDialog(element) {
@@ -193,9 +198,10 @@ export default {
             }
         },
         showError () {
+            this.clickOtherFields()
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
-                EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                EventBus.$emit('drawLine')
             })
         },
         inputErrorName () {
@@ -205,24 +211,41 @@ export default {
                 this.$store.commit('isintoErrorList', {uuid:this.element.uuid, name:this.element.name, path:this.element.path})
             }
         },
+        clickOtherFields() {
+            if (this.refDomain) {
+                this.deleteOpenElement()
+                this.refDomain = false
+            }
+        },
 
         clearErrorD() {
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/errordomain')
             if (endLine != undefined) {
                 this.element.errorDref = null
                 this.deleteLine(this.element.uuid+'/errordomain')
+                this.refDomain = false
             }
         },
         setErrorDSelect() {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/errordomain')
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getErrorDomainPath(this.element.errorDref)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.ErrorDomain_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
-            }
+            if (this.element.errorDref != null) {this.refDomain = true}
+            //if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/errordomain')
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getErrorDomainPath(this.element.errorDref)
+                }
+                if (endLine != null) {
+                    // 기존에 있던거 좌표 바꿔줘야함.
+                    if (this.$store.getters.getDeleteOpenElement(endLine) == -1) {
+                        this.$store.commit('editErrorDomain', {compo:"drag", uuid: endLine, top: this.element.top + 100, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.ErrorDomain_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/errordomain', endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/errordomain', end:endLine, iscircle:false, refNum:1})
+                }
+            //}
         },
         setErrorDList() {
             this.selErrorDomain = this.$store.getters.getErrorDomain
@@ -237,18 +260,39 @@ export default {
                     this.deleteLine(this.element.uuid+'/errordomain')
                 }
                 //새로 추가해준다
-                this.newLine(this.element.uuid+'/errordomain', this.element.uuid+'/errordomain', item.uuid)
+                if (endLine != item.uuid) {
+                    this.refDomain = true
+                    if (this.$store.getters.getDeleteOpenElement(item.uuid) == -1) {
+                        this.$store.commit('editErrorDomain', {compo:"drag", uuid: item.uuid, top: this.element.top + 100, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.ErrorDomain_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/errordomain', this.element.uuid+'/errordomain', item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/errordomain', end:item.uuid, iscircle:false, refNum:1})
+                }
                 this.element.errorDref = item.name
+            } else {
+                //if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refDomain = true
+                    if (this.$store.getters.getDeleteOpenElement(item.uuid) == -1) {
+                        this.$store.commit('editErrorDomain', {compo:"drag", uuid: item.uuid, top: this.element.top + 100, left: this.element.left + this.$setPositionLeft} )
+                    }
+                    this.$store.commit('setzIndexVisible', {parent:constant.ErrorDomain_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/errordomain', this.element.uuid+'/errordomain', item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/errordomain', end:item.uuid, iscircle:false, refNum:1})
+                //}
             }
             this.setactiveUUID()
         },
         newErrorD() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementErrorDomain', {
-                name: this.$store.getters.getNameErrorDomain, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNameErrorDomain, path: '', input: false,
+                top: this.element.top + 100, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                 namespace:'', value:'',
             })
             EventBus.$emit('add-element', constant.Service_str)
@@ -263,13 +307,19 @@ export default {
         deleteLine(fineLine) {
             var linenum = this.$store.getters.getconnectLineNum(fineLine)
             if (linenum != -1) {
-                EventBus.$emit('delete-line', linenum)
                 this.$store.commit('deletConnectionline', {startnum: linenum} )
+                this.deleteOpenElement()
             }
         },
-        newLine(startLine, drawLine, endLine) {
+        deleteOpenElement() {
+            //EventBus.$emit('delete-line', this.$store.getters.getDeleteOpenElement(this.element.uuid))
+            this.$store.commit('deleteOpenElemnt', {uuid: this.element.uuid, isDeleteAll: false, startUUID: this.element.uuid} )
+        },
+        newLine(startLine, drawLine, endLine, isView) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
-            EventBus.$emit('new-line', drawLine, endLine)
+            if (isView) {
+                EventBus.$emit('new-line', drawLine, endLine)
+            }
         },
 
         viewARXML() {
@@ -297,7 +347,7 @@ export default {
                 }
                 var changEndLine = this.$store.getters.getErrorDomainPath(this.editARXML.errorDref)
                 if (changEndLine != null) {
-                    this.newLine(this.element.uuid+'/errordomain', this.element.uuid+'/errordomain', changEndLine)
+                    this.newLine(this.element.uuid+'/errordomain', this.element.uuid+'/errordomain', changEndLine, false)
                 }
             }
             this.element.errorDref = this.editARXML.errorDref

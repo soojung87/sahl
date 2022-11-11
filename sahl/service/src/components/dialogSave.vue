@@ -41,6 +41,22 @@
                                                     <v-icon v-if="isIncludeSaveWindow(item.uuid, 'H')" color="indigo" small class="pa-0 ma-n1">mdi mdi-alpha-h</v-icon>
                                                     <v-icon v-if="isIncludeSaveWindow(item.uuid, 'I')" color="teal" small class="pa-0 ma-n1">mdi mdi-alpha-i</v-icon>
                                                     <v-icon v-if="isIncludeSaveWindow(item.uuid, 'J')" color="cyan" small class="pa-0 ma-n1">mdi mdi-alpha-j</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'K')" color="#0000FF" small class="pa-0 ma-n1">mdi mdi-alpha-k</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'L')" color="#00FFFF" small class="pa-0 ma-n1">mdi mdi-alpha-l</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'M')" color="#FF7F50" small class="pa-0 ma-n1">mdi mdi-alpha-m</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'N')" color="#A9A9A9" small class="pa-0 ma-n1">mdi mdi-alpha-n</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'O')" color="#DEB887" small class="pa-0 ma-n1">mdi mdi-alpha-o</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'P')" color="#FFD700" small class="pa-0 ma-n1">mdi mdi-alpha-p</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'Q')" color="#87CEFA" small class="pa-0 ma-n1">mdi mdi-alpha-q</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'R')" color="#FF69B4" small class="pa-0 ma-n1">mdi mdi-alpha-r</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'S')" color="#000080" small class="pa-0 ma-n1">mdi mdi-alpha-s</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'T')" color="#DA70D6" small class="pa-0 ma-n1">mdi mdi-alpha-t</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'U')" color="#663399" small class="pa-0 ma-n1">mdi mdi-alpha-u</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'V')" color="#FF6347" small class="pa-0 ma-n1">mdi mdi-alpha-v</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'W')" color="#9ACD32" small class="pa-0 ma-n1">mdi mdi-alpha-w</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'X')" color="#7CFC00" small class="pa-0 ma-n1">mdi mdi-alpha-x</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'Y')" color="#FF8C00" small class="pa-0 ma-n1">mdi mdi-alpha-y</v-icon>
+                                                    <v-icon v-if="isIncludeSaveWindow(item.uuid, 'Z')" color="#8A2BE2" small class="pa-0 ma-n1">mdi mdi-alpha-z</v-icon>
                                                 </template>
                                             </v-treeview>
                                         </v-card-text>
@@ -71,7 +87,7 @@
                         <v-row>
                             <v-col cols="3">
                                 <v-btn @click="btnSaveFile" dense color="teal darken" dark> find save file </v-btn>
-                                <input ref="saveloader" class="d-none" type="file" @click="onClickSaveFile" @change="uploadSaveFile">
+                                <input ref="saveloader" class="d-none" aria-label="file" type="file" @click="onClickSaveFile" @change="changeloadSaveFile">
                             </v-col>
                         </v-row>
                         <v-row>
@@ -138,6 +154,9 @@ export default {
         errorList() {
             return this.$store.state.errorList
         },
+        beforeSaveList() {
+            return this.$store.state.beforeSaveList
+        },
 
         dialogSaveWindow: {
             get() {
@@ -181,6 +200,22 @@ export default {
                 { existence: false, key:'H'},
                 { existence: false, key:'I'},
                 { existence: false, key:'J'},
+                { existence: false, key:'K'},
+                { existence: false, key:'L'},
+                { existence: false, key:'M'},
+                { existence: false, key:'N'},
+                { existence: false, key:'O'},
+                { existence: false, key:'P'},
+                { existence: false, key:'Q'},
+                { existence: false, key:'R'},
+                { existence: false, key:'S'},
+                { existence: false, key:'T'},
+                { existence: false, key:'U'},
+                { existence: false, key:'V'},
+                { existence: false, key:'W'},
+                { existence: false, key:'X'},
+                { existence: false, key:'Y'},
+                { existence: false, key:'Z'},
             ],
             dialogNoValidation: false,
             snackbar: false,
@@ -188,6 +223,7 @@ export default {
             timeout: 2000,
             dialogOpen: false,
             reOpen: true, // update,beforeupdate는 무언가를 누를때마다 불린다. cancle누르면  둘다 불려서 dialogOpen이 true로 변하기 떄문에 이걸로 바뀌지 않게 잡아줘야함.
+            isValidationSaveList: false,
             //openIds: [],
         }
     },
@@ -207,6 +243,11 @@ export default {
             this.tabListItem[1].list = JSON.parse(JSON.stringify(this.navigatorList[this.openProjectIndex].children[constant.Service_index].children))
             this.tabListItem[2].list = JSON.parse(JSON.stringify(this.navigatorList[this.openProjectIndex].children[constant.AdaptiveApplication_index].children))
             this.tabListItem[3].list = JSON.parse(JSON.stringify(this.navigatorList[this.openProjectIndex].children[constant.Machines_index].children))
+            if (this.isValidationSaveList) {
+                this.saveList = JSON.parse(JSON.stringify(this.$store.state.beforeSaveList))
+                this.isValidationSaveList = false
+                this.checkNotontheList()
+            }
             this.dialogOpen = true
             this.reOpen = false
             this.setOpenList(0)
@@ -214,7 +255,7 @@ export default {
     },
     methods: {
         newSaveWindow() {
-            if (this.saveList.length < 10) {
+            if (this.saveList.length < 26) {
                 var radio = ''
                 this.saveList.forEach( list => {
                     this.checkList.forEach ( item => {
@@ -427,7 +468,7 @@ export default {
         onClickSaveFile(e) {
             e.target.value = ''
         },
-        uploadSaveFile () {
+        changeloadSaveFile () {
             let file = this.$refs.saveloader.files[0];
             if(!file || file.type !== 'text/plain') return;
             
@@ -485,6 +526,7 @@ export default {
                 this.cancelSave()
             } else {
                 this.snackbar = true
+                this.isValidationSaveList = true
             }
         },
         cancelSave() {
@@ -500,10 +542,13 @@ export default {
             this.listTab = 0
             this.moveSaveFile = []
             this.radios = null
-            this.saveList = [ {radio:'A', savename:'', label: 'A Save File Name', selectItem:undefined, saveFile: [], },]
+            if (this.isValidationSaveList) {
+                this.$store.commit('saveSaveList', {list: this.saveList} )
+            } else {
+                this.saveList = [ {radio:'A', savename:'', label: 'A Save File Name', selectItem:undefined, saveFile: [], },]
+            }
             this.checkAll = false
             this.onlyList = false
-
         },
         setOpenList(idx) {
             this.tabListItem[idx].list.forEach(item => {
@@ -528,6 +573,17 @@ export default {
                 }
             })
         },
+        checkNotontheList() {
+            var treeitem = Object.values(this.$store.getters.gettreeviewitems)
+            this.saveList.forEach(item => {
+                for (let i=0;i<item.saveFile.length;i++){
+                    if(treeitem.findIndex(x=>x.uuid === item.saveFile[i].uuid) == -1) {
+                        item.saveFile.splice(i,1)
+                        i--
+                    }
+                }
+            })
+        }
     },
 }
 </script>

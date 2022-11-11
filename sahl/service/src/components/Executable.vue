@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showExecutable">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -20,20 +20,17 @@
                                 <v-icon> mdi-format-text</v-icon>
                             </v-btn>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>Executable</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-show="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
-                                        @input='inputExecutableName' outlined dense  @click="setactiveUUID"></v-text-field>
-                            <v-text-field v-model="element.category" label="Category"  @click="setactiveUUID" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
-                            <v-select :items="buildType" label="Build Type"  v-model="element.buildType" @click="setactiveUUID()" clearable outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
-                            <v-select :items="loggingBehabior" label="Logging Behavior"  v-model="element.loggingBehabior" @click="setactiveUUID()" clearable outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
-                            <v-select :items="reportingBehabior" label="Reporting Behavior"  v-model="element.reportingBehabior" @click="setactiveUUID()" clearable outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
-                            <v-text-field v-model="element.version" label="Version" placeholder="Int" style="height: 45px;" @click="setactiveUUID" outlined dense class="lable-placeholer-color"></v-text-field>
+                                        @input='inputExecutableName' outlined dense  @click="clickOtherFields()"></v-text-field>
+                            <v-text-field v-model="element.category" label="Category"  @click="clickOtherFields()" placeholder="String" style="height: 45px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                            <v-select :items="buildType" label="Build Type"  v-model="element.buildType" @click="[clickOtherFields(),setactiveUUID()]" clearable @click:clear="clickOtherFields()" outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
+                            <v-select :items="loggingBehabior" label="Logging Behavior"  v-model="element.loggingBehabior" @click="[clickOtherFields(),setactiveUUID()]" clearable @click:clear="clickOtherFields()"  outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
+                            <v-select :items="reportingBehabior" label="Reporting Behavior"  v-model="element.reportingBehabior" @click="[clickOtherFields(),setactiveUUID()]" clearable  @click:clear="clickOtherFields()" outlined dense return-object style="height: 45px;" class="lable-placeholer-color"></v-select>
+                            <v-text-field v-model="element.version" label="Version" placeholder="Int" style="height: 45px;" @click="clickOtherFields()" outlined dense class="lable-placeholer-color"></v-text-field>
                             <v-card outlined class="mx-auto">
                                 <div class="subtitle-2" style="height:20px">
                                     <!-- <v-hover v-slot="{ hover }">
@@ -47,10 +44,11 @@
                                     Root SW Component Prototype
                                 </div>
                                 <v-card-text v-if="isRootSWComponentOpenClose">
-                                    <v-text-field v-model="element.swname" label="name" :rules="rules.name" @input='inputRootSWName' @click="setactiveUUID" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
+                                    <v-text-field v-model="element.swname" label="name" @input='inputRootSWName' @click="clickOtherFields()" placeholder="String" style="height: 45px;" class="lable-placeholer-color" outlined dense></v-text-field>
                                     <v-row style="height: 70px">
                                         <v-col cols="10">
-                                            <v-text-field v-model="element.applicationtyperef" readonly @click="setApplicationTypeRefSelect()" clearable @click:clear='clearApplicationTypeRef()' label="Application Type Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
+                                            <v-text-field v-model="element.applicationtyperef" readonly @click="setApplicationTypeRefSelect()" :style="refSWComponemt ? 'height: 43px;border:solid red 2px' : ''" 
+                                                        clearable @click:clear='clearApplicationTypeRef()' label="Application Type Reference" style="height:25px;" outlined dense class="lable-placeholer-color"></v-text-field>
                                         </v-col>
                                         <v-col cols="2">
                                             <v-menu>
@@ -73,7 +71,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-show="(!iselementOpenClose && zoomvalue > $setZoominElement) || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -160,9 +158,6 @@ export default {
         activeUUID() {
             return this.$store.state.activeUUID
         },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
-        },
         setting() {
             return this.$store.state.setting
         },
@@ -171,9 +166,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -203,7 +198,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             dialogText: false,
             editARXML: {name:'', category: '', buildType: null, loggingBehabior: null, reportingBehabior: null, version: '', swname: '', applicationtyperef: null},
             isRootSWComponentOpenClose: true,
@@ -211,12 +206,19 @@ export default {
             loggingBehabior: ['USES-LOGGING', 'DOES-NOT-USE-LOGGUNG', ],
             reportingBehabior: ['REPORTS-EXECUTION-STATE', 'DOES-NOT-REPORT-EXECUTION-STATE', ],
             selApplicationType: this.$store.getters.getSWComponentType,
+            refSWComponemt: false,
         }
     },
     mounted () {
         if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
             this.isTooltip = false
         }
+        EventBus.$on(this.element.uuid, (refNum) => {
+            this.refSWComponemt = false
+            if (refNum == 1) {
+                this.refSWComponemt = true
+            }
+        })
     },
     methods: {
         submitDialog(element) {
@@ -242,9 +244,10 @@ export default {
             }
         },
         showExecutable() {
+            this.clickOtherFields()
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
-                EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                EventBus.$emit('drawLine')
             })
         },
         showRootSWComponent() {
@@ -261,22 +264,40 @@ export default {
             this.$store.commit('changePathElement', {uuid:this.element.uuid, path: this.element.path, name: this.element.name,
                                             changeName: 'swname', listname: this.element.swname} )
         },
+        clickOtherFields() {
+            if (this.refSWComponemt) {
+                this.setactiveUUID()
+                this.deleteOpenElement()
+                this.refSWComponemt = false
+            }
+        },
         clearApplicationTypeRef() {
             this.element.applicationtyperef = null
             var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/applicationtyperef')
             if (endLine != undefined) {
                 this.deleteLine(this.element.uuid+'/applicationtyperef')
+                this.refSWComponemt = false
             }
         },
         setApplicationTypeRefSelect() {
-            var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/applicationtyperef')
-            if (endLine == undefined) {
-                endLine = this.$store.getters.getSWComponentPath(this.element.applicationtyperef, 0)
-            }
-            if (endLine != null) {
-                this.$store.commit('setDetailView', {uuid: endLine, element: constant.SWComponents_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+            if (this.element.applicationtyperef != null) {this.refSWComponemt = true}
+            if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/applicationtyperef')
+                if (endLine == undefined) {
+                    endLine = this.$store.getters.getSWComponentPath(this.element.applicationtyperef, 0)
+                }
+                if (endLine != null) {
+                    this.$store.commit('editSWComponents', {compo:"drag", uuid: endLine, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SWComponents_str, uuid: endLine, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        EventBus.$emit('new-line', this.element.uuid+'/applicationtyperef', endLine)
+                        document.getElementById(endLine+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/applicationtyperef', end:endLine, iscircle:false, refNum:1})
+                    //this.$store.commit('setDetailView', {uuid: endLine, element: constant.SWComponents_str} )
+                    /*document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', endLine)*/
+                }
             }
         },
         setApplicationTypeList() {
@@ -284,6 +305,7 @@ export default {
             this.setactiveUUID()
         },
         setSWComponent(item) {
+            this.clickOtherFields()
             if(this.element.applicationtyperef != item.name) {
                 var endLine = this.$store.getters.getChangeEndLine(this.element.uuid+'/applicationtyperef')
                 if (endLine != undefined && endLine != item.uuid) {
@@ -291,18 +313,35 @@ export default {
                     this.deleteLine(this.element.uuid+'/applicationtyperef')
                 }
                 //새로 추가해준다
-                this.newLine(this.element.uuid+'/applicationtyperef', this.element.uuid+'/applicationtyperef', item.uuid)
+                if (endLine != item.uuid) {
+                    this.refSWComponemt = true
+                    this.$store.commit('editSWComponents', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SWComponents_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/applicationtyperef', this.element.uuid+'/applicationtyperef', item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/applicationtyperef', end: item.uuid, iscircle:false, refNum:1})
+                }
                 this.element.applicationtyperef = item.name
+            } else {
+                if (this.$store.getters.getDeleteOpenElement(this.element.uuid)+1 == this.$store.state.openElement.length) {
+                    this.refSWComponemt = true
+                    this.$store.commit('editSWComponents', {compo:"drag", uuid: item.uuid, top: this.element.top, left: this.element.left + this.$setPositionLeft} )
+                    this.$store.commit('setzIndexVisible', {parent:constant.SWComponents_str, uuid: item.uuid, isVisible: true, compo: 'visible', startUUID: this.element.uuid} )
+                    this.$nextTick(() => { 
+                        this.newLine(this.element.uuid+'/applicationtyperef', this.element.uuid+'/applicationtyperef', item.uuid, true)
+                        document.getElementById(item.uuid+1).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    })
+                    this.$store.commit('setViewLineInfo', {start:this.element.uuid+'/applicationtyperef', end: item.uuid, iscircle:false, refNum:1})
+                }
             }
             this.setactiveUUID()
         },
         newSWComponent() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
             this.$store.commit('addElementSWComponents', {
-                    name: this.$store.getters.getNameSWComponents, path: '',
-                    top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                    name: this.$store.getters.getNameSWComponents, path: '', input: false,
+                    top: this.element.top + 235, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
                     pport: [], rport: [], prport: [],
                 })
             EventBus.$emit('add-element', constant.SWComponents_str)
@@ -316,13 +355,19 @@ export default {
         deleteLine(fineLine) {
             var linenum = this.$store.getters.getconnectLineNum(fineLine)
             if (linenum != -1) {
-                EventBus.$emit('delete-line', linenum)
                 this.$store.commit('deletConnectionline', {startnum: linenum} )
+                this.deleteOpenElement()
             }
         },
-        newLine(startLine, drawLine, endLine) {
+        deleteOpenElement() {
+            //EventBus.$emit('delete-line', this.$store.getters.getDeleteOpenElement(this.element.uuid))
+            this.$store.commit('deleteOpenElemnt', {uuid: this.element.uuid, isDeleteAll: false, startUUID: this.element.uuid} )
+        },
+        newLine(startLine, drawLine, endLine, isView) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
-            EventBus.$emit('new-line', drawLine, endLine)
+            if (isView) {
+                EventBus.$emit('new-line', drawLine, endLine)
+            }
         },
 
         viewARXML() {
@@ -346,26 +391,18 @@ export default {
             }
             this.element.name = this.editARXML.name
             this.element.category = this.editARXML.category
-            if (this.editARXML.buildType == 'BUILD-TYPE-DEBUG' || this.editARXML.buildType == 'BUILD-TYPE-RELEASE' || this.editARXML.buildType == '') {
-                if (this.editARXML.buildType == '') {
-                    this.element.buildType = null
-                } else {
-                    this.element.buildType = this.editARXML.buildType
-                }
+
+            this.editARXML.buildType = this.editARXML.buildType.toUpperCase()
+            if (this.editARXML.buildType == 'BUILD-TYPE-DEBUG' || this.editARXML.buildType == 'BUILD-TYPE-RELEASE') {
+                this.element.buildType = this.editARXML.buildType
             }
-            if (this.editARXML.loggingBehabior == 'USES-LOGGING' || this.editARXML.loggingBehabior == 'DOES-NOT-USE-LOGGUNG' || this.editARXML.loggingBehabior == '') {
-                if (this.editARXML.loggingBehabior == '') {
-                    this.element.loggingBehabior = null
-                } else {
-                    this.element.loggingBehabior = this.editARXML.loggingBehabior
-                }
+            this.editARXML.loggingBehabior = this.editARXML.loggingBehabior.toUpperCase()
+            if (this.editARXML.loggingBehabior == 'USES-LOGGING' || this.editARXML.loggingBehabior == 'DOES-NOT-USE-LOGGUNG') {
+                this.element.loggingBehabior = this.editARXML.loggingBehabior
             }
-            if (this.editARXML.reportingBehabior == 'REPORTS-EXECUTION-STATE' || this.editARXML.reportingBehabior == 'DOES-NOT-REPORT-EXECUTION-STATE' || this.editARXML.reportingBehabior == '') {
-                if (this.editARXML.reportingBehabior == '') {
-                    this.element.reportingBehabior = null
-                } else {
-                    this.element.reportingBehabior = this.editARXML.reportingBehabior
-                }
+            this.editARXML.reportingBehabior = this.editARXML.reportingBehabior.toUpperCase()
+            if (this.editARXML.reportingBehabior == 'REPORTS-EXECUTION-STATE' || this.editARXML.reportingBehabior == 'DOES-NOT-REPORT-EXECUTION-STATE') {
+                this.element.reportingBehabior = this.editARXML.reportingBehabior
             }
 
             this.element.version = this.editARXML.version
@@ -382,7 +419,7 @@ export default {
                 }
                 var chandEndLine = this.$store.getters.getSWComponentPath(this.editARXML.applicationtyperef, 0)
                 if (chandEndLine != null) {
-                    this.newLine(this.element.uuid+'/applicationtyperef', this.element.uuid+'/applicationtyperef', chandEndLine)
+                    this.newLine(this.element.uuid+'/applicationtyperef', this.element.uuid+'/applicationtyperef', chandEndLine, false)
                 }
             }
             this.cancelARXML()

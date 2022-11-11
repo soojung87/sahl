@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showPHMSupervised">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -17,13 +17,10 @@
                             <v-toolbar-title>PHM Supervised Entity Interface</v-toolbar-title>
                             <v-spacer></v-spacer>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>PHM Supervised Entity Interface</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputPHMSupervisedName' outlined dense></v-text-field>
                             <v-card outlined class="mx-auto">
@@ -42,7 +39,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isCheckPOpenClose">
-                                    <v-data-table v-model="selectDelectCheckP" :headers="headerCheckP" :items="element.checkpoint" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectCheckP" :headers="headerCheckP" :items="element.checkpoint" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteCheckPItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -51,7 +48,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @open="openCheckP(idx)" @cancel="editCheckP(idx)" @save="cancelCheckP" large >
+                                                        <v-edit-dialog persistent @open="openCheckP(idx)" @cancel="cancelCheckP" @save="editCheckP(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -63,7 +60,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addCheckP()" @save="cancelCheckP"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelCheckP" @save="addCheckP()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon >mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -81,7 +78,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -95,6 +92,7 @@
 
 <script>
 import dialogPathSetting from '../components/dialogPathSetting.vue'
+import { EventBus } from "../main.js"
 
 export default {
     props: ['element', 'isDatailView', 'minimaptoolbar'],
@@ -102,9 +100,6 @@ export default {
     computed: {
         activeUUID() {
             return this.$store.state.activeUUID
-        },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
         },
         setting() {
             return this.$store.state.setting
@@ -114,9 +109,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -138,7 +133,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             isCheckPOpenClose: true,
             isEditingError: true,
             isdeleteCheckPItem: false,
@@ -181,6 +176,9 @@ export default {
         },
         showPHMSupervised () {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
+            this.$nextTick(() => {
+                EventBus.$emit('drawLine')
+            })
         },
         showCheckP() {
             this.isCheckPOpenClose = this.isCheckPOpenClose ? false : true

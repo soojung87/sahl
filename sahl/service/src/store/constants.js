@@ -1,5 +1,5 @@
 export default {
-    DateType_index: 0,
+    DataType_index: 0,
     Service_index: 1,
     AdaptiveApplication_index: 2,
     Machines_index: 3,

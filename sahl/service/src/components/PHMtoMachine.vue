@@ -4,7 +4,7 @@
             <v-tooltip bottom color="success" :disabled="isTooltip" z-index="10">
                 <template v-slot:activator="{ on, attrs }">
                     <v-card outlined :color="minimaptoolbar ? null : colorToolbar" v-bind="attrs" v-on="on">
-                        <v-toolbar v-if="!isDatailView && zoomvalue > $setZoominElement" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
+                        <v-toolbar v-if="!isDatailView" :color=colorToolbar dark hide-on-scroll height="30px" class="drag-handle">
                             <v-hover v-if="minimaptoolbar" v-slot="{ hover }">
                                 <v-btn icon @click="showPHMtoMachine">
                                     <v-icon>{{ iselementOpenClose ? (hover? 'mdi-chevron-double-left' :'mdi-chevron-double-right') : (hover? 'mdi-chevron-double-right' :'mdi-chevron-double-left')}}</v-icon>
@@ -17,13 +17,10 @@
                             <v-toolbar-title>PHM Contribution To Machine Mapping</v-toolbar-title>
                             <v-spacer></v-spacer>
                         </v-toolbar>
-                        <v-toolbar v-else-if="zoomvalue < $setZoominElement" :color=colorToolbar dark hide-on-scroll height="50px" class="drag-handle">
-                            <v-toolbar-title>{{ element.name }}</v-toolbar-title>
-                        </v-toolbar>
                         <v-toolbar v-else hide-on-scroll dense flat>
                             <v-toolbar-title>PHM Contribution To Machine Mapping</v-toolbar-title>
                         </v-toolbar>
-                        <v-card-text v-if="iselementOpenClose && zoomvalue > $setZoominElement">
+                        <v-card-text v-if="iselementOpenClose">
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         @input='inputPHMtoMachineName' outlined dense></v-text-field>
                             <v-row style="height: 70px">
@@ -64,7 +61,7 @@
                                     </v-btn>
                                 </div>
                                 <v-card-text v-if="isContriOpenClose">
-                                    <v-data-table v-model="selectDelectContri" :headers="headerContri" :items="element.contri" :items-per-page='20'
+                                    <v-data-table v-model="selectDelectContri" :headers="headerContri" :items="element.contri" :items-per-page='$setNumTableList'
                                             :show-select="isdeleteContriItem" item-key="id" height="140px" dense hide-default-footer >
                                         <template v-slot:item.data-table-select="{ isSelected, select }">
                                             <v-simple-checkbox color="green" :value="isSelected" :ripple="false" @input="select($event)"></v-simple-checkbox>
@@ -73,7 +70,7 @@
                                             <tbody>
                                                 <tr v-for="(item,idx) in items" :key="idx">
                                                     <td v-for="(header,key) in headers" :key="key">
-                                                        <v-edit-dialog persistent cancel-text='Ok' save-text="Cancel" @cancel="editContri(idx)" @open="openContri(idx)" @save="cancelContri" large >
+                                                        <v-edit-dialog persistent @cancel="cancelContri" @open="openContri(idx)" @save="editContri(idx)" large >
                                                             {{item[header.value]}}
                                                             <template v-slot:input>
                                                                 <br>
@@ -92,7 +89,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3">
-                                                        <v-edit-dialog  large persistent cancel-text='Ok' save-text="Cancel" @cancel="addContri()" @save="cancelContri"> 
+                                                        <v-edit-dialog  large persistent @cancel="cancelContri" @save="addContri()"> 
                                                             <v-btn outlined color="indigo" dense text small block width="270px" >
                                                                 <v-icon >mdi-plus</v-icon>New Item
                                                             </v-btn>
@@ -117,7 +114,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-card-text>
-                        <v-card-text v-else-if="zoomvalue > $setZoominElement || !minimaptoolbar">
+                        <v-card-text v-else>
                             <v-text-field v-model="element.name" :label="'name  <'+element.path +'>'" :rules="rules.name" placeholder="String" style="height: 45px;" class="lable-placeholer-color"
                                         readonly outlined dense></v-text-field>
                         </v-card-text>
@@ -141,9 +138,6 @@ export default {
         activeUUID() {
             return this.$store.state.activeUUID
         },
-        detailViewUUID() {
-            return this.$store.state.detailViewUUID
-        },
         setting() {
             return this.$store.state.setting
         },
@@ -152,9 +146,9 @@ export default {
         activeUUID(val) {
             this.setToolbarColor(val)
         },
-        detailViewUUID(val) {
+        /*detailViewUUID(val) {
             this.setToolbarColorDetailView(val)
-        },
+        },*/
         setting(value) {
             this.zoomvalue = value.zoomMain
             if (this.zoomvalue < this.$setZoominTooltip) {
@@ -176,7 +170,7 @@ export default {
             colorToolbar: "#6A5ACD",
             zoomvalue: this.$store.state.setting.zoomMain,
             isTooltip: this.minimaptoolbar,
-            iselementOpenClose: this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
+            iselementOpenClose: true,//this.minimaptoolbar, //toolbar만 보여줄것이냐 아니냐 설정 true: 전체 다 보여줌 / false : toolbar만 보여줌
             selMachine: this.$store.getters.getMachine,
             selPHMManagement: this.$store.getters.getPHMContribution,
             isContriOpenClose: true,
@@ -194,6 +188,9 @@ export default {
         if (this.minimaptoolbar && this.zoomvalue < this.$setZoominElement) {
             this.isTooltip = false
         }
+        EventBus.$on(this.element.uuid, () => {
+            //
+        })
     },
     methods: {
         submitDialog(element) {
@@ -220,7 +217,7 @@ export default {
         showPHMtoMachine () {
             this.iselementOpenClose = this.iselementOpenClose ? false : true
             this.$nextTick(() => {
-                EventBus.$emit('drawLineTitleBar', this.element.uuid, this.iselementOpenClose)
+                EventBus.$emit('drawLine')
             })
         },
         showContri() {
@@ -247,8 +244,8 @@ export default {
             }
             if (endLine != null) {
                 this.$store.commit('setDetailView', {uuid: endLine, element: constant.Machine_str} )
-                document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                EventBus.$emit('active-element', endLine)
+                /*document.getElementById(endLine+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                EventBus.$emit('active-element', endLine)*/
             }
         },
         setMachineList() {
@@ -263,22 +260,31 @@ export default {
                     this.deleteLine(this.element.uuid+'/PHMtoMachine')
                 }
                 //새로 추가해준다
-                this.newLine(this.element.uuid+'/PHMtoMachine', this.element.uuid+'/PHMtoMachine', item.uuid)
+                this.newLine(this.element.uuid+'/PHMtoMachine', this.element.uuid+'/PHMtoMachine', item.uuid, false)
                 this.element.machine = item.name
             }
             this.setactiveUUID()
         },
         newMachine() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-
+            /*var nameMachine = this.$store.getters.getNameMachine
+                this.$store.commit('addElementModeDeclarationGroup', {
+                    name: nameMachine+'_MachineState_ModeDeclarationGroup', path: '',
+                    top: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), left: Array.from({length:4}, () => Math.floor(Math.random() * 3000)), 
+                    zindex: 10, modedeclaration:[{name: 'Off', value: ''},{name: 'Startup', Value: ''},{name: 'Running', Value: ''},{name: 'Shutdown', Value: ''}], initmode:'Off', icon:"mdi-clipboard-outline", validation: false
+                })
             this.$store.commit('addElementMachine', {
-                name: this.$store.getters.getNameMachine, path: '',
-                top: elementY, left: elementX, zindex: 10, machinedesign:null, timeout:'', hwelement:[], executable:null, admin: '',
+                name: nameMachine, path: '',
+                top: elementY, left: elementX, zindex: 10, machinedesign:null, enterTimeout:'', exitTimeout:'', hwelement:[], executable:null, admin: '',
+                functiongroup:[{name:'MachineState', type:'/'+nameMachine+'_MachineState_ModeDeclarationGroup'}], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: [], icon:"mdi-clipboard-outline", validation: false
+            })*/
+            this.$store.commit('addElementMachine', {
+                name: this.$store.getters.getNameMachine, path: '', input: false,
+                top: this.element.top, left: this.element.left + this.$setPositionLeft, zindex: 10, machinedesign:null, enterTimeout:'', exitTimeout:'', hwelement:[], executable:null, admin: '',
                 functiongroup:[], environ: [], processor: [], moduleinstant: [], ucm: [], iam: [], crypto: [], icon:"mdi-clipboard-outline", validation: false
             })
             EventBus.$emit('add-element', constant.Machine_str)
             EventBus.$emit('add-element', constant.Machines_str)
+            //EventBus.$emit('add-element', constant.ModeDeclarationGroup_str)
             this.$store.commit('editPHMtoMachine', {compo:"z", uuid:this.element.uuid, zindex:2} )
         },
 
@@ -306,7 +312,7 @@ export default {
                 for(let n=0; n<this.element.contri.length; n++) {
                     for(let idx=0; idx<this.deleteChangeLine.length; idx++) {
                         if (this.element.contri[n].id == this.deleteChangeLine[idx].id) {
-                            this.newLine(this.element.uuid+'/PHMContri-'+n, this.element.uuid+'/PHMContri', this.deleteChangeLine[idx].endLine)
+                            this.newLine(this.element.uuid+'/PHMContri-'+n, this.element.uuid+'/PHMContri', this.deleteChangeLine[idx].endLine, false)
                         }
                     }
                 }
@@ -334,10 +340,10 @@ export default {
             } else if (endLine != undefined && endLine != this.editItem.con.uuid) {
                 //기존꺼 삭제해야한다 vuex에서도 삭제하고 mainview에서도 삭제하고 
                 this.deleteLine(this.element.uuid+'/PHMContri-'+idx)
-                this.newLine(this.element.uuid+'/PHMContri-'+idx, this.element.uuid+'/PHMContri', this.editItem.con.uuid)
+                this.newLine(this.element.uuid+'/PHMContri-'+idx, this.element.uuid+'/PHMContri', this.editItem.con.uuid, false)
                 this.element.contri[idx].con = this.editItem.con.name
             } else if (endLine == undefined && this.editItem.con != null && this.editItem.con.uuid != null) {
-                this.newLine(this.element.uuid+'/PHMContri-'+idx, this.element.uuid+'/PHMContri', this.editItem.con.uuid)
+                this.newLine(this.element.uuid+'/PHMContri-'+idx, this.element.uuid+'/PHMContri', this.editItem.con.uuid, false)
                 this.element.contri[idx].con = this.editItem.con.name
             }
 
@@ -357,7 +363,7 @@ export default {
 
             if( this.editItem.con != null) {
                 var datacount = this.element.contri.length
-                this.newLine(this.element.uuid+'/PHMContri-'+datacount, this.element.uuid+'/PHMContri', this.editItem.con.uuid)
+                this.newLine(this.element.uuid+'/PHMContri-'+datacount, this.element.uuid+'/PHMContri', this.editItem.con.uuid, false)
                 this.editItem.con = this.editItem.con.name
             }
             const addObj = Object.assign({}, this.editItem)
@@ -373,8 +379,8 @@ export default {
             if (this.isEditingCon == true) {
                 if (this.editItem.con != null && this.editItem.con.uuid != null) {
                     this.$store.commit('setDetailView', {uuid: this.editItem.con.uuid, element: constant.PlatformHealthManagC_str} )
-                    document.getElementById(this.editItem.con.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    EventBus.$emit('active-element', this.editItem.con.uuid)
+                    /*document.getElementById(this.editItem.con.uuid+this.location).scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    EventBus.$emit('active-element', this.editItem.con.uuid)*/
                 }
                 this.setConList()
                 this.isEditingCon = false
@@ -387,11 +393,9 @@ export default {
             this.setactiveUUID()
         },
         newPHMContribution() {
-            const elementX = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
-            const elementY = Array.from({length:4}, () => Math.floor(Math.random() * 3000))
             this.$store.commit('addElementPHMContribution', {
-                name: this.$store.getters.getNamePHMContribution, path: '',
-                top: elementY, left: elementX, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
+                name: this.$store.getters.getNamePHMContribution, path: '', input: false,
+                top: this.element.top, left: this.element.left + this.$setPositionLeft, zindex: 10, icon:"mdi-clipboard-outline", validation: false,
             })
             EventBus.$emit('add-element', constant.Platform_str)
             EventBus.$emit('add-element', constant.PHM_str)
@@ -406,13 +410,19 @@ export default {
         deleteLine(fineLine) {
             var linenum = this.$store.getters.getconnectLineNum(fineLine)
             if (linenum != -1) {
-                EventBus.$emit('delete-line', linenum)
                 this.$store.commit('deletConnectionline', {startnum: linenum} )
+                this.deleteOpenElement()
             }
         },
-        newLine(startLine, drawLine, endLine) {
+        deleteOpenElement() {
+            //EventBus.$emit('delete-line', this.$store.getters.getDeleteOpenElement(this.element.uuid))
+            this.$store.commit('deleteOpenElemnt', {uuid: this.element.uuid, isDeleteAll: false, startUUID: this.element.uuid} )
+        },
+        newLine(startLine, drawLine, endLine, isView) {
             this.$store.commit('setConnectionline', {start: startLine, end: endLine} )
-            EventBus.$emit('new-line', drawLine, endLine)
+            if (isView) {
+                EventBus.$emit('new-line', drawLine, endLine)
+            }
         },
 
     },
